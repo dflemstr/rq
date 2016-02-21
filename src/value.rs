@@ -37,7 +37,8 @@ pub enum Value {
 
 impl Value {
     pub fn to_json<W>(&self, write: &mut W) -> error::Result<()>
-          where W: io::Write {
+        where W: io::Write
+    {
 
         Ok(try!(serde_json::to_writer(write, self)))
     }
@@ -46,7 +47,8 @@ impl Value {
 impl serde::ser::Serialize for Value {
     #[inline]
     fn serialize<S>(&self, serializer: &mut S) -> Result<(), S::Error>
-          where S: serde::ser::Serializer {
+        where S: serde::ser::Serializer
+    {
 
         match *self {
             Value::Unit => serializer.visit_unit(),

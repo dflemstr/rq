@@ -31,27 +31,7 @@ const QUERY_ARG: &'static str = "query";
 fn main() {
     use std::io::Read;
 
-    let matches =
-        clap::App::new("rq - Record query")
-        .version(env!("CARGO_PKG_VERSION"))
-        .author("David Flemström <dflemstr@spotify.com>")
-        .about(ABOUT)
-
-        .arg(clap::Arg::with_name(INPUT_JSON_ARG)
-             .short("j")
-             .long("input-json")
-             .help("Input is white-space separated JSON values."))
-
-        .arg(clap::Arg::with_name(OUTPUT_JSON_ARG)
-             .short("J")
-             .long("output-json")
-             .help("Output should be formatted as JSON values."))
-
-        .arg(clap::Arg::with_name(QUERY_ARG)
-             .multiple(true)
-             .help("The query to apply."))
-
-        .get_matches();
+    let matches = match_args();
 
     let stdin = io::stdin();
     let input = stdin.lock();
@@ -63,7 +43,28 @@ fn main() {
     }
 }
 
-fn run<Iter>(input: Iter) where Iter: Iterator<Item=value::Value> {
+fn match_args<'a>() -> clap::ArgMatches<'a> {
+    clap::App::new("rq - Record query")
+        .version(env!("CARGO_PKG_VERSION"))
+        .author("David Flemström <dflemstr@spotify.com>")
+        .about(ABOUT)
+        .arg(clap::Arg::with_name(INPUT_JSON_ARG)
+                 .short("j")
+                 .long("input-json")
+                 .help("Input is white-space separated JSON values."))
+        .arg(clap::Arg::with_name(OUTPUT_JSON_ARG)
+                 .short("J")
+                 .long("output-json")
+                 .help("Output should be formatted as JSON values."))
+        .arg(clap::Arg::with_name(QUERY_ARG)
+                 .multiple(true)
+                 .help("The query to apply."))
+        .get_matches()
+}
+
+fn run<Iter>(input: Iter)
+    where Iter: Iterator<Item = value::Value>
+{
     use std::io::Write;
     let mut stdout = io::stdout();
     for value in input {
