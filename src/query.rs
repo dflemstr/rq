@@ -33,19 +33,19 @@ fn is_alpha(c: char) -> bool {
     c.is_alphabetic()
 }
 
-named!(space<&str, &str>, take_while_s!(is_space));
-named!(alpha<&str, &str>, take_while_s!(is_alpha));
+named!(space(&str) -> &str, take_while_s!(is_space));
+named!(alpha(&str) -> &str, take_while_s!(is_alpha));
 
-named!(string_lit<&str, String>,
-       chain!(tag_s!("a"),
+named!(string_lit(&str) -> String,
+       chain!(tag_s!("a") ~ space,
               ||{ "a".to_owned() }));
 
-named!(expr<&str, Expression>,
+named!(expr(&str) -> Expression,
        alt!(map!(string_lit, Expression::String)));
 
-named!(args<&str, Vec<Expression> >, many0!(expr));
+named!(args(&str) -> Vec<Expression>, many0!(expr));
 
-named!(query<&str, Query>,
+named!(query(&str) -> Query,
        chain!(name: alpha ~ space ~ args: args,
               ||{ Query::Function { name: name.to_owned(), args: args } }));
 
@@ -55,12 +55,26 @@ mod test {
 
     #[test]
     fn function() {
-        let q = Query::parse("select a");
+        let expected = Query::Function {
+            name: "select".to_owned(),
+            args: vec![Expression::String("a".to_owned())],
+        };
+        let actual = Query::parse("select a");
 
-        assert_eq!(q,
-                   Query::Function {
-                       name: "select".to_owned(),
-                       args: vec![Expression::String("a".to_owned())],
-                   });
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn function_two_args() {
+        let expected = Query::Function {
+            name: "select".to_owned(),
+            args: vec![
+                Expression::String("a".to_owned()),
+                Expression::String("a".to_owned()),
+            ],
+        };
+        let actual = Query::parse("select a a");
+
+        assert_eq!(expected, actual);
     }
 }
