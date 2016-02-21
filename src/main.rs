@@ -1,6 +1,7 @@
+#![feature(plugin)]
+#![plugin(mod_path)]
+
 extern crate clap;
-#[macro_use]
-extern crate nom;
 extern crate serde;
 extern crate serde_json;
 
