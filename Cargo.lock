@@ -3,6 +3,7 @@ name = "rq"
 version = "0.1.0"
 dependencies = [
  "clap 2.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "nom 1.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 0.6.13 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_json 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -31,6 +32,11 @@ dependencies = [
 [[package]]
 name = "libc"
 version = "0.2.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "nom"
+version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]

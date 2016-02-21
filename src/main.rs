@@ -1,9 +1,12 @@
 extern crate clap;
+#[macro_use]
+extern crate nom;
 extern crate serde;
 extern crate serde_json;
 
 mod error;
 mod json_values;
+mod query;
 mod value;
 
 use std::io;

@@ -5,5 +5,6 @@ version = "0.1.0"
 
 [dependencies]
 clap = "2.1.1"
+nom = "1.2.0"
 serde = "0.6.13"
 serde_json = "0.6.0"
