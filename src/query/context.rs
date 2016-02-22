@@ -21,9 +21,7 @@ impl Context {
             }
         }));
 
-        Context {
-            functions: functions
-        }
+        Context { functions: functions }
     }
 
     pub fn function(&self, name: &str) -> Option<&Box<Function>> {

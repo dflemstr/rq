@@ -22,10 +22,15 @@ impl Query {
         parser::parse_query(raw).unwrap()
     }
 
-    pub fn evaluate(&self, context: &context::Context, input: value::Value) -> value::Value {
+    pub fn evaluate(&self,
+        context: &context::Context,
+        input: value::Value)
+        -> value::Value {
         match *self {
             Query::Chain(ref queries) => apply_chain(context, input, queries),
-            Query::Function(ref name, ref args) => apply_function(context, input, name, args),
+            Query::Function(ref name, ref args) => {
+                apply_function(context, input, name, args)
+            }
         }
     }
 }
@@ -39,7 +44,10 @@ impl Expression {
     }
 }
 
-fn apply_chain(context: &context::Context, input: value::Value, queries: &[Query]) -> value::Value{
+fn apply_chain(context: &context::Context,
+    input: value::Value,
+    queries: &[Query])
+    -> value::Value {
     let mut result = input;
 
     for query in queries {
@@ -49,7 +57,11 @@ fn apply_chain(context: &context::Context, input: value::Value, queries: &[Query
     result
 }
 
-fn apply_function(context: &context::Context, input: value::Value, name: &str, args: &[Expression]) -> value::Value {
+fn apply_function(context: &context::Context,
+    input: value::Value,
+    name: &str,
+    args: &[Expression])
+    -> value::Value {
     match context.function(name) {
         Some(func) => {
             let mut vals = Vec::with_capacity(args.len() + 1);
@@ -58,7 +70,7 @@ fn apply_function(context: &context::Context, input: value::Value, name: &str, a
                 vals.push(arg.to_value())
             }
             func(&vals)
-        },
+        }
         None => value::Value::Unit,
     }
 }
@@ -97,9 +109,8 @@ mod test {
 
     #[test]
     fn parse_function_one_arg_integer() {
-        let expected =
-            Query::Function("select".to_owned(),
-                            vec![Expression::Integer(52)]);
+        let expected = Query::Function("select".to_owned(),
+                                       vec![Expression::Integer(52)]);
         let actual = Query::parse("select 52");
 
         assert_eq!(expected, actual);
@@ -107,9 +118,8 @@ mod test {
 
     #[test]
     fn parse_function_one_arg_negative_integer() {
-        let expected =
-            Query::Function("select".to_owned(),
-                            vec![Expression::Integer(-52)]);
+        let expected = Query::Function("select".to_owned(),
+                                       vec![Expression::Integer(-52)]);
         let actual = Query::parse("select -52");
 
         assert_eq!(expected, actual);
@@ -117,9 +127,8 @@ mod test {
 
     #[test]
     fn parse_function_one_arg_negative_integer_spaced() {
-        let expected =
-            Query::Function("select".to_owned(),
-                            vec![Expression::Integer(-52)]);
+        let expected = Query::Function("select".to_owned(),
+                                       vec![Expression::Integer(-52)]);
         let actual = Query::parse("select - 52");
 
         assert_eq!(expected, actual);
@@ -147,8 +156,8 @@ mod test {
 
     #[test]
     fn parse_function_two_args() {
-        let expected =
-            Query::Function("select".to_owned(), vec![
+        let expected = Query::Function("select".to_owned(),
+                                       vec![
                 Expression::String("abc-def".to_owned()),
                 Expression::String("ghi_123".to_owned()),
             ]);
