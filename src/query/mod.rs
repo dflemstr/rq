@@ -39,4 +39,46 @@ mod test {
 
         assert_eq!(expected, actual);
     }
+
+    #[test]
+    fn parse_function_one_arg_numbers() {
+        let expected =
+            Query::Function("select".to_owned(),
+                            vec![Expression::String("abc123".to_owned())]);
+        let actual = Query::parse("select abc123");
+
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn parse_function_one_arg_underscore() {
+        let expected =
+            Query::Function("select".to_owned(),
+                            vec![Expression::String("abc_def".to_owned())]);
+        let actual = Query::parse("select abc_def");
+
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn parse_function_one_arg_dash() {
+        let expected =
+            Query::Function("select".to_owned(),
+                            vec![Expression::String("abc-def".to_owned())]);
+        let actual = Query::parse("select abc-def");
+
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn parse_function_two_args() {
+        let expected =
+            Query::Function("select".to_owned(), vec![
+                Expression::String("abc-def".to_owned()),
+                Expression::String("ghi_123".to_owned()),
+            ]);
+        let actual = Query::parse("select abc-def ghi_123");
+
+        assert_eq!(expected, actual);
+    }
 }

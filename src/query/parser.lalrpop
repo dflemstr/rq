@@ -1,3 +1,4 @@
+// -*- mode: rust -*-
 use std::str::FromStr;
 
 use query;
@@ -27,9 +28,9 @@ query_elem: query::Query = {
 };
 
 expr: query::Expression = {
-    "a" => query::Expression::String("a".to_owned()),
+    <ident> => query::Expression::String(<>),
 };
 
-ident: String = r"[a-zA-Z_][a-zA-Z0-9_]*" => <>.to_owned();
+ident: String = r"[a-zA-Z_-][a-zA-Z0-9_-]*" => <>.to_owned();
 num: i32 = r"[0-9]+" => i32::from_str(<>).unwrap();
 bar: () = "|" => ();
