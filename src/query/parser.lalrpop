@@ -29,8 +29,12 @@ query_elem: query::Query = {
 
 expr: query::Expression = {
     <ident> => query::Expression::String(<>),
+    <integer> => query::Expression::Integer(<>),
 };
 
-ident: String = r"[a-zA-Z_-][a-zA-Z0-9_-]*" => <>.to_owned();
-num: i32 = r"[0-9]+" => i32::from_str(<>).unwrap();
+ident: String = r"[a-zA-Z_][a-zA-Z0-9_-]*" => <>.to_owned();
+integer: i64 = {
+    r"[0-9]+" => i64::from_str(<>).unwrap(),
+    "-" <r"[0-9]+"> => -i64::from_str(<>).unwrap(),
+};
 bar: () = "|" => ();

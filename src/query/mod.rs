@@ -10,6 +10,7 @@ pub enum Query {
 #[derive(Debug, Eq, PartialEq)]
 pub enum Expression {
     String(String),
+    Integer(i64),
 }
 
 impl Query {
@@ -41,11 +42,41 @@ mod test {
     }
 
     #[test]
-    fn parse_function_one_arg_numbers() {
+    fn parse_function_one_arg_ident_numbers() {
         let expected =
             Query::Function("select".to_owned(),
                             vec![Expression::String("abc123".to_owned())]);
         let actual = Query::parse("select abc123");
+
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn parse_function_one_arg_integer() {
+        let expected =
+            Query::Function("select".to_owned(),
+                            vec![Expression::Integer(52)]);
+        let actual = Query::parse("select 52");
+
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn parse_function_one_arg_negative_integer() {
+        let expected =
+            Query::Function("select".to_owned(),
+                            vec![Expression::Integer(-52)]);
+        let actual = Query::parse("select -52");
+
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn parse_function_one_arg_negative_integer_spaced() {
+        let expected =
+            Query::Function("select".to_owned(),
+                            vec![Expression::Integer(-52)]);
+        let actual = Query::parse("select - 52");
 
         assert_eq!(expected, actual);
     }
