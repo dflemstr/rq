@@ -1,4 +1,4 @@
-pub mod context;
+mod context;
 #[cfg_attr(rustfmt, rustfmt_skip)]
 mod_path! parser (concat!(env!("OUT_DIR"), "/query/parser.rs"));
 
