@@ -1,4 +1,4 @@
-#![feature(plugin)]
+#![feature(advanced_slice_patterns, plugin, slice_patterns)]
 #![plugin(mod_path)]
 
 extern crate clap;
@@ -37,11 +37,13 @@ fn main() {
 
     let matches = match_args();
 
+    let query = query::Query::parse(matches.value_of(QUERY_ARG).unwrap());
+
     let stdin = io::stdin();
     let input = stdin.lock();
 
     if matches.is_present(INPUT_JSON_ARG) {
-        run(json_values::JsonValues::new(input.bytes()));
+        run(json_values::JsonValues::new(input.bytes()), query);
     } else {
         panic!("Only JSON parsing (-j) is implemented for now (see --help)");
     }
@@ -61,18 +63,19 @@ fn match_args<'a>() -> clap::ArgMatches<'a> {
                  .long("output-json")
                  .help("Output should be formatted as JSON values."))
         .arg(clap::Arg::with_name(QUERY_ARG)
-                 .multiple(true)
+                 .required(true)
                  .help("The query to apply."))
         .get_matches()
 }
 
-fn run<Iter>(input: Iter)
+fn run<Iter>(input: Iter, query: query::Query)
     where Iter: Iterator<Item = value::Value>
 {
     use std::io::Write;
     let mut stdout = io::stdout();
+    let context = query::Context::new();
     for value in input {
-        value.to_json(&mut stdout).unwrap();
+        query.evaluate(&context, value).to_json(&mut stdout).unwrap();
         stdout.write(&[10]).unwrap();
         stdout.flush().unwrap();
     }

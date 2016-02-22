@@ -1,13 +1,17 @@
+pub mod context;
 #[cfg_attr(rustfmt, rustfmt_skip)]
 mod_path! parser (concat!(env!("OUT_DIR"), "/query/parser.rs"));
 
-#[derive(Debug, Eq, PartialEq)]
+use value;
+pub use self::context::Context;
+
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub enum Query {
     Chain(Vec<Query>),
     Function(String, Vec<Expression>),
 }
 
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub enum Expression {
     String(String),
     Integer(i64),
@@ -16,6 +20,46 @@ pub enum Expression {
 impl Query {
     pub fn parse(raw: &str) -> Query {
         parser::parse_query(raw).unwrap()
+    }
+
+    pub fn evaluate(&self, context: &context::Context, input: value::Value) -> value::Value {
+        match *self {
+            Query::Chain(ref queries) => apply_chain(context, input, queries),
+            Query::Function(ref name, ref args) => apply_function(context, input, name, args),
+        }
+    }
+}
+
+impl Expression {
+    fn to_value(&self) -> value::Value {
+        match *self {
+            Expression::String(ref s) => value::Value::String(s.clone()),
+            Expression::Integer(i) => value::Value::I64(i),
+        }
+    }
+}
+
+fn apply_chain(context: &context::Context, input: value::Value, queries: &[Query]) -> value::Value{
+    let mut result = input;
+
+    for query in queries {
+        result = query.evaluate(context, result);
+    }
+
+    result
+}
+
+fn apply_function(context: &context::Context, input: value::Value, name: &str, args: &[Expression]) -> value::Value {
+    match context.function(name) {
+        Some(func) => {
+            let mut vals = Vec::with_capacity(args.len() + 1);
+            vals.push(input);
+            for arg in args {
+                vals.push(arg.to_value())
+            }
+            func(&vals)
+        },
+        None => value::Value::Unit,
     }
 }
 
