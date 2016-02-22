@@ -6,7 +6,6 @@ extern crate serde;
 extern crate serde_json;
 
 mod error;
-mod json_values;
 mod query;
 mod value;
 
@@ -43,7 +42,7 @@ fn main() {
     let input = stdin.lock();
 
     if matches.is_present(INPUT_JSON_ARG) {
-        run(json_values::JsonValues::new(input.bytes()), query);
+        run(value::json::JsonValues::new(input.bytes()), query);
     } else {
         panic!("Only JSON parsing (-j) is implemented for now (see --help)");
     }

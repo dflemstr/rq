@@ -6,6 +6,8 @@ use serde_json;
 
 use error;
 
+pub mod json;
+
 #[derive(Clone, Debug, PartialEq)]
 pub enum Value {
     Unit,
