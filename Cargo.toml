@@ -4,6 +4,8 @@ build = "build.rs"
 name = "rq"
 version = "0.1.0"
 
+[build-dependencies]
+
 [build-dependencies.lalrpop]
 branch = "cargo-out-dir"
 git = "https://github.com/dflemstr/lalrpop.git"
@@ -11,9 +13,12 @@ path = "lalrpop"
 
 [dependencies]
 clap = "2.1.1"
+glob = "0.2.10"
 mod_path = "0.1.6"
+protobuf = "1.0.18"
 serde = "0.6.13"
 serde_json = "0.6.0"
+xdg-basedir = "1.0.0"
 
 [dependencies.lalrpop-util]
 branch = "cargo-out-dir"

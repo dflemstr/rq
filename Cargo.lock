@@ -3,11 +3,14 @@ name = "rq"
 version = "0.1.0"
 dependencies = [
  "clap 2.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "glob 0.2.10 (registry+https://github.com/rust-lang/crates.io-index)",
  "lalrpop 0.10.0 (git+https://github.com/dflemstr/lalrpop.git?branch=cargo-out-dir)",
  "lalrpop-util 0.10.0 (git+https://github.com/dflemstr/lalrpop.git?branch=cargo-out-dir)",
  "mod_path 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "protobuf 1.0.18 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 0.6.13 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_json 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "xdg-basedir 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -80,6 +83,11 @@ dependencies = [
 [[package]]
 name = "fixedbitset"
 version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "glob"
+version = "0.2.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
@@ -177,6 +185,11 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "fixedbitset 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
+
+[[package]]
+name = "protobuf"
+version = "1.0.18"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "rand"
@@ -285,5 +298,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "winapi-build"
 version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "xdg-basedir"
+version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 

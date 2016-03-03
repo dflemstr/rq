@@ -7,6 +7,7 @@ use serde_json;
 use error;
 
 pub mod json;
+pub mod protobuf;
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum Value {

@@ -1,5 +1,3 @@
 max_width = 80
-fn_return_indent = "WithWhereClause"
-fn_arg_indent = "Tabbed"
 chain_base_indent = "Visual"
 reorder_imports = true

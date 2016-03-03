@@ -23,9 +23,9 @@ impl Query {
     }
 
     pub fn evaluate(&self,
-        context: &context::Context,
-        input: value::Value)
-        -> value::Value {
+                    context: &context::Context,
+                    input: value::Value)
+                    -> value::Value {
         match *self {
             Query::Chain(ref queries) => apply_chain(context, input, queries),
             Query::Function(ref name, ref args) => {
@@ -45,9 +45,9 @@ impl Expression {
 }
 
 fn apply_chain(context: &context::Context,
-    input: value::Value,
-    queries: &[Query])
-    -> value::Value {
+               input: value::Value,
+               queries: &[Query])
+               -> value::Value {
     let mut result = input;
 
     for query in queries {
@@ -58,10 +58,10 @@ fn apply_chain(context: &context::Context,
 }
 
 fn apply_function(context: &context::Context,
-    input: value::Value,
-    name: &str,
-    args: &[Expression])
-    -> value::Value {
+                  input: value::Value,
+                  name: &str,
+                  args: &[Expression])
+                  -> value::Value {
     match context.function(name) {
         Some(func) => {
             let mut vals = Vec::with_capacity(args.len() + 1);
