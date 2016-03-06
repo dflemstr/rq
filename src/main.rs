@@ -52,8 +52,10 @@ fn main() {
     let input = stdin.lock();
 
     if matches.is_present(INPUT_PROTOBUF_ARG) {
-        let descriptors = proto_index::compile_descriptor_set(&paths).unwrap();
-        unimplemented!()
+        let descriptors_proto = proto_index::compile_descriptor_set(&paths)
+                                    .unwrap();
+        let descriptors = value::protobuf::descriptor::Descriptors::from_proto(&descriptors_proto);
+        println!("{:#?}", descriptors);
     } else {
         run(value::json::JsonValues::new(input.bytes()), query);
     }

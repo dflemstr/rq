@@ -21,26 +21,34 @@ pub fn compile_descriptor_set
             try!(fs::create_dir_all(parent));
         }
 
-        let include_args = proto_includes.iter()
-            .map(|p| format!("-I{}", p.to_string_lossy()))
-            .collect::<Vec<_>>();
+        let include_args = proto_includes.into_iter()
+                                         .map(|p| {
+                                             format!("-I{}",
+                                                     p.to_string_lossy())
+                                         })
+                                         .collect::<Vec<_>>();
 
         let status = try!(process::Command::new("protoc")
-                          .arg("-o").arg(&cache)
-                          .args(&include_args)
-                          .args(&proto_files)
-                          .status());
+                              .arg("-o")
+                              .arg(&cache)
+                              .args(&include_args)
+                              .args(&proto_files)
+                              .status());
         if !status.success() {
             panic!("protoc descriptor compilation failed");
         }
     }
 
-    println!("descriptor cache: {:?}", cache);
-
-    unimplemented!()
+    let mut cache_file = try!(fs::File::open(&cache));
+    let descriptor_set = try!(protobuf::parse_from_reader(&mut cache_file));
+    Ok(descriptor_set)
 }
 
-fn is_cache_stale<P>(cache: &path::Path, proto_files: &[P]) -> error::Result<bool> where P: AsRef<path::Path> {
+fn is_cache_stale<P>(cache: &path::Path,
+                     proto_files: &[P])
+                     -> error::Result<bool>
+    where P: AsRef<path::Path>
+{
     use std::os::unix::fs::MetadataExt;
 
     if cache.exists() {

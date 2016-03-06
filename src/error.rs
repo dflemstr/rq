@@ -11,6 +11,7 @@ pub type Result<A> = result::Result<A, Error>;
 
 #[derive(Debug)]
 pub enum Error {
+    General(String),
     IO(io::Error),
     FromUtf8(string::FromUtf8Error),
     Protobuf(protobuf::ProtobufError),
