@@ -54,10 +54,10 @@ impl<'a> Context<'a> {
 
         while !try!(self.input.eof()) {
             let (field_number, wire_type) = try!(self.input.read_tag_unpack());
+            let number = field_number as i32;
 
             // Only handle known fields for now
-            if let Some(field) = message.fields_by_number
-                                        .get(&(field_number as i32)) {
+            if let Some(field) = message.fields_by_number.get(&number) {
                 use protobuf::descriptor::FieldDescriptorProto_Label;
                 let field = &field.upgrade().unwrap();
                 if field.proto_label ==
@@ -74,6 +74,20 @@ impl<'a> Context<'a> {
                                                             field,
                                                             wire_type));
                     result.insert(field.name.clone(), value);
+                }
+            } else {
+                use protobuf::stream::wire_format::WireType;
+                match wire_type {
+                    WireType::WireTypeStartGroup => {
+                        loop {
+                            let (_, wire_type) = try!(self.input.read_tag_unpack());
+                            if wire_type == WireType::WireTypeEndGroup {
+                                break;
+                            }
+                            try!(self.input.skip_field(wire_type));
+                        }
+                    },
+                    _ => try!(self.input.skip_field(wire_type)),
                 }
             }
         }
