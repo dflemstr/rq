@@ -8,9 +8,8 @@ use protobuf;
 use config;
 use error;
 
-pub fn compile_descriptor_set
-    (paths: &config::Paths)
-     -> error::Result<protobuf::descriptor::FileDescriptorSet> {
+pub fn compile_descriptor_set(paths: &config::Paths)
+                              -> error::Result<protobuf::descriptor::FileDescriptorSet> {
 
     let proto_includes = try!(paths.find_data("proto"));
     let proto_files = try!(paths.find_data("proto/*.proto"));
@@ -22,10 +21,7 @@ pub fn compile_descriptor_set
         }
 
         let include_args = proto_includes.into_iter()
-                                         .map(|p| {
-                                             format!("-I{}",
-                                                     p.to_string_lossy())
-                                         })
+                                         .map(|p| format!("-I{}", p.to_string_lossy()))
                                          .collect::<Vec<_>>();
 
         let status = try!(process::Command::new("protoc")
@@ -44,9 +40,7 @@ pub fn compile_descriptor_set
     Ok(descriptor_set)
 }
 
-fn is_cache_stale<P>(cache: &path::Path,
-                     proto_files: &[P])
-                     -> error::Result<bool>
+fn is_cache_stale<P>(cache: &path::Path, proto_files: &[P]) -> error::Result<bool>
     where P: AsRef<path::Path>
 {
     use std::os::unix::fs::MetadataExt;

@@ -22,15 +22,10 @@ impl Query {
         parser::parse_query(raw).unwrap()
     }
 
-    pub fn evaluate(&self,
-                    context: &context::Context,
-                    input: value::Value)
-                    -> value::Value {
+    pub fn evaluate(&self, context: &context::Context, input: value::Value) -> value::Value {
         match *self {
             Query::Chain(ref queries) => apply_chain(context, input, queries),
-            Query::Function(ref name, ref args) => {
-                apply_function(context, input, name, args)
-            }
+            Query::Function(ref name, ref args) => apply_function(context, input, name, args),
         }
     }
 }
@@ -44,10 +39,7 @@ impl Expression {
     }
 }
 
-fn apply_chain(context: &context::Context,
-               input: value::Value,
-               queries: &[Query])
-               -> value::Value {
+fn apply_chain(context: &context::Context, input: value::Value, queries: &[Query]) -> value::Value {
     let mut result = input;
 
     for query in queries {
@@ -89,9 +81,8 @@ mod test {
 
     #[test]
     fn parse_function_one_arg() {
-        let expected =
-            Query::Function("select".to_owned(),
-                            vec![Expression::String("a".to_owned())]);
+        let expected = Query::Function("select".to_owned(),
+                                       vec![Expression::String("a".to_owned())]);
         let actual = Query::parse("select a");
 
         assert_eq!(expected, actual);
@@ -99,9 +90,8 @@ mod test {
 
     #[test]
     fn parse_function_one_arg_ident_numbers() {
-        let expected =
-            Query::Function("select".to_owned(),
-                            vec![Expression::String("abc123".to_owned())]);
+        let expected = Query::Function("select".to_owned(),
+                                       vec![Expression::String("abc123".to_owned())]);
         let actual = Query::parse("select abc123");
 
         assert_eq!(expected, actual);
@@ -109,8 +99,7 @@ mod test {
 
     #[test]
     fn parse_function_one_arg_integer() {
-        let expected = Query::Function("select".to_owned(),
-                                       vec![Expression::Integer(52)]);
+        let expected = Query::Function("select".to_owned(), vec![Expression::Integer(52)]);
         let actual = Query::parse("select 52");
 
         assert_eq!(expected, actual);
@@ -118,8 +107,7 @@ mod test {
 
     #[test]
     fn parse_function_one_arg_negative_integer() {
-        let expected = Query::Function("select".to_owned(),
-                                       vec![Expression::Integer(-52)]);
+        let expected = Query::Function("select".to_owned(), vec![Expression::Integer(-52)]);
         let actual = Query::parse("select -52");
 
         assert_eq!(expected, actual);
@@ -127,8 +115,7 @@ mod test {
 
     #[test]
     fn parse_function_one_arg_negative_integer_spaced() {
-        let expected = Query::Function("select".to_owned(),
-                                       vec![Expression::Integer(-52)]);
+        let expected = Query::Function("select".to_owned(), vec![Expression::Integer(-52)]);
         let actual = Query::parse("select - 52");
 
         assert_eq!(expected, actual);
@@ -136,9 +123,8 @@ mod test {
 
     #[test]
     fn parse_function_one_arg_underscore() {
-        let expected =
-            Query::Function("select".to_owned(),
-                            vec![Expression::String("abc_def".to_owned())]);
+        let expected = Query::Function("select".to_owned(),
+                                       vec![Expression::String("abc_def".to_owned())]);
         let actual = Query::parse("select abc_def");
 
         assert_eq!(expected, actual);
@@ -146,9 +132,8 @@ mod test {
 
     #[test]
     fn parse_function_one_arg_dash() {
-        let expected =
-            Query::Function("select".to_owned(),
-                            vec![Expression::String("abc-def".to_owned())]);
+        let expected = Query::Function("select".to_owned(),
+                                       vec![Expression::String("abc-def".to_owned())]);
         let actual = Query::parse("select abc-def");
 
         assert_eq!(expected, actual);

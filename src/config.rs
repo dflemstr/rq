@@ -58,24 +58,17 @@ impl Paths {
         result
     }
 
-    pub fn find_config(&self,
-                       pattern: &str)
-                       -> error::Result<Vec<path::PathBuf>> {
+    pub fn find_config(&self, pattern: &str) -> error::Result<Vec<path::PathBuf>> {
         find(&self.config_home, &self.config_dirs, pattern)
     }
 
-    pub fn find_data(&self,
-                     pattern: &str)
-                     -> error::Result<Vec<path::PathBuf>> {
+    pub fn find_data(&self, pattern: &str) -> error::Result<Vec<path::PathBuf>> {
         find(&self.data_home, &self.data_dirs, pattern)
     }
 }
 
 
-fn find<P>(home: &path::Path,
-           dirs: &[P],
-           pattern: &str)
-           -> error::Result<Vec<path::PathBuf>>
+fn find<P>(home: &path::Path, dirs: &[P], pattern: &str) -> error::Result<Vec<path::PathBuf>>
     where P: AsRef<path::Path>
 {
     let mut result = Vec::new();

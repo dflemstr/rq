@@ -10,8 +10,7 @@ pub struct Descriptors {
     pub enums: Vec<rc::Rc<EnumDescriptor>>,
 
     // Indices
-    pub messages_by_name: collections::HashMap<String,
-                                               rc::Weak<MessageDescriptor>>,
+    pub messages_by_name: collections::HashMap<String, rc::Weak<MessageDescriptor>>,
     pub enums_by_name: collections::HashMap<String, rc::Weak<EnumDescriptor>>,
 }
 
@@ -36,10 +35,8 @@ pub struct EnumDescriptor {
     pub values: Vec<rc::Rc<EnumValueDescriptor>>,
 
     // Indices
-    pub values_by_name: collections::HashMap<String,
-                                             rc::Weak<EnumValueDescriptor>>,
-    pub values_by_number: collections::HashMap<i32,
-                                               rc::Weak<EnumValueDescriptor>>,
+    pub values_by_name: collections::HashMap<String, rc::Weak<EnumValueDescriptor>>,
+    pub values_by_number: collections::HashMap<i32, rc::Weak<EnumValueDescriptor>>,
 }
 
 #[derive(Debug)]
@@ -95,9 +92,7 @@ impl Descriptors {
         }
     }
 
-    fn add_message_type(&mut self,
-                        path: &str,
-                        message_type: &descriptor::DescriptorProto) {
+    fn add_message_type(&mut self, path: &str, message_type: &descriptor::DescriptorProto) {
         let path = format!("{}.{}", path, message_type.get_name());
 
         for nested_type in message_type.get_nested_type().iter() {
@@ -126,9 +121,7 @@ impl Descriptors {
         self.messages.push(message_ref);
     }
 
-    fn add_enum_type(&mut self,
-                     path: &str,
-                     enum_type: &descriptor::EnumDescriptorProto) {
+    fn add_enum_type(&mut self, path: &str, enum_type: &descriptor::EnumDescriptorProto) {
         let enum_name = format!("{}.{}", path, enum_type.get_name());
 
         let mut enum_descriptor = EnumDescriptor {

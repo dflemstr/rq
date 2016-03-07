@@ -33,8 +33,7 @@ impl<'a> ProtobufValues<'a> {
     fn try_next(&mut self) -> error::Result<value::Value> {
         match self.descriptors.messages_by_name.get(&self.name) {
             Some(message) => {
-                self.context.read_message(&self.descriptors,
-                                          &message.upgrade().unwrap())
+                self.context.read_message(&self.descriptors, &message.upgrade().unwrap())
             }
             None => {
                 let msg = format!("Message type not found: {}", self.name);
@@ -65,14 +64,9 @@ impl<'a> Context<'a> {
                     let mut values = repeateds.entry(field.name.clone())
                                               .or_insert_with(|| Vec::new());
 
-                    try!(self.read_repeated_field(descriptors,
-                                                  field,
-                                                  wire_type,
-                                                  &mut values));
+                    try!(self.read_repeated_field(descriptors, field, wire_type, &mut values));
                 } else {
-                    let value = try!(self.read_single_field(descriptors,
-                                                            field,
-                                                            wire_type));
+                    let value = try!(self.read_single_field(descriptors, field, wire_type));
                     result.insert(field.name.clone(), value);
                 }
             } else {
@@ -122,75 +116,47 @@ impl<'a> Context<'a> {
         };
 
         match field.proto_type {
-            TYPE_DOUBLE => {
-                wrap!(WireTypeFixed64 => F64, self.input.read_double())
-            }
-            TYPE_FLOAT => {
-                wrap!(WireTypeFixed32 => F32, self.input.read_float())
-            }
+            TYPE_DOUBLE => wrap!(WireTypeFixed64 => F64, self.input.read_double()),
+            TYPE_FLOAT => wrap!(WireTypeFixed32 => F32, self.input.read_float()),
             TYPE_INT64 => wrap!(WireTypeVarint => I64, self.input.read_int64()),
-            TYPE_UINT64 => {
-                wrap!(WireTypeVarint => U64, self.input.read_uint64())
-            }
+            TYPE_UINT64 => wrap!(WireTypeVarint => U64, self.input.read_uint64()),
             TYPE_INT32 => wrap!(WireTypeVarint => I32, self.input.read_int32()),
-            TYPE_FIXED64 => {
-                wrap!(WireTypeFixed64 => U64, self.input.read_fixed64())
-            }
-            TYPE_FIXED32 => {
-                wrap!(WireTypeFixed32 => U32, self.input.read_fixed32())
-            }
+            TYPE_FIXED64 => wrap!(WireTypeFixed64 => U64, self.input.read_fixed64()),
+            TYPE_FIXED32 => wrap!(WireTypeFixed32 => U32, self.input.read_fixed32()),
             TYPE_BOOL => wrap!(WireTypeVarint => Bool, self.input.read_bool()),
-            TYPE_STRING =>
-                wrap!(WireTypeLengthDelimited => String, self.input.read_string()),
+            TYPE_STRING => wrap!(WireTypeLengthDelimited => String, self.input.read_string()),
             TYPE_GROUP => unimplemented!(),
             TYPE_MESSAGE => {
                 match wire_type {
                     WireTypeLengthDelimited => {
-                        if let Some(message) =
-                               descriptors.messages_by_name
-                                          .get(&field.proto_type_name) {
+                        if let Some(message) = descriptors.messages_by_name
+                                                          .get(&field.proto_type_name) {
                             let message = message.upgrade().unwrap();
                             let len = try!(self.input.read_raw_varint32());
                             let old_limit = try!(self.input.push_limit(len));
-                            let result = try!(self.read_message(descriptors,
-                                                                &message));
+                            let result = try!(self.read_message(descriptors, &message));
                             self.input.pop_limit(old_limit);
                             Ok(result)
                         } else {
-                            Err(error::Error::General(format!("Missing type in schema: {}", field.proto_type_name)))
+                            Err(error::Error::General(format!("Missing type in schema: {}",
+                                                              field.proto_type_name)))
                         }
                     }
-                    _ => {
-                        Err(error::Error::from(unexpected_wire_type(wire_type)))
-                    }
+                    _ => Err(error::Error::from(unexpected_wire_type(wire_type))),
                 }
             }
-            TYPE_BYTES => {
-                wrap!(WireTypeLengthDelimited => Bytes, self.input.read_bytes())
-            }
-            TYPE_UINT32 => {
-                wrap!(WireTypeVarint => U32, self.input.read_uint32())
-            }
+            TYPE_BYTES => wrap!(WireTypeLengthDelimited => Bytes, self.input.read_bytes()),
+            TYPE_UINT32 => wrap!(WireTypeVarint => U32, self.input.read_uint32()),
             TYPE_ENUM => {
                 match wire_type {
                     WireTypeVarint => unimplemented!(),
-                    _ => {
-                        Err(error::Error::from(unexpected_wire_type(wire_type)))
-                    }
+                    _ => Err(error::Error::from(unexpected_wire_type(wire_type))),
                 }
             }
-            TYPE_SFIXED32 => {
-                wrap!(WireTypeFixed32 => I32, self.input.read_sfixed32())
-            }
-            TYPE_SFIXED64 => {
-                wrap!(WireTypeFixed64 => I64, self.input.read_sfixed64())
-            }
-            TYPE_SINT32 => {
-                wrap!(WireTypeVarint => I32, self.input.read_sint32())
-            }
-            TYPE_SINT64 => {
-                wrap!(WireTypeVarint => I64, self.input.read_sint64())
-            }
+            TYPE_SFIXED32 => wrap!(WireTypeFixed32 => I32, self.input.read_sfixed32()),
+            TYPE_SFIXED64 => wrap!(WireTypeFixed64 => I64, self.input.read_sfixed64()),
+            TYPE_SINT32 => wrap!(WireTypeVarint => I32, self.input.read_sint32()),
+            TYPE_SINT64 => wrap!(WireTypeVarint => I64, self.input.read_sint64()),
         }
     }
 
@@ -243,9 +209,7 @@ impl<'a> Context<'a> {
         };
 
         match field.proto_type {
-            TYPE_DOUBLE => {
-                packable!(WireTypeFixed64 => 8, F64, i.read_double())
-            }
+            TYPE_DOUBLE => packable!(WireTypeFixed64 => 8, F64, i.read_double()),
             TYPE_FLOAT => packable!(WireTypeFixed32 => 4, F32, i.read_float()),
             TYPE_INT64 => packable!(WireTypeVarint => I64, i.read_int64()),
             TYPE_UINT64 => packable!(WireTypeVarint => U64, i.read_uint64()),
@@ -253,9 +217,7 @@ impl<'a> Context<'a> {
             TYPE_FIXED64 => packable!(WireTypeFixed64 => U64, i.read_fixed64()),
             TYPE_FIXED32 => packable!(WireTypeFixed32 => U32, i.read_fixed32()),
             TYPE_BOOL => packable!(WireTypeVarint => Bool, i.read_bool()),
-            TYPE_STRING => {
-                scalar!(WireTypeLengthDelimited => String, i.read_string())
-            }
+            TYPE_STRING => scalar!(WireTypeLengthDelimited => String, i.read_string()),
             TYPE_GROUP => unimplemented!(),
             TYPE_MESSAGE => {
                 match wire_type {
@@ -276,12 +238,8 @@ impl<'a> Context<'a> {
                     _ => unimplemented!(),
                 }
             }
-            TYPE_SFIXED32 => {
-                packable!(WireTypeFixed32 => 4, I32, i.read_sfixed32())
-            }
-            TYPE_SFIXED64 => {
-                packable!(WireTypeFixed64 => 8, I64, i.read_sfixed64())
-            }
+            TYPE_SFIXED32 => packable!(WireTypeFixed32 => 4, I32, i.read_sfixed32()),
+            TYPE_SFIXED64 => packable!(WireTypeFixed64 => 8, I64, i.read_sfixed64()),
             TYPE_SINT32 => packable!(WireTypeVarint => 4, I32, i.read_sint32()),
             TYPE_SINT64 => packable!(WireTypeVarint => 8, I64, i.read_sint64()),
         }
