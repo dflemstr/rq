@@ -2,7 +2,10 @@
 #![plugin(mod_path)]
 
 extern crate clap;
+extern crate env_logger;
 extern crate glob;
+#[macro_use]
+extern crate log;
 extern crate protobuf;
 extern crate serde;
 extern crate serde_json;
@@ -43,18 +46,25 @@ const QUERY_ARG: &'static str = "query";
 fn main() {
     use std::io::Read;
 
+    env_logger::init().unwrap();
+
     let paths = config::Paths::new().unwrap();
     let matches = match_args();
 
     let query = query::Query::parse(matches.value_of(QUERY_ARG).unwrap());
 
     let stdin = io::stdin();
-    let input = stdin.lock();
+    let mut input = stdin.lock();
 
     if matches.is_present(INPUT_PROTOBUF_ARG) {
+        let name = matches.value_of(INPUT_PROTOBUF_ARG).unwrap();
+        debug!("Input is protobuf with argument {}", name);
+
         let descriptors_proto = proto_index::compile_descriptor_set(&paths).unwrap();
         let descriptors = value::protobuf::descriptor::Descriptors::from_proto(&descriptors_proto);
-        println!("{:#?}", descriptors);
+        let stream = protobuf::CodedInputStream::new(&mut input);
+        let values = value::protobuf::ProtobufValues::new(descriptors, name.to_owned(), stream);
+        run(values, query);
     } else {
         run(value::json::JsonValues::new(input.bytes()), query);
     }
@@ -105,13 +115,17 @@ fn match_args<'a>() -> clap::ArgMatches<'a> {
 }
 
 fn run<Iter>(input: Iter, query: query::Query)
-    where Iter: Iterator<Item = value::Value>
+    where Iter: Iterator<Item = error::Result<value::Value>>
 {
     use std::io::Write;
     let mut stdout = io::stdout();
     let context = query::Context::new();
+
+    debug!("Starting input consumption");
+
     for value in input {
-        query.evaluate(&context, value).to_json(&mut stdout).unwrap();
+        debug!("Consuming an input value");
+        query.evaluate(&context, value.unwrap()).to_json(&mut stdout).unwrap();
         stdout.write(&[10]).unwrap();
         stdout.flush().unwrap();
     }

@@ -13,7 +13,9 @@ path = "lalrpop"
 
 [dependencies]
 clap = "2.1.1"
+env_logger = "0.3.2"
 glob = "0.2.10"
+log = "0.3.5"
 mod_path = "0.1.6"
 protobuf = "1.0.18"
 serde = "0.6.13"

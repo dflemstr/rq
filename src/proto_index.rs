@@ -15,8 +15,15 @@ pub fn compile_descriptor_set(paths: &config::Paths)
     let proto_files = try!(paths.find_data("proto/*.proto"));
     let cache = paths.preferred_cache("descriptor-cache.pb");
 
+    debug!("Proto includes: {:?}", proto_includes);
+    debug!("Proto files: {:?}", proto_files);
+    debug!("Proto cache location: {:?}", cache);
+
     if try!(is_cache_stale(&cache, &proto_files)) {
+        debug!("Proto descriptor cache is stale; recomputing");
+
         if let Some(parent) = cache.parent() {
+            debug!("Creating directory {:?}", parent);
             try!(fs::create_dir_all(parent));
         }
 
@@ -33,10 +40,15 @@ pub fn compile_descriptor_set(paths: &config::Paths)
         if !status.success() {
             panic!("protoc descriptor compilation failed");
         }
+
+        debug!("Proto descriptor cache regenerated");
     }
 
     let mut cache_file = try!(fs::File::open(&cache));
     let descriptor_set = try!(protobuf::parse_from_reader(&mut cache_file));
+
+    debug!("Successfully parsed descriptor set from cache");
+
     Ok(descriptor_set)
 }
 

@@ -18,10 +18,11 @@ impl Context {
                              match values {
                                  [value::Value::Map(ref m), value::Value::String(ref s)] => {
                                      m.get(s).map(|v| v.clone()).unwrap_or(value::Value::Unit)
-                                 }
+                                 },
                                  _ => value::Value::Unit,
                              }
                          }));
+        functions.insert("id".to_owned(), Box::new(|values: &[value::Value]| values[0].clone()));
 
         Context { functions: functions }
     }

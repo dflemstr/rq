@@ -2,6 +2,7 @@ use std::io;
 
 use serde_json;
 
+use error;
 use value;
 
 pub struct JsonValues<Iter>
@@ -21,14 +22,21 @@ impl<Iter> JsonValues<Iter>
 impl<Iter> Iterator for JsonValues<Iter>
     where Iter: Iterator<Item = io::Result<u8>>
 {
-    type Item = value::Value;
+    type Item = error::Result<value::Value>;
 
     fn next(&mut self) -> Option<Self::Item> {
         use serde::de::Deserialize;
+        use serde_json::error::Error::*;
+        use serde_json::error::ErrorCode::*;
 
-        let json = serde_json::Value::deserialize(&mut self.deserializer).ok();
-
-        json.map(json_to_value)
+        match serde_json::Value::deserialize(&mut self.deserializer) {
+            Ok(v) => Some(Ok(json_to_value(v))),
+            Err(SyntaxError(EOFWhileParsingList, _, _)) => None,
+            Err(SyntaxError(EOFWhileParsingObject, _, _)) => None,
+            Err(SyntaxError(EOFWhileParsingString, _, _)) => None,
+            Err(SyntaxError(EOFWhileParsingValue, _, _)) => None,
+            Err(e) => Some(Err(error::Error::from(e))),
+        }
     }
 }
 
@@ -42,11 +50,11 @@ fn json_to_value(json: serde_json::Value) -> value::Value {
         serde_json::Value::String(v) => value::Value::String(v),
         serde_json::Value::Array(v) => {
             value::Value::Sequence(v.into_iter().map(json_to_value).collect())
-        }
+        },
         serde_json::Value::Object(v) => {
             value::Value::Map(v.into_iter()
                                .map(|(k, v)| (k, json_to_value(v)))
                                .collect())
-        }
+        },
     }
 }

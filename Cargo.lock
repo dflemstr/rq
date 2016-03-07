@@ -3,9 +3,11 @@ name = "rq"
 version = "0.1.0"
 dependencies = [
  "clap 2.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "env_logger 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "glob 0.2.10 (registry+https://github.com/rust-lang/crates.io-index)",
  "lalrpop 0.10.0 (git+https://github.com/dflemstr/lalrpop.git?branch=cargo-out-dir)",
  "lalrpop-util 0.10.0 (git+https://github.com/dflemstr/lalrpop.git?branch=cargo-out-dir)",
+ "log 0.3.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "mod_path 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "protobuf 1.0.18 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 0.6.13 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -78,6 +80,15 @@ dependencies = [
  "regex 0.1.52 (registry+https://github.com/rust-lang/crates.io-index)",
  "rustc-serialize 0.3.18 (registry+https://github.com/rust-lang/crates.io-index)",
  "strsim 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "env_logger"
+version = "0.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "log 0.3.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "regex 0.1.52 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -155,6 +166,14 @@ source = "git+https://github.com/dflemstr/lalrpop.git?branch=cargo-out-dir#79356
 name = "libc"
 version = "0.2.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "log"
+version = "0.3.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "libc 0.2.7 (registry+https://github.com/rust-lang/crates.io-index)",
+]
 
 [[package]]
 name = "memchr"

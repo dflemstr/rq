@@ -62,7 +62,7 @@ fn apply_function(context: &context::Context,
                 vals.push(arg.to_value())
             }
             func(&vals)
-        }
+        },
         None => value::Value::Unit,
     }
 }
