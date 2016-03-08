@@ -1,5 +1,5 @@
 [root]
-name = "rq"
+name = "record-query"
 version = "0.1.0"
 dependencies = [
  "clap 2.1.2 (registry+https://github.com/rust-lang/crates.io-index)",

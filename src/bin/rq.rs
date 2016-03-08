@@ -1,23 +1,13 @@
-#![feature(advanced_slice_patterns, plugin, slice_patterns)]
-#![plugin(mod_path)]
-
 extern crate clap;
 extern crate env_logger;
-extern crate glob;
 #[macro_use]
 extern crate log;
 extern crate protobuf;
-extern crate serde;
-extern crate serde_json;
-extern crate xdg_basedir;
-
-mod config;
-mod error;
-mod proto_index;
-mod query;
-mod value;
+extern crate record_query;
 
 use std::io;
+
+use record_query as rq;
 
 const ABOUT: &'static str = r#"
 A tool for manipulating data records.  Similar in spirit to awk(1),
@@ -36,6 +26,9 @@ See 'man rq' for in-depth documentation."#;
 const INPUT_FORMAT_GROUP: &'static str = "input-format";
 const OUTPUT_FORMAT_GROUP: &'static str = "output-format";
 
+const PROTOBUF_CMD: &'static str = "protobuf";
+const PROTOBUF_ADD_CMD: &'static str = "protobuf-add";
+
 const INPUT_JSON_ARG: &'static str = "input-json";
 const OUTPUT_JSON_ARG: &'static str = "output-json";
 const INPUT_PROTOBUF_ARG: &'static str = "input-protobuf";
@@ -48,10 +41,10 @@ fn main() {
 
     env_logger::init().unwrap();
 
-    let paths = config::Paths::new().unwrap();
+    let paths = rq::config::Paths::new().unwrap();
     let matches = match_args();
 
-    let query = query::Query::parse(matches.value_of(QUERY_ARG).unwrap());
+    let query = rq::query::Query::parse(matches.value_of(QUERY_ARG).unwrap());
 
     let stdin = io::stdin();
     let mut input = stdin.lock();
@@ -60,13 +53,13 @@ fn main() {
         let name = matches.value_of(INPUT_PROTOBUF_ARG).unwrap();
         debug!("Input is protobuf with argument {}", name);
 
-        let descriptors_proto = proto_index::compile_descriptor_set(&paths).unwrap();
-        let descriptors = value::protobuf::descriptor::Descriptors::from_proto(&descriptors_proto);
+        let descriptors_proto = rq::proto_index::compile_descriptor_set(&paths).unwrap();
+        let descriptors = rq::value::protobuf::descriptor::Descriptors::from_proto(&descriptors_proto);
         let stream = protobuf::CodedInputStream::new(&mut input);
-        let values = value::protobuf::ProtobufValues::new(descriptors, name.to_owned(), stream);
+        let values = rq::value::protobuf::ProtobufValues::new(descriptors, name.to_owned(), stream);
         run(values, query);
     } else {
-        run(value::json::JsonValues::new(input.bytes()), query);
+        run(rq::value::json::JsonValues::new(input.bytes()), query);
     }
 }
 
@@ -114,12 +107,12 @@ fn match_args<'a>() -> clap::ArgMatches<'a> {
         .get_matches()
 }
 
-fn run<Iter>(input: Iter, query: query::Query)
-    where Iter: Iterator<Item = error::Result<value::Value>>
+fn run<Iter>(input: Iter, query: rq::query::Query)
+    where Iter: Iterator<Item = rq::error::Result<rq::value::Value>>
 {
     use std::io::Write;
     let mut stdout = io::stdout();
-    let context = query::Context::new();
+    let context = rq::query::Context::new();
 
     debug!("Starting input consumption");
 
