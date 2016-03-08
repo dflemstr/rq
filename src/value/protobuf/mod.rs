@@ -1,5 +1,4 @@
 use std::collections;
-use std::rc;
 
 use protobuf;
 
@@ -55,7 +54,9 @@ impl<'a> Context<'a> {
             let (field_number, wire_type) = try!(self.input.read_tag_unpack());
             let number = field_number as i32;
 
-            debug!("Encountered field with number {} type {:?}", number, wire_type);
+            debug!("Encountered field with number {} type {:?}",
+                   number,
+                   wire_type);
 
             // Only handle known fields for now
             if let Some(field) = message.fields_by_number.get(&number) {
@@ -239,7 +240,8 @@ impl<'a> Context<'a> {
             TYPE_MESSAGE => {
                 match wire_type {
                     WireTypeLengthDelimited => {
-                        if let Some(message) = descriptors.messages_by_name.get(&field.proto_type_name) {
+                        if let Some(message) = descriptors.messages_by_name
+                                                          .get(&field.proto_type_name) {
                             let message = message.upgrade().unwrap();
                             let len = try!(self.input.read_raw_varint32());
                             let old_limit = try!(self.input.push_limit(len));
@@ -247,7 +249,8 @@ impl<'a> Context<'a> {
                             self.input.pop_limit(old_limit);
                             values.push(result);
                         } else {
-                            let message = format!("Missing type in schema: {}", field.proto_type_name);
+                            let message = format!("Missing type in schema: {}",
+                                                  field.proto_type_name);
                             return Err(error::Error::General(message));
                         }
                     },

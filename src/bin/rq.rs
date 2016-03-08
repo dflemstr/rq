@@ -6,6 +6,7 @@ extern crate protobuf;
 extern crate record_query;
 
 use std::io;
+use std::path;
 
 use record_query as rq;
 
@@ -23,11 +24,14 @@ By default, the input and output format is JSON.
 
 See 'man rq' for in-depth documentation."#;
 
+const AUTHOR: &'static str = "David Flemström <dflemstr@spotify.com>";
+
 const INPUT_FORMAT_GROUP: &'static str = "input-format";
 const OUTPUT_FORMAT_GROUP: &'static str = "output-format";
 
 const PROTOBUF_CMD: &'static str = "protobuf";
-const PROTOBUF_ADD_CMD: &'static str = "protobuf-add";
+const PROTOBUF_ADD_CMD: &'static str = "add";
+const PROTOBUF_ADD_INPUT_ARG: &'static str = "protobuf-add-input";
 
 const INPUT_JSON_ARG: &'static str = "input-json";
 const OUTPUT_JSON_ARG: &'static str = "output-json";
@@ -44,30 +48,42 @@ fn main() {
     let paths = rq::config::Paths::new().unwrap();
     let matches = match_args();
 
-    let query = rq::query::Query::parse(matches.value_of(QUERY_ARG).unwrap());
-
-    let stdin = io::stdin();
-    let mut input = stdin.lock();
-
-    if matches.is_present(INPUT_PROTOBUF_ARG) {
-        let name = matches.value_of(INPUT_PROTOBUF_ARG).unwrap();
-        debug!("Input is protobuf with argument {}", name);
-
-        let descriptors_proto = rq::proto_index::compile_descriptor_set(&paths).unwrap();
-        let descriptors = rq::value::protobuf::descriptor::Descriptors::from_proto(&descriptors_proto);
-        let stream = protobuf::CodedInputStream::new(&mut input);
-        let values = rq::value::protobuf::ProtobufValues::new(descriptors, name.to_owned(), stream);
-        run(values, query);
+    if let Some(matches) = matches.subcommand_matches(PROTOBUF_CMD) {
+        if let Some(matches) = matches.subcommand_matches(PROTOBUF_ADD_CMD) {
+            let input = matches.value_of(PROTOBUF_ADD_INPUT_ARG).unwrap();
+            rq::proto_index::add_file(&paths, path::Path::new(input)).unwrap();
+        }
     } else {
-        run(rq::value::json::JsonValues::new(input.bytes()), query);
+
+        let query = rq::query::Query::parse(matches.value_of(QUERY_ARG).unwrap());
+
+        let stdin = io::stdin();
+        let mut input = stdin.lock();
+
+        if matches.is_present(INPUT_PROTOBUF_ARG) {
+            let name = matches.value_of(INPUT_PROTOBUF_ARG).unwrap();
+            debug!("Input is protobuf with argument {}", name);
+
+            let descriptors_proto = rq::proto_index::compile_descriptor_set(&paths).unwrap();
+            let descriptors =
+                rq::value::protobuf::descriptor::Descriptors::from_proto(&descriptors_proto);
+            let stream = protobuf::CodedInputStream::new(&mut input);
+            let values = rq::value::protobuf::ProtobufValues::new(descriptors,
+                                                                  name.to_owned(),
+                                                                  stream);
+            run(values, query);
+        } else {
+            run(rq::value::json::JsonValues::new(input.bytes()), query);
+        }
     }
 }
 
 fn match_args<'a>() -> clap::ArgMatches<'a> {
     clap::App::new("rq - Record query")
         .version(env!("CARGO_PKG_VERSION"))
-        .author("David Flemström <dflemstr@spotify.com>")
+        .author(AUTHOR)
         .about(ABOUT)
+        .setting(clap::AppSettings::SubcommandsNegateReqs)
         .group(clap::ArgGroup::with_name(INPUT_FORMAT_GROUP))
         .group(clap::ArgGroup::with_name(OUTPUT_FORMAT_GROUP))
         .arg(clap::Arg::with_name(INPUT_JSON_ARG)
@@ -104,6 +120,17 @@ fn match_args<'a>() -> clap::ArgMatches<'a> {
         .arg(clap::Arg::with_name(QUERY_ARG)
                  .required(true)
                  .help("The query to apply."))
+        .subcommand(clap::SubCommand::with_name(PROTOBUF_CMD)
+                        .about("Control protobuf configuration and data")
+                        .author(AUTHOR)
+                        .subcommand(clap::SubCommand::with_name(PROTOBUF_ADD_CMD)
+                                        .about("Add a schema file to the rq registry")
+                                        .author(AUTHOR)
+                                        .arg(clap::Arg::with_name(PROTOBUF_ADD_INPUT_ARG)
+                                                 .required(true)
+                                                 .value_name("schema")
+                                                 .help("The path to a .proto file to add to \
+                                                        the rq registry"))))
         .get_matches()
 }
 

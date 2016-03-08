@@ -22,7 +22,8 @@ impl Context {
                                  _ => value::Value::Unit,
                              }
                          }));
-        functions.insert("id".to_owned(), Box::new(|values: &[value::Value]| values[0].clone()));
+        functions.insert("id".to_owned(),
+                         Box::new(|values: &[value::Value]| values[0].clone()));
 
         Context { functions: functions }
     }
