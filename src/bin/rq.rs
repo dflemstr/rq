@@ -1,3 +1,4 @@
+#[macro_use]
 extern crate clap;
 extern crate env_logger;
 #[macro_use]
@@ -9,6 +10,8 @@ use std::io;
 use std::path;
 
 use record_query as rq;
+
+const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 
 const ABOUT: &'static str = r#"
 A tool for manipulating data records.  Similar in spirit to awk(1),
@@ -26,20 +29,6 @@ See 'man rq' for in-depth documentation."#;
 
 const AUTHOR: &'static str = "David Flemström <dflemstr@spotify.com>";
 
-const INPUT_FORMAT_GROUP: &'static str = "input-format";
-const OUTPUT_FORMAT_GROUP: &'static str = "output-format";
-
-const PROTOBUF_CMD: &'static str = "protobuf";
-const PROTOBUF_ADD_CMD: &'static str = "add";
-const PROTOBUF_ADD_INPUT_ARG: &'static str = "protobuf-add-input";
-
-const INPUT_JSON_ARG: &'static str = "input-json";
-const OUTPUT_JSON_ARG: &'static str = "output-json";
-const INPUT_PROTOBUF_ARG: &'static str = "input-protobuf";
-const OUTPUT_PROTOBUF_ARG: &'static str = "output-protobuf";
-
-const QUERY_ARG: &'static str = "query";
-
 fn main() {
     use std::io::Read;
 
@@ -48,20 +37,19 @@ fn main() {
     let paths = rq::config::Paths::new().unwrap();
     let matches = match_args();
 
-    if let Some(matches) = matches.subcommand_matches(PROTOBUF_CMD) {
-        if let Some(matches) = matches.subcommand_matches(PROTOBUF_ADD_CMD) {
-            let input = matches.value_of(PROTOBUF_ADD_INPUT_ARG).unwrap();
-            rq::proto_index::add_file(&paths, path::Path::new(input)).unwrap();
+    if let Some(matches) = matches.subcommand_matches("protobuf") {
+        if let Some(matches) = matches.subcommand_matches("add") {
+            let schema = matches.value_of("schema").unwrap();
+            rq::proto_index::add_file(&paths, path::Path::new(schema)).unwrap();
         }
     } else {
-
-        let query = rq::query::Query::parse(matches.value_of(QUERY_ARG).unwrap());
+        let query = rq::query::Query::parse(matches.value_of("query").unwrap());
 
         let stdin = io::stdin();
         let mut input = stdin.lock();
 
-        if matches.is_present(INPUT_PROTOBUF_ARG) {
-            let name = matches.value_of(INPUT_PROTOBUF_ARG).unwrap();
+        if matches.is_present("input_protobuf") {
+            let name = matches.value_of("input_protobuf").unwrap();
             debug!("Input is protobuf with argument {}", name);
 
             let descriptors_proto = rq::proto_index::compile_descriptor_set(&paths).unwrap();
@@ -79,59 +67,40 @@ fn main() {
 }
 
 fn match_args<'a>() -> clap::ArgMatches<'a> {
-    clap::App::new("rq - Record query")
-        .version(env!("CARGO_PKG_VERSION"))
-        .author(AUTHOR)
-        .about(ABOUT)
-        .setting(clap::AppSettings::SubcommandsNegateReqs)
-        .group(clap::ArgGroup::with_name(INPUT_FORMAT_GROUP))
-        .group(clap::ArgGroup::with_name(OUTPUT_FORMAT_GROUP))
-        .arg(clap::Arg::with_name(INPUT_JSON_ARG)
-                 .group(INPUT_FORMAT_GROUP)
-                 .short("j")
-                 .long("input-json")
-                 .help("Input is white-space separated JSON values."))
-        .arg(clap::Arg::with_name(OUTPUT_JSON_ARG)
-                 .group(OUTPUT_FORMAT_GROUP)
-                 .short("J")
-                 .long("output-json")
-                 .help("Output should be formatted as JSON values."))
-        .arg(clap::Arg::with_name(INPUT_PROTOBUF_ARG)
-                 .group(INPUT_FORMAT_GROUP)
-                 .short("p")
-                 .long("input-protobuf")
-                 .takes_value(true)
-                 .value_name("schema-alias:MessageType")
-                 .next_line_help(true)
-                 .help("Input is a single protocol buffer object.  The \
-                        argument refers to a schema alias defined in the \
-                        config."))
-        .arg(clap::Arg::with_name(OUTPUT_PROTOBUF_ARG)
-                 .group(OUTPUT_FORMAT_GROUP)
-                 .short("P")
-                 .long("output-protobuf")
-                 .takes_value(true)
-                 .value_name("schema-alias:MessageType")
-                 .next_line_help(true)
-                 .help("Output should be formatted as protocol buffer \
-                        objects.  The argument refers to a schema alias \
-                        defined in the config, but if it is omitted and -p \
-                        was used, the input schema is used instead."))
-        .arg(clap::Arg::with_name(QUERY_ARG)
-                 .required(true)
-                 .help("The query to apply."))
-        .subcommand(clap::SubCommand::with_name(PROTOBUF_CMD)
-                        .about("Control protobuf configuration and data")
-                        .author(AUTHOR)
-                        .subcommand(clap::SubCommand::with_name(PROTOBUF_ADD_CMD)
-                                        .about("Add a schema file to the rq registry")
-                                        .author(AUTHOR)
-                                        .arg(clap::Arg::with_name(PROTOBUF_ADD_INPUT_ARG)
-                                                 .required(true)
-                                                 .value_name("schema")
-                                                 .help("The path to a .proto file to add to \
-                                                        the rq registry"))))
-        .get_matches()
+    let app = clap_app!(rq =>
+      (version: VERSION)
+      (author: AUTHOR)
+      (about: ABOUT)
+      (@setting SubcommandsNegateReqs)
+      (@arg query: +required
+       "The query to apply.")
+      (@group input =>
+        (@attributes +required)
+        (@arg input_json: -j --input-json
+         "Input is white-space separated JSON values.")
+        (@arg input_protobuf: -p --input-protobuf <message> +next_line_help
+         "Input is a single protocol buffer message.  The argument must be the \
+          fully qualified message type e.g. \
+          '.google.protobuf.DescriptorProto'.")
+      )
+      (@group output =>
+        (@arg output_json: -J --output-json
+         "Output should be formatted as JSON values.")
+        (@arg output_protobuf: -P --output-protobuf <message> +next_line_help
+         "Output should be formatted as protocol buffer objects.  The argument \
+          must be the fully qualified message type e.g. \
+          '.google.protobuf.DescriptorProto'.")
+      )
+      (@subcommand protobuf =>
+        (about: "Control protobuf configuration and data.")
+        (@subcommand add =>
+          (about: "Add a schema file to the rq registry.")
+          (@arg schema: +required
+           "The path to a .proto file to add to the rq registry.")
+        )
+      )
+    );
+    app.get_matches()
 }
 
 fn run<Iter>(input: Iter, query: rq::query::Query)
