@@ -1,5 +1,5 @@
 [package]
-authors = ["David Flemström <dflemstr@spotify.com>"]
+authors = ["David Flemström <david.flemstrom@gmail.com>"]
 build = "build.rs"
 name = "record-query"
 version = "0.1.0"

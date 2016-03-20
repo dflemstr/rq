@@ -27,7 +27,7 @@ By default, the input and output format is JSON.
 
 See 'man rq' for in-depth documentation."#;
 
-const AUTHOR: &'static str = "David Flemström <dflemstr@spotify.com>";
+const AUTHOR: &'static str = "David Flemström <david.flemstrom@gmail.com>";
 
 fn main() {
     use std::io::Read;
