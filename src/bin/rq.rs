@@ -78,59 +78,62 @@ fn main() {
     }
 }
 
+#[cfg_attr(rustfmt, rustfmt_skip)]
 fn match_args<'a>() -> clap::ArgMatches<'a> {
+    use clap::AppSettings;
+    use clap::Arg;
+    use clap::ArgGroup;
+    use clap::SubCommand;
+
     clap::App::new("rq - Record query")
         .version(env!("CARGO_PKG_VERSION"))
         .author(AUTHOR)
         .about(ABOUT)
-        .setting(clap::AppSettings::SubcommandsNegateReqs)
-        .group(clap::ArgGroup::with_name(INPUT_FORMAT_GROUP))
-        .group(clap::ArgGroup::with_name(OUTPUT_FORMAT_GROUP))
-        .arg(clap::Arg::with_name(INPUT_JSON_ARG)
-                 .group(INPUT_FORMAT_GROUP)
-                 .short("j")
-                 .long("input-json")
-                 .help("Input is white-space separated JSON values."))
-        .arg(clap::Arg::with_name(OUTPUT_JSON_ARG)
-                 .group(OUTPUT_FORMAT_GROUP)
-                 .short("J")
-                 .long("output-json")
-                 .help("Output should be formatted as JSON values."))
-        .arg(clap::Arg::with_name(INPUT_PROTOBUF_ARG)
-                 .group(INPUT_FORMAT_GROUP)
-                 .short("p")
-                 .long("input-protobuf")
-                 .takes_value(true)
-                 .value_name("schema-alias:MessageType")
-                 .next_line_help(true)
-                 .help("Input is a single protocol buffer object.  The \
-                        argument refers to a schema alias defined in the \
-                        config."))
-        .arg(clap::Arg::with_name(OUTPUT_PROTOBUF_ARG)
-                 .group(OUTPUT_FORMAT_GROUP)
-                 .short("P")
-                 .long("output-protobuf")
-                 .takes_value(true)
-                 .value_name("schema-alias:MessageType")
-                 .next_line_help(true)
-                 .help("Output should be formatted as protocol buffer \
-                        objects.  The argument refers to a schema alias \
-                        defined in the config, but if it is omitted and -p \
-                        was used, the input schema is used instead."))
-        .arg(clap::Arg::with_name(QUERY_ARG)
-                 .required(true)
-                 .help("The query to apply."))
-        .subcommand(clap::SubCommand::with_name(PROTOBUF_CMD)
-                        .about("Control protobuf configuration and data")
-                        .author(AUTHOR)
-                        .subcommand(clap::SubCommand::with_name(PROTOBUF_ADD_CMD)
-                                        .about("Add a schema file to the rq registry")
-                                        .author(AUTHOR)
-                                        .arg(clap::Arg::with_name(PROTOBUF_ADD_INPUT_ARG)
-                                                 .required(true)
-                                                 .value_name("schema")
-                                                 .help("The path to a .proto file to add to \
-                                                        the rq registry"))))
+        .setting(AppSettings::SubcommandsNegateReqs)
+        .group(ArgGroup::with_name(INPUT_FORMAT_GROUP))
+        .group(ArgGroup::with_name(OUTPUT_FORMAT_GROUP))
+        .arg(Arg::with_name(INPUT_JSON_ARG)
+             .group(INPUT_FORMAT_GROUP)
+             .short("j")
+             .long("input-json")
+             .help("Input is white-space separated JSON values."))
+        .arg(Arg::with_name(OUTPUT_JSON_ARG)
+             .group(OUTPUT_FORMAT_GROUP)
+             .short("J")
+             .long("output-json")
+             .help("Output should be formatted as JSON values."))
+        .arg(Arg::with_name(INPUT_PROTOBUF_ARG)
+             .group(INPUT_FORMAT_GROUP)
+             .short("p")
+             .long("input-protobuf")
+             .takes_value(true)
+             .value_name(".package.MessageType")
+             .next_line_help(true)
+             .help("Input is a single protocol buffer object.  The argument refers to the fully \
+                    qualified name of the message type (including the leading '.')"))
+        .arg(Arg::with_name(OUTPUT_PROTOBUF_ARG)
+             .group(OUTPUT_FORMAT_GROUP)
+             .short("P")
+             .long("output-protobuf")
+             .takes_value(true)
+             .value_name(".package.MessageType")
+             .next_line_help(true)
+             .help("Output should be formatted as protocol buffer objects.  The argument refers \
+                    to the fully qualified name of the message type (including the leading '.'), \
+                    but if it is omitted and -p was used, the input schema is used instead."))
+        .arg(Arg::with_name(QUERY_ARG)
+             .required(true)
+             .help("The query to apply."))
+        .subcommand(SubCommand::with_name(PROTOBUF_CMD)
+                    .about("Control protobuf configuration and data")
+                    .author(AUTHOR)
+                    .subcommand(SubCommand::with_name(PROTOBUF_ADD_CMD)
+                                .about("Add a schema file to the rq registry")
+                                .author(AUTHOR)
+                                .arg(Arg::with_name(PROTOBUF_ADD_INPUT_ARG)
+                                     .required(true)
+                                     .value_name("schema")
+                                     .help("The path to a .proto file to add to the rq registry"))))
         .get_matches()
 }
 
