@@ -12,6 +12,7 @@ git = "https://github.com/dflemstr/lalrpop.git"
 path = "lalrpop"
 
 [dependencies]
+clap = "2.1.1"
 env_logger = "0.3.2"
 glob = "0.2.10"
 log = "0.3.5"
@@ -20,10 +21,6 @@ protobuf = "1.0.18"
 serde = "0.6.13"
 serde_json = "0.6.0"
 xdg-basedir = "1.0.0"
-
-[dependencies.clap]
-version = "2.1.1"
-features = ["unstable"]
 
 [dependencies.lalrpop-util]
 branch = "cargo-out-dir"
