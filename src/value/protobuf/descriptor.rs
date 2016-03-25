@@ -1,4 +1,5 @@
 use std::collections;
+use std::fmt;
 use std::rc;
 
 use protobuf::descriptor;
@@ -184,5 +185,60 @@ impl EnumDescriptor {
         self.values_by_name.insert(name, weak_by_name);
         self.values_by_number.insert(number, weak_by_number);
         self.values.push(value_ref);
+    }
+}
+
+impl fmt::Display for FieldDescriptor {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        use protobuf::descriptor::FieldDescriptorProto_Label::*;
+        let kind = match self.proto_label {
+            LABEL_OPTIONAL => "optional",
+            LABEL_REQUIRED => "required",
+            LABEL_REPEATED => "repeated",
+        };
+
+        let type_description = describe_proto_type(self.proto_type);
+
+        if self.proto_type_name.len() > 0 {
+            write!(f,
+                   "{:?} (number {}, {}, {} {})",
+                   self.name,
+                   self.number,
+                   kind,
+                   type_description,
+                   self.proto_type_name)
+        } else {
+            write!(f,
+                   "{:?} (number {}, {}, {})",
+                   self.name,
+                   self.number,
+                   kind,
+                   type_description)
+        }
+    }
+}
+
+fn describe_proto_type(proto_type: descriptor::FieldDescriptorProto_Type) -> &'static str {
+    use protobuf::descriptor::FieldDescriptorProto_Type::*;
+
+    match proto_type {
+        TYPE_DOUBLE => "double",
+        TYPE_FLOAT => "float",
+        TYPE_INT64 => "int64",
+        TYPE_UINT64 => "uint64",
+        TYPE_INT32 => "int32",
+        TYPE_FIXED64 => "fixed64",
+        TYPE_FIXED32 => "fixed32",
+        TYPE_BOOL => "bool",
+        TYPE_STRING => "string",
+        TYPE_GROUP => "group",
+        TYPE_MESSAGE => "message",
+        TYPE_BYTES => "bytes",
+        TYPE_UINT32 => "uint32",
+        TYPE_ENUM => "enum",
+        TYPE_SFIXED32 => "sfixed32",
+        TYPE_SFIXED64 => "sfixed64",
+        TYPE_SINT32 => "sint32",
+        TYPE_SINT64 => "sint64",
     }
 }

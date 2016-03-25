@@ -113,7 +113,6 @@ impl<'a> Context<'a> {
                          -> error::Result<value::Value> {
         use protobuf::descriptor::FieldDescriptorProto_Type::*;
         use protobuf::stream::wire_format::WireType::*;
-        use protobuf::rt::unexpected_wire_type;
         use value::Value::*;
 
         macro_rules! wrap {
@@ -123,7 +122,7 @@ impl<'a> Context<'a> {
                         debug!("Reading a {}", stringify!($wrapper));
                         Ok($wrapper(try!($read)))
                     }
-                    _ => Err(error::Error::from(unexpected_wire_type(wire_type))),
+                    _ => Err(bad_wire_type(field, wire_type)),
                 }
             }
         };
@@ -159,7 +158,7 @@ impl<'a> Context<'a> {
                             Err(error::Error::General(message))
                         }
                     },
-                    _ => Err(error::Error::from(unexpected_wire_type(wire_type))),
+                    _ => Err(bad_wire_type(field, wire_type)),
                 }
             },
             TYPE_BYTES => wrap!(WireTypeLengthDelimited => Bytes, self.input.read_bytes()),
@@ -170,7 +169,7 @@ impl<'a> Context<'a> {
                         try!(self.input.read_raw_varint32());
                         Ok(String("Unimplemented".to_owned()))
                     },
-                    _ => Err(error::Error::from(unexpected_wire_type(wire_type))),
+                    _ => Err(bad_wire_type(field, wire_type)),
                 }
             },
             TYPE_SFIXED32 => wrap!(WireTypeFixed32 => I32, self.input.read_sfixed32()),
@@ -188,7 +187,6 @@ impl<'a> Context<'a> {
                            -> error::Result<()> {
         use protobuf::descriptor::FieldDescriptorProto_Type::*;
         use protobuf::stream::wire_format::WireType::*;
-        use protobuf::rt::unexpected_wire_type;
         use value::Value::*;
 
         macro_rules! packable {
@@ -210,7 +208,7 @@ impl<'a> Context<'a> {
                     $wire_type => {
                         values.push($wrapper(try!($read)));
                     }
-                    _ => return Err(error::Error::from(unexpected_wire_type(wire_type))),
+                    _ => return Err(bad_wire_type(field, wire_type)),
                 }
             }
         };
@@ -221,7 +219,7 @@ impl<'a> Context<'a> {
                     $wire_type => {
                         values.push($wrapper(try!($read)));
                     }
-                    _ => return Err(error::Error::from(unexpected_wire_type(wire_type))),
+                    _ => return Err(bad_wire_type(field, wire_type)),
                 }
             }
         };
@@ -254,7 +252,7 @@ impl<'a> Context<'a> {
                             return Err(error::Error::General(message));
                         }
                     },
-                    _ => return Err(error::Error::from(unexpected_wire_type(wire_type))),
+                    _ => return Err(bad_wire_type(field, wire_type)),
                 }
             },
             TYPE_BYTES => scalar!(WireTypeLengthDelimited => Bytes, self.input.read_bytes()),
@@ -265,7 +263,7 @@ impl<'a> Context<'a> {
                         try!(self.input.read_raw_varint32());
                         values.push(String("Unimplemented".to_owned()));
                     },
-                    _ => return Err(error::Error::from(unexpected_wire_type(wire_type))),
+                    _ => return Err(bad_wire_type(field, wire_type)),
                 }
             },
             TYPE_SFIXED32 => packable!(WireTypeFixed32 => 4, I32, self.input.read_sfixed32()),
@@ -276,6 +274,12 @@ impl<'a> Context<'a> {
 
         Ok(())
     }
+}
+
+fn bad_wire_type(field: &descriptor::FieldDescriptor,
+                 wire_type: protobuf::stream::wire_format::WireType)
+                 -> error::Error {
+    error::Error::General(format!("Unexpected wire type {:?} for field {}", wire_type, field))
 }
 
 impl<'a> Iterator for ProtobufValues<'a> {
