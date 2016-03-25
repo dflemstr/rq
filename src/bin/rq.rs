@@ -5,6 +5,7 @@ extern crate log;
 extern crate protobuf;
 extern crate record_query;
 
+use std::env;
 use std::io;
 use std::path;
 
@@ -43,7 +44,7 @@ const QUERY_ARG: &'static str = "query";
 fn main() {
     use std::io::Read;
 
-    env_logger::init().unwrap();
+    setup_log();
 
     let paths = rq::config::Paths::new().unwrap();
     let matches = match_args();
@@ -76,6 +77,22 @@ fn main() {
             run(rq::value::json::JsonValues::new(input.bytes()), query);
         }
     }
+}
+
+fn setup_log() {
+    let format = |record: &log::LogRecord| {
+        format!("{} {}", record.level(), record.args())
+    };
+
+    let mut builder = env_logger::LogBuilder::new();
+
+    builder.format(format).filter(None, log::LogLevelFilter::Info);
+
+    if let Ok(spec) = env::var("RUST_LOG") {
+        builder.parse(&spec);
+    }
+
+    builder.init().unwrap();
 }
 
 #[cfg_attr(rustfmt, rustfmt_skip)]
