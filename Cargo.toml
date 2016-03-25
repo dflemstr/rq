@@ -12,11 +12,13 @@ git = "https://github.com/dflemstr/lalrpop.git"
 path = "lalrpop"
 
 [dependencies]
+ansi_term = "0.7.2"
 clap = "2.1.1"
 env_logger = "0.3.2"
 glob = "0.2.10"
 log = "0.3.5"
 mod_path = "0.1.6"
+nix = "0.5.0"
 protobuf = "1.0.18"
 serde = "0.6.13"
 serde_json = "0.6.0"

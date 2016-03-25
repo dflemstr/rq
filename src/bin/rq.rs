@@ -1,7 +1,9 @@
+extern crate ansi_term;
 extern crate clap;
 extern crate env_logger;
 #[macro_use]
 extern crate log;
+extern crate nix;
 extern crate protobuf;
 extern crate record_query;
 
@@ -40,14 +42,18 @@ const INPUT_PROTOBUF_ARG: &'static str = "input-protobuf";
 const OUTPUT_PROTOBUF_ARG: &'static str = "output-protobuf";
 
 const QUERY_ARG: &'static str = "query";
+const VERBOSE_ARG: &'static str = "verbose";
+const QUIET_ARG: &'static str = "quiet";
 
 fn main() {
     use std::io::Read;
 
-    setup_log();
+    let matches = match_args();
+
+    setup_log(matches.occurrences_of(VERBOSE_ARG),
+              matches.is_present(QUIET_ARG));
 
     let paths = rq::config::Paths::new().unwrap();
-    let matches = match_args();
 
     if let Some(matches) = matches.subcommand_matches(PROTOBUF_CMD) {
         if let Some(matches) = matches.subcommand_matches(PROTOBUF_ADD_CMD) {
@@ -79,14 +85,59 @@ fn main() {
     }
 }
 
-fn setup_log() {
-    let format = |record: &log::LogRecord| {
-        format!("{} {}", record.level(), record.args())
+fn setup_log(verbose_level: u64, quiet: bool) {
+    use ansi_term::ANSIStrings;
+    use ansi_term::Colour;
+    use ansi_term::Style;
+    use log::LogLevel;
+    use log::LogLevelFilter;
+    use nix::unistd;
+    use nix::sys::ioctl;
+
+    let normal_style = Style::new();
+
+    let format = move |record: &log::LogRecord| {
+        if unistd::isatty(ioctl::libc::STDERR_FILENO).unwrap_or(false) {
+            let (fg_style, bg_style) = match record.level() {
+                LogLevel::Error => (Colour::Red.normal(), Colour::Red.dimmed()),
+                LogLevel::Warn => (Colour::Yellow.normal(), Colour::Yellow.dimmed()),
+                LogLevel::Info => (Colour::Blue.normal(), Colour::Blue.dimmed()),
+                LogLevel::Debug => (Colour::Purple.normal(), Colour::Purple.dimmed()),
+                LogLevel::Trace => (Colour::White.dimmed(), Colour::Black.normal()),
+            };
+
+            let strings = &[bg_style.paint("["),
+                            fg_style.paint(format!("{}", record.level())),
+                            bg_style.paint("]"),
+                            normal_style.paint(" "),
+                            bg_style.paint("["),
+                            fg_style.paint(record.location().module_path()),
+                            bg_style.paint("]"),
+                            normal_style.paint(" "),
+                            bg_style.paint(format!("{}", record.args()))];
+
+            format!("{}", ANSIStrings(strings))
+        } else {
+            format!("[{}] [{}] {}",
+                    record.level(),
+                    record.location().module_path(),
+                    record.args())
+        }
     };
 
     let mut builder = env_logger::LogBuilder::new();
 
-    builder.format(format).filter(None, log::LogLevelFilter::Info);
+    let filter = if quiet {
+        LogLevelFilter::Off
+    } else {
+        match verbose_level {
+            0 => LogLevelFilter::Info,
+            1 => LogLevelFilter::Debug,
+            _ => LogLevelFilter::Trace,
+        }
+    };
+
+    builder.format(format).filter(None, filter);
 
     if let Ok(spec) = env::var("RUST_LOG") {
         builder.parse(&spec);
@@ -107,6 +158,8 @@ fn match_args<'a>() -> clap::ArgMatches<'a> {
         .author(AUTHOR)
         .about(ABOUT)
         .setting(AppSettings::SubcommandsNegateReqs)
+        .setting(AppSettings::GlobalVersion)
+        .setting(AppSettings::UnifiedHelpMessage)
         .group(ArgGroup::with_name(INPUT_FORMAT_GROUP))
         .group(ArgGroup::with_name(OUTPUT_FORMAT_GROUP))
         .arg(Arg::with_name(INPUT_JSON_ARG)
@@ -141,6 +194,15 @@ fn match_args<'a>() -> clap::ArgMatches<'a> {
         .arg(Arg::with_name(QUERY_ARG)
              .required(true)
              .help("The query to apply."))
+        .arg(Arg::with_name(VERBOSE_ARG)
+             .short("v")
+             .long("verbose")
+             .multiple(true)
+             .help("Increase the logging verbosity"))
+        .arg(Arg::with_name(QUIET_ARG)
+             .short("q")
+             .long("quiet")
+             .help("Disable default logging (the RUST_LOG env var is still respected)"))
         .subcommand(SubCommand::with_name(PROTOBUF_CMD)
                     .about("Control protobuf configuration and data")
                     .author(AUTHOR)
