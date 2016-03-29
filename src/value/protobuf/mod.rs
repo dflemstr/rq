@@ -60,13 +60,11 @@ impl<'a> Context<'a> {
 
             // Only handle known fields for now
             if let Some(field) = message.fields_by_number.get(&number) {
-                use protobuf::descriptor::FieldDescriptorProto_Label::*;
-
                 let field = &field.upgrade().unwrap();
 
                 debug!("Field is known: {:?}", field);
 
-                if field.proto_label == LABEL_REPEATED {
+                if field.label == descriptor::Label::Repeated {
                     debug!("Field is repeated");
                     let mut values = repeateds.entry(field.name.clone())
                                               .or_insert_with(|| Vec::new());
@@ -111,7 +109,7 @@ impl<'a> Context<'a> {
                          field: &descriptor::FieldDescriptor,
                          wire_type: protobuf::stream::wire_format::WireType)
                          -> error::Result<value::Value> {
-        use protobuf::descriptor::FieldDescriptorProto_Type::*;
+        use value::protobuf::descriptor::FieldType;
         use protobuf::stream::wire_format::WireType::*;
         use value::Value::*;
 
@@ -127,43 +125,43 @@ impl<'a> Context<'a> {
             }
         };
 
-        match field.proto_type {
-            TYPE_DOUBLE => wrap!(WireTypeFixed64 => F64, self.input.read_double()),
-            TYPE_FLOAT => wrap!(WireTypeFixed32 => F32, self.input.read_float()),
-            TYPE_INT64 => wrap!(WireTypeVarint => I64, self.input.read_int64()),
-            TYPE_UINT64 => wrap!(WireTypeVarint => U64, self.input.read_uint64()),
-            TYPE_INT32 => wrap!(WireTypeVarint => I32, self.input.read_int32()),
-            TYPE_FIXED64 => wrap!(WireTypeFixed64 => U64, self.input.read_fixed64()),
-            TYPE_FIXED32 => wrap!(WireTypeFixed32 => U32, self.input.read_fixed32()),
-            TYPE_BOOL => wrap!(WireTypeVarint => Bool, self.input.read_bool()),
-            TYPE_STRING => wrap!(WireTypeLengthDelimited => String, self.input.read_string()),
-            TYPE_GROUP => unimplemented!(),
-            TYPE_MESSAGE => {
+        match field.field_type {
+            FieldType::UnresolvedMessage(ref m) => {
+                let msg = format!("Tried to use a field with an unresolved message type: {}", m);
+                return Err(error::Error::General(msg))
+            },
+            FieldType::UnresolvedEnum(ref e) => {
+                let msg = format!("Tried to use a field with an unresolved enum type: {}", e);
+                return Err(error::Error::General(msg))
+            },
+            FieldType::Double => wrap!(WireTypeFixed64 => F64, self.input.read_double()),
+            FieldType::Float => wrap!(WireTypeFixed32 => F32, self.input.read_float()),
+            FieldType::Int64 => wrap!(WireTypeVarint => I64, self.input.read_int64()),
+            FieldType::UInt64 => wrap!(WireTypeVarint => U64, self.input.read_uint64()),
+            FieldType::Int32 => wrap!(WireTypeVarint => I32, self.input.read_int32()),
+            FieldType::Fixed64 => wrap!(WireTypeFixed64 => U64, self.input.read_fixed64()),
+            FieldType::Fixed32 => wrap!(WireTypeFixed32 => U32, self.input.read_fixed32()),
+            FieldType::Bool => wrap!(WireTypeVarint => Bool, self.input.read_bool()),
+            FieldType::String => wrap!(WireTypeLengthDelimited => String, self.input.read_string()),
+            FieldType::Group => unimplemented!(),
+            FieldType::Message(ref message) => {
                 match wire_type {
                     WireTypeLengthDelimited => {
-                        debug!("Reading a nested message");
-                        if let Some(message) = descriptors.messages_by_name
-                                                          .get(&field.proto_type_name) {
-                            let message = message.upgrade().unwrap();
-                            debug!("Message is known: {:?}", message);
+                        let message = message.upgrade().unwrap();
+                        debug!("Reading a message");
 
-                            let len = try!(self.input.read_raw_varint32());
-                            let old_limit = try!(self.input.push_limit(len));
-                            let result = try!(self.read_message(descriptors, &message));
-                            self.input.pop_limit(old_limit);
-                            Ok(result)
-                        } else {
-                            let message = format!("Missing type in schema: {}",
-                                                  field.proto_type_name);
-                            Err(error::Error::General(message))
-                        }
+                        let len = try!(self.input.read_raw_varint32());
+                        let old_limit = try!(self.input.push_limit(len));
+                        let result = try!(self.read_message(descriptors, &message));
+                        self.input.pop_limit(old_limit);
+                        Ok(result)
                     },
                     _ => Err(bad_wire_type(field, wire_type)),
                 }
             },
-            TYPE_BYTES => wrap!(WireTypeLengthDelimited => Bytes, self.input.read_bytes()),
-            TYPE_UINT32 => wrap!(WireTypeVarint => U32, self.input.read_uint32()),
-            TYPE_ENUM => {
+            FieldType::Bytes => wrap!(WireTypeLengthDelimited => Bytes, self.input.read_bytes()),
+            FieldType::UInt32 => wrap!(WireTypeVarint => U32, self.input.read_uint32()),
+            FieldType::Enum(ref enu) => {
                 match wire_type {
                     WireTypeVarint => {
                         try!(self.input.read_raw_varint32());
@@ -172,10 +170,10 @@ impl<'a> Context<'a> {
                     _ => Err(bad_wire_type(field, wire_type)),
                 }
             },
-            TYPE_SFIXED32 => wrap!(WireTypeFixed32 => I32, self.input.read_sfixed32()),
-            TYPE_SFIXED64 => wrap!(WireTypeFixed64 => I64, self.input.read_sfixed64()),
-            TYPE_SINT32 => wrap!(WireTypeVarint => I32, self.input.read_sint32()),
-            TYPE_SINT64 => wrap!(WireTypeVarint => I64, self.input.read_sint64()),
+            FieldType::SFixed32 => wrap!(WireTypeFixed32 => I32, self.input.read_sfixed32()),
+            FieldType::SFixed64 => wrap!(WireTypeFixed64 => I64, self.input.read_sfixed64()),
+            FieldType::SInt32 => wrap!(WireTypeVarint => I32, self.input.read_sint32()),
+            FieldType::SInt64 => wrap!(WireTypeVarint => I64, self.input.read_sint64()),
         }
     }
 
@@ -185,7 +183,7 @@ impl<'a> Context<'a> {
                            wire_type: protobuf::stream::wire_format::WireType,
                            values: &mut Vec<value::Value>)
                            -> error::Result<()> {
-        use protobuf::descriptor::FieldDescriptorProto_Type::*;
+        use value::protobuf::descriptor::FieldType;
         use protobuf::stream::wire_format::WireType::*;
         use value::Value::*;
 
@@ -224,40 +222,41 @@ impl<'a> Context<'a> {
             }
         };
 
-        match field.proto_type {
-            TYPE_DOUBLE => packable!(WireTypeFixed64 => 8, F64, self.input.read_double()),
-            TYPE_FLOAT => packable!(WireTypeFixed32 => 4, F32, self.input.read_float()),
-            TYPE_INT64 => packable!(WireTypeVarint => I64, self.input.read_int64()),
-            TYPE_UINT64 => packable!(WireTypeVarint => U64, self.input.read_uint64()),
-            TYPE_INT32 => packable!(WireTypeVarint => I32, self.input.read_int32()),
-            TYPE_FIXED64 => packable!(WireTypeFixed64 => U64, self.input.read_fixed64()),
-            TYPE_FIXED32 => packable!(WireTypeFixed32 => U32, self.input.read_fixed32()),
-            TYPE_BOOL => packable!(WireTypeVarint => Bool, self.input.read_bool()),
-            TYPE_STRING => scalar!(WireTypeLengthDelimited => String, self.input.read_string()),
-            TYPE_GROUP => unimplemented!(),
-            TYPE_MESSAGE => {
+        match field.field_type {
+            FieldType::UnresolvedMessage(ref m) => {
+                let msg = format!("Tried to use a field with an unresolved message type: {}", m);
+                return Err(error::Error::General(msg))
+            },
+            FieldType::UnresolvedEnum(ref e) => {
+                let msg = format!("Tried to use a field with an unresolved enum type: {}", e);
+                return Err(error::Error::General(msg))
+            },
+            FieldType::Double => packable!(WireTypeFixed64 => 8, F64, self.input.read_double()),
+            FieldType::Float => packable!(WireTypeFixed32 => 4, F32, self.input.read_float()),
+            FieldType::Int64 => packable!(WireTypeVarint => I64, self.input.read_int64()),
+            FieldType::UInt64 => packable!(WireTypeVarint => U64, self.input.read_uint64()),
+            FieldType::Int32 => packable!(WireTypeVarint => I32, self.input.read_int32()),
+            FieldType::Fixed64 => packable!(WireTypeFixed64 => U64, self.input.read_fixed64()),
+            FieldType::Fixed32 => packable!(WireTypeFixed32 => U32, self.input.read_fixed32()),
+            FieldType::Bool => packable!(WireTypeVarint => Bool, self.input.read_bool()),
+            FieldType::String => scalar!(WireTypeLengthDelimited => String, self.input.read_string()),
+            FieldType::Group => unimplemented!(),
+            FieldType::Message(ref message) => {
                 match wire_type {
                     WireTypeLengthDelimited => {
-                        if let Some(message) = descriptors.messages_by_name
-                                                          .get(&field.proto_type_name) {
-                            let message = message.upgrade().unwrap();
-                            let len = try!(self.input.read_raw_varint32());
-                            let old_limit = try!(self.input.push_limit(len));
-                            let result = try!(self.read_message(descriptors, &message));
-                            self.input.pop_limit(old_limit);
-                            values.push(result);
-                        } else {
-                            let message = format!("Missing type in schema: {}",
-                                                  field.proto_type_name);
-                            return Err(error::Error::General(message));
-                        }
+                        let message = message.upgrade().unwrap();
+                        let len = try!(self.input.read_raw_varint32());
+                        let old_limit = try!(self.input.push_limit(len));
+                        let result = try!(self.read_message(descriptors, &message));
+                        self.input.pop_limit(old_limit);
+                        values.push(result);
                     },
                     _ => return Err(bad_wire_type(field, wire_type)),
                 }
             },
-            TYPE_BYTES => scalar!(WireTypeLengthDelimited => Bytes, self.input.read_bytes()),
-            TYPE_UINT32 => packable!(WireTypeVarint => U32, self.input.read_uint32()),
-            TYPE_ENUM => {
+            FieldType::Bytes => scalar!(WireTypeLengthDelimited => Bytes, self.input.read_bytes()),
+            FieldType::UInt32 => packable!(WireTypeVarint => U32, self.input.read_uint32()),
+            FieldType::Enum(ref enu) => {
                 match wire_type {
                     WireTypeVarint => {
                         try!(self.input.read_raw_varint32());
@@ -266,10 +265,10 @@ impl<'a> Context<'a> {
                     _ => return Err(bad_wire_type(field, wire_type)),
                 }
             },
-            TYPE_SFIXED32 => packable!(WireTypeFixed32 => 4, I32, self.input.read_sfixed32()),
-            TYPE_SFIXED64 => packable!(WireTypeFixed64 => 8, I64, self.input.read_sfixed64()),
-            TYPE_SINT32 => packable!(WireTypeVarint => 4, I32, self.input.read_sint32()),
-            TYPE_SINT64 => packable!(WireTypeVarint => 8, I64, self.input.read_sint64()),
+            FieldType::SFixed32 => packable!(WireTypeFixed32 => 4, I32, self.input.read_sfixed32()),
+            FieldType::SFixed64 => packable!(WireTypeFixed64 => 8, I64, self.input.read_sfixed64()),
+            FieldType::SInt32 => packable!(WireTypeVarint => 4, I32, self.input.read_sint32()),
+            FieldType::SInt64 => packable!(WireTypeVarint => 8, I64, self.input.read_sint64()),
         }
 
         Ok(())

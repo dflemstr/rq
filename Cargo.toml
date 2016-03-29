@@ -28,3 +28,6 @@ xdg-basedir = "1.0.0"
 branch = "cargo-out-dir"
 git = "https://github.com/dflemstr/lalrpop.git"
 path = "lalrpop-util"
+
+[profile.release]
+lto = true

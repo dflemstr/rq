@@ -46,14 +46,43 @@ pub struct EnumValueDescriptor {
     pub number: i32,
 }
 
+#[derive(Debug, Eq, PartialEq)]
+pub enum Label {
+    Optional,
+    Required,
+    Repeated,
+}
+
+#[derive(Debug)]
+pub enum FieldType {
+    UnresolvedMessage(String),
+    UnresolvedEnum(String),
+    Double,
+    Float,
+    Int64,
+    UInt64,
+    Int32,
+    Fixed64,
+    Fixed32,
+    Bool,
+    String,
+    Group,
+    Message(rc::Weak<MessageDescriptor>),
+    Bytes,
+    UInt32,
+    Enum(rc::Weak<EnumDescriptor>),
+    SFixed32,
+    SFixed64,
+    SInt32,
+    SInt64,
+}
+
 #[derive(Debug)]
 pub struct FieldDescriptor {
     pub name: String,
     pub number: i32,
-
-    pub proto_label: descriptor::FieldDescriptorProto_Label,
-    pub proto_type: descriptor::FieldDescriptorProto_Type,
-    pub proto_type_name: String,
+    pub label: Label,
+    pub field_type: FieldType,
 }
 
 impl Descriptors {
@@ -146,16 +175,46 @@ impl Descriptors {
 
 impl MessageDescriptor {
     fn add_field(&mut self, field: &descriptor::FieldDescriptorProto) {
+        use protobuf::descriptor::FieldDescriptorProto_Label::*;
+        use protobuf::descriptor::FieldDescriptorProto_Type::*;
+
         let name = field.get_name().to_owned();
         let number = field.get_number();
+
+        let label = match field.get_label() {
+            LABEL_OPTIONAL => Label::Optional,
+            LABEL_REQUIRED => Label::Required,
+            LABEL_REPEATED => Label::Repeated,
+        };
+
+        let field_type = match field.get_field_type() {
+            TYPE_DOUBLE => FieldType::Double,
+            TYPE_FLOAT => FieldType::Float,
+            TYPE_INT64 => FieldType::Int64,
+            TYPE_UINT64 => FieldType::UInt64,
+            TYPE_INT32 => FieldType::Int32,
+            TYPE_FIXED64 => FieldType::Fixed64,
+            TYPE_FIXED32 => FieldType::Fixed32,
+            TYPE_BOOL => FieldType::Bool,
+            TYPE_STRING => FieldType::String,
+            TYPE_GROUP => FieldType::Group,
+            TYPE_MESSAGE =>
+                FieldType::UnresolvedMessage(field.get_type_name().to_owned()),
+            TYPE_BYTES => FieldType::Bytes,
+            TYPE_UINT32 => FieldType::UInt32,
+            TYPE_ENUM =>
+                FieldType::UnresolvedEnum(field.get_type_name().to_owned()),
+            TYPE_SFIXED32 => FieldType::SFixed32,
+            TYPE_SFIXED64 => FieldType::SFixed64,
+            TYPE_SINT32 => FieldType::SInt32,
+            TYPE_SINT64 => FieldType::SInt64,
+        };
 
         let field_descriptor = FieldDescriptor {
             name: name.clone(),
             number: number,
-
-            proto_label: field.get_label(),
-            proto_type: field.get_field_type(),
-            proto_type_name: field.get_type_name().to_owned(),
+            label: label,
+            field_type: field_type,
         };
 
         let field_ref = rc::Rc::new(field_descriptor);
@@ -188,57 +247,58 @@ impl EnumDescriptor {
     }
 }
 
-impl fmt::Display for FieldDescriptor {
+impl fmt::Display for Label {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        use protobuf::descriptor::FieldDescriptorProto_Label::*;
-        let kind = match self.proto_label {
-            LABEL_OPTIONAL => "optional",
-            LABEL_REQUIRED => "required",
-            LABEL_REPEATED => "repeated",
-        };
-
-        let type_description = describe_proto_type(self.proto_type);
-
-        if self.proto_type_name.len() > 0 {
-            write!(f,
-                   "{:?} (number {}, {}, {} {})",
-                   self.name,
-                   self.number,
-                   kind,
-                   type_description,
-                   self.proto_type_name)
-        } else {
-            write!(f,
-                   "{:?} (number {}, {}, {})",
-                   self.name,
-                   self.number,
-                   kind,
-                   type_description)
+        match *self {
+            Label::Optional => write!(f, "optional"),
+            Label::Required => write!(f, "required"),
+            Label::Repeated => write!(f, "repeated"),
         }
     }
 }
 
-fn describe_proto_type(proto_type: descriptor::FieldDescriptorProto_Type) -> &'static str {
-    use protobuf::descriptor::FieldDescriptorProto_Type::*;
+impl fmt::Display for FieldType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            FieldType::UnresolvedMessage(ref n) => write!(f, "(Unresolved message {:?})", n),
+            FieldType::UnresolvedEnum(ref n) => write!(f, "(Unresolved enum {:?})", n),
+            FieldType::Double => write!(f, "double"),
+            FieldType::Float => write!(f, "float"),
+            FieldType::Int64 => write!(f, "int64"),
+            FieldType::UInt64 => write!(f, "uint64"),
+            FieldType::Int32 => write!(f, "int32"),
+            FieldType::Fixed64 => write!(f, "fixed64"),
+            FieldType::Fixed32 => write!(f, "fixed32"),
+            FieldType::Bool => write!(f, "bool"),
+            FieldType::String => write!(f, "string"),
+            FieldType::Group => write!(f, "group"),
+            FieldType::Message(ref msg) =>
+                match msg.upgrade() {
+                    Some(m) => write!(f, "message {}", m.name),
+                    None => write!(f, "deallocated message"),
+                },
+            FieldType::Bytes => write!(f, "bytes"),
+            FieldType::UInt32 => write!(f, "uint32"),
+            FieldType::Enum(ref enu) =>
+                match enu.upgrade() {
+                    Some(e) => write!(f, "enum {}", e.name),
+                    None => write!(f, "deallocated enum"),
+                },
+            FieldType::SFixed32 => write!(f, "sfixed32"),
+            FieldType::SFixed64 => write!(f, "sfixed64"),
+            FieldType::SInt32 => write!(f, "sint32"),
+            FieldType::SInt64 => write!(f, "sint64"),
+        }
+    }
+}
 
-    match proto_type {
-        TYPE_DOUBLE => "double",
-        TYPE_FLOAT => "float",
-        TYPE_INT64 => "int64",
-        TYPE_UINT64 => "uint64",
-        TYPE_INT32 => "int32",
-        TYPE_FIXED64 => "fixed64",
-        TYPE_FIXED32 => "fixed32",
-        TYPE_BOOL => "bool",
-        TYPE_STRING => "string",
-        TYPE_GROUP => "group",
-        TYPE_MESSAGE => "message",
-        TYPE_BYTES => "bytes",
-        TYPE_UINT32 => "uint32",
-        TYPE_ENUM => "enum",
-        TYPE_SFIXED32 => "sfixed32",
-        TYPE_SFIXED64 => "sfixed64",
-        TYPE_SINT32 => "sint32",
-        TYPE_SINT64 => "sint64",
+impl fmt::Display for FieldDescriptor {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f,
+               "{:?} (number {}, {}, {})",
+               self.name,
+               self.number,
+               self.label,
+               self.field_type)
     }
 }
