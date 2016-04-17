@@ -6,8 +6,8 @@ dependencies = [
  "clap 2.2.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "env_logger 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "glob 0.2.11 (registry+https://github.com/rust-lang/crates.io-index)",
- "lalrpop 0.10.0 (git+https://github.com/dflemstr/lalrpop.git?branch=cargo-out-dir)",
- "lalrpop-util 0.10.0 (git+https://github.com/dflemstr/lalrpop.git?branch=cargo-out-dir)",
+ "lalrpop 0.11.0 (git+https://github.com/dflemstr/lalrpop.git?branch=output-control)",
+ "lalrpop-util 0.11.0 (git+https://github.com/dflemstr/lalrpop.git?branch=output-control)",
  "log 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "mod_path 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "nix 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -121,8 +121,8 @@ dependencies = [
 
 [[package]]
 name = "lalrpop"
-version = "0.10.0"
-source = "git+https://github.com/dflemstr/lalrpop.git?branch=cargo-out-dir#79356ce6816d6d48c94b317b6984e117d80f9752"
+version = "0.11.0"
+source = "git+https://github.com/dflemstr/lalrpop.git?branch=output-control#061a580569e3df6224849b30f222a76c68a872e6"
 dependencies = [
  "atty 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "bit-set 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -130,32 +130,32 @@ dependencies = [
  "diff 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
  "docopt 0.6.80 (registry+https://github.com/rust-lang/crates.io-index)",
  "itertools 0.3.25 (registry+https://github.com/rust-lang/crates.io-index)",
- "lalrpop-intern 0.10.0 (git+https://github.com/dflemstr/lalrpop.git?branch=cargo-out-dir)",
- "lalrpop-snap 0.10.0 (git+https://github.com/dflemstr/lalrpop.git?branch=cargo-out-dir)",
- "lalrpop-util 0.10.0 (git+https://github.com/dflemstr/lalrpop.git?branch=cargo-out-dir)",
+ "lalrpop-intern 0.11.0 (git+https://github.com/dflemstr/lalrpop.git?branch=output-control)",
+ "lalrpop-snap 0.11.0 (git+https://github.com/dflemstr/lalrpop.git?branch=output-control)",
+ "lalrpop-util 0.11.0 (git+https://github.com/dflemstr/lalrpop.git?branch=output-control)",
  "petgraph 0.1.18 (registry+https://github.com/rust-lang/crates.io-index)",
  "regex 0.1.66 (registry+https://github.com/rust-lang/crates.io-index)",
+ "regex-syntax 0.2.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "rustc-serialize 0.3.19 (registry+https://github.com/rust-lang/crates.io-index)",
  "term 0.4.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "time 0.1.35 (registry+https://github.com/rust-lang/crates.io-index)",
  "unicode-xid 0.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "walkdir 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "lalrpop-intern"
-version = "0.10.0"
-source = "git+https://github.com/dflemstr/lalrpop.git?branch=cargo-out-dir#79356ce6816d6d48c94b317b6984e117d80f9752"
+version = "0.11.0"
+source = "git+https://github.com/dflemstr/lalrpop.git?branch=output-control#061a580569e3df6224849b30f222a76c68a872e6"
 
 [[package]]
 name = "lalrpop-snap"
-version = "0.10.0"
-source = "git+https://github.com/dflemstr/lalrpop.git?branch=cargo-out-dir#79356ce6816d6d48c94b317b6984e117d80f9752"
+version = "0.11.0"
+source = "git+https://github.com/dflemstr/lalrpop.git?branch=output-control#061a580569e3df6224849b30f222a76c68a872e6"
 dependencies = [
  "diff 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
  "itertools 0.3.25 (registry+https://github.com/rust-lang/crates.io-index)",
- "lalrpop-intern 0.10.0 (git+https://github.com/dflemstr/lalrpop.git?branch=cargo-out-dir)",
- "lalrpop-util 0.10.0 (git+https://github.com/dflemstr/lalrpop.git?branch=cargo-out-dir)",
+ "lalrpop-intern 0.11.0 (git+https://github.com/dflemstr/lalrpop.git?branch=output-control)",
+ "lalrpop-util 0.11.0 (git+https://github.com/dflemstr/lalrpop.git?branch=output-control)",
  "petgraph 0.1.18 (registry+https://github.com/rust-lang/crates.io-index)",
  "regex 0.1.66 (registry+https://github.com/rust-lang/crates.io-index)",
  "unicode-xid 0.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -163,8 +163,8 @@ dependencies = [
 
 [[package]]
 name = "lalrpop-util"
-version = "0.10.0"
-source = "git+https://github.com/dflemstr/lalrpop.git?branch=cargo-out-dir#79356ce6816d6d48c94b317b6984e117d80f9752"
+version = "0.11.0"
+source = "git+https://github.com/dflemstr/lalrpop.git?branch=output-control#061a580569e3df6224849b30f222a76c68a872e6"
 
 [[package]]
 name = "libc"
@@ -299,6 +299,11 @@ dependencies = [
 
 [[package]]
 name = "regex-syntax"
+version = "0.2.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "regex-syntax"
 version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
@@ -403,15 +408,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "void"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-
-[[package]]
-name = "walkdir"
-version = "0.1.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-dependencies = [
- "kernel32-sys 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "winapi 0.2.6 (registry+https://github.com/rust-lang/crates.io-index)",
-]
 
 [[package]]
 name = "winapi"
