@@ -1,0 +1,37 @@
+language: generic
+sudo: required
+dist: trusty
+
+matrix:
+  include:
+    - os: linux
+      env: TOOLCHAIN=nightly TARGET=x86_64-unknown-linux-gnu
+    - os: linux
+      env: TOOLCHAIN=nightly TARGET=i686-unknown-linux-gnu
+    - os: linux
+      env: TOOLCHAIN=nightly TARGET=x86_64-unknown-linux-musl
+    - os: osx
+      env: TOOLCHAIN=nightly TARGET=i686-apple-darwin
+    - os: osx
+      env: TOOLCHAIN=nightly TARGET=x86_64-apple-darwin
+
+before_install:
+  - export PATH="$HOME/.cargo/bin:$PATH"
+  - ./ci install
+
+script: ./ci test
+
+before_deploy: ./ci deploy
+
+deploy:
+  - provider: s3
+    access_key_id: AKIAIMXXFE4ETRSISAEA
+    secret_access_key:
+      secure: "BwXmKjyKJVzmBp9GyJ0raBrJP1cHZ8LYyUxIlHzhb7Zfxlot/R5HwnNKqYlu6QJb0VBL+vcFjzujHljvlPSu/fLFlg4MNc36l3IeowOchvZpv+2+72IgJCJgxC+d7s0Al/TILB4htYVwoIAAvO99HerKKX91M2TeCyEoYIK1PmYjw6c0gZo5CifUe9EISFqIzuUGysZsZFCsHF0purhIAIWBBJjgu35XLluvu+kZ1bJ22Fqvsz2x1MUyyNHV4pNw6gYwC4CSBwACuu2aQDY7i+ZXU6ubSyK5P495rElWqMpMtMVg0oxH+UAsdw4La2DwxkF8dc/4w4eYaix7ucXrV1n24M34nzm4GwZ3/n4ZANaRAtl6zxhTPk5UadEX5PAOAxPsTPDJYQPSU/ZkbdUsYm6YhJtw/HDQOAkwhrZs2PibVyM6JB34/AsJrryl+yZ+By7M2AOnDcLWAvYroqFVW316yIe1x4EJW9loknqNCseDGEHCqtAjX5tFB3n7h8w+p2VpoaR23AM1BoOUEuWzfQZtCULKSZFwFDlj3pnJAdC2zqojtr87zNcqUX+XMy7YpoLEVGetG8zpAYmKXE8r7jNrSMOagBph90ThN+D9Zjkku5p9xH2Xw2kRhZdY56JrhJApotWJ8j3Gr6dt8rRAssa8E388Xz+EMAC34fo2tr8="
+    bucket: record-query
+    region: eu-west-1
+    skip_cleanup: true
+    local_dir: target/deploy
+    upload-dir: record-query
+    on:
+      repo: dflemstr/rq
