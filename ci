@@ -13,7 +13,7 @@ ci-install() {
 }
 
 ci-test() {
-    cargo test
+    cargo test --target="$TARGET"
 }
 
 ci-deploy() {
