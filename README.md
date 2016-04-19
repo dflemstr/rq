@@ -1,4 +1,4 @@
-# rq
+# rq [![Build Status](https://travis-ci.org/dflemstr/rq.svg?branch=master)](https://travis-ci.org/dflemstr/rq)
 
 This is the home of the record query tool called `rq`.
 
