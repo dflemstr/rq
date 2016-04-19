@@ -6,6 +6,7 @@ use serde_json;
 
 use error;
 
+pub mod cbor;
 pub mod json;
 pub mod protobuf;
 
@@ -52,7 +53,7 @@ impl serde::ser::Serialize for Value {
         where S: serde::ser::Serializer
     {
         match *self {
-            Value::Unit => serializer.visit_unit(),
+            Value::Unit => serializer.serialize_unit(),
             Value::Bool(v) => v.serialize(serializer),
 
             Value::ISize(v) => v.serialize(serializer),

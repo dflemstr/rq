@@ -31,10 +31,10 @@ impl<Iter> Iterator for JsonValues<Iter>
 
         match serde_json::Value::deserialize(&mut self.deserializer) {
             Ok(v) => Some(Ok(json_to_value(v))),
-            Err(SyntaxError(EOFWhileParsingList, _, _)) => None,
-            Err(SyntaxError(EOFWhileParsingObject, _, _)) => None,
-            Err(SyntaxError(EOFWhileParsingString, _, _)) => None,
-            Err(SyntaxError(EOFWhileParsingValue, _, _)) => None,
+            Err(Syntax(EOFWhileParsingList, _, _)) => None,
+            Err(Syntax(EOFWhileParsingObject, _, _)) => None,
+            Err(Syntax(EOFWhileParsingString, _, _)) => None,
+            Err(Syntax(EOFWhileParsingValue, _, _)) => None,
             Err(e) => Some(Err(error::Error::from(e))),
         }
     }

@@ -219,8 +219,7 @@ fn match_args<'a>() -> clap::ArgMatches<'a> {
         .get_matches()
 }
 
-fn run<Iter>(input: Iter, query: rq::query::Query)
-    -> rq::error::Result<()>
+fn run<Iter>(input: Iter, query: rq::query::Query) -> rq::error::Result<()>
     where Iter: Iterator<Item = rq::error::Result<rq::value::Value>>
 {
     use std::io::Write;

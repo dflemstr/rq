@@ -4,6 +4,7 @@ use std::string;
 
 use glob;
 use protobuf;
+use serde_cbor;
 use serde_json;
 use xdg_basedir;
 
@@ -26,12 +27,18 @@ impl From<io::Error> for Error {
     }
 }
 
+impl From<serde_cbor::Error> for Error {
+    fn from(e: serde_cbor::Error) -> Error {
+        unimplemented!()
+    }
+}
+
 impl From<serde_json::Error> for Error {
     fn from(e: serde_json::Error) -> Error {
         match e {
-            serde_json::Error::IoError(e) => Error::IO(e),
-            serde_json::Error::FromUtf8Error(e) => Error::FromUtf8(e),
-            serde_json::Error::SyntaxError(_, _, _) => unimplemented!(),
+            serde_json::Error::Io(e) => Error::IO(e),
+            serde_json::Error::FromUtf8(e) => Error::FromUtf8(e),
+            serde_json::Error::Syntax(_, _, _) => unimplemented!(),
         }
     }
 }

@@ -6,6 +6,7 @@ extern crate glob;
 extern crate log;
 extern crate protobuf;
 extern crate serde;
+extern crate serde_cbor;
 extern crate serde_json;
 extern crate xdg_basedir;
 
