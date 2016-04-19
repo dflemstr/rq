@@ -3,20 +3,32 @@
 # TODO: Replace with https://sh.rustup.rs when it supports -y and such
 rustup_init_url='https://raw.githubusercontent.com/rust-lang-nursery/rustup.rs/master/rustup-init.sh'
 
-ci-install() {
+function for-target {
+    local wanted_target
+    wanted_target=$1
+    shift
+
+    if [[ "$TARGET" == "$wanted_target" ]]
+    then "$@"
+    fi
+}
+
+function ci-install {
     local default_target
 
-    if [[ "$TARGET" == *-musl ]]; then sudo apt-get -y install musl-tools; fi
+    for-target x86_64-unknown-linux-musl sudo apt-get -y install musl-tools
+    for-target i686-unknown-linux-gnu    sudo apt-get -y install gcc-multilib
+
     curl "$rustup_init_url" -sSf | sh -s -- -y --default-toolchain="$TOOLCHAIN"
     default_target="$(rustup target list | grep default | awk '{print $1}')"
     if [[ "$TARGET" != "$default_target" ]]; then rustup target add "$TARGET"; fi
 }
 
-ci-test() {
+function ci-test {
     cargo test --target="$TARGET"
 }
 
-ci-deploy() {
+function ci-deploy {
     cargo build --release --target="$TARGET"
     mkdir -p "target/deploy/$TARGET"
     cp "target/$TARGET/release/rq" "target/deploy/$TARGET/rq"
