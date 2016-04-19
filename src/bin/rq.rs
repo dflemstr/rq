@@ -64,7 +64,6 @@ fn main() {
             rq::proto_index::add_file(&paths, path::Path::new(input)).unwrap();
         }
     } else {
-
         let query = rq::query::Query::parse(matches.value_of(QUERY_ARG).unwrap());
 
         let stdin = io::stdin();
@@ -76,14 +75,15 @@ fn main() {
 
             let descriptors_proto = rq::proto_index::compile_descriptor_set(&paths).unwrap();
             let descriptors =
-                rq::value::protobuf::descriptor::Descriptors::from_proto(&descriptors_proto);
+                rq::value::protobuf::descriptor::Descriptors::from_protobuf(&descriptors_proto);
             let stream = protobuf::CodedInputStream::new(&mut input);
             let values = rq::value::protobuf::ProtobufValues::new(descriptors,
                                                                   name.to_owned(),
                                                                   stream);
-            run(values, query);
+            run(values, query).unwrap_or_else(|e| error!("{:?}", e));
         } else {
-            run(rq::value::json::JsonValues::new(input.bytes()), query);
+            run(rq::value::json::JsonValues::new(input.bytes()), query)
+                .unwrap_or_else(|e| error!("{:?}", e));
         }
     }
 }
@@ -97,11 +97,11 @@ fn setup_log(verbose_level: u64, quiet: bool) {
     use nix::unistd;
     use nix::sys::ioctl;
 
-    let normal_style = Style::new();
+    let normal = Style::new();
 
     let format = move |record: &log::LogRecord| {
         if unistd::isatty(ioctl::libc::STDERR_FILENO).unwrap_or(false) {
-            let (fg_style, bg_style) = match record.level() {
+            let (front, back) = match record.level() {
                 LogLevel::Error => (Colour::Red.normal(), Colour::Red.dimmed()),
                 LogLevel::Warn => (Colour::Yellow.normal(), Colour::Yellow.dimmed()),
                 LogLevel::Info => (Colour::Blue.normal(), Colour::Blue.dimmed()),
@@ -109,15 +109,15 @@ fn setup_log(verbose_level: u64, quiet: bool) {
                 LogLevel::Trace => (Colour::White.dimmed(), Colour::Black.normal()),
             };
 
-            let strings = &[bg_style.paint("["),
-                            fg_style.paint(format!("{}", record.level())),
-                            bg_style.paint("]"),
-                            normal_style.paint(" "),
-                            bg_style.paint("["),
-                            fg_style.paint(record.location().module_path()),
-                            bg_style.paint("]"),
-                            normal_style.paint(" "),
-                            bg_style.paint(format!("{}", record.args()))];
+            let strings = &[back.paint("["),
+                            front.paint(format!("{}", record.level())),
+                            back.paint("]"),
+                            normal.paint(" "),
+                            back.paint("["),
+                            front.paint(record.location().module_path()),
+                            back.paint("]"),
+                            normal.paint(" "),
+                            back.paint(format!("{}", record.args()))];
 
             format!("{}", ANSIStrings(strings))
         } else {
@@ -220,6 +220,7 @@ fn match_args<'a>() -> clap::ArgMatches<'a> {
 }
 
 fn run<Iter>(input: Iter, query: rq::query::Query)
+    -> rq::error::Result<()>
     where Iter: Iterator<Item = rq::error::Result<rq::value::Value>>
 {
     use std::io::Write;
@@ -229,9 +230,11 @@ fn run<Iter>(input: Iter, query: rq::query::Query)
     debug!("Starting input consumption");
 
     for value in input {
+        let value = try!(value);
         debug!("Consuming an input value");
-        query.evaluate(&context, value.unwrap()).to_json(&mut stdout).unwrap();
-        stdout.write(&[10]).unwrap();
-        stdout.flush().unwrap();
+        try!(query.evaluate(&context, value).to_json(&mut stdout));
+        try!(stdout.write(&[10]));
+        try!(stdout.flush());
     }
+    Ok(())
 }

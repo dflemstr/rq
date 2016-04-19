@@ -1,6 +1,7 @@
 use std::collections;
 
 use protobuf;
+use protobuf::stream::wire_format;
 
 use error;
 use value;
@@ -30,10 +31,8 @@ impl<'a> ProtobufValues<'a> {
     }
 
     fn try_next(&mut self) -> error::Result<value::Value> {
-        match self.descriptors.messages_by_name.get(&self.name) {
-            Some(message) => {
-                self.context.read_message(&self.descriptors, &message.upgrade().unwrap())
-            },
+        match self.descriptors.message_by_name(&self.name) {
+            Some(message) => self.context.read_message(&self.descriptors, message),
             None => {
                 let msg = format!("Message type not found: {}", self.name);
                 Err(error::Error::General(msg))
@@ -59,21 +58,21 @@ impl<'a> Context<'a> {
                    wire_type);
 
             // Only handle known fields for now
-            if let Some(field) = message.fields_by_number.get(&number) {
-                let field = &field.upgrade().unwrap();
-
+            if let Some(field) = message.field_by_number(number) {
                 debug!("Field is known: {:?}", field);
 
-                if field.label == descriptor::Label::Repeated {
+                if field.field_label() == descriptor::FieldLabel::Repeated {
                     debug!("Field is repeated");
-                    let mut values = repeateds.entry(field.name.clone())
-                                              .or_insert_with(|| Vec::new());
+                    let mut values = repeateds.entry(field.name().to_owned())
+                                              .or_insert_with(Vec::new);
 
-                    try!(self.read_repeated_field(descriptors, field, wire_type, &mut values));
+                    try!(self.read_repeated_field(descriptors, &field, wire_type, &mut values));
+                    debug!("Values so far {:?}", values);
                 } else {
                     debug!("Field is singular");
-                    let value = try!(self.read_single_field(descriptors, field, wire_type));
-                    result.insert(field.name.clone(), value);
+                    let value = try!(self.read_single_field(descriptors, &field, wire_type));
+                    debug!("Value is {:?}", value);
+                    result.insert(field.name().to_owned(), value);
                 }
             } else {
                 use protobuf::stream::wire_format::WireType;
@@ -106,74 +105,79 @@ impl<'a> Context<'a> {
 
     fn read_single_field(&mut self,
                          descriptors: &descriptor::Descriptors,
-                         field: &descriptor::FieldDescriptor,
-                         wire_type: protobuf::stream::wire_format::WireType)
+                         f: &descriptor::FieldDescriptor,
+                         wt: protobuf::stream::wire_format::WireType)
                          -> error::Result<value::Value> {
-        use value::protobuf::descriptor::FieldType;
-        use protobuf::stream::wire_format::WireType::*;
-        use value::Value::*;
+        use value::protobuf::descriptor::FieldType as T;
+        use protobuf::CodedInputStream as I;
+        use protobuf::stream::wire_format::WireType as W;
+        use value::Value as V;
 
-        macro_rules! wrap {
-            ($wire_type:pat => $wrapper:expr, $read:expr) => {
-                match wire_type {
-                    $wire_type => {
-                        debug!("Reading a {}", stringify!($wrapper));
-                        Ok($wrapper(try!($read)))
-                    }
-                    _ => Err(bad_wire_type(field, wire_type)),
-                }
-            }
-        };
-
-        match field.field_type {
-            FieldType::UnresolvedMessage(ref m) => {
-                let msg = format!("Tried to use a field with an unresolved message type: {}", m);
-                return Err(error::Error::General(msg))
-            },
-            FieldType::UnresolvedEnum(ref e) => {
-                let msg = format!("Tried to use a field with an unresolved enum type: {}", e);
-                return Err(error::Error::General(msg))
-            },
-            FieldType::Double => wrap!(WireTypeFixed64 => F64, self.input.read_double()),
-            FieldType::Float => wrap!(WireTypeFixed32 => F32, self.input.read_float()),
-            FieldType::Int64 => wrap!(WireTypeVarint => I64, self.input.read_int64()),
-            FieldType::UInt64 => wrap!(WireTypeVarint => U64, self.input.read_uint64()),
-            FieldType::Int32 => wrap!(WireTypeVarint => I32, self.input.read_int32()),
-            FieldType::Fixed64 => wrap!(WireTypeFixed64 => U64, self.input.read_fixed64()),
-            FieldType::Fixed32 => wrap!(WireTypeFixed32 => U32, self.input.read_fixed32()),
-            FieldType::Bool => wrap!(WireTypeVarint => Bool, self.input.read_bool()),
-            FieldType::String => wrap!(WireTypeLengthDelimited => String, self.input.read_string()),
-            FieldType::Group => unimplemented!(),
-            FieldType::Message(ref message) => {
-                match wire_type {
-                    WireTypeLengthDelimited => {
-                        let message = message.upgrade().unwrap();
-                        debug!("Reading a message");
-
-                        let len = try!(self.input.read_raw_varint32());
-                        let old_limit = try!(self.input.push_limit(len));
-                        let result = try!(self.read_message(descriptors, &message));
-                        self.input.pop_limit(old_limit);
-                        Ok(result)
-                    },
-                    _ => Err(bad_wire_type(field, wire_type)),
-                }
-            },
-            FieldType::Bytes => wrap!(WireTypeLengthDelimited => Bytes, self.input.read_bytes()),
-            FieldType::UInt32 => wrap!(WireTypeVarint => U32, self.input.read_uint32()),
-            FieldType::Enum(ref enu) => {
-                match wire_type {
-                    WireTypeVarint => {
+        match f.field_type(descriptors) {
+            T::UnresolvedMessage(ref m) => Err(unresolved_message(m)),
+            T::UnresolvedEnum(ref e) => Err(unresolved_enum(e)),
+            T::Double => self.ss(f, W::WireTypeFixed64, wt, V::F64, I::read_double),
+            T::Float => self.ss(f, W::WireTypeFixed32, wt, V::F32, I::read_float),
+            T::Int64 => self.ss(f, W::WireTypeVarint, wt, V::I64, I::read_int64),
+            T::UInt64 => self.ss(f, W::WireTypeVarint, wt, V::U64, I::read_uint64),
+            T::Int32 => self.ss(f, W::WireTypeVarint, wt, V::I32, I::read_int32),
+            T::Fixed64 => self.ss(f, W::WireTypeFixed64, wt, V::U64, I::read_fixed64),
+            T::Fixed32 => self.ss(f, W::WireTypeFixed32, wt, V::U32, I::read_fixed32),
+            T::Bool => self.ss(f, W::WireTypeVarint, wt, V::Bool, I::read_bool),
+            T::String => self.ss(f, W::WireTypeLengthDelimited, wt, V::String, I::read_string),
+            T::Group => unimplemented!(),
+            T::Message(ref m) => self.sm(descriptors, f, m, wt),
+            T::Bytes => self.ss(f, W::WireTypeLengthDelimited, wt, V::Bytes, I::read_bytes),
+            T::UInt32 => self.ss(f, W::WireTypeVarint, wt, V::U32, I::read_uint32),
+            T::Enum(ref enu) => {
+                match wt {
+                    W::WireTypeVarint => {
                         try!(self.input.read_raw_varint32());
-                        Ok(String("Unimplemented".to_owned()))
+                        Ok(V::String("Unimplemented".to_owned()))
                     },
-                    _ => Err(bad_wire_type(field, wire_type)),
+                    _ => Err(bad_wire_type(f, wt)),
                 }
             },
-            FieldType::SFixed32 => wrap!(WireTypeFixed32 => I32, self.input.read_sfixed32()),
-            FieldType::SFixed64 => wrap!(WireTypeFixed64 => I64, self.input.read_sfixed64()),
-            FieldType::SInt32 => wrap!(WireTypeVarint => I32, self.input.read_sint32()),
-            FieldType::SInt64 => wrap!(WireTypeVarint => I64, self.input.read_sint64()),
+            T::SFixed32 => self.ss(f, W::WireTypeFixed32, wt, V::I32, I::read_sfixed32),
+            T::SFixed64 => self.ss(f, W::WireTypeFixed64, wt, V::I64, I::read_sfixed64),
+            T::SInt32 => self.ss(f, W::WireTypeVarint, wt, V::I32, I::read_sint32),
+            T::SInt64 => self.ss(f, W::WireTypeVarint, wt, V::I64, I::read_sint64),
+        }
+    }
+
+    fn ss<A, W, R>(&mut self,
+                   field: &descriptor::FieldDescriptor,
+                   expected_wire_type: wire_format::WireType,
+                   actual_wire_type: wire_format::WireType,
+                   wrapper: W,
+                   reader: R)
+                   -> error::Result<value::Value>
+        where W: Fn(A) -> value::Value,
+              R: Fn(&mut protobuf::CodedInputStream<'a>) -> protobuf::ProtobufResult<A>
+    {
+        if expected_wire_type == actual_wire_type {
+            Ok(wrapper(try!(reader(&mut self.input))))
+        } else {
+            Err(bad_wire_type(field, actual_wire_type))
+        }
+    }
+
+    fn sm(&mut self,
+          descriptors: &descriptor::Descriptors,
+          field: &descriptor::FieldDescriptor,
+          message: &descriptor::MessageDescriptor,
+          actual_wire_type: wire_format::WireType)
+          -> error::Result<value::Value> {
+        if wire_format::WireType::WireTypeLengthDelimited == actual_wire_type {
+            debug!("Reading a message");
+
+            let len = try!(self.input.read_raw_varint32());
+            let old_limit = try!(self.input.push_limit(len));
+            let result = try!(self.read_message(descriptors, message));
+            self.input.pop_limit(old_limit);
+            Ok(result)
+        } else {
+            Err(bad_wire_type(field, actual_wire_type))
         }
     }
 
@@ -222,14 +226,12 @@ impl<'a> Context<'a> {
             }
         };
 
-        match field.field_type {
+        match field.field_type(descriptors) {
             FieldType::UnresolvedMessage(ref m) => {
-                let msg = format!("Tried to use a field with an unresolved message type: {}", m);
-                return Err(error::Error::General(msg))
+                return Err(unresolved_message(m));
             },
             FieldType::UnresolvedEnum(ref e) => {
-                let msg = format!("Tried to use a field with an unresolved enum type: {}", e);
-                return Err(error::Error::General(msg))
+                return Err(unresolved_enum(e));
             },
             FieldType::Double => packable!(WireTypeFixed64 => 8, F64, self.input.read_double()),
             FieldType::Float => packable!(WireTypeFixed32 => 4, F32, self.input.read_float()),
@@ -239,15 +241,16 @@ impl<'a> Context<'a> {
             FieldType::Fixed64 => packable!(WireTypeFixed64 => U64, self.input.read_fixed64()),
             FieldType::Fixed32 => packable!(WireTypeFixed32 => U32, self.input.read_fixed32()),
             FieldType::Bool => packable!(WireTypeVarint => Bool, self.input.read_bool()),
-            FieldType::String => scalar!(WireTypeLengthDelimited => String, self.input.read_string()),
+            FieldType::String => {
+                scalar!(WireTypeLengthDelimited => String, self.input.read_string())
+            },
             FieldType::Group => unimplemented!(),
             FieldType::Message(ref message) => {
                 match wire_type {
                     WireTypeLengthDelimited => {
-                        let message = message.upgrade().unwrap();
                         let len = try!(self.input.read_raw_varint32());
                         let old_limit = try!(self.input.push_limit(len));
-                        let result = try!(self.read_message(descriptors, &message));
+                        let result = try!(self.read_message(descriptors, message));
                         self.input.pop_limit(old_limit);
                         values.push(result);
                     },
@@ -275,10 +278,25 @@ impl<'a> Context<'a> {
     }
 }
 
+fn unresolved_message(type_name: &str) -> error::Error {
+    let msg = format!("Tried to use a field with an unresolved message type: {}",
+                      type_name);
+    error::Error::General(msg)
+}
+
+fn unresolved_enum(type_name: &str) -> error::Error {
+    let msg = format!("Tried to use a field with an unresolved enum type: {}",
+                      type_name);
+    error::Error::General(msg)
+}
+
 fn bad_wire_type(field: &descriptor::FieldDescriptor,
                  wire_type: protobuf::stream::wire_format::WireType)
                  -> error::Error {
-    error::Error::General(format!("Unexpected wire type {:?} for field {}", wire_type, field))
+    let msg = format!("Unexpected wire type {:?} for field {}",
+                      wire_type,
+                      field.name());
+    error::Error::General(msg)
 }
 
 impl<'a> Iterator for ProtobufValues<'a> {

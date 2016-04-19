@@ -10,6 +10,16 @@ pub struct Context {
 
 impl Context {
     pub fn new() -> Context {
+        Context::default()
+    }
+
+    pub fn function(&self, name: &str) -> Option<&Box<Function>> {
+        self.functions.get(name)
+    }
+}
+
+impl Default for Context {
+    fn default() -> Context {
         let mut functions: collections::HashMap<String, Box<Function>> =
             collections::HashMap::new();
 
@@ -17,7 +27,7 @@ impl Context {
                          Box::new(|values: &[value::Value]| {
                              match values {
                                  [value::Value::Map(ref m), value::Value::String(ref s)] => {
-                                     m.get(s).map(|v| v.clone()).unwrap_or(value::Value::Unit)
+                                     m.get(s).map_or(value::Value::Unit, |v| v.clone())
                                  },
                                  _ => value::Value::Unit,
                              }
@@ -26,9 +36,5 @@ impl Context {
                          Box::new(|values: &[value::Value]| values[0].clone()));
 
         Context { functions: functions }
-    }
-
-    pub fn function(&self, name: &str) -> Option<&Box<Function>> {
-        self.functions.get(name)
     }
 }
