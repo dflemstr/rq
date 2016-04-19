@@ -1,3 +1,6 @@
+#![feature(plugin)]
+#![plugin(clippy)]
+
 extern crate ansi_term;
 extern crate clap;
 extern crate env_logger;

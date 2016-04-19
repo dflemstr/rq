@@ -15,6 +15,7 @@ path = "lalrpop"
 [dependencies]
 ansi_term = "0.7.2"
 clap = "2.1.1"
+clippy = "*"
 env_logger = "0.3.2"
 glob = "0.2.10"
 log = "0.3.5"
@@ -29,6 +30,8 @@ xdg-basedir = "1.0.0"
 branch = "output-control"
 git = "https://github.com/dflemstr/lalrpop.git"
 path = "lalrpop-util"
+
+[profile]
 
 [profile.release]
 lto = true

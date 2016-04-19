@@ -1,5 +1,5 @@
 #![feature(advanced_slice_patterns, plugin, slice_patterns)]
-#![plugin(mod_path)]
+#![plugin(clippy, mod_path)]
 
 extern crate glob;
 #[macro_use]
