@@ -53,32 +53,32 @@ impl<'a> Context<'a> {
             let (field_number, wire_type) = try!(self.input.read_tag_unpack());
             let number = field_number as i32;
 
-            debug!("Encountered field with number {} type {:?}",
+            trace!("Encountered field with number {} type {:?}",
                    number,
                    wire_type);
 
             // Only handle known fields for now
             if let Some(field) = message.field_by_number(number) {
-                debug!("Field is known: {:?}", field);
+                trace!("Field is known: {:?}", field);
 
                 if field.field_label() == descriptor::FieldLabel::Repeated {
-                    debug!("Field is repeated");
+                    trace!("Field is repeated");
                     let mut values = repeateds.entry(field.name().to_owned())
                                               .or_insert_with(Vec::new);
 
                     try!(self.read_repeated_field(descriptors, &field, wire_type, &mut values));
-                    debug!("Values so far {:?}", values);
+                    trace!("Values so far {:?}", values);
                 } else {
-                    debug!("Field is singular");
+                    trace!("Field is singular");
                     let value = try!(self.read_single_field(descriptors, &field, wire_type));
-                    debug!("Value is {:?}", value);
+                    trace!("Value is {:?}", value);
                     result.insert(value::Value::String(field.name().to_owned()), value);
                 }
             } else {
                 use protobuf::stream::wire_format::WireType;
                 match wire_type {
                     WireType::WireTypeStartGroup => {
-                        debug!("Skipping unknown group");
+                        trace!("Skipping unknown group");
                         loop {
                             let (_, wire_type) = try!(self.input
                                                           .read_tag_unpack());
@@ -89,7 +89,7 @@ impl<'a> Context<'a> {
                         }
                     },
                     _ => {
-                        debug!("Skipping unknown field");
+                        trace!("Skipping unknown field");
                         try!(self.input.skip_field(wire_type));
                     },
                 }
@@ -169,7 +169,7 @@ impl<'a> Context<'a> {
           actual_wire_type: wire_format::WireType)
           -> error::Result<value::Value> {
         if wire_format::WireType::WireTypeLengthDelimited == actual_wire_type {
-            debug!("Reading a message");
+            trace!("Reading a message");
 
             let len = try!(self.input.read_raw_varint32());
             let old_limit = try!(self.input.push_limit(len));

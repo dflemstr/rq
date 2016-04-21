@@ -13,7 +13,7 @@ pub fn add_file(paths: &config::Paths, file: &path::Path) -> error::Result<()> {
         let target = paths.preferred_data("proto").join(file_name).with_extension("proto");
 
         if let Some(parent) = target.parent() {
-            debug!("Creating directory {:?}", parent);
+            trace!("Creating directory {:?}", parent);
             try!(fs::create_dir_all(parent));
         }
 
@@ -37,10 +37,10 @@ pub fn compile_descriptor_set(paths: &config::Paths)
     debug!("Proto cache location: {:?}", cache);
 
     if try!(is_cache_stale(&cache, &proto_files)) {
-        debug!("Proto descriptor cache is stale; recomputing");
+        trace!("Proto descriptor cache is stale; recomputing");
 
         if let Some(parent) = cache.parent() {
-            debug!("Creating directory {:?}", parent);
+            trace!("Creating directory {:?}", parent);
             try!(fs::create_dir_all(parent));
         }
 
@@ -58,13 +58,13 @@ pub fn compile_descriptor_set(paths: &config::Paths)
             panic!("protoc descriptor compilation failed");
         }
 
-        debug!("Proto descriptor cache regenerated");
+        trace!("Proto descriptor cache regenerated");
     }
 
     let mut cache_file = try!(fs::File::open(&cache));
     let descriptor_set = try!(protobuf::parse_from_reader(&mut cache_file));
 
-    debug!("Successfully parsed descriptor set from cache");
+    trace!("Successfully parsed descriptor set from cache");
 
     Ok(descriptor_set)
 }
