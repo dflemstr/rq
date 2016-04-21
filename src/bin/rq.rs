@@ -1,14 +1,15 @@
 #![feature(plugin)]
-#![plugin(clippy)]
+#![plugin(clippy, docopt_macros)]
 
 extern crate ansi_term;
-extern crate clap;
+extern crate docopt;
 extern crate env_logger;
 #[macro_use]
 extern crate log;
 extern crate nix;
 extern crate protobuf;
 extern crate record_query;
+extern crate rustc_serialize;
 
 use std::env;
 use std::io;
@@ -16,63 +17,79 @@ use std::path;
 
 use record_query as rq;
 
-const ABOUT: &'static str = r#"
-A tool for manipulating data records.  Similar in spirit to awk(1),
-but on steroids.  Inspired by jq(1), but supports more record formats
-and operations.
+const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 
-Records are read from stdin, processed, and written to stdout.  The
-tool accepts a query in the custom rq query language as its main
-command-line arguments.
+docopt!(pub Args derive Debug, concat!("
+rq - record query v", env!("CARGO_PKG_VERSION"), "
 
-Flags can be used to control the input and output formats of the tool.
-By default, the input and output format is JSON.
+A tool for manipulating data records.
 
-See 'man rq' for in-depth documentation."#;
+Records are read from stdin, processed, and written to stdout.  The tool accepts
+a query in the custom rq query language as its main command-line arguments.
 
-const AUTHOR: &'static str = "David Flemström <david.flemstrom@gmail.com>";
+See 'man rq' for in-depth documentation.
 
-const INPUT_FORMAT_GROUP: &'static str = "input-format";
-const OUTPUT_FORMAT_GROUP: &'static str = "output-format";
+Usage:
+  rq (--help|--version)
+  rq [-j|-c|-p <type>] [-J|-C|-P <type>] [-l <level>|-q] [--] [<query>]
+  rq [-l <level>|-q] protobuf add <schema>
 
-const PROTOBUF_CMD: &'static str = "protobuf";
-const PROTOBUF_ADD_CMD: &'static str = "add";
-const PROTOBUF_ADD_INPUT_ARG: &'static str = "protobuf-add-input";
+Options:
+  --help
+      Show this screen.
+  --version
+      Show the program name and version.
 
-const INPUT_JSON_ARG: &'static str = "input-json";
-const OUTPUT_JSON_ARG: &'static str = "output-json";
-const INPUT_PROTOBUF_ARG: &'static str = "input-protobuf";
-const OUTPUT_PROTOBUF_ARG: &'static str = "output-protobuf";
-const INPUT_CBOR_ARG: &'static str = "input-cbor";
-const OUTPUT_CBOR_ARG: &'static str = "output-cbor";
+  -j, --input-json
+      Input is white-space separated JSON values.
+  -J, --output-json
+      Output should be formatted as JSON values.
+  -c, --input-cbor
+      Input is a series of CBOR values.
+  -C, --output-cbor
+      Output is a series of CBOR values.
+  -p <type>, --input-protobuf <type>
+      Input is a single protocol buffer object.  The argument refers to the
+      fully qualified name of the message type (including the leading '.').
+  -P <type>, --output-protobuf <type>
+      Output should be formatted as protocol buffer objects.  The argument
+      refers to the fully qualified name of the message type (including the
+      leading '.').
 
-const QUERY_ARG: &'static str = "query";
-const VERBOSE_ARG: &'static str = "verbose";
-const QUIET_ARG: &'static str = "quiet";
+  <query>
+      A query indicating how to transform each record.
+
+  -l <level>, --log <level>
+      Display log messages at and above the specified log level.  The value can
+      be one of 'off', 'error', 'warn', 'info', 'debug' or 'trace'.
+  -q, --quiet
+      Log nothing (alias for '-v off').
+"));
 
 fn main() {
     use std::io::Read;
 
-    let matches = match_args();
+    let args: Args = Args::docopt()
+        .version(Some(VERSION.to_owned()))
+        .decode().unwrap_or_else(|e| e.exit());
 
-    setup_log(matches.occurrences_of(VERBOSE_ARG),
-              matches.is_present(QUIET_ARG));
+    setup_log(&args.flag_log, args.flag_quiet);
 
     let paths = rq::config::Paths::new().unwrap();
 
-    if let Some(matches) = matches.subcommand_matches(PROTOBUF_CMD) {
-        if let Some(matches) = matches.subcommand_matches(PROTOBUF_ADD_CMD) {
-            let input = matches.value_of(PROTOBUF_ADD_INPUT_ARG).unwrap();
-            rq::proto_index::add_file(&paths, path::Path::new(input)).unwrap();
+    if args.cmd_protobuf {
+        if args.cmd_add {
+            let schema = path::Path::new(&args.arg_schema);
+            rq::proto_index::add_file(&paths, schema).unwrap();
         }
     } else {
-        let query = rq::query::Query::parse(matches.value_of(QUERY_ARG).unwrap());
+        let query = rq::query::Query::parse(&args.arg_query);
 
         let stdin = io::stdin();
         let mut input = stdin.lock();
 
-        if matches.is_present(INPUT_PROTOBUF_ARG) {
-            let name = matches.value_of(INPUT_PROTOBUF_ARG).unwrap();
+        if !args.flag_input_protobuf.is_empty() {
+            let name = args.flag_input_protobuf;
             debug!("Input is protobuf with argument {}", name);
 
             let descriptors_proto = rq::proto_index::compile_descriptor_set(&paths).unwrap();
@@ -83,7 +100,7 @@ fn main() {
                                                                   name.to_owned(),
                                                                   stream);
             run(values, query).unwrap_or_else(|e| error!("{:?}", e));
-        } else if matches.is_present(INPUT_CBOR_ARG) {
+        } else if args.flag_input_cbor {
             run(rq::value::cbor::CborValues::new(input), query)
                 .unwrap_or_else(|e| error!("{:?}", e));
         } else {
@@ -93,7 +110,8 @@ fn main() {
     }
 }
 
-fn setup_log(verbose_level: u64, quiet: bool) {
+fn setup_log(level: &str, quiet: bool) {
+    use std::str::FromStr;
     use ansi_term::ANSIStrings;
     use ansi_term::Colour;
     use ansi_term::Style;
@@ -138,11 +156,7 @@ fn setup_log(verbose_level: u64, quiet: bool) {
     let filter = if quiet {
         LogLevelFilter::Off
     } else {
-        match verbose_level {
-            0 => LogLevelFilter::Info,
-            1 => LogLevelFilter::Debug,
-            _ => LogLevelFilter::Trace,
-        }
+        LogLevelFilter::from_str(level).unwrap_or(LogLevelFilter::Info)
     };
 
     builder.format(format).filter(None, filter);
@@ -152,89 +166,6 @@ fn setup_log(verbose_level: u64, quiet: bool) {
     }
 
     builder.init().unwrap();
-}
-
-#[cfg_attr(rustfmt, rustfmt_skip)]
-fn match_args<'a>() -> clap::ArgMatches<'a> {
-    use clap::AppSettings;
-    use clap::Arg;
-    use clap::ArgGroup;
-    use clap::SubCommand;
-
-    clap::App::new("rq - Record query")
-        .version(env!("CARGO_PKG_VERSION"))
-        .author(AUTHOR)
-        .about(ABOUT)
-        .setting(AppSettings::SubcommandsNegateReqs)
-        .setting(AppSettings::ArgRequiredElseHelp)
-        .setting(AppSettings::GlobalVersion)
-        .setting(AppSettings::VersionlessSubcommands)
-        .setting(AppSettings::UnifiedHelpMessage)
-        .setting(AppSettings::ColoredHelp)
-        .group(ArgGroup::with_name(INPUT_FORMAT_GROUP))
-        .group(ArgGroup::with_name(OUTPUT_FORMAT_GROUP))
-        .arg(Arg::with_name(INPUT_JSON_ARG)
-             .group(INPUT_FORMAT_GROUP)
-             .short("j")
-             .long("input-json")
-             .help("Input is white-space separated JSON values."))
-        .arg(Arg::with_name(OUTPUT_JSON_ARG)
-             .group(OUTPUT_FORMAT_GROUP)
-             .short("J")
-             .long("output-json")
-             .help("Output should be formatted as JSON values."))
-        .arg(Arg::with_name(INPUT_PROTOBUF_ARG)
-             .group(INPUT_FORMAT_GROUP)
-             .short("p")
-             .long("input-protobuf")
-             .takes_value(true)
-             .value_name(".package.MessageType")
-             .next_line_help(true)
-             .help("Input is a single protocol buffer object.  The argument refers to the fully \
-                    qualified name of the message type (including the leading '.')"))
-        .arg(Arg::with_name(OUTPUT_PROTOBUF_ARG)
-             .group(OUTPUT_FORMAT_GROUP)
-             .short("P")
-             .long("output-protobuf")
-             .takes_value(true)
-             .value_name(".package.MessageType")
-             .next_line_help(true)
-             .help("Output should be formatted as protocol buffer objects.  The argument refers \
-                    to the fully qualified name of the message type (including the leading '.'), \
-                    but if it is omitted and -p was used, the input schema is used instead."))
-        .arg(Arg::with_name(INPUT_CBOR_ARG)
-             .group(INPUT_FORMAT_GROUP)
-             .short("c")
-             .long("input-cbor")
-             .help("Input is a sequence of CBOR values."))
-        .arg(Arg::with_name(OUTPUT_CBOR_ARG)
-             .group(OUTPUT_FORMAT_GROUP)
-             .short("C")
-             .long("output-cbor")
-             .help("Output should be formatted as CBOR values."))
-        .arg(Arg::with_name(QUERY_ARG)
-             .required(true)
-             .help("The query to apply."))
-        .arg(Arg::with_name(VERBOSE_ARG)
-             .short("v")
-             .long("verbose")
-             .multiple(true)
-             .help("Increase the logging verbosity"))
-        .arg(Arg::with_name(QUIET_ARG)
-             .short("q")
-             .long("quiet")
-             .help("Disable default logging (the RUST_LOG env var is still respected)"))
-        .subcommand(SubCommand::with_name(PROTOBUF_CMD)
-                    .about("Control protobuf configuration and data")
-                    .author(AUTHOR)
-                    .subcommand(SubCommand::with_name(PROTOBUF_ADD_CMD)
-                                .about("Add a schema file to the rq registry")
-                                .author(AUTHOR)
-                                .arg(Arg::with_name(PROTOBUF_ADD_INPUT_ARG)
-                                     .required(true)
-                                     .value_name("schema")
-                                     .help("The path to a .proto file to add to the rq registry"))))
-        .get_matches()
 }
 
 fn run<Iter>(input: Iter, query: rq::query::Query) -> rq::error::Result<()>
@@ -254,4 +185,134 @@ fn run<Iter>(input: Iter, query: rq::query::Query) -> rq::error::Result<()>
         try!(stdout.flush());
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    fn parse_args(args: &[&str]) -> Args {
+        let a = Args::docopt().argv(args).decode().unwrap();
+        println!("{:?}", a);
+        a
+    }
+
+    #[test]
+    fn test_docopt_kitchen_sink() {
+        let a = parse_args(&["rq", "-l", "info", "-jP", ".foo.Bar", "select x"]);
+        assert!(a.flag_input_json);
+        assert_eq!(a.flag_output_protobuf, ".foo.Bar");
+        assert_eq!(a.flag_log, "info");
+        assert_eq!(a.arg_query, "select x");
+    }
+
+    #[test]
+    fn test_docopt_no_args() {
+        parse_args(&["rq"]);
+    }
+
+    #[test]
+    #[should_panic(expected = "Help")]
+    fn test_docopt_help() {
+        parse_args(&["rq", "--help"]);
+    }
+
+    #[test]
+    fn test_docopt_version() {
+        let a = parse_args(&["rq", "--version"]);
+        assert!(a.flag_version);
+    }
+
+    #[test]
+    fn test_docopt_input_json() {
+        let a = parse_args(&["rq", "-j"]);
+        assert!(a.flag_input_json);
+    }
+
+    #[test]
+    fn test_docopt_input_json_long() {
+        let a = parse_args(&["rq", "--input-json"]);
+        assert!(a.flag_input_json);
+    }
+
+    #[test]
+    fn test_docopt_output_json() {
+        let a = parse_args(&["rq", "-J"]);
+        assert!(a.flag_output_json);
+    }
+
+    #[test]
+    fn test_docopt_output_json_long() {
+        let a = parse_args(&["rq", "--output-json"]);
+        assert!(a.flag_output_json);
+    }
+
+    #[test]
+    fn test_docopt_input_cbor() {
+        let a = parse_args(&["rq", "-c"]);
+        assert!(a.flag_input_cbor);
+    }
+
+    #[test]
+    fn test_docopt_input_cbor_long() {
+        let a = parse_args(&["rq", "--input-cbor"]);
+        assert!(a.flag_input_cbor);
+    }
+
+    #[test]
+    fn test_docopt_output_cbor() {
+        let a = parse_args(&["rq", "-C"]);
+        assert!(a.flag_output_cbor);
+    }
+
+    #[test]
+    fn test_docopt_output_cbor_long() {
+        let a = parse_args(&["rq", "--output-cbor"]);
+        assert!(a.flag_output_cbor);
+    }
+
+    #[test]
+    fn test_docopt_input_protobuf() {
+        let a = parse_args(&["rq", "-p", ".foo.Bar"]);
+        assert_eq!(a.flag_input_protobuf, ".foo.Bar");
+    }
+
+    #[test]
+    fn test_docopt_input_protobuf_long() {
+        let a = parse_args(&["rq", "--input-protobuf", ".foo.Bar"]);
+        assert_eq!(a.flag_input_protobuf, ".foo.Bar");
+    }
+
+    #[test]
+    fn test_docopt_output_protobuf() {
+        let a = parse_args(&["rq", "-P", ".foo.Bar"]);
+        assert_eq!(a.flag_output_protobuf, ".foo.Bar");
+    }
+
+    #[test]
+    fn test_docopt_output_protobuf_long() {
+        let a = parse_args(&["rq", "--output-protobuf", ".foo.Bar"]);
+        assert_eq!(a.flag_output_protobuf, ".foo.Bar");
+    }
+
+    #[test]
+    #[should_panic(expected = "NoMatch")]
+    fn test_docopt_input_conflict() {
+        parse_args(&["rq", "-jc"]);
+    }
+
+    #[test]
+    #[should_panic(expected = "NoMatch")]
+    fn test_docopt_output_conflict() {
+        parse_args(&["rq", "-JC"]);
+    }
+
+    #[test]
+    fn test_docopt_protobuf_add_schema() {
+        let a = parse_args(&["rq", "-l", "info", "protobuf", "add", "schema.proto"]);
+        assert_eq!(a.flag_log, "info");
+        assert!(a.cmd_protobuf);
+        assert!(a.cmd_add);
+        assert_eq!(a.arg_schema, "schema.proto");
+    }
 }
