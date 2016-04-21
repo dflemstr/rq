@@ -42,23 +42,26 @@ fn cbor_to_value(cbor: serde_cbor::Value) -> value::Value {
         serde_cbor::Value::Bool(v) => value::Value::Bool(v),
         serde_cbor::Value::I64(v) => value::Value::I64(v),
         serde_cbor::Value::U64(v) => value::Value::U64(v),
-        serde_cbor::Value::F64(v) => value::Value::F64(v),
+        serde_cbor::Value::F64(v) => value::Value::from_f64(v),
         serde_cbor::Value::String(v) => value::Value::String(v),
         serde_cbor::Value::Array(v) => {
             value::Value::Sequence(v.into_iter().map(cbor_to_value).collect())
         },
         serde_cbor::Value::Object(v) => {
             value::Value::Map(v.into_iter()
-                               .map(|(k, v)| (cbor_key_to_string(k), cbor_to_value(v)))
+                               .map(|(k, v)| (cbor_key_to_value(k), cbor_to_value(v)))
                                .collect())
         },
         serde_cbor::Value::Bytes(b) => value::Value::Bytes(b),
     }
 }
 
-fn cbor_key_to_string(key: serde_cbor::ObjectKey) -> String {
+fn cbor_key_to_value(key: serde_cbor::ObjectKey) -> value::Value {
     match key {
-        serde_cbor::ObjectKey::String(s) => s,
-        _ => unimplemented!(),
+        serde_cbor::ObjectKey::Integer(i) => value::Value::I64(i),
+        serde_cbor::ObjectKey::Bytes(b) => value::Value::Bytes(b),
+        serde_cbor::ObjectKey::String(s) => value::Value::String(s),
+        serde_cbor::ObjectKey::Bool(b) => value::Value::Bool(b),
+        serde_cbor::ObjectKey::Null => value::Value::Unit,
     }
 }

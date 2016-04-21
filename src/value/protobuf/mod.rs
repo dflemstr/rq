@@ -72,7 +72,7 @@ impl<'a> Context<'a> {
                     debug!("Field is singular");
                     let value = try!(self.read_single_field(descriptors, &field, wire_type));
                     debug!("Value is {:?}", value);
-                    result.insert(field.name().to_owned(), value);
+                    result.insert(value::Value::String(field.name().to_owned()), value);
                 }
             } else {
                 use protobuf::stream::wire_format::WireType;
@@ -97,7 +97,7 @@ impl<'a> Context<'a> {
         }
 
         for (key, values) in repeateds.into_iter() {
-            result.insert(key, value::Value::Sequence(values));
+            result.insert(value::Value::String(key), value::Value::Sequence(values));
         }
 
         Ok(value::Value::Map(result))
@@ -116,8 +116,8 @@ impl<'a> Context<'a> {
         match f.field_type(descriptors) {
             T::UnresolvedMessage(ref m) => Err(unresolved_message(m)),
             T::UnresolvedEnum(ref e) => Err(unresolved_enum(e)),
-            T::Double => self.ss(f, W::WireTypeFixed64, wt, V::F64, I::read_double),
-            T::Float => self.ss(f, W::WireTypeFixed32, wt, V::F32, I::read_float),
+            T::Double => self.ss(f, W::WireTypeFixed64, wt, V::from_f64, I::read_double),
+            T::Float => self.ss(f, W::WireTypeFixed32, wt, V::from_f32, I::read_float),
             T::Int64 => self.ss(f, W::WireTypeVarint, wt, V::I64, I::read_int64),
             T::UInt64 => self.ss(f, W::WireTypeVarint, wt, V::U64, I::read_uint64),
             T::Int32 => self.ss(f, W::WireTypeVarint, wt, V::I32, I::read_int32),
@@ -233,8 +233,8 @@ impl<'a> Context<'a> {
             FieldType::UnresolvedEnum(ref e) => {
                 return Err(unresolved_enum(e));
             },
-            FieldType::Double => packable!(WireTypeFixed64 => 8, F64, self.input.read_double()),
-            FieldType::Float => packable!(WireTypeFixed32 => 4, F32, self.input.read_float()),
+            FieldType::Double => packable!(WireTypeFixed64 => 8, value::Value::from_f64, self.input.read_double()),
+            FieldType::Float => packable!(WireTypeFixed32 => 4, value::Value::from_f32, self.input.read_float()),
             FieldType::Int64 => packable!(WireTypeVarint => I64, self.input.read_int64()),
             FieldType::UInt64 => packable!(WireTypeVarint => U64, self.input.read_uint64()),
             FieldType::Int32 => packable!(WireTypeVarint => I32, self.input.read_int32()),

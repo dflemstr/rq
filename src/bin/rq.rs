@@ -43,6 +43,8 @@ const INPUT_JSON_ARG: &'static str = "input-json";
 const OUTPUT_JSON_ARG: &'static str = "output-json";
 const INPUT_PROTOBUF_ARG: &'static str = "input-protobuf";
 const OUTPUT_PROTOBUF_ARG: &'static str = "output-protobuf";
+const INPUT_CBOR_ARG: &'static str = "input-cbor";
+const OUTPUT_CBOR_ARG: &'static str = "output-cbor";
 
 const QUERY_ARG: &'static str = "query";
 const VERBOSE_ARG: &'static str = "verbose";
@@ -81,6 +83,9 @@ fn main() {
                                                                   name.to_owned(),
                                                                   stream);
             run(values, query).unwrap_or_else(|e| error!("{:?}", e));
+        } else if matches.is_present(INPUT_CBOR_ARG) {
+            run(rq::value::cbor::CborValues::new(input), query)
+                .unwrap_or_else(|e| error!("{:?}", e));
         } else {
             run(rq::value::json::JsonValues::new(input.bytes()), query)
                 .unwrap_or_else(|e| error!("{:?}", e));
@@ -197,6 +202,16 @@ fn match_args<'a>() -> clap::ArgMatches<'a> {
              .help("Output should be formatted as protocol buffer objects.  The argument refers \
                     to the fully qualified name of the message type (including the leading '.'), \
                     but if it is omitted and -p was used, the input schema is used instead."))
+        .arg(Arg::with_name(INPUT_CBOR_ARG)
+             .group(INPUT_FORMAT_GROUP)
+             .short("c")
+             .long("input-cbor")
+             .help("Input is a sequence of CBOR values."))
+        .arg(Arg::with_name(OUTPUT_CBOR_ARG)
+             .group(OUTPUT_FORMAT_GROUP)
+             .short("C")
+             .long("output-cbor")
+             .help("Output should be formatted as CBOR values."))
         .arg(Arg::with_name(QUERY_ARG)
              .required(true)
              .help("The query to apply."))

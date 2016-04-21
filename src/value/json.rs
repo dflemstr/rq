@@ -46,14 +46,14 @@ fn json_to_value(json: serde_json::Value) -> value::Value {
         serde_json::Value::Bool(v) => value::Value::Bool(v),
         serde_json::Value::I64(v) => value::Value::I64(v),
         serde_json::Value::U64(v) => value::Value::U64(v),
-        serde_json::Value::F64(v) => value::Value::F64(v),
+        serde_json::Value::F64(v) => value::Value::from_f64(v),
         serde_json::Value::String(v) => value::Value::String(v),
         serde_json::Value::Array(v) => {
             value::Value::Sequence(v.into_iter().map(json_to_value).collect())
         },
         serde_json::Value::Object(v) => {
             value::Value::Map(v.into_iter()
-                               .map(|(k, v)| (k, json_to_value(v)))
+                               .map(|(k, v)| (value::Value::String(k), json_to_value(v)))
                                .collect())
         },
     }

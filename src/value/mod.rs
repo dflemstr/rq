@@ -1,6 +1,7 @@
 use std::collections;
 use std::io;
 
+use ordered_float;
 use serde;
 use serde_json;
 
@@ -10,7 +11,7 @@ pub mod cbor;
 pub mod json;
 pub mod protobuf;
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub enum Value {
     Unit,
     Bool(bool),
@@ -27,8 +28,8 @@ pub enum Value {
     U32(u32),
     U64(u64),
 
-    F32(f32),
-    F64(f64),
+    F32(ordered_float::OrderedFloat<f32>),
+    F64(ordered_float::OrderedFloat<f64>),
 
     Char(char),
     String(String),
@@ -36,7 +37,7 @@ pub enum Value {
 
     Sequence(Vec<Value>),
     // TODO: Use a container that preserves insertion order
-    Map(collections::BTreeMap<String, Value>),
+    Map(collections::BTreeMap<Value, Value>),
 }
 
 impl Value {
@@ -44,6 +45,14 @@ impl Value {
         where W: io::Write
     {
         Ok(try!(serde_json::to_writer(write, self)))
+    }
+
+    pub fn from_f32(v: f32) -> Value {
+        Value::F32(ordered_float::OrderedFloat(v))
+    }
+
+    pub fn from_f64(v: f64) -> Value {
+        Value::F64(ordered_float::OrderedFloat(v))
     }
 }
 

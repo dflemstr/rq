@@ -4,6 +4,7 @@
 extern crate glob;
 #[macro_use]
 extern crate log;
+extern crate ordered_float;
 extern crate protobuf;
 extern crate serde;
 extern crate serde_cbor;

@@ -26,8 +26,8 @@ impl Default for Context {
         functions.insert("select".to_owned(),
                          Box::new(|values: &[value::Value]| {
                              match values {
-                                 [value::Value::Map(ref m), value::Value::String(ref s)] => {
-                                     m.get(s).map_or(value::Value::Unit, |v| v.clone())
+                                 [value::Value::Map(ref m), ref v] => {
+                                     m.get(v).map_or(value::Value::Unit, |v| v.clone())
                                  },
                                  _ => value::Value::Unit,
                              }
