@@ -63,7 +63,7 @@ Options:
       Display log messages at and above the specified log level.  The value can
       be one of 'off', 'error', 'warn', 'info', 'debug' or 'trace'.
   -q, --quiet
-      Log nothing (alias for '-v off').
+      Log nothing (alias for '-l off').
 "));
 
 fn main() {
