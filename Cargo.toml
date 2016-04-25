@@ -9,8 +9,7 @@ version = "0.1.0"
 env_logger = "0.3.2"
 
 [build-dependencies.lalrpop]
-branch = "output-control"
-git = "https://github.com/dflemstr/lalrpop.git"
+git = "https://github.com/nikomatsakis/lalrpop.git"
 path = "lalrpop"
 
 [dependencies]
@@ -32,8 +31,7 @@ serde_json = "0.7.0"
 xdg-basedir = "1.0.0"
 
 [dependencies.lalrpop-util]
-branch = "output-control"
-git = "https://github.com/dflemstr/lalrpop.git"
+git = "https://github.com/nikomatsakis/lalrpop.git"
 path = "lalrpop-util"
 
 [profile]
