@@ -1,5 +1,6 @@
 [package]
 authors = ["David Flemström <david.flemstrom@gmail.com>"]
+license = "Apache-2.0"
 build = "build.rs"
 name = "record-query"
 version = "0.1.0"
