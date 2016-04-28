@@ -1,67 +1,41 @@
 use std::io;
 
+use serde;
 use serde_cbor;
 
 use error;
 use value;
 
-pub struct CborValues<R>
-    where R: io::Read
-{
-    deserializer: serde_cbor::de::Deserializer<R>,
+pub struct CborSource<R>(serde_cbor::de::Deserializer<R>)
+    where R: io::Read;
+
+pub struct CborSink<W>(serde_cbor::ser::Serializer<W>)
+    where W: io::Write;
+
+#[inline]
+pub fn source<R>(r: R) -> CborSource<R> where R: io::Read {
+    CborSource(serde_cbor::de::Deserializer::new(r))
 }
 
-impl<R> CborValues<R>
-    where R: io::Read
-{
-    pub fn new(reader: R) -> CborValues<R> {
-        CborValues { deserializer: serde_cbor::de::Deserializer::new(reader) }
-    }
+#[inline]
+pub fn sink<W>(w: W) -> CborSink<W> where W: io::Write {
+    CborSink(serde_cbor::ser::Serializer::new(w))
 }
 
-impl<R> Iterator for CborValues<R>
-    where R: io::Read
-{
-    type Item = error::Result<value::Value>;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        use serde::de::Deserialize;
-        use serde_cbor::error::Error::*;
-
-        match serde_cbor::Value::deserialize(&mut self.deserializer) {
-            Ok(v) => Some(Ok(cbor_to_value(v))),
-            Err(Eof) => None,
-            Err(e) => Some(Err(error::Error::from(e))),
+impl<R> value::Source for CborSource<R> where R: io::Read {
+    #[inline]
+    fn read(&mut self) -> error::Result<Option<value::Value>> {
+        match serde::Deserialize::deserialize(&mut self.0) {
+            Ok(v) => Ok(Some(v)),
+            Err(serde_cbor::error::Error::Eof) => Ok(None),
+            Err(e) => Err(error::Error::from(e)),
         }
     }
 }
 
-fn cbor_to_value(cbor: serde_cbor::Value) -> value::Value {
-    match cbor {
-        serde_cbor::Value::Null => value::Value::Unit,
-        serde_cbor::Value::Bool(v) => value::Value::Bool(v),
-        serde_cbor::Value::I64(v) => value::Value::I64(v),
-        serde_cbor::Value::U64(v) => value::Value::U64(v),
-        serde_cbor::Value::F64(v) => value::Value::from_f64(v),
-        serde_cbor::Value::String(v) => value::Value::String(v),
-        serde_cbor::Value::Array(v) => {
-            value::Value::Sequence(v.into_iter().map(cbor_to_value).collect())
-        },
-        serde_cbor::Value::Object(v) => {
-            value::Value::Map(v.into_iter()
-                               .map(|(k, v)| (cbor_key_to_value(k), cbor_to_value(v)))
-                               .collect())
-        },
-        serde_cbor::Value::Bytes(b) => value::Value::Bytes(b),
-    }
-}
-
-fn cbor_key_to_value(key: serde_cbor::ObjectKey) -> value::Value {
-    match key {
-        serde_cbor::ObjectKey::Integer(i) => value::Value::I64(i),
-        serde_cbor::ObjectKey::Bytes(b) => value::Value::Bytes(b),
-        serde_cbor::ObjectKey::String(s) => value::Value::String(s),
-        serde_cbor::ObjectKey::Bool(b) => value::Value::Bool(b),
-        serde_cbor::ObjectKey::Null => value::Value::Unit,
+impl<W> value::Sink for CborSink<W> where W: io::Write {
+    #[inline]
+    fn write(&mut self, v: value::Value) -> error::Result<()> {
+        serde::Serialize::serialize(&v, &mut self.0).map_err(From::from)
     }
 }

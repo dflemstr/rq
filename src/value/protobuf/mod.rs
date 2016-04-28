@@ -8,8 +8,8 @@ use value;
 
 pub mod descriptor;
 
-pub struct ProtobufValues<'a> {
-    descriptors: descriptor::Descriptors,
+pub struct ProtobufSource<'a> {
+    descriptors: &'a descriptor::Descriptors,
     name: String,
     context: Context<'a>,
 }
@@ -18,18 +18,17 @@ struct Context<'a> {
     input: protobuf::CodedInputStream<'a>,
 }
 
-impl<'a> ProtobufValues<'a> {
-    pub fn new(descriptors: descriptor::Descriptors,
-               name: String,
-               input: protobuf::CodedInputStream<'a>)
-               -> ProtobufValues<'a> {
-        ProtobufValues {
-            descriptors: descriptors,
-            name: name,
-            context: Context { input: input },
-        }
+pub fn source<'a>(descriptors: &'a descriptor::Descriptors,
+                  name: String,
+                  input: protobuf::CodedInputStream<'a>) -> ProtobufSource<'a> {
+    ProtobufSource {
+        descriptors: descriptors,
+        name: name,
+        context: Context { input: input },
     }
+}
 
+impl<'a> ProtobufSource<'a> {
     fn try_next(&mut self) -> error::Result<value::Value> {
         match self.descriptors.message_by_name(&self.name) {
             Some(message) => self.context.read_message(&self.descriptors, message),
@@ -233,8 +232,12 @@ impl<'a> Context<'a> {
             FieldType::UnresolvedEnum(ref e) => {
                 return Err(unresolved_enum(e));
             },
-            FieldType::Double => packable!(WireTypeFixed64 => 8, value::Value::from_f64, self.input.read_double()),
-            FieldType::Float => packable!(WireTypeFixed32 => 4, value::Value::from_f32, self.input.read_float()),
+            FieldType::Double => {
+                packable!(WireTypeFixed64 => 8, value::Value::from_f64, self.input.read_double())
+            },
+            FieldType::Float => {
+                packable!(WireTypeFixed32 => 4, value::Value::from_f32, self.input.read_float())
+            },
             FieldType::Int64 => packable!(WireTypeVarint => I64, self.input.read_int64()),
             FieldType::UInt64 => packable!(WireTypeVarint => U64, self.input.read_uint64()),
             FieldType::Int32 => packable!(WireTypeVarint => I32, self.input.read_int32()),
@@ -299,14 +302,12 @@ fn bad_wire_type(field: &descriptor::FieldDescriptor,
     error::Error::General(msg)
 }
 
-impl<'a> Iterator for ProtobufValues<'a> {
-    type Item = error::Result<value::Value>;
-
-    fn next(&mut self) -> Option<Self::Item> {
+impl<'a> value::Source for ProtobufSource<'a> {
+    fn read(&mut self) -> error::Result<Option<value::Value>> {
         match self.context.input.eof() {
-            Ok(false) => Some(self.try_next()),
-            Ok(true) => None,
-            Err(e) => Some(Err(error::Error::from(e))),
+            Ok(false) => self.try_next().map(Some),
+            Ok(true) => Ok(None),
+            Err(e) => Err(error::Error::from(e)),
         }
     }
 }

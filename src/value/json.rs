@@ -1,60 +1,55 @@
 use std::io;
+use std::mem;
 
+use serde;
 use serde_json;
 
 use error;
 use value;
 
-pub struct JsonValues<Iter>
-    where Iter: Iterator<Item = io::Result<u8>>
-{
-    deserializer: serde_json::de::Deserializer<Iter>,
+pub struct JsonSource<R>(serde_json::StreamDeserializer<value::Value, io::Bytes<R>>)
+    where R: io::Read;
+
+pub struct JsonSink<W>(Option<serde_json::Serializer<W>>)
+    where W: io::Write;
+
+#[inline]
+pub fn source<R>(r: R) -> JsonSource<R> where R: io::Read {
+    JsonSource(serde_json::StreamDeserializer::new(r.bytes()))
 }
 
-impl<Iter> JsonValues<Iter>
-    where Iter: Iterator<Item = io::Result<u8>>
-{
-    pub fn new(iter: Iter) -> JsonValues<Iter> {
-        JsonValues { deserializer: serde_json::Deserializer::new(iter) }
-    }
+#[inline]
+pub fn sink<W>(w: W) -> JsonSink<W> where W: io::Write {
+    JsonSink(Some(serde_json::Serializer::new(w)))
 }
 
-impl<Iter> Iterator for JsonValues<Iter>
-    where Iter: Iterator<Item = io::Result<u8>>
+impl<R> value::Source for JsonSource<R>
+    where R: io::Read
 {
-    type Item = error::Result<value::Value>;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        use serde::de::Deserialize;
-        use serde_json::error::Error::*;
-        use serde_json::error::ErrorCode::*;
-
-        match serde_json::Value::deserialize(&mut self.deserializer) {
-            Ok(v) => Some(Ok(json_to_value(v))),
-            Err(Syntax(EOFWhileParsingList, _, _)) => None,
-            Err(Syntax(EOFWhileParsingObject, _, _)) => None,
-            Err(Syntax(EOFWhileParsingString, _, _)) => None,
-            Err(Syntax(EOFWhileParsingValue, _, _)) => None,
-            Err(e) => Some(Err(error::Error::from(e))),
+    #[inline]
+    fn read(&mut self) -> error::Result<Option<value::Value>> {
+        match self.0.next() {
+            Some(Ok(v)) => Ok(Some(v)),
+            Some(Err(e)) => Err(error::Error::from(e)),
+            None => Ok(None),
         }
     }
 }
 
-fn json_to_value(json: serde_json::Value) -> value::Value {
-    match json {
-        serde_json::Value::Null => value::Value::Unit,
-        serde_json::Value::Bool(v) => value::Value::Bool(v),
-        serde_json::Value::I64(v) => value::Value::I64(v),
-        serde_json::Value::U64(v) => value::Value::U64(v),
-        serde_json::Value::F64(v) => value::Value::from_f64(v),
-        serde_json::Value::String(v) => value::Value::String(v),
-        serde_json::Value::Array(v) => {
-            value::Value::Sequence(v.into_iter().map(json_to_value).collect())
-        },
-        serde_json::Value::Object(v) => {
-            value::Value::Map(v.into_iter()
-                               .map(|(k, v)| (value::Value::String(k), json_to_value(v)))
-                               .collect())
-        },
+impl<W> value::Sink for JsonSink<W>
+    where W: io::Write
+{
+    #[inline]
+    fn write(&mut self, v: value::Value) -> error::Result<()> {
+        if let Some(ref mut w) = self.0 {
+            try!(serde::Serialize::serialize(&v, w));
+        }
+
+        // Some juggling required here to get the underlying writer temporarily, to write a newline.
+        let mut w = mem::replace(&mut self.0, None).unwrap().into_inner();
+        let result = w.write_all(&[10]);
+        mem::replace(&mut self.0, Some(serde_json::Serializer::new(w)));
+
+        result.map_err(From::from)
     }
 }

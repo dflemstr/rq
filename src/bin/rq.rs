@@ -64,16 +64,18 @@ Options:
       be one of 'off', 'error', 'warn', 'info', 'debug' or 'trace'.
   -q, --quiet
       Log nothing (alias for '-l off').
-"));
+"),
+        flag_input_protobuf: Option<String>,
+        flag_output_protobuf: Option<String>,
+        flag_log: Option<String>);
 
 fn main() {
-    use std::io::Read;
-
     let args: Args = Args::docopt()
-        .version(Some(VERSION.to_owned()))
-        .decode().unwrap_or_else(|e| e.exit());
+                         .version(Some(VERSION.to_owned()))
+                         .decode()
+                         .unwrap_or_else(|e| e.exit());
 
-    setup_log(&args.flag_log, args.flag_quiet);
+    setup_log(args.flag_log.as_ref().map(String::as_ref), args.flag_quiet);
 
     let paths = rq::config::Paths::new().unwrap();
 
@@ -84,33 +86,125 @@ fn main() {
         }
     } else {
         let query = rq::query::Query::parse(&args.arg_query);
+        let query_context = rq::query::Context::new();
+        // TODO: lazy load
+        let proto_descriptors = load_descriptors(&paths).unwrap();
 
         let stdin = io::stdin();
         let mut input = stdin.lock();
+        let output = io::stdout();
 
-        if !args.flag_input_protobuf.is_empty() {
-            let name = args.flag_input_protobuf;
-            debug!("Input is protobuf with argument {}", name);
-
-            let descriptors_proto = rq::proto_index::compile_descriptor_set(&paths).unwrap();
-            let descriptors =
-                rq::value::protobuf::descriptor::Descriptors::from_protobuf(&descriptors_proto);
-            let stream = protobuf::CodedInputStream::new(&mut input);
-            let values = rq::value::protobuf::ProtobufValues::new(descriptors,
-                                                                  name.to_owned(),
-                                                                  stream);
-            run(values, query).unwrap_or_else(|e| error!("{:?}", e));
-        } else if args.flag_input_cbor {
-            run(rq::value::cbor::CborValues::new(input), query)
-                .unwrap_or_else(|e| error!("{:?}", e));
-        } else {
-            run(rq::value::json::JsonValues::new(input.bytes()), query)
-                .unwrap_or_else(|e| error!("{:?}", e));
-        }
+        run_raw(
+            &args,
+            &paths,
+            &query,
+            &query_context,
+            &proto_descriptors,
+            input,
+            output).unwrap_or_else(|e| error!("{:?}", e));
     }
 }
 
-fn setup_log(level: &str, quiet: bool) {
+fn run_raw<R, W>(
+    args: &Args,
+    paths: &rq::config::Paths,
+    query: &rq::query::Query,
+    query_context: &rq::query::Context,
+    proto_descriptors: &rq::value::protobuf::descriptor::Descriptors,
+    mut r: R,
+    w: W) -> rq::error::Result<()>
+    where R: io::Read, W: io::Write {
+    if let Some(ref name) = args.flag_input_protobuf {
+        debug!("Input is protobuf with argument {:?}", name);
+
+        let stream = protobuf::CodedInputStream::new(&mut r);
+
+        run_from_source(
+            args,
+            paths,
+            query,
+            query_context,
+            proto_descriptors,
+            rq::value::protobuf::source(proto_descriptors, name.to_owned(), stream),
+            w)
+    } else if args.flag_input_cbor {
+        run_from_source(
+            args,
+            paths,
+            query,
+            query_context,
+            proto_descriptors,
+            rq::value::cbor::source(r),
+            w)
+    } else {
+        run_from_source(
+            args,
+            paths,
+            query,
+            query_context,
+            proto_descriptors,
+            rq::value::json::source(r),
+            w)
+    }
+}
+
+fn run_from_source<I, W>(
+    args: &Args,
+    paths: &rq::config::Paths,
+    query: &rq::query::Query,
+    query_context: &rq::query::Context,
+    proto_descriptors: &rq::value::protobuf::descriptor::Descriptors,
+    source: I,
+    w: W) -> rq::error::Result<()>
+    where I: rq::value::Source, W: io::Write {
+    if let Some(ref name) = args.flag_output_protobuf {
+        unimplemented!()
+    } else if args.flag_output_cbor {
+        run(args,
+            paths,
+            query,
+            query_context,
+            proto_descriptors,
+            source,
+            rq::value::cbor::sink(w))
+    } else {
+        run(args,
+            paths,
+            query,
+            query_context,
+            proto_descriptors,
+            source,
+            rq::value::json::sink(w))
+    }
+}
+
+fn run<I, O>(
+    args: &Args,
+    paths: &rq::config::Paths,
+    query: &rq::query::Query,
+    query_context: &rq::query::Context,
+    proto_descriptors: &rq::value::protobuf::descriptor::Descriptors,
+    mut source: I,
+    mut sink: O) -> rq::error::Result<()>
+    where I: rq::value::Source,
+          O: rq::value::Sink
+{
+    debug!("Starting input consumption");
+    while let Some(i) = try!(source.read()) {
+        debug!("Consuming an input value");
+        let o = query.evaluate(query_context, i);
+        try!(sink.write(o));
+    }
+
+    Ok(())
+}
+
+fn load_descriptors(paths: &rq::config::Paths) -> rq::error::Result<rq::value::protobuf::descriptor::Descriptors> {
+    let descriptors_proto = try!(rq::proto_index::compile_descriptor_set(paths));
+    Ok(rq::value::protobuf::descriptor::Descriptors::from_protobuf(&descriptors_proto))
+}
+
+fn setup_log(level: Option<&str>, quiet: bool) {
     use std::str::FromStr;
     use ansi_term::ANSIStrings;
     use ansi_term::Colour;
@@ -155,8 +249,10 @@ fn setup_log(level: &str, quiet: bool) {
 
     let filter = if quiet {
         LogLevelFilter::Off
+    } else if let Some(l) = level {
+        LogLevelFilter::from_str(l).unwrap_or(LogLevelFilter::Info)
     } else {
-        LogLevelFilter::from_str(level).unwrap_or(LogLevelFilter::Info)
+        LogLevelFilter::Info
     };
 
     builder.format(format).filter(None, filter);
@@ -166,25 +262,6 @@ fn setup_log(level: &str, quiet: bool) {
     }
 
     builder.init().unwrap();
-}
-
-fn run<Iter>(input: Iter, query: rq::query::Query) -> rq::error::Result<()>
-    where Iter: Iterator<Item = rq::error::Result<rq::value::Value>>
-{
-    use std::io::Write;
-    let mut stdout = io::stdout();
-    let context = rq::query::Context::new();
-
-    debug!("Starting input consumption");
-
-    for value in input {
-        let value = try!(value);
-        debug!("Consuming an input value");
-        try!(query.evaluate(&context, value).to_json(&mut stdout));
-        try!(stdout.write(&[10]));
-        try!(stdout.flush());
-    }
-    Ok(())
 }
 
 #[cfg(test)]

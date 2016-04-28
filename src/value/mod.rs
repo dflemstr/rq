@@ -40,13 +40,23 @@ pub enum Value {
     Map(collections::BTreeMap<Value, Value>),
 }
 
+pub trait Source {
+    fn read(&mut self) -> error::Result<Option<Value>>;
+}
+
+pub trait Sink {
+    fn write(&mut self, v: Value) -> error::Result<()>;
+}
+
 struct ValueVisitor;
 
 impl Value {
-    pub fn to_json<W>(&self, write: &mut W) -> error::Result<()>
+    pub fn to_json<W>(&self, w: &mut W) -> error::Result<()>
         where W: io::Write
     {
-        Ok(try!(serde_json::to_writer(write, self)))
+        try!(serde_json::to_writer(w, self));
+        try!(w.write(&[10])); // Newline
+        Ok(())
     }
 
     pub fn from_f32(v: f32) -> Value {
