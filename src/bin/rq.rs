@@ -278,8 +278,8 @@ mod test {
     fn test_docopt_kitchen_sink() {
         let a = parse_args(&["rq", "-l", "info", "-jP", ".foo.Bar", "select x"]);
         assert!(a.flag_input_json);
-        assert_eq!(a.flag_output_protobuf, ".foo.Bar");
-        assert_eq!(a.flag_log, "info");
+        assert_eq!(a.flag_output_protobuf, Some(".foo.Bar".to_owned()));
+        assert_eq!(a.flag_log, Some("info".to_owned()));
         assert_eq!(a.arg_query, "select x");
     }
 
@@ -351,25 +351,25 @@ mod test {
     #[test]
     fn test_docopt_input_protobuf() {
         let a = parse_args(&["rq", "-p", ".foo.Bar"]);
-        assert_eq!(a.flag_input_protobuf, ".foo.Bar");
+        assert_eq!(a.flag_input_protobuf, Some(".foo.Bar".to_owned()));
     }
 
     #[test]
     fn test_docopt_input_protobuf_long() {
         let a = parse_args(&["rq", "--input-protobuf", ".foo.Bar"]);
-        assert_eq!(a.flag_input_protobuf, ".foo.Bar");
+        assert_eq!(a.flag_input_protobuf, Some(".foo.Bar".to_owned()));
     }
 
     #[test]
     fn test_docopt_output_protobuf() {
         let a = parse_args(&["rq", "-P", ".foo.Bar"]);
-        assert_eq!(a.flag_output_protobuf, ".foo.Bar");
+        assert_eq!(a.flag_output_protobuf, Some(".foo.Bar".to_owned()));
     }
 
     #[test]
     fn test_docopt_output_protobuf_long() {
         let a = parse_args(&["rq", "--output-protobuf", ".foo.Bar"]);
-        assert_eq!(a.flag_output_protobuf, ".foo.Bar");
+        assert_eq!(a.flag_output_protobuf, Some(".foo.Bar".to_owned()));
     }
 
     #[test]
@@ -387,7 +387,7 @@ mod test {
     #[test]
     fn test_docopt_protobuf_add_schema() {
         let a = parse_args(&["rq", "-l", "info", "protobuf", "add", "schema.proto"]);
-        assert_eq!(a.flag_log, "info");
+        assert_eq!(a.flag_log, Some("info".to_owned()));
         assert!(a.cmd_protobuf);
         assert!(a.cmd_add);
         assert_eq!(a.arg_schema, "schema.proto");
