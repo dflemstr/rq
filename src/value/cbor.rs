@@ -6,23 +6,27 @@ use serde_cbor;
 use error;
 use value;
 
-pub struct CborSource<R>(serde_cbor::de::Deserializer<R>)
-    where R: io::Read;
+pub struct CborSource<R>(serde_cbor::de::Deserializer<R>) where R: io::Read;
 
-pub struct CborSink<W>(serde_cbor::ser::Serializer<W>)
-    where W: io::Write;
+pub struct CborSink<W>(serde_cbor::ser::Serializer<W>) where W: io::Write;
 
 #[inline]
-pub fn source<R>(r: R) -> CborSource<R> where R: io::Read {
+pub fn source<R>(r: R) -> CborSource<R>
+    where R: io::Read
+{
     CborSource(serde_cbor::de::Deserializer::new(r))
 }
 
 #[inline]
-pub fn sink<W>(w: W) -> CborSink<W> where W: io::Write {
+pub fn sink<W>(w: W) -> CborSink<W>
+    where W: io::Write
+{
     CborSink(serde_cbor::ser::Serializer::new(w))
 }
 
-impl<R> value::Source for CborSource<R> where R: io::Read {
+impl<R> value::Source for CborSource<R>
+    where R: io::Read
+{
     #[inline]
     fn read(&mut self) -> error::Result<Option<value::Value>> {
         match serde::Deserialize::deserialize(&mut self.0) {
@@ -33,7 +37,9 @@ impl<R> value::Source for CborSource<R> where R: io::Read {
     }
 }
 
-impl<W> value::Sink for CborSink<W> where W: io::Write {
+impl<W> value::Sink for CborSink<W>
+    where W: io::Write
+{
     #[inline]
     fn write(&mut self, v: value::Value) -> error::Result<()> {
         serde::Serialize::serialize(&v, &mut self.0).map_err(From::from)

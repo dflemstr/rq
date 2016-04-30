@@ -10,16 +10,19 @@ use value;
 pub struct JsonSource<R>(serde_json::StreamDeserializer<value::Value, io::Bytes<R>>)
     where R: io::Read;
 
-pub struct JsonSink<W>(Option<serde_json::Serializer<W>>)
-    where W: io::Write;
+pub struct JsonSink<W>(Option<serde_json::Serializer<W>>) where W: io::Write;
 
 #[inline]
-pub fn source<R>(r: R) -> JsonSource<R> where R: io::Read {
+pub fn source<R>(r: R) -> JsonSource<R>
+    where R: io::Read
+{
     JsonSource(serde_json::StreamDeserializer::new(r.bytes()))
 }
 
 #[inline]
-pub fn sink<W>(w: W) -> JsonSink<W> where W: io::Write {
+pub fn sink<W>(w: W) -> JsonSink<W>
+    where W: io::Write
+{
     JsonSink(Some(serde_json::Serializer::new(w)))
 }
 

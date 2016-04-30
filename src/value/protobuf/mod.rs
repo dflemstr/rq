@@ -20,7 +20,8 @@ struct Context<'a> {
 
 pub fn source<'a>(descriptors: &'a descriptor::Descriptors,
                   name: String,
-                  input: protobuf::CodedInputStream<'a>) -> ProtobufSource<'a> {
+                  input: protobuf::CodedInputStream<'a>)
+                  -> ProtobufSource<'a> {
     ProtobufSource {
         descriptors: descriptors,
         name: name,
