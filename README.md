@@ -19,6 +19,7 @@ formats and operations.
 Currently, the following input and output formats are supported:
 
   - Google Protocol Buffers
+  - CBOR
   - JSON
 
 ## Installation
