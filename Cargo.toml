@@ -14,7 +14,6 @@ path = "lalrpop"
 
 [dependencies]
 ansi_term = "0.7.2"
-clippy = "*"
 docopt = "0.6.80"
 docopt_macros = "0.6.84"
 env_logger = "0.3.3"

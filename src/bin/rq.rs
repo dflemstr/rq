@@ -1,5 +1,5 @@
 #![feature(plugin)]
-#![plugin(clippy, docopt_macros)]
+#![plugin(docopt_macros)]
 
 extern crate ansi_term;
 extern crate docopt;
