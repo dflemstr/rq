@@ -38,7 +38,7 @@ pub fn compile_descriptor_set(paths: &config::Paths)
     debug!("Proto cache location: {:?}", cache);
 
     if try!(is_cache_stale(&cache, &proto_files)) {
-        trace!("Proto descriptor cache is stale; recomputing");
+        info!("Proto descriptor cache is stale; recomputing");
 
         if let Some(parent) = cache.parent() {
             trace!("Creating directory {:?}", parent);
