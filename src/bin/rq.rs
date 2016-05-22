@@ -10,6 +10,7 @@ extern crate nix;
 extern crate protobuf;
 extern crate record_query;
 extern crate rustc_serialize;
+extern crate serde_protobuf;
 
 use std::env;
 use std::io;
@@ -109,7 +110,7 @@ fn run_raw<R, W>(args: &Args,
                  paths: &rq::config::Paths,
                  query: &rq::query::Query,
                  query_context: &rq::query::Context,
-                 proto_descriptors: &rq::value::protobuf::descriptor::Descriptors,
+                 proto_descriptors: &serde_protobuf::descriptor::Descriptors,
                  mut r: R,
                  w: W)
                  -> rq::error::Result<()>
@@ -119,31 +120,16 @@ fn run_raw<R, W>(args: &Args,
     if let Some(ref name) = args.flag_input_protobuf {
         debug!("Input is protobuf with argument {:?}", name);
 
-        let stream = protobuf::CodedInputStream::new(&mut r);
+        let mut stream = protobuf::CodedInputStream::new(&mut r);
 
-        run_from_source(args,
-                        paths,
-                        query,
-                        query_context,
-                        proto_descriptors,
-                        rq::value::protobuf::source(proto_descriptors, name.to_owned(), stream),
-                        w)
+        let src = try!(rq::value::protobuf::source(proto_descriptors, name, &mut stream));
+        run_from_source(args, paths, query, query_context, proto_descriptors, src, w)
     } else if args.flag_input_cbor {
-        run_from_source(args,
-                        paths,
-                        query,
-                        query_context,
-                        proto_descriptors,
-                        rq::value::cbor::source(r),
-                        w)
+        let src = rq::value::cbor::source(r);
+        run_from_source(args, paths, query, query_context, proto_descriptors, src, w)
     } else {
-        run_from_source(args,
-                        paths,
-                        query,
-                        query_context,
-                        proto_descriptors,
-                        rq::value::json::source(r),
-                        w)
+        let src = rq::value::json::source(r);
+        run_from_source(args, paths, query, query_context, proto_descriptors, src, w)
     }
 }
 
@@ -151,7 +137,7 @@ fn run_from_source<I, W>(args: &Args,
                          paths: &rq::config::Paths,
                          query: &rq::query::Query,
                          query_context: &rq::query::Context,
-                         proto_descriptors: &rq::value::protobuf::descriptor::Descriptors,
+                         proto_descriptors: &serde_protobuf::descriptor::Descriptors,
                          source: I,
                          w: W)
                          -> rq::error::Result<()>
@@ -183,7 +169,7 @@ fn run<I, O>(args: &Args,
              paths: &rq::config::Paths,
              query: &rq::query::Query,
              query_context: &rq::query::Context,
-             proto_descriptors: &rq::value::protobuf::descriptor::Descriptors,
+             proto_descriptors: &serde_protobuf::descriptor::Descriptors,
              mut source: I,
              mut sink: O)
              -> rq::error::Result<()>
@@ -201,9 +187,9 @@ fn run<I, O>(args: &Args,
 }
 
 fn load_descriptors(paths: &rq::config::Paths)
-                    -> rq::error::Result<rq::value::protobuf::descriptor::Descriptors> {
+                    -> rq::error::Result<serde_protobuf::descriptor::Descriptors> {
     let descriptors_proto = try!(rq::proto_index::compile_descriptor_set(paths));
-    Ok(rq::value::protobuf::descriptor::Descriptors::from_protobuf(&descriptors_proto))
+    Ok(serde_protobuf::descriptor::Descriptors::from_proto(&descriptors_proto))
 }
 
 fn setup_log(level: Option<&str>, quiet: bool) {

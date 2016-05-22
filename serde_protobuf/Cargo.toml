@@ -1,0 +1,9 @@
+[package]
+authors = ["David Flemström <david.flemstrom@gmail.com>"]
+name = "serde_protobuf"
+version = "0.1.0"
+
+[dependencies]
+log = "0.3.6"
+protobuf = "1.0.20"
+serde = "0.7.5"

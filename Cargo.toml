@@ -33,6 +33,9 @@ xdg-basedir = "1.0.0"
 git = "https://github.com/nikomatsakis/lalrpop.git"
 path = "lalrpop-util"
 
+[dependencies.serde_protobuf]
+path = "serde_protobuf"
+
 [profile]
 
 [profile.release]

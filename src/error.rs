@@ -6,6 +6,7 @@ use glob;
 use protobuf;
 use serde_cbor;
 use serde_json;
+use serde_protobuf;
 use xdg_basedir;
 
 pub type Result<A> = result::Result<A, Error>;
@@ -43,9 +44,9 @@ impl From<serde_json::Error> for Error {
     }
 }
 
-impl From<protobuf::ProtobufError> for Error {
-    fn from(e: protobuf::ProtobufError) -> Error {
-        Error::Protobuf(e)
+impl From<serde_protobuf::Error> for Error {
+    fn from(e: serde_protobuf::Error) -> Error {
+        unimplemented!()
     }
 }
 
@@ -61,9 +62,14 @@ impl From<glob::GlobError> for Error {
     }
 }
 
-
 impl From<glob::PatternError> for Error {
     fn from(e: glob::PatternError) -> Error {
         Error::Pattern(e)
+    }
+}
+
+impl From<protobuf::ProtobufError> for Error {
+    fn from(e: protobuf::ProtobufError) -> Error {
+        Error::Protobuf(e)
     }
 }

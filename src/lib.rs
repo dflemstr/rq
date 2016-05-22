@@ -1,5 +1,5 @@
 #![feature(advanced_slice_patterns, plugin, slice_patterns)]
-#![plugin(clippy, mod_path)]
+#![plugin(mod_path)]
 
 extern crate glob;
 #[macro_use]
@@ -9,6 +9,7 @@ extern crate protobuf;
 extern crate serde;
 extern crate serde_cbor;
 extern crate serde_json;
+extern crate serde_protobuf;
 extern crate xdg_basedir;
 
 pub mod config;
