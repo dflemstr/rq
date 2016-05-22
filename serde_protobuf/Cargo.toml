@@ -8,7 +8,7 @@ keywords = ["serde", "protocol", "buffers", "protobuf", "google"]
 license = "Apache-2.0"
 name = "serde_protobuf"
 repository = "https://github.com/dflemstr/rq/tree/master/serde_protobuf"
-version = "0.1.0"
+version = "0.1.1"
 
 [dependencies]
 linked-hash-map = "0.0.10"
