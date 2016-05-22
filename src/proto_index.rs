@@ -30,7 +30,7 @@ pub fn compile_descriptor_set(paths: &config::Paths)
                               -> error::Result<protobuf::descriptor::FileDescriptorSet> {
 
     let proto_includes = try!(paths.find_data("proto"));
-    let proto_files = try!(paths.find_data("proto/*.proto"));
+    let proto_files = try!(paths.find_data("proto/**/*.proto"));
     let cache = paths.preferred_cache("descriptor-cache.pb");
 
     debug!("Proto includes: {:?}", proto_includes);
