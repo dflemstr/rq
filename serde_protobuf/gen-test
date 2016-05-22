@@ -1,0 +1,36 @@
+#!/bin/sh -eu
+# Use this to regenerate all the test data that's derived from .proto
+# files.  This script only does so if any of the test files have
+# changed, since it can't be done during CI, because it requires
+# 'protoc' and 'protoc-gen-rust'.
+dir=$(dirname "$0")
+testdata="$dir/testdata"
+hash="$testdata/hash"
+
+# This dance is needed to make mktemp work on both Mac OS X and
+# GNU/Linux
+newhash=$(mktemp 2>/dev/null || mktemp -t "serde_protobuf-gen-test")
+
+# This dance is needed to implement md5 sums on both Mac OS X and
+# GNU/Linux
+if which md5 1>/dev/null 2>/dev/null
+then md5sum='md5 -r'
+elif which md5sum 1>/dev/null 2>/dev/null
+then md5sum='md5sum'
+else echo 'No md5 utility found; exiting'; exit 1
+fi
+
+(cd "$testdata" && find . -type f \( -name '*.proto' -o -name '*.pb' \) -exec $md5sum {} \; | LC_ALL=C sort -k 2 | awk '{print $1, $2}'> "$newhash")
+
+if [ ! -f "$hash" ] || ! diff "$hash" "$newhash"
+then
+    echo >&2 'Changes detected; rebuilding protobuf'
+    mkdir -p "$dir/tests/protobuf_unittest"
+    protoc -I "$testdata" --rust_out "$dir/tests/protobuf_unittest" "$testdata/google/protobuf/unittest.proto"
+    protoc -I "$testdata" --rust_out "$dir/tests/protobuf_unittest" "$testdata/google/protobuf/unittest_import.proto"
+    protoc -I "$testdata" --rust_out "$dir/tests/protobuf_unittest" "$testdata/google/protobuf/unittest_import_public.proto"
+    protoc -I "$testdata" --include_imports -o "$testdata/descriptors.pb" "$testdata/google/protobuf/unittest.proto"
+    mv "$newhash" "$hash"
+else
+    echo >&2 'Protobuf test data is up to date'
+fi
