@@ -655,293 +655,301 @@ mod test {
     }
 
     macro_rules! check_field {
-        ($descr:expr, $msg:expr, $field:expr, $t:pat, $label:expr, $num:expr) => {
-            let msg = $descr.message_by_name($msg).unwrap();
-            let field_by_name = msg.field_by_name($field).unwrap();
-            match field_by_name.field_type(&$descr) {
-                $t => (),
-                t => panic!(concat!("Expected type ", stringify!($t), ", got {:?}"), t),
-            }
-            assert_eq!(field_by_name.name(), $field);
-            assert_eq!(field_by_name.number(), $num);
-            assert_eq!(field_by_name.field_label(), $label);
+        ($id:ident, $msg:expr, $field:expr, $t:pat, $label:expr, $num:expr) => {
+            #[test]
+            fn $id() {
+                let mut d = load_descriptors();
+                d.resolve_refs();
+                let msg = d.message_by_name($msg).unwrap();
+                let field_by_name = msg.field_by_name($field).unwrap();
+                match field_by_name.field_type(&d) {
+                    $t => (),
+                    t => panic!(concat!("Expected type ", stringify!($t), ", got {:?}"), t),
+                }
+                assert_eq!(field_by_name.name(), $field);
+                assert_eq!(field_by_name.number(), $num);
+                assert_eq!(field_by_name.field_label(), $label);
 
-            let field_by_number = msg.field_by_number($num).unwrap();
-            match field_by_number.field_type(&$descr) {
-                $t => (),
-                t => panic!(concat!("Expected type ", stringify!($t), ", got {:?}"), t),
+                let field_by_number = msg.field_by_number($num).unwrap();
+                match field_by_number.field_type(&d) {
+                    $t => (),
+                    t => panic!(concat!("Expected type ", stringify!($t), ", got {:?}"), t),
+                }
+                assert_eq!(field_by_number.name(), $field);
+                assert_eq!(field_by_number.number(), $num);
+                assert_eq!(field_by_number.field_label(), $label);
             }
-            assert_eq!(field_by_number.name(), $field);
-            assert_eq!(field_by_number.number(), $num);
-            assert_eq!(field_by_number.field_label(), $label);
         }
     }
 
     macro_rules! check_enum_value {
-        ($descr:expr, $enu:expr, $value:expr, $num:expr) => {
-            let enu = $descr.enum_by_name($enu).unwrap();
-            let value_by_name = enu.value_by_name($value).unwrap();
-            assert_eq!(value_by_name.name(), $value);
-            assert_eq!(value_by_name.number(), $num);
+        ($id:ident, $enu:expr, $value:expr, $num:expr) => {
+            #[test]
+            fn $id() {
+                let mut d = load_descriptors();
+                d.resolve_refs();
+                let enu = d.enum_by_name($enu).unwrap();
+                let value_by_name = enu.value_by_name($value).unwrap();
+                assert_eq!(value_by_name.name(), $value);
+                assert_eq!(value_by_name.number(), $num);
 
-            let value_by_number = enu.value_by_number($num).unwrap();
-            assert_eq!(value_by_number.name(), $value);
-            assert_eq!(value_by_number.number(), $num);
+                let value_by_number = enu.value_by_number($num).unwrap();
+                assert_eq!(value_by_number.name(), $value);
+                assert_eq!(value_by_number.number(), $num);
+            }
         }
     }
 
-    #[test]
-    fn optional_int32_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "optional_int32", Int32, Optional, 1);
-    }
+    check_field!(optional_int32_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "optional_int32",
+                 Int32,
+                 Optional,
+                 1);
 
-    #[test]
-    fn optional_int64_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "optional_int64", Int64, Optional, 2);
-    }
+    check_field!(optional_int64_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "optional_int64",
+                 Int64,
+                 Optional,
+                 2);
 
-    #[test]
-    fn optional_uint32_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "optional_uint32", UInt32, Optional, 3);
-    }
+    check_field!(optional_uint32_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "optional_uint32",
+                 UInt32,
+                 Optional,
+                 3);
 
-    #[test]
-    fn optional_uint64_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "optional_uint64", UInt64, Optional, 4);
-    }
+    check_field!(optional_uint64_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "optional_uint64",
+                 UInt64,
+                 Optional,
+                 4);
 
-    #[test]
-    fn optional_sint32_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "optional_sint32", SInt32, Optional, 5);
-    }
+    check_field!(optional_sint32_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "optional_sint32",
+                 SInt32,
+                 Optional,
+                 5);
 
-    #[test]
-    fn optional_sint64_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "optional_sint64", SInt64, Optional, 6);
-    }
+    check_field!(optional_sint64_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "optional_sint64",
+                 SInt64,
+                 Optional,
+                 6);
 
-    #[test]
-    fn optional_fixed32_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "optional_fixed32", Fixed32, Optional, 7);
-    }
+    check_field!(optional_fixed32_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "optional_fixed32",
+                 Fixed32,
+                 Optional,
+                 7);
 
-    #[test]
-    fn optional_fixed64_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "optional_fixed64", Fixed64, Optional, 8);
-    }
+    check_field!(optional_fixed64_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "optional_fixed64",
+                 Fixed64,
+                 Optional,
+                 8);
 
-    #[test]
-    fn optional_sfixed32_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "optional_sfixed32", SFixed32, Optional, 9);
-    }
+    check_field!(optional_sfixed32_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "optional_sfixed32",
+                 SFixed32,
+                 Optional,
+                 9);
 
-    #[test]
-    fn optional_sfixed64_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "optional_sfixed64", SFixed64, Optional, 10);
-    }
+    check_field!(optional_sfixed64_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "optional_sfixed64",
+                 SFixed64,
+                 Optional,
+                 10);
 
-    #[test]
-    fn optional_float_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "optional_float", Float, Optional, 11);
-    }
+    check_field!(optional_float_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "optional_float",
+                 Float,
+                 Optional,
+                 11);
 
-    #[test]
-    fn optional_double_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "optional_double", Double, Optional, 12);
-    }
+    check_field!(optional_double_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "optional_double",
+                 Double,
+                 Optional,
+                 12);
 
-    #[test]
-    fn optional_bool_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "optional_bool", Bool, Optional, 13);
-    }
+    check_field!(optional_bool_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "optional_bool",
+                 Bool,
+                 Optional,
+                 13);
 
-    #[test]
-    fn optional_string_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "optional_string", String, Optional, 14);
-    }
+    check_field!(optional_string_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "optional_string",
+                 String,
+                 Optional,
+                 14);
 
-    #[test]
-    fn optional_bytes_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "optional_bytes", Bytes, Optional, 15);
-    }
+    check_field!(optional_bytes_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "optional_bytes",
+                 Bytes,
+                 Optional,
+                 15);
 
-    #[test]
-    fn optional_message_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "optional_foreign_message",
-                     Message(_), Optional, 19);
-    }
+    check_field!(repeated_int32_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "repeated_int32",
+                 Int32,
+                 Repeated,
+                 31);
 
-    #[test]
-    fn optional_enum_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "optional_foreign_enum",
-                     Enum(_), Optional, 22);
-    }
+    check_field!(repeated_int64_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "repeated_int64",
+                 Int64,
+                 Repeated,
+                 32);
 
-    #[test]
-    fn optional_resolved_message_field() {
-        let mut d = load_descriptors();
-        d.resolve_refs();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "optional_foreign_message",
-                     Message(_), Optional, 19);
-    }
+    check_field!(repeated_uint32_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "repeated_uint32",
+                 UInt32,
+                 Repeated,
+                 33);
 
-    #[test]
-    fn optional_resolved_enum_field() {
-        let mut d = load_descriptors();
-        d.resolve_refs();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "optional_foreign_enum",
-                     Enum(_), Optional, 22);
-    }
+    check_field!(repeated_uint64_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "repeated_uint64",
+                 UInt64,
+                 Repeated,
+                 34);
 
+    check_field!(repeated_sint32_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "repeated_sint32",
+                 SInt32,
+                 Repeated,
+                 35);
 
-    #[test]
-    fn repeated_int32_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "repeated_int32", Int32, Repeated, 31);
-    }
+    check_field!(repeated_sint64_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "repeated_sint64",
+                 SInt64,
+                 Repeated,
+                 36);
 
-    #[test]
-    fn repeated_int64_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "repeated_int64", Int64, Repeated, 32);
-    }
+    check_field!(repeated_fixed32_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "repeated_fixed32",
+                 Fixed32,
+                 Repeated,
+                 37);
 
-    #[test]
-    fn repeated_uint32_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "repeated_uint32", UInt32, Repeated, 33);
-    }
+    check_field!(repeated_fixed64_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "repeated_fixed64",
+                 Fixed64,
+                 Repeated,
+                 38);
 
-    #[test]
-    fn repeated_uint64_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "repeated_uint64", UInt64, Repeated, 34);
-    }
+    check_field!(repeated_sfixed32_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "repeated_sfixed32",
+                 SFixed32,
+                 Repeated,
+                 39);
 
-    #[test]
-    fn repeated_sint32_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "repeated_sint32", SInt32, Repeated, 35);
-    }
+    check_field!(repeated_sfixed64_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "repeated_sfixed64",
+                 SFixed64,
+                 Repeated,
+                 40);
 
-    #[test]
-    fn repeated_sint64_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "repeated_sint64", SInt64, Repeated, 36);
-    }
+    check_field!(repeated_float_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "repeated_float",
+                 Float,
+                 Repeated,
+                 41);
 
-    #[test]
-    fn repeated_fixed32_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "repeated_fixed32", Fixed32, Repeated, 37);
-    }
+    check_field!(repeated_double_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "repeated_double",
+                 Double,
+                 Repeated,
+                 42);
 
-    #[test]
-    fn repeated_fixed64_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "repeated_fixed64", Fixed64, Repeated, 38);
-    }
+    check_field!(repeated_bool_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "repeated_bool",
+                 Bool,
+                 Repeated,
+                 43);
 
-    #[test]
-    fn repeated_sfixed32_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "repeated_sfixed32", SFixed32, Repeated, 39);
-    }
+    check_field!(repeated_string_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "repeated_string",
+                 String,
+                 Repeated,
+                 44);
 
-    #[test]
-    fn repeated_sfixed64_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "repeated_sfixed64", SFixed64, Repeated, 40);
-    }
+    check_field!(repeated_bytes_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "repeated_bytes",
+                 Bytes,
+                 Repeated,
+                 45);
 
-    #[test]
-    fn repeated_float_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "repeated_float", Float, Repeated, 41);
-    }
+    check_field!(repeated_message_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "repeated_foreign_message",
+                 Message(),
+                 Repeated,
+                 49);
 
-    #[test]
-    fn repeated_double_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "repeated_double", Double, Repeated, 42);
-    }
+    check_field!(repeated_enum_field,
+                 ".protobuf_unittest.TestAllTypes",
+                 "repeated_foreign_enum",
+                 Enum(),
+                 Repeated,
+                 52);
 
-    #[test]
-    fn repeated_bool_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "repeated_bool", Bool, Repeated, 43);
-    }
+    check_field!(required_field_a,
+                 ".protobuf_unittest.TestRequired",
+                 "a",
+                 Int32,
+                 Required,
+                 1);
 
-    #[test]
-    fn repeated_string_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "repeated_string", String, Repeated, 44);
-    }
+    check_field!(required_field_b,
+                 ".protobuf_unittest.TestRequired",
+                 "b",
+                 Int32,
+                 Required,
+                 3);
 
-    #[test]
-    fn repeated_bytes_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "repeated_bytes", Bytes, Repeated, 45);
-    }
+    check_enum_value!(enum_value_foo,
+                      ".protobuf_unittest.ForeignEnum",
+                      "FOREIGN_FOO",
+                      4);
 
-    #[test]
-    fn repeated_message_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "repeated_foreign_message",
-                     Message(_), Repeated, 49);
-    }
+    check_enum_value!(enum_value_bar,
+                      ".protobuf_unittest.ForeignEnum",
+                      "FOREIGN_BAR",
+                      5);
 
-    #[test]
-    fn repeated_enum_field() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestAllTypes", "repeated_foreign_enum",
-                     Enum(_), Repeated, 52);
-    }
-
-    #[test]
-    fn required_field_a() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestRequired", "a", Int32, Required, 1);
-    }
-
-    #[test]
-    fn required_field_b() {
-        let d = load_descriptors();
-        check_field!(d, ".protobuf_unittest.TestRequired", "b", Int32, Required, 3);
-    }
-
-    #[test]
-    fn enum_value_foo() {
-        let d = load_descriptors();
-        check_enum_value!(d, ".protobuf_unittest.ForeignEnum", "FOREIGN_FOO", 4);
-    }
-
-    #[test]
-    fn enum_value_bar() {
-        let d = load_descriptors();
-        check_enum_value!(d, ".protobuf_unittest.ForeignEnum", "FOREIGN_BAR", 5);
-    }
-
-    #[test]
-    fn enum_value_baz() {
-        let d = load_descriptors();
-        check_enum_value!(d, ".protobuf_unittest.ForeignEnum", "FOREIGN_BAZ", 6);
-    }
+    check_enum_value!(enum_value_baz,
+                      ".protobuf_unittest.ForeignEnum",
+                      "FOREIGN_BAZ",
+                      6);
 }

@@ -286,6 +286,12 @@ fn visit_value<V>(descriptors: &descriptor::Descriptors,
                 panic!("A field with a message value doesn't have a message type!")
             }
         },
-        value::Value::Enum(_) => unimplemented!(),
+        value::Value::Enum(e) => {
+            if let descriptor::FieldType::Enum(d) = descriptor.field_type(descriptors) {
+                visitor.visit_str(d.value_by_number(e).unwrap().name())
+            } else {
+                panic!("A field with an enum value doesn't have an enum type!")
+            }
+        },
     }
 }

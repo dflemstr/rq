@@ -199,11 +199,7 @@ impl Field {
             let len = try!(input.read_raw_varint32());
             let mut msg = match *self {
                 Field::Singular(ref mut o) => {
-                    if let Some(Value::Message(m)) = o.take() {
-                        m
-                    } else {
-                        Message::new(message)
-                    }
+                    if let Some(Value::Message(m)) = o.take() { m } else { Message::new(message) }
                 },
                 _ => Message::new(message),
             };
