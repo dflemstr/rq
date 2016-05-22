@@ -4,6 +4,7 @@ name = "serde_protobuf"
 version = "0.1.0"
 
 [dependencies]
+linked-hash-map = "0.0.10"
 log = "0.3.6"
 protobuf = "1.0.20"
 serde = "0.7.5"

@@ -126,8 +126,7 @@
 //! ```
 //!
 //! [1]: https://github.com/google/protobuf/blob/master/src/google/protobuf/descriptor.proto
-use std::collections;
-
+use linked_hash_map;
 use protobuf::descriptor;
 
 /// An ID used for internal tracking of resolved message descriptors.
@@ -158,8 +157,8 @@ pub struct Descriptors {
     enums: Vec<EnumDescriptor>,
 
     // Indices
-    messages_by_name: collections::HashMap<String, MessageId>,
-    enums_by_name: collections::HashMap<String, EnumId>,
+    messages_by_name: linked_hash_map::LinkedHashMap<String, MessageId>,
+    enums_by_name: linked_hash_map::LinkedHashMap<String, EnumId>,
 }
 
 /// A descriptor for a single protocol buffer message type.
@@ -172,8 +171,8 @@ pub struct MessageDescriptor {
     fields: Vec<FieldDescriptor>,
 
     // Indices
-    fields_by_name: collections::HashMap<String, FieldId>,
-    fields_by_number: collections::HashMap<i32, FieldId>,
+    fields_by_name: linked_hash_map::LinkedHashMap<String, FieldId>,
+    fields_by_number: linked_hash_map::LinkedHashMap<i32, FieldId>,
 }
 
 /// A descriptor for a single protocol buffer enum type.
@@ -185,8 +184,8 @@ pub struct EnumDescriptor {
     values: Vec<EnumValueDescriptor>,
 
     // Indices
-    values_by_name: collections::HashMap<String, EnumValueId>,
-    values_by_number: collections::HashMap<i32, EnumValueId>,
+    values_by_name: linked_hash_map::LinkedHashMap<String, EnumValueId>,
+    values_by_number: linked_hash_map::LinkedHashMap<i32, EnumValueId>,
 }
 
 /// A descriptor for a single protocol buffer enum value.
@@ -278,8 +277,8 @@ impl Descriptors {
             messages: Vec::new(),
             enums: Vec::new(),
 
-            messages_by_name: collections::HashMap::new(),
-            enums_by_name: collections::HashMap::new(),
+            messages_by_name: linked_hash_map::LinkedHashMap::new(),
+            enums_by_name: linked_hash_map::LinkedHashMap::new(),
         }
     }
 
@@ -395,8 +394,8 @@ impl MessageDescriptor {
         MessageDescriptor {
             name: name.into(),
             fields: Vec::new(),
-            fields_by_name: collections::HashMap::new(),
-            fields_by_number: collections::HashMap::new(),
+            fields_by_name: linked_hash_map::LinkedHashMap::new(),
+            fields_by_number: linked_hash_map::LinkedHashMap::new(),
         }
     }
 
@@ -441,8 +440,8 @@ impl EnumDescriptor {
         EnumDescriptor {
             name: name.into(),
             values: Vec::new(),
-            values_by_name: collections::HashMap::new(),
-            values_by_number: collections::HashMap::new(),
+            values_by_name: linked_hash_map::LinkedHashMap::new(),
+            values_by_number: linked_hash_map::LinkedHashMap::new(),
         }
     }
 

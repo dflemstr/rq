@@ -1,3 +1,4 @@
+extern crate linked_hash_map;
 #[macro_use]
 extern crate log;
 extern crate protobuf;
