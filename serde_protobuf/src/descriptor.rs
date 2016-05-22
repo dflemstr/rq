@@ -664,7 +664,7 @@ mod test {
                 let field_by_name = msg.field_by_name($field).unwrap();
                 match field_by_name.field_type(&d) {
                     $t => (),
-                    t => panic!(concat!("Expected type ", stringify!($t), ", got {:?}"), t),
+                    t => panic!("Expected type {}, got {:?}", stringify!($t), t),
                 }
                 assert_eq!(field_by_name.name(), $field);
                 assert_eq!(field_by_name.number(), $num);
@@ -673,7 +673,7 @@ mod test {
                 let field_by_number = msg.field_by_number($num).unwrap();
                 match field_by_number.field_type(&d) {
                     $t => (),
-                    t => panic!(concat!("Expected type ", stringify!($t), ", got {:?}"), t),
+                    t => panic!("Expected type {}, got {:?}", stringify!($t), t),
                 }
                 assert_eq!(field_by_number.name(), $field);
                 assert_eq!(field_by_number.number(), $num);
@@ -910,17 +910,18 @@ mod test {
                  Repeated,
                  45);
 
-    check_field!(repeated_message_field,
+
+    check_field!(repppeated_message_field,
                  ".protobuf_unittest.TestAllTypes",
                  "repeated_foreign_message",
-                 Message(),
+                 Message(..),
                  Repeated,
                  49);
 
     check_field!(repeated_enum_field,
                  ".protobuf_unittest.TestAllTypes",
                  "repeated_foreign_enum",
-                 Enum(),
+                 Enum(..),
                  Repeated,
                  52);
 
