@@ -1,6 +1,7 @@
 [package]
 authors = ["David Flemström <david.flemstrom@gmail.com>"]
 description = "Support for Google Protocol Buffers in combination with serde"
+documentation = "http://dflemstr.github.io/rq/serde_protobuf/"
 homepage = "https://github.com/dflemstr/rq/tree/master/serde_protobuf"
 include = ["src/**/*", "tests/**/*", "testdata/**/*", "Cargo.toml"]
 keywords = ["serde", "protocol", "buffers", "protobuf", "google"]

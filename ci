@@ -31,9 +31,20 @@ function ci-test {
 }
 
 function ci-deploy {
+    for-target x86-unknown-linux-gnu cargo doc
     cargo build --release --target="$TARGET"
     mkdir -p "target/deploy/$TARGET"
     cp "target/$TARGET/release/rq" "target/deploy/$TARGET/rq"
+}
+
+function ci-deploy-gh-pages {
+    cd target/doc
+    git init
+    git config user.email 'nobody@nobody.org'
+    git config user.name 'Travis CI'
+    git add .
+    git commit -m "Generate rustdoc for $TRAVIS_COMMIT"
+    git push --force "https://${GITHUB_TOKEN}@github.com/dflemstr/rq.git" master:gh-pages
 }
 
 case "$1" in
@@ -43,4 +54,6 @@ case "$1" in
         shift; ci-test "$@" ;;
     deploy )
         shift; ci-deploy "$@" ;;
+    deploy-gh-pages )
+        shift; cdeploy-gh-pages "$@" ;;
 esac

@@ -24,6 +24,11 @@ script: ./ci test
 before_deploy: ./ci deploy
 
 deploy:
+  - provider: script
+    script: ./ci deploy-gh-pages
+    skip_cleanup: true
+    on:
+      repo: dflemstr/rq
   - provider: s3
     access_key_id: AKIAIMXXFE4ETRSISAEA
     secret_access_key:
