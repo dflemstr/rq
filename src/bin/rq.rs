@@ -33,7 +33,7 @@ See 'man rq' for in-depth documentation.
 Usage:
   rq (--help|--version)
   rq [-j|-c|-p <type>] [-J|-C|-P <type>] [-l <level>|-q] [--] [<query>]
-  rq [-l <level>|-q] protobuf add <schema>
+  rq [-l <level>|-q] protobuf add <schema> [--base <path>]
 
 Options:
   --help
@@ -60,6 +60,11 @@ Options:
   <query>
       A query indicating how to transform each record.
 
+  --base <path>
+      Directories are significant when dealing with protocol buffer
+      schemas.  This specifies the base directory used to normalize schema
+      file paths [default: .]
+
   -l <level>, --log <level>
       Display log messages at and above the specified log level.  The value can
       be one of 'off', 'error', 'warn', 'info', 'debug' or 'trace'.
@@ -68,7 +73,8 @@ Options:
 "),
         flag_input_protobuf: Option<String>,
         flag_output_protobuf: Option<String>,
-        flag_log: Option<String>);
+        flag_log: Option<String>,
+        flag_base: Option<String>);
 
 fn main() {
     let args: Args = Args::docopt()
@@ -83,7 +89,12 @@ fn main() {
     if args.cmd_protobuf {
         if args.cmd_add {
             let schema = path::Path::new(&args.arg_schema);
-            rq::proto_index::add_file(&paths, schema).unwrap();
+            let base = path::Path::new(if let Some(ref b) = args.flag_base {
+                b.as_str()
+            } else {
+                "."
+            });
+            rq::proto_index::add_file(&paths, base, schema).unwrap();
         }
     } else {
         let query = rq::query::Query::parse(&args.arg_query);

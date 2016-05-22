@@ -8,21 +8,22 @@ use protobuf;
 use config;
 use error;
 
-pub fn add_file(paths: &config::Paths, file: &path::Path) -> error::Result<()> {
-    if let Some(file_name) = file.file_name() {
-        let target = paths.preferred_data("proto").join(file_name).with_extension("proto");
+pub fn add_file(paths: &config::Paths,
+                relative_to: &path::Path,
+                file: &path::Path)
+                -> error::Result<()> {
+    let rel_file = file.strip_prefix(relative_to)
+                       .unwrap_or(file.file_name().map(path::Path::new).unwrap_or(file));
+    let target = paths.preferred_data("proto").join(rel_file);
 
-        if let Some(parent) = target.parent() {
-            trace!("Creating directory {:?}", parent);
-            try!(fs::create_dir_all(parent));
-        }
-
-        try!(fs::copy(file, &target));
-        info!("Added proto file as {:?}", target);
-        Ok(())
-    } else {
-        Err(error::Error::General(format!("Could not determine file name of {:?}", file)))
+    if let Some(parent) = target.parent() {
+        trace!("Creating directory {:?}", parent);
+        try!(fs::create_dir_all(parent));
     }
+
+    try!(fs::copy(file, &target));
+    info!("Added proto file as {:?}", target);
+    Ok(())
 }
 
 pub fn compile_descriptor_set(paths: &config::Paths)
