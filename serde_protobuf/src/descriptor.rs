@@ -290,11 +290,13 @@ impl Descriptors {
     }
 
     /// Looks up a message by its fully qualified name (i.e. `.foo.package.Message`).
+    #[inline]
     pub fn message_by_name(&self, name: &str) -> Option<&MessageDescriptor> {
         self.messages_by_name.get(name).map(|m| &self.messages[m.0])
     }
 
     /// Looks up an enum by its fully qualified name (i.e. `.foo.package.Enum`).
+    #[inline]
     pub fn enum_by_name(&self, name: &str) -> Option<&EnumDescriptor> {
         self.enums_by_name.get(name).map(|e| &self.enums[e.0])
     }
@@ -410,14 +412,17 @@ impl MessageDescriptor {
         message_descriptor
     }
 
+    #[inline]
     pub fn name(&self) -> &str {
         &self.name
     }
 
+    #[inline]
     pub fn field_by_name(&self, name: &str) -> Option<&FieldDescriptor> {
         self.fields_by_name.get(name).map(|f| &self.fields[f.0])
     }
 
+    #[inline]
     pub fn field_by_number(&self, number: i32) -> Option<&FieldDescriptor> {
         self.fields_by_number.get(&number).map(|f| &self.fields[f.0])
     }
@@ -457,6 +462,7 @@ impl EnumDescriptor {
         enum_descriptor
     }
 
+    #[inline]
     pub fn name(&self) -> &str {
         &self.name
     }
@@ -471,10 +477,12 @@ impl EnumDescriptor {
         self.values_by_number.insert(number, value_id);
     }
 
+    #[inline]
     pub fn value_by_name(&self, name: &str) -> Option<&EnumValueDescriptor> {
         self.values_by_name.get(name).map(|v| &self.values[v.0])
     }
 
+    #[inline]
     pub fn value_by_number(&self, number: i32) -> Option<&EnumValueDescriptor> {
         self.values_by_number.get(&number).map(|v| &self.values[v.0])
     }
@@ -494,10 +502,12 @@ impl EnumValueDescriptor {
         EnumValueDescriptor::new(proto.get_name().to_owned(), proto.get_number())
     }
 
+    #[inline]
     pub fn name(&self) -> &str {
         &self.name
     }
 
+    #[inline]
     pub fn number(&self) -> i32 {
         self.number
     }
@@ -514,6 +524,7 @@ impl FieldLabel {
         }
     }
 
+    #[inline]
     pub fn is_repeated(&self) -> bool {
         *self == FieldLabel::Repeated
     }
@@ -546,6 +557,7 @@ impl InternalFieldType {
         }
     }
 
+    #[inline]
     fn resolve<'a>(&'a self, descriptors: &'a Descriptors) -> FieldType<'a> {
         match *self {
             InternalFieldType::UnresolvedMessage(ref n) => {
@@ -610,22 +622,27 @@ impl FieldDescriptor {
         FieldDescriptor::new(name, number, field_label, field_type)
     }
 
+    #[inline]
     pub fn name(&self) -> &str {
         &self.name
     }
 
+    #[inline]
     pub fn number(&self) -> i32 {
         self.number
     }
 
+    #[inline]
     pub fn field_label(&self) -> FieldLabel {
         self.field_label
     }
 
+    #[inline]
     pub fn is_repeated(&self) -> bool {
         self.field_label == FieldLabel::Repeated
     }
 
+    #[inline]
     pub fn field_type<'a>(&'a self, descriptors: &'a Descriptors) -> FieldType<'a> {
         self.field_type.resolve(descriptors)
     }

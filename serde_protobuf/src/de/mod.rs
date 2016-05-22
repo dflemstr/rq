@@ -85,6 +85,7 @@ impl<'a> serde::Deserializer for Deserializer<'a> {
 }
 
 impl<'a> MessageVisitor<'a> {
+    #[inline]
     fn new(descriptors: &'a descriptor::Descriptors,
            descriptor: &'a descriptor::MessageDescriptor,
            value: value::Message)
@@ -101,6 +102,7 @@ impl<'a> MessageVisitor<'a> {
 impl<'a> serde::de::MapVisitor for MessageVisitor<'a> {
     type Error = error::Error;
 
+    #[inline]
     fn visit_key<K>(&mut self) -> error::Result<Option<K>>
         where K: serde::Deserialize
     {
@@ -114,6 +116,7 @@ impl<'a> serde::de::MapVisitor for MessageVisitor<'a> {
         }
     }
 
+    #[inline]
     fn visit_value<V>(&mut self) -> error::Result<V>
         where V: serde::Deserialize
     {
@@ -126,12 +129,14 @@ impl<'a> serde::de::MapVisitor for MessageVisitor<'a> {
                                                                   field))))
     }
 
+    #[inline]
     fn end(&mut self) -> error::Result<()> {
         Ok(())
     }
 }
 
 impl<'a> MessageKeyDeserializer<'a> {
+    #[inline]
     fn new(descriptor: &'a descriptor::FieldDescriptor) -> MessageKeyDeserializer<'a> {
         MessageKeyDeserializer { descriptor: descriptor }
     }
@@ -140,18 +145,21 @@ impl<'a> MessageKeyDeserializer<'a> {
 impl<'a> serde::Deserializer for MessageKeyDeserializer<'a> {
     type Error = error::Error;
 
+    #[inline]
     fn deserialize<V>(&mut self, mut visitor: V) -> error::Result<V::Value>
         where V: serde::de::Visitor
     {
         visitor.visit_str(self.descriptor.name())
     }
 
+    #[inline]
     fn deserialize_i64<V>(&mut self, mut visitor: V) -> error::Result<V::Value>
         where V: serde::de::Visitor
     {
         visitor.visit_i32(self.descriptor.number())
     }
 
+    #[inline]
     fn deserialize_u64<V>(&mut self, mut visitor: V) -> error::Result<V::Value>
         where V: serde::de::Visitor
     {
@@ -160,6 +168,7 @@ impl<'a> serde::Deserializer for MessageKeyDeserializer<'a> {
 }
 
 impl<'a> MessageFieldDeserializer<'a> {
+    #[inline]
     fn new(descriptors: &'a descriptor::Descriptors,
            descriptor: &'a descriptor::FieldDescriptor,
            field: value::Field)
@@ -175,6 +184,7 @@ impl<'a> MessageFieldDeserializer<'a> {
 impl<'a> serde::Deserializer for MessageFieldDeserializer<'a> {
     type Error = error::Error;
 
+    #[inline]
     fn deserialize<V>(&mut self, mut visitor: V) -> error::Result<V::Value>
         where V: serde::de::Visitor
     {
@@ -204,6 +214,7 @@ impl<'a> serde::Deserializer for MessageFieldDeserializer<'a> {
 }
 
 impl<'a> RepeatedValueVisitor<'a> {
+    #[inline]
     fn new(descriptors: &'a descriptor::Descriptors,
            descriptor: &'a descriptor::FieldDescriptor,
            values: vec::IntoIter<value::Value>)
@@ -219,6 +230,7 @@ impl<'a> RepeatedValueVisitor<'a> {
 impl<'a> serde::de::SeqVisitor for RepeatedValueVisitor<'a> {
     type Error = error::Error;
 
+    #[inline]
     fn visit<A>(&mut self) -> error::Result<Option<A>>
         where A: serde::de::Deserialize
     {
@@ -230,17 +242,20 @@ impl<'a> serde::de::SeqVisitor for RepeatedValueVisitor<'a> {
         }
     }
 
+    #[inline]
     fn end(&mut self) -> error::Result<()> {
         let len = self.values.size_hint().0;
         if len == 0 { Ok(()) } else { Err(serde::de::Error::invalid_length(len)) }
     }
 
+    #[inline]
     fn size_hint(&self) -> (usize, Option<usize>) {
         self.values.size_hint()
     }
 }
 
 impl<'a> ValueDeserializer<'a> {
+    #[inline]
     fn new(descriptors: &'a descriptor::Descriptors,
            descriptor: &'a descriptor::FieldDescriptor,
            value: value::Value)
@@ -256,6 +271,7 @@ impl<'a> ValueDeserializer<'a> {
 impl<'a> serde::Deserializer for ValueDeserializer<'a> {
     type Error = error::Error;
 
+    #[inline]
     fn deserialize<V>(&mut self, visitor: V) -> error::Result<V::Value>
         where V: serde::de::Visitor
     {
@@ -266,6 +282,7 @@ impl<'a> serde::Deserializer for ValueDeserializer<'a> {
     }
 }
 
+#[inline]
 fn visit_value<V>(descriptors: &descriptor::Descriptors,
                   descriptor: &descriptor::FieldDescriptor,
                   value: value::Value,
