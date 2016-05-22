@@ -1,3 +1,64 @@
+//! Deserialization of binary protocol buffer encoded data.
+//!
+//! All deserialization operations require a previously loaded set of schema descriptors; see the
+//! [`descriptor`](../descriptor/index.html) module for more information.
+//!
+//! Provided that a set of descriptors have been loaded, a `Deserializer` can be used to deserialize
+//! a stream of bytes into something that implements `Deserialize`.
+//!
+//! ```
+//! extern crate serde;
+//! extern crate protobuf;
+//! extern crate serde_protobuf;
+//! extern crate serde_value;
+//!
+//! use std::fs;
+//! use serde::de::Deserialize;
+//! use serde_protobuf::descriptor::Descriptors;
+//! use serde_protobuf::de::Deserializer;
+//! use serde_value::Value;
+//!
+//! # use std::io;
+//! # #[derive(Debug)] struct Error;
+//! # impl From<protobuf::ProtobufError> for Error {
+//! #   fn from(a: protobuf::ProtobufError) -> Error {
+//! #     Error
+//! #   }
+//! # }
+//! # impl From<io::Error> for Error {
+//! #   fn from(a: io::Error) -> Error {
+//! #     Error
+//! #   }
+//! # }
+//! # impl From<serde_protobuf::Error> for Error {
+//! #   fn from(a: serde_protobuf::Error) -> Error {
+//! #     Error
+//! #   }
+//! # }
+//! # fn foo() -> Result<(), Error> {
+//! // Load a descriptor registry (see descriptor module)
+//! let mut file = try!(fs::File::open("testdata/descriptors.pb"));
+//! let proto = try!(protobuf::parse_from_reader(&mut file));
+//! let descriptors = Descriptors::from_proto(&proto);
+//!
+//! // Set up some data to read
+//! let data = &[8, 42];
+//! let mut input = protobuf::CodedInputStream::from_bytes(data);
+//!
+//! // Create a deserializer
+//! let name = ".protobuf_unittest.TestAllTypes";
+//! let mut deserializer = try!(Deserializer::for_named_message(&descriptors, name, &mut input));
+//!
+//! // Deserialize some struct
+//! let value = try!(Value::deserialize(&mut deserializer));
+//! assert_eq!("Map({String(\"optional_int32\"): Option(Some(I32(42)))})", format!("{:?}", value));
+//! # Ok(())
+//! # }
+//! # fn main() {
+//! #   foo().unwrap();
+//! # }
+//! ```
+
 use std::collections;
 use std::vec;
 
@@ -8,6 +69,7 @@ use descriptor;
 use error;
 use value;
 
+/// A deserializer that can deserialize a single message type.
 pub struct Deserializer<'a> {
     descriptors: &'a descriptor::Descriptors,
     descriptor: &'a descriptor::MessageDescriptor,
@@ -44,6 +106,10 @@ struct ValueDeserializer<'a> {
 }
 
 impl<'a> Deserializer<'a> {
+    /// Constructs a new protocol buffer deserializer for the specified message type.
+    ///
+    /// The caller must ensure that all of the information needed by the specified message
+    /// descriptor is available in the associated descriptors registry.
     pub fn new(descriptors: &'a descriptor::Descriptors,
                descriptor: &'a descriptor::MessageDescriptor,
                input: &'a mut protobuf::CodedInputStream<'a>)
@@ -55,6 +121,10 @@ impl<'a> Deserializer<'a> {
         }
     }
 
+    /// Constructs a new protocol buffer deserializer for the specified named message type.
+    ///
+    /// The message type name must be fully quailified (for example
+    /// `".google.protobuf.FileDescriptorSet"`).
     pub fn for_named_message(descriptors: &'a descriptor::Descriptors,
                              message_name: &str,
                              input: &'a mut protobuf::CodedInputStream<'a>)

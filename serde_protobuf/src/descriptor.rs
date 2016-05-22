@@ -19,7 +19,7 @@
 //! The binary file descriptor set can then be parsed into a `Descriptors` instance:
 //!
 //! ```
-//! # extern crate serde_protobuf;
+//! extern crate serde_protobuf;
 //! extern crate protobuf;
 //!
 //! use std::fs;
