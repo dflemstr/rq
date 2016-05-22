@@ -177,6 +177,11 @@ version = "0.2.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
+name = "linked-hash-map"
+version = "0.0.10"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
 name = "log"
 version = "0.3.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -311,6 +316,7 @@ dependencies = [
 name = "serde_protobuf"
 version = "0.1.0"
 dependencies = [
+ "linked-hash-map 0.0.10 (registry+https://github.com/rust-lang/crates.io-index)",
  "log 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "protobuf 1.0.20 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 0.7.5 (registry+https://github.com/rust-lang/crates.io-index)",
