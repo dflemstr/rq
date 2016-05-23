@@ -18,7 +18,7 @@ dependencies = [
  "serde 0.7.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_cbor 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_json 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "serde_protobuf 0.1.0",
+ "serde_protobuf 0.1.1",
  "xdg-basedir 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -314,7 +314,7 @@ dependencies = [
 
 [[package]]
 name = "serde_protobuf"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "linked-hash-map 0.0.10 (registry+https://github.com/rust-lang/crates.io-index)",
  "log 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)",
