@@ -16,6 +16,7 @@ pub enum Error {
     UnknownEnumValue(i32),
     UnknownMessage(String),
     BadWireType(wire_format::WireType),
+    BadDefaultValue(String),
     Custom(String),
 }
 
@@ -28,6 +29,7 @@ impl fmt::Display for Error {
             Error::UnknownEnumValue(v) => write!(f, "unknown enum value: {:?}", v),
             Error::UnknownMessage(ref m) => write!(f, "unknown message: {:?}", m),
             Error::BadWireType(wt) => write!(f, "bad wire type: {:?}", wt),
+            Error::BadDefaultValue(ref d) => write!(f, "bad default value: {:?}", d),
             Error::Custom(ref m) => write!(f, "error: {}", m),
         }
     }
@@ -42,6 +44,7 @@ impl error::Error for Error {
             Error::UnknownEnumValue(_) => "unknown enum value",
             Error::UnknownMessage(_) => "unknown message",
             Error::BadWireType(_) => "bad wire type",
+            Error::BadDefaultValue(_) => "bad default value",
             Error::Custom(ref m) => m,
         }
     }

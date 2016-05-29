@@ -6,6 +6,7 @@ use protobuf::stream::wire_format;
 use descriptor;
 use error;
 
+#[derive(Clone, Debug)]
 pub enum Value {
     Bool(bool),
     I32(i32),
@@ -20,11 +21,13 @@ pub enum Value {
     Message(Message),
 }
 
+#[derive(Clone, Debug)]
 pub struct Message {
     pub fields: collections::BTreeMap<i32, Field>,
     pub unknown: protobuf::UnknownFields,
 }
 
+#[derive(Clone, Debug)]
 pub enum Field {
     Singular(Option<Value>),
     Repeated(Vec<Value>),
@@ -33,10 +36,20 @@ pub enum Field {
 impl Message {
     #[inline]
     pub fn new(message: &descriptor::MessageDescriptor) -> Message {
-        Message {
+        let mut m = Message {
             fields: collections::BTreeMap::new(),
             unknown: protobuf::UnknownFields::new(),
+        };
+
+        for field in message.fields() {
+            m.fields.insert(field.number(), if field.is_repeated() {
+                Field::Repeated(Vec::new())
+            } else {
+                Field::Singular(field.default_value().cloned())
+            });
         }
+
+        m
     }
 
     #[inline]

@@ -106,6 +106,47 @@ macro_rules! value {
     };
 }
 
+trait Subset {
+    fn subset_of(&self, other: &Self) -> bool;
+}
+
+impl Subset for serde_value::Value {
+    fn subset_of(&self, other: &Self) -> bool {
+        use serde_value::Value::*;
+        match (self, other) {
+            (&Map(ref ma), &Map(ref mb)) => {
+                for (ka, va) in ma {
+                    if let Some(vb) = mb.get(ka) {
+                        if !va.subset_of(vb) {
+                            return false
+                        }
+                    } else {
+                        return false
+                    }
+                }
+                true
+            },
+            (&Option(Some(ref sa)), &Option(Some(ref sb))) => {
+                sa.subset_of(&*sb)
+            },
+            _ => self == other
+        }
+    }
+}
+
+macro_rules! assert_subset {
+    ($left:expr , $right:expr) => ({
+        match (&$left, &$right) {
+            (left_val, right_val) => {
+                if !(left_val.subset_of(right_val)) {
+                    panic!("assertion failed: `(left.subset_of(right))` \
+                            (left: `{:?}`, right: `{:?}`)", left_val, right_val)
+                }
+            }
+        }
+    })
+}
+
 macro_rules! roundtrip {
     ($t:ty, $v:ident, $s:stmt) => {
         {
@@ -134,11 +175,11 @@ fn roundtrip_optional_message() {
         v.mut_optional_nested_message().set_bb(1);
     });
 
-    assert_eq!(v, value!(map {
+    assert_subset!(value!(map {
         (str: "optional_nested_message") => (some map {
             (str: "bb") => (some i32: 1)
         })
-    }))
+    }), v)
 }
 
 #[test]
@@ -147,9 +188,9 @@ fn roundtrip_optional_enum() {
         v.set_optional_nested_enum(protobuf_unittest::unittest::TestAllTypes_NestedEnum::BAZ);
     });
 
-    assert_eq!(v, value!(map {
+    assert_subset!(value!(map {
         (str: "optional_nested_enum") => (some str: "BAZ")
-    }))
+    }), v)
 }
 
 #[test]
@@ -160,11 +201,11 @@ fn roundtrip_required() {
         v.set_c(3);
     });
 
-    assert_eq!(v, value!(map {
+    assert_subset!(value!(map {
         (str: "a") => (i32: 1),
         (str: "b") => (i32: 2),
         (str: "c") => (i32: 3)
-    }))
+    }), v)
 }
 
 #[test]
@@ -175,7 +216,7 @@ fn roundtrip_repeated_message() {
         v.mut_repeated_nested_message().push_default().set_bb(3);
     });
 
-    assert_eq!(v, value!(map {
+    assert_subset!(value!(map {
         (str: "repeated_nested_message") => (seq [
             (map {
                 (str: "bb") => (some i32: 1)
@@ -187,7 +228,7 @@ fn roundtrip_repeated_message() {
                 (str: "bb") => (some i32: 3)
             })
         ])
-    }))
+    }), v)
 }
 
 #[test]
@@ -198,9 +239,9 @@ fn roundtrip_repeated_enum() {
         v.mut_repeated_nested_enum().push(protobuf_unittest::unittest::TestAllTypes_NestedEnum::BAR);
     });
 
-    assert_eq!(v, value!(map {
+    assert_subset!(value!(map {
         (str: "repeated_nested_enum") => (seq [(str: "BAZ"), (str: "FOO"), (str: "BAR")])
-    }))
+    }), v)
 }
 
 
@@ -211,7 +252,7 @@ fn roundtrip_recursive() {
         v.mut_a().mut_a().mut_a().mut_a().set_i(4);
     });
 
-    assert_eq!(v, value!(map {
+    assert_subset!(value!(map {
         (str: "a") => (some map {
             (str: "a") => (some map {
                 (str: "i") => (some i32: 3),
@@ -222,38 +263,66 @@ fn roundtrip_recursive() {
                 })
             })
         })
-    }))
+    }), v)
 }
 
-macro_rules! check_roundtrip_optional {
+macro_rules! check_roundtrip_singular {
     ($id:ident, $field:ident, $setter:ident, $v:expr, $($p:tt)+) => {
         #[test]
         fn $id() {
             let v = roundtrip!(protobuf_unittest::unittest::TestAllTypes, v, {
                 v.$setter($v);
             });
-            assert_eq!(v, value!(map {
+            assert_subset!(value!(map {
                 (str: stringify!($field)) => ($($p)+: $v)
-            }))
+            }), v)
         }
     }
 }
 
-check_roundtrip_optional!(roundtrip_optional_int32, optional_int32, set_optional_int32, 42, some i32);
-check_roundtrip_optional!(roundtrip_optional_int64, optional_int64, set_optional_int64, 42, some i64);
-check_roundtrip_optional!(roundtrip_optional_uint32, optional_uint32, set_optional_uint32, 42, some u32);
-check_roundtrip_optional!(roundtrip_optional_uint64, optional_uint64, set_optional_uint64, 42, some u64);
-check_roundtrip_optional!(roundtrip_optional_sint32, optional_sint32, set_optional_sint32, 42, some i32);
-check_roundtrip_optional!(roundtrip_optional_sint64, optional_sint64, set_optional_sint64, 42, some i64);
-check_roundtrip_optional!(roundtrip_optional_fixed32, optional_fixed32, set_optional_fixed32, 42, some u32);
-check_roundtrip_optional!(roundtrip_optional_fixed64, optional_fixed64, set_optional_fixed64, 42, some u64);
-check_roundtrip_optional!(roundtrip_optional_sfixed32, optional_sfixed32, set_optional_sfixed32, 42, some i32);
-check_roundtrip_optional!(roundtrip_optional_sfixed64, optional_sfixed64, set_optional_sfixed64, 42, some i64);
-check_roundtrip_optional!(roundtrip_optional_float, optional_float, set_optional_float, 0.4, some f32);
-check_roundtrip_optional!(roundtrip_optional_double, optional_double, set_optional_double, 0.4, some f64);
-check_roundtrip_optional!(roundtrip_optional_bool, optional_bool, set_optional_bool, true, some bool);
-check_roundtrip_optional!(roundtrip_optional_string, optional_string, set_optional_string, "hello".to_owned(), some string);
-check_roundtrip_optional!(roundtrip_optional_bytes, optional_bytes, set_optional_bytes, vec![1, 2, 3], some byte_buf);
+check_roundtrip_singular!(roundtrip_optional_int32, optional_int32, set_optional_int32, 42, some i32);
+check_roundtrip_singular!(roundtrip_optional_int64, optional_int64, set_optional_int64, 42, some i64);
+check_roundtrip_singular!(roundtrip_optional_uint32, optional_uint32, set_optional_uint32, 42, some u32);
+check_roundtrip_singular!(roundtrip_optional_uint64, optional_uint64, set_optional_uint64, 42, some u64);
+check_roundtrip_singular!(roundtrip_optional_sint32, optional_sint32, set_optional_sint32, 42, some i32);
+check_roundtrip_singular!(roundtrip_optional_sint64, optional_sint64, set_optional_sint64, 42, some i64);
+check_roundtrip_singular!(roundtrip_optional_fixed32, optional_fixed32, set_optional_fixed32, 42, some u32);
+check_roundtrip_singular!(roundtrip_optional_fixed64, optional_fixed64, set_optional_fixed64, 42, some u64);
+check_roundtrip_singular!(roundtrip_optional_sfixed32, optional_sfixed32, set_optional_sfixed32, 42, some i32);
+check_roundtrip_singular!(roundtrip_optional_sfixed64, optional_sfixed64, set_optional_sfixed64, 42, some i64);
+check_roundtrip_singular!(roundtrip_optional_float, optional_float, set_optional_float, 0.4, some f32);
+check_roundtrip_singular!(roundtrip_optional_double, optional_double, set_optional_double, 0.4, some f64);
+check_roundtrip_singular!(roundtrip_optional_bool, optional_bool, set_optional_bool, true, some bool);
+check_roundtrip_singular!(roundtrip_optional_string, optional_string, set_optional_string, "hello".to_owned(), some string);
+check_roundtrip_singular!(roundtrip_optional_bytes, optional_bytes, set_optional_bytes, vec![1, 2, 3], some byte_buf);
+
+macro_rules! check_roundtrip_default {
+    ($id:ident, $field:ident, $v:expr, $($p:tt)+) => {
+        #[test]
+        fn $id() {
+            let v = roundtrip!(protobuf_unittest::unittest::TestAllTypes, v, {});
+            assert_subset!(value!(map {
+                (str: stringify!($field)) => ($($p)+: $v)
+            }), v)
+        }
+    }
+}
+
+check_roundtrip_default!(roundtrip_default_int32, default_int32, 41, some i32);
+check_roundtrip_default!(roundtrip_default_int64, default_int64, 42, some i64);
+check_roundtrip_default!(roundtrip_default_uint32, default_uint32, 43, some u32);
+check_roundtrip_default!(roundtrip_default_uint64, default_uint64, 44, some u64);
+check_roundtrip_default!(roundtrip_default_sint32, default_sint32, -45, some i32);
+check_roundtrip_default!(roundtrip_default_sint64, default_sint64, 46, some i64);
+check_roundtrip_default!(roundtrip_default_fixed32, default_fixed32, 47, some u32);
+check_roundtrip_default!(roundtrip_default_fixed64, default_fixed64, 48, some u64);
+check_roundtrip_default!(roundtrip_default_sfixed32, default_sfixed32, 49, some i32);
+check_roundtrip_default!(roundtrip_default_sfixed64, default_sfixed64, -50, some i64);
+check_roundtrip_default!(roundtrip_default_float, default_float, 51.5, some f32);
+check_roundtrip_default!(roundtrip_default_double, default_double, 52e3, some f64);
+check_roundtrip_default!(roundtrip_default_bool, default_bool, true, some bool);
+check_roundtrip_default!(roundtrip_default_string, default_string, "hello".to_owned(), some string);
+check_roundtrip_default!(roundtrip_default_bytes, default_bytes, "world".as_bytes().to_owned(), some byte_buf);
 
 macro_rules! check_roundtrip_repeated {
     ($id:ident, $field:ident, $mut_getter:ident, [$($v:expr),+], $p:tt) => {
@@ -264,9 +333,9 @@ macro_rules! check_roundtrip_repeated {
                     v.$mut_getter().push($v);
                 )+
             });
-            assert_eq!(v, value!(map {
+            assert_subset!(value!(map {
                 (str: stringify!($field)) => (seq [$(($p: $v)),+])
-            }))
+            }), v)
         }
     }
 }

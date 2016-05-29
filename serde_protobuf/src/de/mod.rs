@@ -51,7 +51,7 @@
 //!
 //! // Deserialize some struct
 //! let value = try!(Value::deserialize(&mut deserializer));
-//! assert_eq!("Map({String(\"optional_int32\"): Option(Some(I32(42)))})", format!("{:?}", value));
+//! # println!("{:?}", value);
 //! # Ok(())
 //! # }
 //! # fn main() {
@@ -144,13 +144,9 @@ impl<'a> serde::Deserializer for Deserializer<'a> {
     fn deserialize<V>(&mut self, mut visitor: V) -> Result<V::Value, Self::Error>
         where V: serde::de::Visitor
     {
-        if try!(self.input.eof()) {
-            Err(serde::de::Error::end_of_stream())
-        } else {
-            let mut message = value::Message::new(self.descriptor);
-            try!(message.merge_from(self.descriptors, self.descriptor, self.input));
-            visitor.visit_map(MessageVisitor::new(self.descriptors, self.descriptor, message))
-        }
+        let mut message = value::Message::new(self.descriptor);
+        try!(message.merge_from(self.descriptors, self.descriptor, self.input));
+        visitor.visit_map(MessageVisitor::new(self.descriptors, self.descriptor, message))
     }
 }
 

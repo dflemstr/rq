@@ -58,9 +58,9 @@
 //! // Create a new message type
 //! let mut m = MessageDescriptor::new(".mypackage.Person");
 //! m.add_field(FieldDescriptor::new("name", 1, FieldLabel::Optional,
-//!                                  InternalFieldType::String));
+//!                                  InternalFieldType::String, None));
 //! m.add_field(FieldDescriptor::new("age", 2, FieldLabel::Optional,
-//!                                  InternalFieldType::Int32));
+//!                                  InternalFieldType::Int32, None));
 //!
 //! // Create a new enum type
 //! let mut e = EnumDescriptor::new(".mypackage.Color");
@@ -126,8 +126,14 @@
 //! ```
 //!
 //! [1]: https://github.com/google/protobuf/blob/master/src/google/protobuf/descriptor.proto
+use std::f32;
+use std::f64;
+
 use linked_hash_map;
 use protobuf::descriptor;
+
+use error;
+use value;
 
 /// An ID used for internal tracking of resolved message descriptors.
 ///
@@ -268,6 +274,7 @@ pub struct FieldDescriptor {
     number: i32,
     field_label: FieldLabel,
     field_type: InternalFieldType,
+    default_value: Option<value::Value>,
 }
 
 impl Descriptors {
@@ -410,6 +417,10 @@ impl MessageDescriptor {
         }
 
         message_descriptor
+    }
+
+    pub fn fields(&self) -> &[FieldDescriptor] {
+        &self.fields
     }
 
     #[inline]
@@ -600,7 +611,8 @@ impl FieldDescriptor {
     pub fn new<S>(name: S,
                   number: i32,
                   field_label: FieldLabel,
-                  field_type: InternalFieldType)
+                  field_type: InternalFieldType,
+                  default_value: Option<value::Value>)
                   -> FieldDescriptor
         where S: Into<String>
     {
@@ -609,6 +621,7 @@ impl FieldDescriptor {
             number: number,
             field_label: field_label,
             field_type: field_type,
+            default_value: default_value,
         }
     }
 
@@ -618,8 +631,14 @@ impl FieldDescriptor {
         let field_label = FieldLabel::from_proto(proto.get_label());
         let field_type = InternalFieldType::from_proto(proto.get_field_type(),
                                                        proto.get_type_name());
+        let default_value = if proto.has_default_value() {
+            // TODO: report error?
+            parse_default_value(proto.get_default_value(), &field_type).ok()
+        } else {
+            None
+        };
 
-        FieldDescriptor::new(name, number, field_label, field_type)
+        FieldDescriptor::new(name, number, field_label, field_type, default_value)
     }
 
     #[inline]
@@ -646,12 +665,58 @@ impl FieldDescriptor {
     pub fn field_type<'a>(&'a self, descriptors: &'a Descriptors) -> FieldType<'a> {
         self.field_type.resolve(descriptors)
     }
+
+    #[inline]
+    pub fn default_value(&self) -> Option<&value::Value> {
+        self.default_value.as_ref()
+    }
 }
 
 fn store<A>(vec: &mut Vec<A>, elem: A) -> usize {
     let idx = vec.len();
     vec.push(elem);
     idx
+}
+
+fn parse_default_value(value: &str, field_type: &InternalFieldType) -> error::Result<value::Value> {
+    use std::str::FromStr;
+
+    fn bad(v: &str) -> error::Error {
+        error::Error::BadDefaultValue(v.to_owned())
+    }
+
+    match *field_type {
+        InternalFieldType::UnresolvedMessage(_) |
+        InternalFieldType::UnresolvedEnum(_) |
+        InternalFieldType::Message(_) |
+        InternalFieldType::Enum(_) => Err(bad(value)),
+        InternalFieldType::Bool => bool::from_str(value).map(value::Value::Bool).map_err(|_| bad(value)),
+        InternalFieldType::Double => match value {
+            "inf" => Ok(value::Value::F64(f64::INFINITY)),
+            "-inf" => Ok(value::Value::F64(f64::NEG_INFINITY)),
+            "nan" => Ok(value::Value::F64(f64::NAN)),
+            _ => f64::from_str(value).map(value::Value::F64).map_err(|_| bad(value)),
+        },
+        InternalFieldType::Float => match value {
+            "inf" => Ok(value::Value::F32(f32::INFINITY)),
+            "-inf" => Ok(value::Value::F32(f32::NEG_INFINITY)),
+            "nan" => Ok(value::Value::F32(f32::NAN)),
+            _ => f32::from_str(value).map(value::Value::F32).map_err(|_| bad(value)),
+        },
+        InternalFieldType::Int32 |
+        InternalFieldType::SFixed32 |
+        InternalFieldType::SInt32 => i32::from_str(value).map(value::Value::I32).map_err(|_| bad(value)),
+        InternalFieldType::Int64 |
+        InternalFieldType::SFixed64 |
+        InternalFieldType::SInt64 => i64::from_str(value).map(value::Value::I64).map_err(|_| bad(value)),
+        InternalFieldType::UInt32 |
+        InternalFieldType::Fixed32 => u32::from_str(value).map(value::Value::U32).map_err(|_| bad(value)),
+        InternalFieldType::UInt64 |
+        InternalFieldType::Fixed64 => u64::from_str(value).map(value::Value::U64).map_err(|_| bad(value)),
+        InternalFieldType::String => Ok(value::Value::String(value.to_owned())),
+        InternalFieldType::Group => unimplemented!(),
+        InternalFieldType::Bytes => Ok(value::Value::Bytes(value.chars().map(|c| c as u8).collect())),
+    }
 }
 
 #[cfg(test)]
