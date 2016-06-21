@@ -3,7 +3,7 @@ name = "record-query"
 version = "0.1.0"
 dependencies = [
  "ansi_term 0.7.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "docopt 0.6.80 (registry+https://github.com/rust-lang/crates.io-index)",
+ "docopt 0.6.81 (registry+https://github.com/rust-lang/crates.io-index)",
  "docopt_macros 0.6.84 (registry+https://github.com/rust-lang/crates.io-index)",
  "env_logger 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "glob 0.2.11 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -11,13 +11,13 @@ dependencies = [
  "lalrpop-util 0.11.0 (git+https://github.com/nikomatsakis/lalrpop.git)",
  "log 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "mod_path 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
- "nix 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "nix 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "ordered-float 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "protobuf 1.0.20 (registry+https://github.com/rust-lang/crates.io-index)",
+ "protobuf 1.0.21 (registry+https://github.com/rust-lang/crates.io-index)",
  "rustc-serialize 0.3.19 (registry+https://github.com/rust-lang/crates.io-index)",
- "serde 0.7.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde 0.7.10 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_cbor 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)",
- "serde_json 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde_json 0.7.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_protobuf 0.1.1",
  "xdg-basedir 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -41,7 +41,7 @@ version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "kernel32-sys 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "libc 0.2.11 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.2.12 (registry+https://github.com/rust-lang/crates.io-index)",
  "winapi 0.2.7 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -75,7 +75,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "docopt"
-version = "0.6.80"
+version = "0.6.81"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "regex 0.1.71 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -88,7 +88,7 @@ name = "docopt_macros"
 version = "0.6.84"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "docopt 0.6.80 (registry+https://github.com/rust-lang/crates.io-index)",
+ "docopt 0.6.81 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -127,13 +127,13 @@ dependencies = [
 [[package]]
 name = "lalrpop"
 version = "0.11.0"
-source = "git+https://github.com/nikomatsakis/lalrpop.git#d34f87b33927d6049520092ca862a814688e47ad"
+source = "git+https://github.com/nikomatsakis/lalrpop.git#04be5f9a8c23391edeff3953360cb545b96b082a"
 dependencies = [
  "atty 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "bit-set 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "bitflags 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "diff 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
- "docopt 0.6.80 (registry+https://github.com/rust-lang/crates.io-index)",
+ "docopt 0.6.81 (registry+https://github.com/rust-lang/crates.io-index)",
  "itertools 0.3.25 (registry+https://github.com/rust-lang/crates.io-index)",
  "lalrpop-intern 0.11.0 (git+https://github.com/nikomatsakis/lalrpop.git)",
  "lalrpop-snap 0.11.0 (git+https://github.com/nikomatsakis/lalrpop.git)",
@@ -150,12 +150,12 @@ dependencies = [
 [[package]]
 name = "lalrpop-intern"
 version = "0.11.0"
-source = "git+https://github.com/nikomatsakis/lalrpop.git#d34f87b33927d6049520092ca862a814688e47ad"
+source = "git+https://github.com/nikomatsakis/lalrpop.git#04be5f9a8c23391edeff3953360cb545b96b082a"
 
 [[package]]
 name = "lalrpop-snap"
 version = "0.11.0"
-source = "git+https://github.com/nikomatsakis/lalrpop.git#d34f87b33927d6049520092ca862a814688e47ad"
+source = "git+https://github.com/nikomatsakis/lalrpop.git#04be5f9a8c23391edeff3953360cb545b96b082a"
 dependencies = [
  "diff 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
  "itertools 0.3.25 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -169,11 +169,11 @@ dependencies = [
 [[package]]
 name = "lalrpop-util"
 version = "0.11.0"
-source = "git+https://github.com/nikomatsakis/lalrpop.git#d34f87b33927d6049520092ca862a814688e47ad"
+source = "git+https://github.com/nikomatsakis/lalrpop.git#04be5f9a8c23391edeff3953360cb545b96b082a"
 
 [[package]]
 name = "libc"
-version = "0.2.11"
+version = "0.2.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
@@ -191,7 +191,7 @@ name = "memchr"
 version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "libc 0.2.11 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.2.12 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -201,11 +201,11 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "nix"
-version = "0.5.0"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "bitflags 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "libc 0.2.11 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.2.12 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -259,7 +259,7 @@ dependencies = [
 
 [[package]]
 name = "protobuf"
-version = "1.0.20"
+version = "1.0.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
@@ -269,8 +269,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "aho-corasick 0.5.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "memchr 0.1.11 (registry+https://github.com/rust-lang/crates.io-index)",
- "regex-syntax 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "thread_local 0.2.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "regex-syntax 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "thread_local 0.2.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "utf8-ranges 0.1.3 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -281,7 +281,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "regex-syntax"
-version = "0.3.2"
+version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
@@ -291,7 +291,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "serde"
-version = "0.7.5"
+version = "0.7.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
@@ -300,16 +300,16 @@ version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "byteorder 0.3.13 (registry+https://github.com/rust-lang/crates.io-index)",
- "serde 0.7.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde 0.7.10 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "serde_json"
-version = "0.7.0"
+version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "num 0.1.32 (registry+https://github.com/rust-lang/crates.io-index)",
- "serde 0.7.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "num-traits 0.1.32 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde 0.7.10 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -318,8 +318,8 @@ version = "0.1.1"
 dependencies = [
  "linked-hash-map 0.0.10 (registry+https://github.com/rust-lang/crates.io-index)",
  "log 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)",
- "protobuf 1.0.20 (registry+https://github.com/rust-lang/crates.io-index)",
- "serde 0.7.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "protobuf 1.0.21 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde 0.7.10 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -342,12 +342,12 @@ version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "kernel32-sys 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "libc 0.2.11 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.2.12 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "thread_local"
-version = "0.2.5"
+version = "0.2.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "thread-id 2.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -359,7 +359,7 @@ version = "0.1.35"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "kernel32-sys 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "libc 0.2.11 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.2.12 (registry+https://github.com/rust-lang/crates.io-index)",
  "winapi 0.2.7 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
