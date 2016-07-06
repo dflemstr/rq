@@ -1,6 +1,8 @@
 mod context;
-#[cfg_attr(rustfmt, rustfmt_skip)]
-mod_path! parser (concat!(env!("OUT_DIR"), "/query/parser.rs"));
+
+mod parser {
+    include!(concat!(env!("OUT_DIR"), "/query/parser.rs"));
+}
 
 use value;
 pub use self::context::Context;

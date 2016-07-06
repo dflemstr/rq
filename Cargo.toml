@@ -1,7 +1,7 @@
 [package]
 authors = ["David Flemström <david.flemstrom@gmail.com>"]
-license = "Apache-2.0"
 build = "build.rs"
+license = "Apache-2.0"
 name = "record-query"
 version = "0.1.0"
 
@@ -9,7 +9,7 @@ version = "0.1.0"
 env_logger = "0.3.2"
 
 [build-dependencies.lalrpop]
-git = "https://github.com/nikomatsakis/lalrpop.git"
+git = "https://github.com/dflemstr/lalrpop.git"
 path = "lalrpop"
 
 [dependencies]
@@ -19,7 +19,6 @@ docopt_macros = "0.6.84"
 env_logger = "0.3.3"
 glob = "0.2.11"
 log = "0.3.6"
-mod_path = "0.1.6"
 nix = "0.5.0"
 ordered-float = "0.2.1"
 protobuf = "1.0.18"
@@ -30,7 +29,7 @@ serde_json = "0.7.0"
 xdg-basedir = "1.0.0"
 
 [dependencies.lalrpop-util]
-git = "https://github.com/nikomatsakis/lalrpop.git"
+git = "https://github.com/dflemstr/lalrpop.git"
 path = "lalrpop-util"
 
 [dependencies.serde_protobuf]

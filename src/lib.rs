@@ -1,5 +1,4 @@
-#![feature(advanced_slice_patterns, plugin, slice_patterns)]
-#![plugin(mod_path)]
+#![feature(advanced_slice_patterns, slice_patterns)]
 
 extern crate glob;
 #[macro_use]
