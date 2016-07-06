@@ -25,11 +25,15 @@ impl Default for Context {
 
         functions.insert("select".to_owned(),
                          Box::new(|values: &[value::Value]| {
-                             match values {
-                                 &[value::Value::Map(ref m), ref v] => {
-                                     m.get(v).map_or(value::Value::Unit, |v| v.clone())
-                                 },
-                                 _ => value::Value::Unit,
+                             if values.len() == 2 {
+                                 match (&values[0], &values[1]) {
+                                     (&value::Value::Map(ref m), ref v) => {
+                                         m.get(v).map_or(value::Value::Unit, |v| v.clone())
+                                     },
+                                     _ => value::Value::Unit,
+                                 }
+                             } else {
+                                 value::Value::Unit
                              }
                          }));
         functions.insert("id".to_owned(),

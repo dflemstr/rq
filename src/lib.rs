@@ -1,5 +1,3 @@
-#![feature(advanced_slice_patterns, slice_patterns)]
-
 extern crate glob;
 #[macro_use]
 extern crate log;
