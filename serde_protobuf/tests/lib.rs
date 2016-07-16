@@ -159,11 +159,11 @@ macro_rules! roundtrip {
             let mut $v = <$t>::new();
             $s;
             let bytes = protobuf::Message::write_to_bytes(&mut $v).unwrap();
-            let mut input = protobuf::CodedInputStream::from_bytes(&bytes);
+            let input = protobuf::CodedInputStream::from_bytes(&bytes);
 
             let message_name = format!(".{}", protobuf::Message::descriptor(&$v).full_name());
 
-            let mut deserializer = de::Deserializer::for_named_message(&descriptors, &message_name, &mut input).unwrap();
+            let mut deserializer = de::Deserializer::for_named_message(&descriptors, &message_name, input).unwrap();
             serde_value::Value::deserialize(&mut deserializer).unwrap()
         }
     }

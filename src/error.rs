@@ -27,5 +27,16 @@ error_chain! {
         glob::PatternError, GlobPattern, "glob pattern error";
     }
 
-    errors {}
+    errors {
+        Unimplemented(what: &'static str) {
+            description("unimplemented")
+            display("unimplemented: {}", what)
+        }
+    }
+}
+
+impl Error {
+    pub fn unimplemented(what: &'static str) -> Error {
+        ErrorKind::Unimplemented(what).into()
+    }
 }

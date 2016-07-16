@@ -78,10 +78,14 @@ Options:
 
 fn main() {
     let args: Args = Args::docopt()
-                         .version(Some(VERSION.to_owned()))
-                         .decode()
-                         .unwrap_or_else(|e| e.exit());
+        .version(Some(VERSION.to_owned()))
+        .decode()
+        .unwrap_or_else(|e| e.exit());
 
+    main_with_args(&args).unwrap();
+}
+
+fn main_with_args(args: &Args) -> rq::error::Result<()> {
     setup_log(args.flag_log.as_ref().map(String::as_ref), args.flag_quiet);
 
     let paths = rq::config::Paths::new().unwrap();
@@ -94,106 +98,50 @@ fn main() {
             } else {
                 "."
             });
-            rq::proto_index::add_file(&paths, base, schema).unwrap();
+            rq::proto_index::add_file(&paths, base, schema)
+        } else {
+            unreachable!()
         }
     } else {
-        let query = rq::query::Query::parse(&args.arg_query);
-        let query_context = rq::query::Context::new();
-        // TODO: lazy load
-        let proto_descriptors = load_descriptors(&paths).unwrap();
-
-        let stdin = io::stdin();
-        let mut input = stdin.lock();
-        let output = io::stdout();
-
-        run_raw(&args,
-                &paths,
-                &query,
-                &query_context,
-                &proto_descriptors,
-                input,
-                output)
-            .unwrap_or_else(|e| error!("{:?}", e));
+        run(&args, &paths)
     }
 }
 
-fn run_raw<R, W>(args: &Args,
-                 paths: &rq::config::Paths,
-                 query: &rq::query::Query,
-                 query_context: &rq::query::Context,
-                 proto_descriptors: &serde_protobuf::descriptor::Descriptors,
-                 mut r: R,
-                 w: W)
-                 -> rq::error::Result<()>
-    where R: io::Read,
-          W: io::Write
-{
-    if let Some(ref name) = args.flag_input_protobuf {
-        debug!("Input is protobuf with argument {:?}", name);
+fn run(args: &Args, paths: &rq::config::Paths) -> rq::error::Result<()> {
+    let query = rq::query::Query::parse(&args.arg_query);
+    let query_context = rq::query::Context::new();
+    // TODO: lazy load
+    let proto_descriptors = try!(load_descriptors(&paths));
 
-        let mut stream = protobuf::CodedInputStream::new(&mut r);
+    let stdin = io::stdin();
+    let mut input = stdin.lock();
+    let input_ref = &mut input;
+    let mut output = io::stdout();
+    let output_ref = &mut output;
 
-        let src = try!(rq::value::protobuf::source(proto_descriptors, name, &mut stream));
-        run_from_source(args, paths, query, query_context, proto_descriptors, src, w)
+    let mut source: Box<rq::value::Source> = if let Some(ref name) = args.flag_input_protobuf {
+        let stream = protobuf::CodedInputStream::new(input_ref);
+        Box::new(try!(rq::value::protobuf::source(&proto_descriptors, name, stream)))
     } else if args.flag_input_cbor {
-        let src = rq::value::cbor::source(r);
-        run_from_source(args, paths, query, query_context, proto_descriptors, src, w)
+        Box::new(rq::value::cbor::source(input_ref))
     } else {
-        let src = rq::value::json::source(r);
-        run_from_source(args, paths, query, query_context, proto_descriptors, src, w)
-    }
-}
+        Box::new(rq::value::json::source(input_ref))
+    };
 
-fn run_from_source<I, W>(args: &Args,
-                         paths: &rq::config::Paths,
-                         query: &rq::query::Query,
-                         query_context: &rq::query::Context,
-                         proto_descriptors: &serde_protobuf::descriptor::Descriptors,
-                         source: I,
-                         w: W)
-                         -> rq::error::Result<()>
-    where I: rq::value::Source,
-          W: io::Write
-{
-    if let Some(ref name) = args.flag_output_protobuf {
-        unimplemented!()
+    let mut sink: Box<rq::value::Sink> = if let Some(_) = args.flag_output_protobuf {
+        return Err(rq::error::Error::unimplemented("protobuf serialization"))
     } else if args.flag_output_cbor {
-        run(args,
-            paths,
-            query,
-            query_context,
-            proto_descriptors,
-            source,
-            rq::value::cbor::sink(w))
+        Box::new(rq::value::cbor::sink(output_ref))
     } else {
-        run(args,
-            paths,
-            query,
-            query_context,
-            proto_descriptors,
-            source,
-            rq::value::json::sink(w))
-    }
-}
+        Box::new(rq::value::json::sink(output_ref))
+    };
 
-fn run<I, O>(args: &Args,
-             paths: &rq::config::Paths,
-             query: &rq::query::Query,
-             query_context: &rq::query::Context,
-             proto_descriptors: &serde_protobuf::descriptor::Descriptors,
-             mut source: I,
-             mut sink: O)
-             -> rq::error::Result<()>
-    where I: rq::value::Source,
-          O: rq::value::Sink
-{
     debug!("Starting input consumption");
     while let Some(i) = try!(source.read()) {
         debug!("Consuming an input value");
-        let o = query.evaluate(query_context, i);
+        let o = query.evaluate(&query_context, i);
         try!(sink.write(o));
     }
-
     Ok(())
 }
 

@@ -47,7 +47,7 @@
 //!
 //! // Create a deserializer
 //! let name = ".protobuf_unittest.TestAllTypes";
-//! let mut deserializer = try!(Deserializer::for_named_message(&descriptors, name, &mut input));
+//! let mut deserializer = try!(Deserializer::for_named_message(&descriptors, name, input));
 //!
 //! // Deserialize some struct
 //! let value = try!(Value::deserialize(&mut deserializer));
@@ -73,7 +73,7 @@ use value;
 pub struct Deserializer<'a> {
     descriptors: &'a descriptor::Descriptors,
     descriptor: &'a descriptor::MessageDescriptor,
-    input: &'a mut protobuf::CodedInputStream<'a>,
+    input: protobuf::CodedInputStream<'a>,
 }
 
 struct MessageVisitor<'a> {
@@ -112,7 +112,7 @@ impl<'a> Deserializer<'a> {
     /// descriptor is available in the associated descriptors registry.
     pub fn new(descriptors: &'a descriptor::Descriptors,
                descriptor: &'a descriptor::MessageDescriptor,
-               input: &'a mut protobuf::CodedInputStream<'a>)
+               input: protobuf::CodedInputStream<'a>)
                -> Deserializer<'a> {
         Deserializer {
             descriptors: descriptors,
@@ -127,7 +127,7 @@ impl<'a> Deserializer<'a> {
     /// `".google.protobuf.FileDescriptorSet"`).
     pub fn for_named_message(descriptors: &'a descriptor::Descriptors,
                              message_name: &str,
-                             input: &'a mut protobuf::CodedInputStream<'a>)
+                             input: protobuf::CodedInputStream<'a>)
                              -> error::Result<Deserializer<'a>> {
         if let Some(message) = descriptors.message_by_name(message_name) {
             Ok(Deserializer::new(descriptors, message, input))
@@ -145,7 +145,7 @@ impl<'a> serde::Deserializer for Deserializer<'a> {
         where V: serde::de::Visitor
     {
         let mut message = value::Message::new(self.descriptor);
-        try!(message.merge_from(self.descriptors, self.descriptor, self.input));
+        try!(message.merge_from(self.descriptors, self.descriptor, &mut self.input));
         visitor.visit_map(MessageVisitor::new(self.descriptors, self.descriptor, message))
     }
 }
