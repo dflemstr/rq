@@ -1,3 +1,5 @@
+#[macro_use]
+extern crate error_chain;
 extern crate glob;
 #[macro_use]
 extern crate log;
