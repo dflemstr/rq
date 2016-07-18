@@ -32,7 +32,7 @@ See 'man rq' for in-depth documentation.
 
 Usage:
   rq (--help|--version)
-  rq [-j|-c|-p <type>] [-J|-C|-P <type>] [-l <level>|-q] [--] [<query>]
+  rq [-j|-c|-p <type>] [-J|-C|-P <type>] [-l <level>|-q] [--] <query>
   rq [-l <level>|-q] protobuf add <schema> [--base <path>]
 
 Options:
