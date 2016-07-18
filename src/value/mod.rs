@@ -1,4 +1,5 @@
 use std::collections;
+use std::fmt;
 use std::io;
 
 use ordered_float;
@@ -65,6 +66,66 @@ impl Value {
 
     pub fn from_f64(v: f64) -> Value {
         Value::F64(ordered_float::OrderedFloat(v))
+    }
+}
+
+impl fmt::Display for Value {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            Value::Unit => write!(f, "()"),
+            Value::Bool(v) => write!(f, "{}", v),
+
+            Value::ISize(v) => write!(f, "{}", v),
+            Value::I8(v) => write!(f, "{}", v),
+            Value::I16(v) => write!(f, "{}", v),
+            Value::I32(v) => write!(f, "{}", v),
+            Value::I64(v) => write!(f, "{}", v),
+
+            Value::USize(v) => write!(f, "{}", v),
+            Value::U8(v) => write!(f, "{}", v),
+            Value::U16(v) => write!(f, "{}", v),
+            Value::U32(v) => write!(f, "{}", v),
+            Value::U64(v) => write!(f, "{}", v),
+
+            Value::F32(v) => write!(f, "{}", v),
+            Value::F64(v) => write!(f, "{}", v),
+
+            Value::Char(v) => write!(f, "{}", v),
+            Value::String(ref v) => write!(f, "{}", v),
+            Value::Bytes(ref v) => {
+                for b in v {
+                    try!(write!(f, "{:02x}", b));
+                }
+                Ok(())
+            },
+
+            Value::Sequence(ref seq) => {
+                let mut needs_sep = false;
+                try!(write!(f, "["));
+                for v in seq {
+                    if needs_sep {
+                        try!(write!(f, ", "));
+                    }
+                    try!(write!(f, "{}", v));
+                    needs_sep = true;
+                }
+                try!(write!(f, "]"));
+                Ok(())
+            },
+            Value::Map(ref map) => {
+                let mut needs_sep = false;
+                try!(write!(f, "{{"));
+                for (k, v) in map {
+                    if needs_sep {
+                        try!(write!(f, ", "));
+                    }
+                    try!(write!(f, "{}: {}", k, v));
+                    needs_sep = true;
+                }
+                try!(write!(f, "}}"));
+                Ok(())
+            },
+        }
     }
 }
 

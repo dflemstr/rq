@@ -1,6 +1,7 @@
 use std::io;
 use std::string;
 
+use duk;
 use glob;
 use protobuf;
 use serde_cbor;
@@ -25,18 +26,27 @@ error_chain! {
         xdg_basedir::Error, XdgBasedir, "XDG basedir error";
         glob::GlobError, Glob, "glob error";
         glob::PatternError, GlobPattern, "glob pattern error";
+        duk::Error, Duk, "Javascript error";
     }
 
     errors {
-        Unimplemented(what: &'static str) {
+        Unimplemented(msg: String) {
             description("unimplemented")
-            display("unimplemented: {}", what)
+            display("unimplemented: {}", msg)
+        }
+        IllegalState(msg: String) {
+            description("illegal state")
+            display("illegal state: {}", msg)
         }
     }
 }
 
 impl Error {
-    pub fn unimplemented(what: &'static str) -> Error {
-        ErrorKind::Unimplemented(what).into()
+    pub fn unimplemented(msg: String) -> Error {
+        ErrorKind::Unimplemented(msg).into()
+    }
+
+    pub fn illegal_state(msg: String) -> Error {
+        ErrorKind::IllegalState(msg).into()
     }
 }
