@@ -2,6 +2,7 @@
 use std::str::FromStr;
 
 use query;
+use value;
 
 grammar;
 
@@ -13,23 +14,17 @@ sep<A, S>: Vec<A> = {
     }
 };
 
-pub query: query::Query = sep<query_elem, bar> => {
-    let mut elems = <>;
-
-    if elems.len() == 1 {
-        elems.pop().unwrap()
-    } else {
-        query::Query::Chain(elems)
-    }
+pub query: query::Query = {
+    sep<process, bar> => query::Query(<>)
 };
 
-query_elem: query::Query = {
-    <ident> <expr*> => query::Query::Function(<>),
+process: query::Process = {
+    <ident> <expr*> => query::Process(<>),
 };
 
 expr: query::Expression = {
-    <ident> => query::Expression::String(<>),
-    <integer> => query::Expression::Integer(<>),
+    <ident> => query::Expression::Value(value::Value::String(<>)),
+    <integer> => query::Expression::Value(value::Value::I64(<>)),
 };
 
 ident: String = r"[a-zA-Z_][a-zA-Z0-9_-]*" => <>.to_owned();

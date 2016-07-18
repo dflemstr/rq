@@ -1,3 +1,4 @@
+extern crate duk;
 #[macro_use]
 extern crate error_chain;
 extern crate glob;
