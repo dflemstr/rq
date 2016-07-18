@@ -37,6 +37,8 @@ Currently, the following architectures are supported:
     as the dependency.
   - i686-unknown-linux-gnu - Linux Intel 32-bit with only GNU Lib C as
     the dependency.
+  - i686-unknown-linux-musl - Linux Intel 32-bit with zero
+    dependencies; interfaces with syscalls directly
   - i686-apple-darwin - Mac OS X Intel 32-bit.
   - x86_64-apple-darwin - Mac OS X Intel 64-bit.
 

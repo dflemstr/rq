@@ -10,6 +10,8 @@ matrix:
       env: TOOLCHAIN=nightly TARGET=i686-unknown-linux-gnu
     - os: linux
       env: TOOLCHAIN=nightly TARGET=x86_64-unknown-linux-musl
+    - os: linux
+      env: TOOLCHAIN=nightly TARGET=i686-unknown-linux-musl
     - os: osx
       env: TOOLCHAIN=nightly TARGET=i686-apple-darwin
     - os: osx
