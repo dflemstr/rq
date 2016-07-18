@@ -78,9 +78,9 @@ Options:
 
 fn main() {
     let args: Args = Args::docopt()
-        .version(Some(VERSION.to_owned()))
-        .decode()
-        .unwrap_or_else(|e| e.exit());
+                         .version(Some(VERSION.to_owned()))
+                         .decode()
+                         .unwrap_or_else(|e| e.exit());
 
     main_with_args(&args).unwrap();
 }
@@ -108,39 +108,55 @@ fn main_with_args(args: &Args) -> rq::error::Result<()> {
 }
 
 fn run(args: &Args, paths: &rq::config::Paths) -> rq::error::Result<()> {
-    let query = rq::query::Query::parse(&args.arg_query);
-    let query_context = rq::query::Context::new();
-    // TODO: lazy load
-    let proto_descriptors = try!(load_descriptors(&paths));
 
     let stdin = io::stdin();
     let mut input = stdin.lock();
-    let input_ref = &mut input;
-    let mut output = io::stdout();
-    let output_ref = &mut output;
 
-    let mut source: Box<rq::value::Source> = if let Some(ref name) = args.flag_input_protobuf {
-        let stream = protobuf::CodedInputStream::new(input_ref);
-        Box::new(try!(rq::value::protobuf::source(&proto_descriptors, name, stream)))
+    if let Some(ref name) = args.flag_input_protobuf {
+        let proto_descriptors = try!(load_descriptors(&paths));
+        let stream = protobuf::CodedInputStream::new(&mut input);
+        let source = try!(rq::value::protobuf::source(&proto_descriptors, name, stream));
+        run_source(args, paths, source)
     } else if args.flag_input_cbor {
-        Box::new(rq::value::cbor::source(input_ref))
+        let source = rq::value::cbor::source(&mut input);
+        run_source(args, paths, source)
     } else {
-        Box::new(rq::value::json::source(input_ref))
-    };
+        let source = rq::value::json::source(&mut input);
+        run_source(args, paths, source)
+    }
+}
 
-    let mut sink: Box<rq::value::Sink> = if let Some(_) = args.flag_output_protobuf {
-        return Err(rq::error::Error::unimplemented("protobuf serialization"))
+fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error::Result<()>
+    where I: rq::value::Source
+{
+    let mut output = io::stdout();
+
+    if let Some(_) = args.flag_output_protobuf {
+        Err(rq::error::Error::unimplemented("protobuf serialization".to_owned()))
     } else if args.flag_output_cbor {
-        Box::new(rq::value::cbor::sink(output_ref))
+        let sink = rq::value::cbor::sink(&mut output);
+        run_source_sink(args, paths, source, sink)
     } else {
-        Box::new(rq::value::json::sink(output_ref))
-    };
+        let sink = rq::value::json::sink(&mut output);
+        run_source_sink(args, paths, source, sink)
+    }
+}
 
-    debug!("Starting input consumption");
-    while let Some(i) = try!(source.read()) {
-        debug!("Consuming an input value");
-        let o = query.evaluate(&query_context, i);
-        try!(sink.write(o));
+fn run_source_sink<I, O>(args: &Args,
+                         _paths: &rq::config::Paths,
+                         source: I,
+                         mut sink: O)
+                         -> rq::error::Result<()>
+    where I: rq::value::Source,
+          O: rq::value::Sink
+{
+    use record_query::value::Source;
+
+    let query = rq::query::Query::parse(&args.arg_query);
+    let query_context = rq::query::Context::new();
+    let mut results = try!(query.evaluate(&query_context, source));
+    while let Some(result) = try!(results.read()) {
+        try!(sink.write(result));
     }
     Ok(())
 }

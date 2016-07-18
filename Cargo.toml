@@ -29,6 +29,10 @@ serde_cbor = "0.3.3"
 serde_json = "0.7.0"
 xdg-basedir = "1.0.0"
 
+[dependencies.duk]
+git = "https://github.com/dflemstr/duk.git"
+features = ["debug", "trace"]
+
 [dependencies.lalrpop-util]
 git = "https://github.com/dflemstr/lalrpop.git"
 path = "lalrpop-util"
