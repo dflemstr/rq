@@ -14,11 +14,11 @@ function for-target {
 }
 
 function install-musl {
-    curl 'http://www.musl-libc.org/releases/musl-1.1.15.tar.gz' | tar xzvf -
+    curl 'http://www.musl-libc.org/releases/musl-1.1.15.tar.gz' | tar xzf -
     cd musl-1.1.15
     ./configure
-    make -j
-    sudo make -j install
+    make -sj
+    sudo make -sj install
 }
 
 function ci-install {
