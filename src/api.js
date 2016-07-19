@@ -95,7 +95,7 @@ rq.Logger.prototype.debug = function debug(args) {
  * @param {...*} args Arbitrary values to log.
  */
 rq.Logger.prototype.info = function info(args) {
-  this.log.debug.apply(this.log, arguments);
+  this.log.info.apply(this.log, arguments);
 };
 
 /**
@@ -221,11 +221,14 @@ rq.util.path = function getPath(obj, path) {
  * @package
  */
 rq.Process = function Process(fn) {
-  var log = new rq.Logger(fn.fileName + '/' + fn.name + '()');
-  var ctx = new rq.Context(log);
+  var ctx = new rq.Context(new rq.Logger(fn.fileName + '/' + fn.name));
   var boundFn = fn.bind(ctx);
 
   this.run = function run(args) {
+    // Replace logger by more detailed one
+    var name = fn.fileName + '/' + fn.name + '(' + args.map(JSON.stringify).join(', ') + ')';
+    ctx.log = new rq.Logger(name);
+
     // TODO: Right now, Duktape doesn't support Function.prototype.apply with coroutines, so we need
     // this hack
     switch (boundFn.length) {

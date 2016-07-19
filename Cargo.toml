@@ -31,7 +31,7 @@ xdg-basedir = "1.0.0"
 
 [dependencies.duk]
 git = "https://github.com/dflemstr/duk.git"
-features = ["debug", "trace"]
+features = ["debug", "logging"]
 
 [dependencies.lalrpop-util]
 git = "https://github.com/dflemstr/lalrpop.git"

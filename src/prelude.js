@@ -32,8 +32,11 @@ function select(path) {
   while (this.await()) {
     var lens = rq.util.path(this.value, path);
     if (lens) {
-      this.emit(lens.get());
+      var value = lens.get();
+      this.log.debug('selecting', JSON.stringify(value), 'for path', path);
+      this.emit(value);
     } else {
+      this.log.warn('path', path, 'did not match a value in', JSON.stringify(this.value));
       this.emit(undefined);
     }
   }
