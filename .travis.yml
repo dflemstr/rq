@@ -1,6 +1,5 @@
 language: generic
-sudo: required
-dist: trusty
+sudo: false
 
 matrix:
   include:
@@ -15,8 +14,13 @@ matrix:
     - os: osx
       env: TOOLCHAIN=nightly TARGET=x86_64-apple-darwin
 
+addons:
+  apt:
+    packages:
+      - gcc-multilib
+
 before_install:
-  - export PATH="$HOME/.cargo/bin:$PATH"
+  - export PATH="$HOME/.cargo/bin:$HOME/musl/bin:$PATH"
   - ./ci install
 
 script: ./ci test

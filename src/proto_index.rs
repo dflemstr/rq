@@ -13,7 +13,7 @@ pub fn add_file(paths: &config::Paths,
                 file: &path::Path)
                 -> error::Result<()> {
     let rel_file = file.strip_prefix(relative_to)
-                       .unwrap_or(file.file_name().map(path::Path::new).unwrap_or(file));
+        .unwrap_or(file.file_name().map(path::Path::new).unwrap_or(file));
     let target = paths.preferred_data("proto").join(rel_file);
 
     if let Some(parent) = target.parent() {
@@ -46,15 +46,15 @@ pub fn compile_descriptor_set(paths: &config::Paths)
         }
 
         let include_args = proto_includes.into_iter()
-                                         .map(|p| format!("-I{}", p.to_string_lossy()))
-                                         .collect::<Vec<_>>();
+            .map(|p| format!("-I{}", p.to_string_lossy()))
+            .collect::<Vec<_>>();
 
         let status = try!(process::Command::new("protoc")
-                              .arg("-o")
-                              .arg(&cache)
-                              .args(&include_args)
-                              .args(&proto_files)
-                              .status());
+            .arg("-o")
+            .arg(&cache)
+            .args(&include_args)
+            .args(&proto_files)
+            .status());
         if !status.success() {
             panic!("protoc descriptor compilation failed");
         }
