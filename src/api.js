@@ -206,12 +206,10 @@ rq.util.path = function getPath(obj, path) {
         return undefined;
       }
     } else {
-      rq.util.log.error('Unrecognized path syntax:', JSON.stringify(path));
-      return undefined;
+      throw new Error('Unrecognized path syntax: ' + JSON.stringify(path));
     }
   } else {
-    rq.util.log.error('Cannot be used as a path:', JSON.stringify(path));
-    return undefined;
+    throw new Error('Cannot be used as a path: ' + JSON.stringify(path));
   }
 };
 

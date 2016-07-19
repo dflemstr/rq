@@ -3,6 +3,7 @@
 
 extern crate ansi_term;
 extern crate docopt;
+extern crate duk;
 extern crate env_logger;
 #[macro_use]
 extern crate log;
@@ -32,8 +33,8 @@ See 'man rq' for in-depth documentation.
 
 Usage:
   rq (--help|--version)
-  rq [-j|-c|-p <type>] [-J|-C|-P <type>] [-l <level>|-q] [--] [<query>]
-  rq [-l <level>|-q] protobuf add <schema> [--base <path>]
+  rq [-j|-c|-p <type>] [-J|-C|-P <type>] [-l <spec>|-q] [-t] [--] [<query>]
+  rq [-l <spec>|-q] [-t] protobuf add <schema> [--base <path>]
 
 Options:
   --help
@@ -65,9 +66,13 @@ Options:
       schemas.  This specifies the base directory used to normalize schema
       file paths [default: .]
 
-  -l <level>, --log <level>
-      Display log messages at and above the specified log level.  The value can
-      be one of 'off', 'error', 'warn', 'info', 'debug' or 'trace'.
+  -l <spec>, --log <spec>
+      Configure logging using the supplied specification, in the format of
+      `env_logger`.  See: https://doc.rust-lang.org/log/env_logger
+
+  -t, --trace
+      Enable (back)trace output on error.
+
   -q, --quiet
       Log nothing (alias for '-l off').
 "),
@@ -78,16 +83,16 @@ Options:
 
 fn main() {
     let args: Args = Args::docopt()
-        .version(Some(VERSION.to_owned()))
-        .decode()
-        .unwrap_or_else(|e| e.exit());
+                         .version(Some(VERSION.to_owned()))
+                         .decode()
+                         .unwrap_or_else(|e| e.exit());
 
-    main_with_args(&args).unwrap();
+    setup_log(args.flag_log.as_ref().map(String::as_ref), args.flag_quiet);
+
+    main_with_args(&args).unwrap_or_else(|e| log_error(&args, e));
 }
 
 fn main_with_args(args: &Args) -> rq::error::Result<()> {
-    setup_log(args.flag_log.as_ref().map(String::as_ref), args.flag_quiet);
-
     let paths = rq::config::Paths::new().unwrap();
 
     if args.cmd_protobuf {
@@ -171,64 +176,96 @@ fn load_descriptors(paths: &rq::config::Paths)
     Ok(serde_protobuf::descriptor::Descriptors::from_proto(&descriptors_proto))
 }
 
-fn setup_log(level: Option<&str>, quiet: bool) {
-    use std::str::FromStr;
+fn log_error(args: &Args, error: rq::error::Error) {
+    use record_query::error::ErrorKind;
+
+    match *error.kind() {
+        ErrorKind::Msg(ref m) => error!("{}", m),
+        ErrorKind::Duk(duk::ErrorKind::Js(ref e)) => {
+            if let Some(ref stack) = e.stack {
+                error!("Error while executing Javascript:");
+                for line in stack.lines() {
+                    error!("{}", line);
+                }
+            } else {
+                error!("Error while executing Javascript: {}", e.message);
+            }
+        },
+        _ => {
+            error!("Encountered: {}", error);
+            for e in error.iter().skip(1) {
+                error!("Caused by: {}", e);
+            }
+        },
+    }
+
+    if args.flag_trace || env::var("RUST_BACKTRACE").as_ref().map(String::as_str) == Ok("1") {
+        error!("");
+        error!("Backtrace:");
+        for line in format!("{:?}", error.backtrace()).lines() {
+            error!("  {}", line);
+        }
+    } else {
+        error!("(Re-run with (-t|--trace) or RUST_BACKTRACE=1 for a backtrace)");
+    }
+}
+
+fn setup_log(spec: Option<&str>, quiet: bool) {
+    use log::LogLevelFilter;
+
+    let mut builder = env_logger::LogBuilder::new();
+
+    if quiet {
+        builder.filter(None, LogLevelFilter::Off);
+    } else if let Some(s) = spec {
+        builder.parse(s);
+    } else if let Ok(s) = env::var("RUST_LOG") {
+        builder.parse(&s);
+    } else {
+        builder.filter(None, LogLevelFilter::Info);
+    };
+
+    builder.format(format_log_record);
+
+    builder.init().unwrap();
+}
+
+fn format_log_record(record: &log::LogRecord) -> String {
     use ansi_term::ANSIStrings;
     use ansi_term::Colour;
     use ansi_term::Style;
     use log::LogLevel;
-    use log::LogLevelFilter;
     use nix::unistd;
     use nix::sys::ioctl;
 
-    let normal = Style::new();
+    if unistd::isatty(ioctl::libc::STDERR_FILENO).unwrap_or(false) {
+        let normal = Style::new();
+        let (front, back) = match record.level() {
+            LogLevel::Error => (Colour::Red.normal(), Colour::Red.dimmed()),
+            LogLevel::Warn => (Colour::Yellow.normal(), Colour::Yellow.dimmed()),
+            LogLevel::Info => (Colour::Blue.normal(), Colour::Blue.dimmed()),
+            LogLevel::Debug => (Colour::Purple.normal(), Colour::Purple.dimmed()),
+            LogLevel::Trace => (Colour::White.dimmed(), Colour::Black.normal()),
+        };
 
-    let format = move |record: &log::LogRecord| {
-        if unistd::isatty(ioctl::libc::STDERR_FILENO).unwrap_or(false) {
-            let (front, back) = match record.level() {
-                LogLevel::Error => (Colour::Red.normal(), Colour::Red.dimmed()),
-                LogLevel::Warn => (Colour::Yellow.normal(), Colour::Yellow.dimmed()),
-                LogLevel::Info => (Colour::Blue.normal(), Colour::Blue.dimmed()),
-                LogLevel::Debug => (Colour::Purple.normal(), Colour::Purple.dimmed()),
-                LogLevel::Trace => (Colour::White.dimmed(), Colour::Black.normal()),
-            };
+        let strings = &[back.paint("["),
+                        front.paint(format!("{}", record.level())),
+                        back.paint("]"),
+                        normal.paint(" "),
+                        back.paint("["),
+                        front.paint(record.location().module_path()),
+                        back.paint("]"),
+                        normal.paint(" "),
+                        back.paint(format!("{}", record.args()))];
 
-            let strings = &[back.paint("["),
-                            front.paint(format!("{}", record.level())),
-                            back.paint("]"),
-                            normal.paint(" "),
-                            back.paint("["),
-                            front.paint(record.location().module_path()),
-                            back.paint("]"),
-                            normal.paint(" "),
-                            back.paint(format!("{}", record.args()))];
-
-            format!("{}", ANSIStrings(strings))
-        } else {
-            format!("[{}] [{}] {}",
-                    record.level(),
-                    record.location().module_path(),
-                    record.args())
-        }
-    };
-
-    let mut builder = env_logger::LogBuilder::new();
-
-    let filter = if quiet {
-        LogLevelFilter::Off
-    } else if let Some(l) = level {
-        LogLevelFilter::from_str(l).unwrap_or(LogLevelFilter::Info)
+        format!("{}", ANSIStrings(strings))
     } else {
-        LogLevelFilter::Info
-    };
-
-    builder.format(format).filter(None, filter);
-
-    if let Ok(spec) = env::var("RUST_LOG") {
-        builder.parse(&spec);
+        format!("[{}] [{}] {}",
+                record.level(),
+                record.location().module_path(),
+                record.args())
     }
 
-    builder.init().unwrap();
 }
 
 #[cfg(test)]

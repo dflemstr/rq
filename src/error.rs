@@ -14,7 +14,9 @@ error_chain! {
         Error, ErrorKind, ChainErr, Result;
     }
 
-    links {}
+    links {
+        duk::Error, duk::ErrorKind, Duk;
+    }
 
     foreign_links {
         io::Error, IO, "IO error";
@@ -26,7 +28,6 @@ error_chain! {
         xdg_basedir::Error, XdgBasedir, "XDG basedir error";
         glob::GlobError, Glob, "glob error";
         glob::PatternError, GlobPattern, "glob pattern error";
-        duk::Error, Duk, "Javascript error";
     }
 
     errors {
