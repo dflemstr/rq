@@ -181,23 +181,25 @@ rq.util.path = function getPath(obj, path) {
         return elem.replace(/~1/g, '/').replace(/~2/g, '~');
       });
 
-      if (elems.length == 0) {
+      if (elems.length === 0) {
         rq.util.log.error('Path projection is empty:', JSON.stringify(path));
         return undefined;
       }
 
       var last = elems.pop();
 
-      elems.forEach(function(elem) {
-        if (obj) {
+      elems.forEach(function (elem) {
+        if (obj && elem in obj) {
           obj = obj[elem];
+        } else {
+          obj = undefined;
         }
       });
 
-      if (obj) {
-        return new rq.util.Lens(function() {
+      if (obj && last in obj) {
+        return new rq.util.Lens(function () {
           return obj[last];
-        }, function(v) {
+        }, function (v) {
           obj[last] = v;
         });
       } else {
