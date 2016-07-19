@@ -13,10 +13,18 @@ function for-target {
     fi
 }
 
+function install-musl {
+    curl 'http://www.musl-libc.org/releases/musl-1.1.15.tar.gz' | tar xvf -
+    cd musl-1.1.15
+    ./configure
+    make -j
+    sudo make -j install
+}
+
 function ci-install {
     local default_target
 
-    for-target x86_64-unknown-linux-musl sudo apt-get -y install musl-tools
+    for-target x86_64-unknown-linux-musl install-musl
     for-target i686-unknown-linux-gnu    sudo apt-get -y install gcc-multilib
 
     curl "$rustup_init_url" -sSf | sh -s -- -y --default-toolchain="$TOOLCHAIN"
