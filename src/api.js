@@ -170,9 +170,9 @@ rq.util.Lens.prototype.get = function get() {
  *
  * @param {(Object|Array<*>)} obj The object to traverse.
  * @param {string} path The path into the object.
- * @return {rq.util.Lens} A lens that can be used to manipulate the targetted value.
+ * @return {Array<rq.util.Lens>} A lens that can be used to manipulate the targetted value.
  */
-rq.util.path = function getPath(obj, path) {
+rq.util.path = function path(obj, path) {
   if (typeof path === 'string' && path.length > 0) {
     if (path.charAt(0) === '/') {
       // Assume it's a JSON pointer
@@ -182,13 +182,12 @@ rq.util.path = function getPath(obj, path) {
       });
 
       if (elems.length === 0) {
-        rq.util.log.error('Path projection is empty:', JSON.stringify(path));
-        return undefined;
+        throw new Error('Path projection is empty: ' + JSON.stringify(path));
       }
 
       var last = elems.pop();
 
-      elems.forEach(function (elem) {
+      elems.forEach(function(elem) {
         if (obj && elem in obj) {
           obj = obj[elem];
         } else {
@@ -197,13 +196,13 @@ rq.util.path = function getPath(obj, path) {
       });
 
       if (obj && last in obj) {
-        return new rq.util.Lens(function () {
+        return [new rq.util.Lens(function get() {
           return obj[last];
-        }, function (v) {
+        }, function set(v) {
           obj[last] = v;
-        });
+        })];
       } else {
-        return undefined;
+        return [];
       }
     } else {
       throw new Error('Unrecognized path syntax: ' + JSON.stringify(path));

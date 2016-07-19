@@ -29,15 +29,19 @@ function id() {
  * @this {rq.Context}
  */
 function select(path) {
+  var self = this;
   while (this.await()) {
-    var lens = rq.util.path(this.value, path);
-    if (lens) {
-      var value = lens.get();
-      this.log.debug('selecting', JSON.stringify(value), 'for path', path);
-      this.emit(value);
+    var lenses = rq.util.path(this.value, path);
+    if (lenses.length > 0) {
+      for (var i = 0; i < lenses.length; i++) {
+        var lens = lenses[i];
+        var value = lens.get();
+        self.log.debug('selecting', JSON.stringify(value), 'for path', JSON.stringify(path));
+        self.emit(value);
+      }
     } else {
-      this.log.warn('path', path, 'did not match a value in', JSON.stringify(this.value));
-      this.emit(undefined);
+      this.log.warn('path', JSON.stringify(path), 'did not match a value in',
+                    JSON.stringify(this.value));
     }
   }
 }
@@ -57,8 +61,9 @@ function select(path) {
  */
 function modify(path, f) {
   while (this.await()) {
-    var lens = rq.util.path(this.value, path);
-    if (lens) {
+    var lenses = rq.util.path(this.value, path);
+    for (var i = 0; i < lenses.length; i++) {
+      var lens = lenses[i];
       lens.set(f(lens.get()));
     }
     this.emit(this.value);
