@@ -67,28 +67,28 @@ impl<'a> Process<'a> {
     pub fn is_start(&self) -> bool {
         match self.state {
             State::Start => true,
-            _ => false
+            _ => false,
         }
     }
 
     pub fn is_await(&self) -> bool {
         match self.state {
             State::Await => true,
-            _ => false
+            _ => false,
         }
     }
 
     pub fn is_emit(&self) -> bool {
         match self.state {
             State::Emit(_) => true,
-            _ => false
+            _ => false,
         }
     }
 
     pub fn is_end(&self) -> bool {
         match self.state {
             State::End => true,
-            _ => false
+            _ => false,
         }
     }
 
@@ -152,7 +152,7 @@ impl<'a> Process<'a> {
                                     let msg = format!("No value specified for emitting");
                                     Err(error::Error::illegal_state(msg))
                                 }
-                            }
+                            },
                             t => {
                                 let msg = format!("Unexpected coroutine message type: {:?}", t);
                                 Err(error::Error::illegal_state(msg))
@@ -160,9 +160,11 @@ impl<'a> Process<'a> {
                         }
                     },
                     t => {
-                        let msg = format!("Expected a coroutine message to have a string type, but it was {:?}", t);
+                        let msg = format!("Expected a coroutine message to have a string type, \
+                                           but it was {:?}",
+                                          t);
                         Err(error::Error::illegal_state(msg))
-                    }
+                    },
                 }
             },
             duk::Value::Undefined => {
@@ -188,8 +190,8 @@ fn value_from_duk(value: duk::Value) -> value::Value {
         duk::Value::Array(v) => value::Value::Sequence(v.into_iter().map(value_from_duk).collect()),
         duk::Value::Object(v) => {
             value::Value::Map(v.into_iter()
-                               .map(|(k, v)| (value::Value::String(k), value_from_duk(v)))
-                               .collect())
+                .map(|(k, v)| (value::Value::String(k), value_from_duk(v)))
+                .collect())
         },
         duk::Value::Bytes(v) => value::Value::Bytes(v),
         duk::Value::Foreign(_) => value::Value::Unit,
@@ -223,8 +225,8 @@ fn value_to_duk(value: value::Value) -> duk::Value {
         value::Value::Sequence(v) => duk::Value::Array(v.into_iter().map(value_to_duk).collect()),
         value::Value::Map(v) => {
             duk::Value::Object(v.into_iter()
-                                .map(|(k, v)| (format!("{}", k), value_to_duk(v)))
-                                .collect())
+                .map(|(k, v)| (format!("{}", k), value_to_duk(v)))
+                .collect())
         },
     }
 }

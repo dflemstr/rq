@@ -51,7 +51,9 @@ impl Query {
     }
 }
 
-impl<'a, S> Output<'a, S> where S: value::Source {
+impl<'a, S> Output<'a, S>
+    where S: value::Source
+{
     fn run_process(&mut self, idx: usize) -> error::Result<Option<value::Value>> {
         // TODO: this is a very procedural thing, maybe make more functional/recursive
         loop {
@@ -66,17 +68,25 @@ impl<'a, S> Output<'a, S> where S: value::Source {
                 } else {
                     self.run_process(idx - 1)
                 });
-                trace!("Process moving out of await: {} {:?}", idx, self.processes[idx].0);
+                trace!("Process moving out of await: {} {:?}",
+                       idx,
+                       self.processes[idx].0);
                 try!(self.processes[idx].1.run_await(value));
-                trace!("Process moved out of await: {} {:?}", idx, self.processes[idx].0);
+                trace!("Process moved out of await: {} {:?}",
+                       idx,
+                       self.processes[idx].0);
             } else if self.processes[idx].1.is_emit() {
-                trace!("Process moving out of emit: {} {:?}", idx, self.processes[idx].0);
+                trace!("Process moving out of emit: {} {:?}",
+                       idx,
+                       self.processes[idx].0);
                 let value = try!(self.processes[idx].1.run_emit());
-                trace!("Process moved out of emit: {} {:?}", idx, self.processes[idx].0);
-                return Ok(Some(value))
+                trace!("Process moved out of emit: {} {:?}",
+                       idx,
+                       self.processes[idx].0);
+                return Ok(Some(value));
             } else if self.processes[idx].1.is_end() {
                 trace!("Process ended: {} {:?}", idx, self.processes[idx].0);
-                return Ok(None)
+                return Ok(None);
             } else {
                 panic!("Process in unknown state: {:?}", self.processes[idx])
             }
@@ -84,7 +94,9 @@ impl<'a, S> Output<'a, S> where S: value::Source {
     }
 }
 
-impl<'a, S> value::Source for Output<'a, S> where S: value::Source {
+impl<'a, S> value::Source for Output<'a, S>
+    where S: value::Source
+{
     fn read(&mut self) -> error::Result<Option<value::Value>> {
         let last_idx = self.processes.len() - 1;
         self.run_process(last_idx)
@@ -115,8 +127,7 @@ mod test {
 
     #[test]
     fn parse_function_one_arg() {
-        let expected =
-            Query(vec![Process("select".to_owned(),
+        let expected = Query(vec![Process("select".to_owned(),
                                vec![Expression::Value(value::Value::String("a".to_owned()))])]);
         let actual = Query::parse("select a");
 
@@ -125,10 +136,9 @@ mod test {
 
     #[test]
     fn parse_function_one_arg_ident_numbers() {
-        let expected =
-            Query(vec![Process("select".to_owned(),
-                               vec![Expression::Value(value::Value::String("abc123"
-                                                                               .to_owned()))])]);
+        let expected = Query(vec![Process("select".to_owned(),
+                                          vec![Expression::Value(value::Value::String("abc123"
+                                                   .to_owned()))])]);
         let actual = Query::parse("select abc123");
 
         assert_eq!(expected, actual);
@@ -163,10 +173,9 @@ mod test {
 
     #[test]
     fn parse_function_one_arg_underscore() {
-        let expected =
-            Query(vec![Process("select".to_owned(),
-                               vec![Expression::Value(value::Value::String("abc_def"
-                                                                               .to_owned()))])]);
+        let expected = Query(vec![Process("select".to_owned(),
+                                          vec![Expression::Value(value::Value::String("abc_def"
+                                                   .to_owned()))])]);
         let actual = Query::parse("select abc_def");
 
         assert_eq!(expected, actual);
@@ -174,10 +183,9 @@ mod test {
 
     #[test]
     fn parse_function_one_arg_dash() {
-        let expected =
-            Query(vec![Process("select".to_owned(),
-                               vec![Expression::Value(value::Value::String("abc-def"
-                                                                               .to_owned()))])]);
+        let expected = Query(vec![Process("select".to_owned(),
+                                          vec![Expression::Value(value::Value::String("abc-def"
+                                                   .to_owned()))])]);
         let actual = Query::parse("select abc-def");
 
         assert_eq!(expected, actual);

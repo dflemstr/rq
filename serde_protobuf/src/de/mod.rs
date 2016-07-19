@@ -187,8 +187,8 @@ impl<'a> serde::de::MapVisitor for MessageVisitor<'a> {
         where V: serde::Deserialize
     {
         let (descriptor, field) = self.field
-                                      .take()
-                                      .expect("visit_value was called before visit_key");
+            .take()
+            .expect("visit_value was called before visit_key");
 
         Ok(try!(V::deserialize(&mut MessageFieldDeserializer::new(self.descriptors,
                                                                   descriptor,

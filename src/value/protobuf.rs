@@ -14,9 +14,8 @@ pub fn source<'a>(descriptors: &'a descriptor::Descriptors,
                   message_name: &str,
                   input: protobuf::CodedInputStream<'a>)
                   -> error::Result<ProtobufSource<'a>> {
-    let de = try!(serde_protobuf::de::Deserializer::for_named_message(descriptors,
-                                                                      message_name,
-                                                                      input));
+    let de =
+        try!(serde_protobuf::de::Deserializer::for_named_message(descriptors, message_name, input));
     Ok(ProtobufSource(de, true))
 }
 

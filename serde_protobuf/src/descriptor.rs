@@ -690,32 +690,48 @@ fn parse_default_value(value: &str, field_type: &InternalFieldType) -> error::Re
         InternalFieldType::UnresolvedEnum(_) |
         InternalFieldType::Message(_) |
         InternalFieldType::Enum(_) => Err(bad(value)),
-        InternalFieldType::Bool => bool::from_str(value).map(value::Value::Bool).map_err(|_| bad(value)),
-        InternalFieldType::Double => match value {
-            "inf" => Ok(value::Value::F64(f64::INFINITY)),
-            "-inf" => Ok(value::Value::F64(f64::NEG_INFINITY)),
-            "nan" => Ok(value::Value::F64(f64::NAN)),
-            _ => f64::from_str(value).map(value::Value::F64).map_err(|_| bad(value)),
+        InternalFieldType::Bool => {
+            bool::from_str(value).map(value::Value::Bool).map_err(|_| bad(value))
         },
-        InternalFieldType::Float => match value {
-            "inf" => Ok(value::Value::F32(f32::INFINITY)),
-            "-inf" => Ok(value::Value::F32(f32::NEG_INFINITY)),
-            "nan" => Ok(value::Value::F32(f32::NAN)),
-            _ => f32::from_str(value).map(value::Value::F32).map_err(|_| bad(value)),
+        InternalFieldType::Double => {
+            match value {
+                "inf" => Ok(value::Value::F64(f64::INFINITY)),
+                "-inf" => Ok(value::Value::F64(f64::NEG_INFINITY)),
+                "nan" => Ok(value::Value::F64(f64::NAN)),
+                _ => f64::from_str(value).map(value::Value::F64).map_err(|_| bad(value)),
+            }
+        },
+        InternalFieldType::Float => {
+            match value {
+                "inf" => Ok(value::Value::F32(f32::INFINITY)),
+                "-inf" => Ok(value::Value::F32(f32::NEG_INFINITY)),
+                "nan" => Ok(value::Value::F32(f32::NAN)),
+                _ => f32::from_str(value).map(value::Value::F32).map_err(|_| bad(value)),
+            }
         },
         InternalFieldType::Int32 |
         InternalFieldType::SFixed32 |
-        InternalFieldType::SInt32 => i32::from_str(value).map(value::Value::I32).map_err(|_| bad(value)),
+        InternalFieldType::SInt32 => {
+            i32::from_str(value).map(value::Value::I32).map_err(|_| bad(value))
+        },
         InternalFieldType::Int64 |
         InternalFieldType::SFixed64 |
-        InternalFieldType::SInt64 => i64::from_str(value).map(value::Value::I64).map_err(|_| bad(value)),
+        InternalFieldType::SInt64 => {
+            i64::from_str(value).map(value::Value::I64).map_err(|_| bad(value))
+        },
         InternalFieldType::UInt32 |
-        InternalFieldType::Fixed32 => u32::from_str(value).map(value::Value::U32).map_err(|_| bad(value)),
+        InternalFieldType::Fixed32 => {
+            u32::from_str(value).map(value::Value::U32).map_err(|_| bad(value))
+        },
         InternalFieldType::UInt64 |
-        InternalFieldType::Fixed64 => u64::from_str(value).map(value::Value::U64).map_err(|_| bad(value)),
+        InternalFieldType::Fixed64 => {
+            u64::from_str(value).map(value::Value::U64).map_err(|_| bad(value))
+        },
         InternalFieldType::String => Ok(value::Value::String(value.to_owned())),
         InternalFieldType::Group => unimplemented!(),
-        InternalFieldType::Bytes => Ok(value::Value::Bytes(value.chars().map(|c| c as u8).collect())),
+        InternalFieldType::Bytes => {
+            Ok(value::Value::Bytes(value.chars().map(|c| c as u8).collect()))
+        },
     }
 }
 

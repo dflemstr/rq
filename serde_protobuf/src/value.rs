@@ -42,11 +42,12 @@ impl Message {
         };
 
         for field in message.fields() {
-            m.fields.insert(field.number(), if field.is_repeated() {
-                Field::Repeated(Vec::new())
-            } else {
-                Field::Singular(field.default_value().cloned())
-            });
+            m.fields.insert(field.number(),
+                            if field.is_repeated() {
+                                Field::Repeated(Vec::new())
+                            } else {
+                                Field::Singular(field.default_value().cloned())
+                            });
         }
 
         m
