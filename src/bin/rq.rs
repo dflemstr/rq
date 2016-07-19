@@ -32,7 +32,7 @@ See 'man rq' for in-depth documentation.
 
 Usage:
   rq (--help|--version)
-  rq [-j|-c|-p <type>] [-J|-C|-P <type>] [-l <level>|-q] [--] <query>
+  rq [-j|-c|-p <type>] [-J|-C|-P <type>] [-l <level>|-q] [--] [<query>]
   rq [-l <level>|-q] protobuf add <schema> [--base <path>]
 
 Options:
@@ -78,9 +78,9 @@ Options:
 
 fn main() {
     let args: Args = Args::docopt()
-                         .version(Some(VERSION.to_owned()))
-                         .decode()
-                         .unwrap_or_else(|e| e.exit());
+        .version(Some(VERSION.to_owned()))
+        .decode()
+        .unwrap_or_else(|e| e.exit());
 
     main_with_args(&args).unwrap();
 }
@@ -152,7 +152,11 @@ fn run_source_sink<I, O>(args: &Args,
 {
     use record_query::value::Source;
 
-    let query = rq::query::Query::parse(&args.arg_query);
+    let query = rq::query::Query::parse(if args.arg_query.is_empty() {
+        "id"
+    } else {
+        &args.arg_query
+    });
     let query_context = rq::query::Context::new();
     let mut results = try!(query.evaluate(&query_context, source));
     while let Some(result) = try!(results.read()) {
