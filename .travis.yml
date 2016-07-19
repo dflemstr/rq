@@ -16,7 +16,7 @@ matrix:
       env: TOOLCHAIN=nightly TARGET=x86_64-apple-darwin
 
 before_install:
-  - export PATH="$HOME/.cargo/bin:$PATH"
+  - export PATH="$HOME/.cargo/bin:/usr/local/musl/bin:$PATH"
   - ./ci install
 
 script: ./ci test
