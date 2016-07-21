@@ -29,12 +29,12 @@ A tool for manipulating data records.
 Records are read from stdin, processed, and written to stdout.  The tool accepts
 a query in the custom rq query language as its main command-line arguments.
 
-See 'man rq' for in-depth documentation.
+See https://github.com/dflemstr/rq for in-depth documentation.
 
 Usage:
   rq (--help|--version)
-  rq [-j|-c|-p <type>] [-J|-C|-P <type>] [-l <spec>|-q] [-t] [--] [<query>]
-  rq [-l <spec>|-q] [-t] protobuf add <schema> [--base <path>]
+  rq [-j|-c|-p <type>] [-J|-C|-P <type>] [-l <spec>|-q] [--trace] [--] [<query>]
+  rq [-l <spec>|-q] [--trace] protobuf add <schema> [--base <path>]
 
 Options:
   --help
@@ -68,13 +68,12 @@ Options:
 
   -l <spec>, --log <spec>
       Configure logging using the supplied specification, in the format of
-      `env_logger`.  See: https://doc.rust-lang.org/log/env_logger
-
-  -t, --trace
+      `env_logger`, for example `rq=info,duk=trace/[0-9]+ objects kept`.
+      See: https://doc.rust-lang.org/log/env_logger
+  --trace
       Enable (back)trace output on error.
-
   -q, --quiet
-      Log nothing (alias for '-l off').
+      Log nothing.
 "),
         flag_input_protobuf: Option<String>,
         flag_output_protobuf: Option<String>,
