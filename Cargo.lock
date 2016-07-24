@@ -7,7 +7,7 @@ dependencies = [
  "docopt_macros 0.6.85 (registry+https://github.com/rust-lang/crates.io-index)",
  "duk 0.1.0 (git+https://github.com/dflemstr/duk.git)",
  "env_logger 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)",
- "error-chain 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "error-chain 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "glob 0.2.11 (registry+https://github.com/rust-lang/crates.io-index)",
  "lalrpop 0.11.0 (git+https://github.com/dflemstr/lalrpop.git)",
  "lalrpop-util 0.11.0 (git+https://github.com/dflemstr/lalrpop.git)",
@@ -48,7 +48,7 @@ dependencies = [
 
 [[package]]
 name = "backtrace"
-version = "0.2.2"
+version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "backtrace-sys 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -65,7 +65,7 @@ name = "backtrace-sys"
 version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "gcc 0.3.31 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gcc 0.3.32 (registry+https://github.com/rust-lang/crates.io-index)",
  "libc 0.2.14 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -132,19 +132,19 @@ dependencies = [
 [[package]]
 name = "duk"
 version = "0.1.0"
-source = "git+https://github.com/dflemstr/duk.git#d95ceeb3ad97e3d115c95d9821e1f7b947f760f8"
+source = "git+https://github.com/dflemstr/duk.git#d65c90da10e12c44a53d24a0ea9bce6b7a0e1545"
 dependencies = [
  "duktape-sys 0.1.0 (git+https://github.com/dflemstr/duk.git)",
- "error-chain 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "error-chain 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "log 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "duktape-sys"
 version = "0.1.0"
-source = "git+https://github.com/dflemstr/duk.git#d95ceeb3ad97e3d115c95d9821e1f7b947f760f8"
+source = "git+https://github.com/dflemstr/duk.git#d65c90da10e12c44a53d24a0ea9bce6b7a0e1545"
 dependencies = [
- "gcc 0.3.31 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gcc 0.3.32 (registry+https://github.com/rust-lang/crates.io-index)",
  "libc 0.2.14 (registry+https://github.com/rust-lang/crates.io-index)",
  "log 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -160,10 +160,10 @@ dependencies = [
 
 [[package]]
 name = "error-chain"
-version = "0.2.1"
+version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "backtrace 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "backtrace 0.2.3 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -173,7 +173,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "gcc"
-version = "0.3.31"
+version = "0.3.32"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
