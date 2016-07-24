@@ -144,24 +144,17 @@ rq.util.log = new rq.Logger('rq.util');
  * @constructor
  */
 rq.util.Lens = function Lens(get, set) {
+  /**
+   * Sets the encapsulated value.
+   * @param {A} value The new value to set.
+   */
   this.get = get;
+
+  /**
+   * Gets the encapsulated value.
+   * @return {A} The current value.
+   */
   this.set = set;
-};
-
-/**
- * Sets the encapsulated value.
- * @param {A} value The new value to set.
- */
-rq.util.Lens.prototype.set = function set(value) {
-  this.set(value);
-};
-
-/**
- * Gets the encapsulated value.
- * @return {A} The current value.
- */
-rq.util.Lens.prototype.get = function get() {
-  return this.get();
 };
 
 /**
