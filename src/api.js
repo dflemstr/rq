@@ -60,6 +60,20 @@ rq.Context.prototype.emit = function emit(value) {
   Duktape.Thread.yield({type: 'emit', value: value});
 };
 
+rq.Context.prototype.collect = function collect() {
+  var result = [];
+  while (this.await()) {
+    result.push(this.value);
+  }
+  return result;
+};
+
+rq.Context.prototype.spread = function publish(values) {
+  for (var i = 0; i < values.length; i++) {
+    this.emit(values[i]);
+  }
+};
+
 /**
  * A logger that can be used to log messages.
  *
@@ -197,6 +211,18 @@ rq.util.path = function path(obj, path) {
       } else {
         return [];
       }
+    } else if (path.charAt(0) == '$') {
+      // Assume it's a JSON path
+
+      var jp = require('jsonpath.js');
+
+      return jp.paths(obj, path).map(function(innerPath) {
+        return new rq.util.Lens(function get() {
+          return jp.value(obj, innerPath);
+        }, function set(v) {
+          jp.value(obj, innerPath, v);
+        })
+      });
     } else {
       throw new Error('Unrecognized path syntax: ' + JSON.stringify(path));
     }
@@ -223,7 +249,7 @@ rq.Process = function Process(fn) {
 
     // TODO: Right now, Duktape doesn't support Function.prototype.apply with coroutines, so we need
     // this hack
-    switch (boundFn.length) {
+    switch (args.length) {
       case 0:
         return boundFn();
       case 1:

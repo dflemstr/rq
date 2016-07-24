@@ -132,7 +132,7 @@ dependencies = [
 [[package]]
 name = "duk"
 version = "0.1.0"
-source = "git+https://github.com/dflemstr/duk.git#d65c90da10e12c44a53d24a0ea9bce6b7a0e1545"
+source = "git+https://github.com/dflemstr/duk.git#bccdcb7302c31a75c4dbb32c5d2d23307e84495a"
 dependencies = [
  "duktape-sys 0.1.0 (git+https://github.com/dflemstr/duk.git)",
  "error-chain 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -142,7 +142,7 @@ dependencies = [
 [[package]]
 name = "duktape-sys"
 version = "0.1.0"
-source = "git+https://github.com/dflemstr/duk.git#d65c90da10e12c44a53d24a0ea9bce6b7a0e1545"
+source = "git+https://github.com/dflemstr/duk.git#bccdcb7302c31a75c4dbb32c5d2d23307e84495a"
 dependencies = [
  "gcc 0.3.32 (registry+https://github.com/rust-lang/crates.io-index)",
  "libc 0.2.14 (registry+https://github.com/rust-lang/crates.io-index)",

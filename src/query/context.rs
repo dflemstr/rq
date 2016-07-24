@@ -1,5 +1,6 @@
 use std::collections;
 use std::mem;
+use std::path;
 
 use duk;
 use ordered_float;
@@ -9,6 +10,11 @@ use value;
 
 const API_JS: &'static str = include_str!("../api.js");
 const PRELUDE_JS: &'static str = include_str!("../prelude.js");
+
+const MODULES: &'static [(&'static str, &'static str)] = &[
+    ("jsonpath.js", include_str!("../js/jsonpath.min.js")),
+    ("lodash.js", include_str!("../js/lodash.custom.min.js")),
+];
 
 #[derive(Debug)]
 pub struct Context {
@@ -33,7 +39,11 @@ pub enum State {
 
 impl Context {
     pub fn new() -> Context {
-        let ctx = duk::Context::new();
+        let ctx = duk::Context::builder()
+            .with_module_resolver(Box::new(Context::resolve_module))
+            .with_module_loader(Box::new(Context::load_module))
+            .build();
+
         ctx.eval_string_with_filename("api.js", API_JS).unwrap();
         ctx.eval_string_with_filename("prelude.js", PRELUDE_JS).unwrap();
 
@@ -43,6 +53,10 @@ impl Context {
     pub fn process(&self, name: &str) -> error::Result<Process> {
         let global = self.duk.global_object();
         let func = try!(global.get(name));
+
+        if let duk::Value::Undefined = func.to_value() {
+            return Err(error::ErrorKind::ProcessNotFound(name.to_owned()).into());
+        }
 
         let rq_ns = try!(global.get("rq"));
         let process_ctor = try!(rq_ns.get("Process"));
@@ -60,6 +74,21 @@ impl Context {
             resume: resume,
             state: State::Start,
         })
+    }
+
+    fn resolve_module(name: String, context: String) -> String {
+        String::from(&*path::Path::new(&context).join(name).to_string_lossy())
+    }
+
+    fn load_module(canonical_name: String) -> Option<String> {
+        for &(name, data) in MODULES {
+            if &canonical_name == name {
+                debug!("Loading JS module {:?}", name);
+                return Some(data.to_owned())
+            }
+        }
+        warn!("Could not load JS module {:?}", canonical_name);
+        None
     }
 }
 
