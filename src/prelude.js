@@ -69,6 +69,13 @@ function modify(path, f) {
   }
 }
 
+function tee() {
+  while (this.await()) {
+    this.log.info(JSON.stringify(this.value));
+    this.emit(this.value);
+  }
+}
+
 function collect() {
   this.emit(this.collect());
 }
@@ -345,4 +352,178 @@ function zipWith(iteratee) {
   var args = Array.prototype.slice.call(arguments);
   args.push(this.collect());
   this.spread(require('lodash.js').zipWith.apply(null, args));
+}
+
+///
+/// lodash wrappers - Collection
+///
+/// NOTE: These are not streaming!
+///
+
+function countBy(iteratee) {
+  this.emit(require('lodash.js').countBy(this.collect(), iteratee));
+}
+
+function every(predicate) {
+  this.emit(require('lodash.js').every(this.collect(), predicate));
+}
+
+function filter(predicate) {
+  this.spread(require('lodash.js').filter(this.collect(), predicate));
+}
+
+function find(predicate, fromIndex) {
+  this.spread(require('lodash.js').find(this.collect(), predicate, fromIndex));
+}
+
+function findLast(predicate, fromIndex) {
+  this.spread(require('lodash.js').findLast(this.collect(), predicate, fromIndex));
+}
+
+function flatMap(iteratee) {
+  this.spread(require('lodash.js').flatMap(this.collect(), iteratee));
+}
+
+function flatMapDeep(iteratee) {
+  this.spread(require('lodash.js').flatMapDeep(this.collect(), iteratee));
+}
+
+function flatMapDepth(iteratee, depth) {
+  this.spread(require('lodash.js').flatMapDepth(this.collect(), iteratee, depth));
+}
+
+// forEach and forEachRight make no sense
+
+function groupBy(iteratee) {
+  this.emit(require('lodash.js').groupBy(this.collect(), iteratee));
+}
+
+function includes(value, fromIndex) {
+  this.emit(require('lodash.js').includes(this.collect(), value, fromIndex));
+}
+
+function invokeMap(path) {
+  var args = Array.prototype.slice.call(arguments);
+  args.unshift(this.collect());
+  this.spread(require('lodash.js').invokeMap.apply(null, args));
+}
+
+function keyBy(iteratee) {
+  this.emit(require('lodash.js').keyBy(this.collect(), iteratee));
+}
+
+function map(iteratee) {
+  this.spread(require('lodash.js').map(this.collect(), iteratee));
+}
+
+function orderBy(iteratees, orders) {
+  this.spread(require('lodash.js').orderBy(this.collect(), iteratees, orders));
+}
+
+function partition(predicate) {
+  this.spread(require('lodash.js').partition(this.collect(), predicate));
+}
+
+function reduce(iteratee, accumulator) {
+  this.emit(require('lodash.js').reduce(this.collect(), iteratee, accumulator));
+}
+
+function reduceRight(iteratee, accumulator) {
+  this.emit(require('lodash.js').reduceRight(this.collect(), iteratee, accumulator));
+}
+
+function reject(predicate) {
+  this.spread(require('lodash.js').reject(this.collect(), predicate));
+}
+
+function sample() {
+  this.emit(require('lodash.js').sample(this.collect()));
+}
+
+function sampleSize(n) {
+  this.emit(require('lodash.js').sampleSize(this.collect(), n));
+}
+
+function shuffle() {
+  this.spread(require('lodash.js').shuffle(this.collect()));
+}
+
+function size() {
+  this.emit(require('lodash.js').size(this.collect()));
+}
+
+function some(predicate) {
+  this.emit(require('lodash.js').some(this.collect(), predicate));
+}
+
+function sortBy(iteratees) {
+  this.spread(require('lodash.js').orderBy(this.collect(), iteratees));
+}
+
+///
+/// lodash wrappers - Date
+///
+/// NOTE: These are not streaming!
+///
+
+function now() {
+  this.emit(require('lodash.js').now());
+}
+
+///
+/// lodash wrappers - Function/Lang don't make sense
+///
+
+///
+/// lodash wrappers - Math
+///
+/// NOTE: These are not streaming!
+///
+
+// add, ceil, divide, floor don't make sense
+
+function max() {
+  this.emit(require('lodash.js').max(this.collect()));
+}
+
+function maxBy(iteratee) {
+  this.emit(require('lodash.js').maxBy(this.collect(), iteratee));
+}
+
+function mean() {
+  this.emit(require('lodash.js').mean(this.collect()));
+}
+
+function meanBy(iteratee) {
+  this.emit(require('lodash.js').meanBy(this.collect(), iteratee));
+}
+
+function min() {
+  this.emit(require('lodash.js').min(this.collect()));
+}
+
+function minBy(iteratee) {
+  this.emit(require('lodash.js').minBy(this.collect(), iteratee));
+}
+
+// multiply, round, subtract don't make sense
+
+function sum() {
+  this.emit(require('lodash.js').sum(this.collect()));
+}
+
+function sumBy(iteratee) {
+  this.emit(require('lodash.js').sumBy(this.collect(), iteratee));
+}
+
+///
+/// lodash wrappers - Number
+///
+/// NOTE: These are not streaming!
+///
+
+// clamp, inRange don't make sense
+
+function random(lower, upper, floating) {
+  this.emit(require('lodash.js').random(lower, upper, floating));
 }
