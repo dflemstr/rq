@@ -152,32 +152,30 @@ rq.util.log = new rq.Logger('rq.util');
 /**
  * A lens that can be used to interact with some encapsulated value.
  *
- * @template A
- * @param {function(): A} get The getter for the value.
- * @param {function(A)} set The setter for the value.
+ * @param {function(): *} get The getter for the value.
+ * @param {function(*)} set The setter for the value.
  * @constructor
  */
 rq.util.Lens = function Lens(get, set) {
   /**
-   * Sets the encapsulated value.
-   * @param {A} value The new value to set.
+   * Gets the encapsulated value.
+   * @return {*} The current value.
    */
   this.get = get;
 
   /**
-   * Gets the encapsulated value.
-   * @return {A} The current value.
+   * Sets the encapsulated value.
+   * @param {*} value The new value to set.
    */
   this.set = set;
 };
 
 /**
- * Evaluates a path into an object, returning a `Lens` if the path target was found, or `undefined`
- * otherwise.
+ * Evaluates a path into an object, returning an array of `Lens`es with the targets of the path.
  *
  * @param {(Object|Array<*>)} obj The object to traverse.
  * @param {string} path The path into the object.
- * @return {Array<rq.util.Lens>} A lens that can be used to manipulate the targetted value.
+ * @return {Array<rq.util.Lens>} A lens that can be used to manipulate the targeted values.
  */
 rq.util.path = function path(obj, path) {
   if (typeof path === 'string' && path.length > 0) {
