@@ -1,0 +1,8 @@
+{
+  "plugins": [
+    "plugins/markdown"
+  ],
+  "templates": {
+    "cleverLinks": true
+  }
+}

@@ -39,13 +39,16 @@ function ci-test {
 }
 
 function ci-deploy {
-    for-target x86-unknown-linux-gnu cargo doc
     cargo build --release --target="$TARGET"
     mkdir -p "target/deploy/$TARGET"
     cp "target/$TARGET/release/rq" "target/deploy/$TARGET/rq"
 }
 
 function ci-deploy-gh-pages {
+    sudo npm install -g jsdoc
+    cargo doc
+    jsdoc -c jsdoc/conf.json -d target/doc/js
+
     cd target/doc
     git init
     git config user.email 'nobody@nobody.org'
