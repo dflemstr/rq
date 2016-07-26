@@ -66,5 +66,5 @@ case "$1" in
     deploy )
         shift; ci-deploy "$@" ;;
     deploy-gh-pages )
-        shift; for-target x86-unknown-linux-gnu ci-deploy-gh-pages "$@" ;;
+        shift; for-target x86_64-unknown-linux-gnu ci-deploy-gh-pages "$@" ;;
 esac
