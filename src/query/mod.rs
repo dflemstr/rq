@@ -115,8 +115,8 @@ mod test {
         let expected =
             Query(vec![Process("dostuff".to_owned(),
                                vec![Expression::Value(value::Value::String("foo".to_owned())),
-                                    Expression::Function(vec!["@".to_owned()],
-                                                         "@+3".to_owned()),
+                                    Expression::Function(vec!["$".to_owned()],
+                                                         "$+3".to_owned()),
                                     Expression::Function(vec!["a".to_owned(),
                                                               "b".to_owned(),
                                                               "c".to_owned()],
@@ -125,7 +125,7 @@ mod test {
                                vec![Expression::Value(value::Value::String("xyz".to_owned())),
                                     Expression::Value(value::Value::I64(2))]),
                        Process("bar".to_owned(), vec![])]);
-        let actual = Query::parse("dostuff foo {@+3} (a, b, c) => {a + b - c} | other xyz 2 | bar");
+        let actual = Query::parse("dostuff foo {$+3} (a, b, c) => {a + b - c} | other xyz 2 | bar");
 
         assert_eq!(expected, actual);
     }
@@ -228,9 +228,9 @@ mod test {
     #[test]
     fn parse_process_function_arg() {
         let expected = Query(vec![Process("map".to_owned(),
-                                          vec![Expression::Function(vec!["@".to_owned()],
-                                                                    "2 + @".to_owned())])]);
-        let actual = Query::parse("map {2 + @}");
+                                          vec![Expression::Function(vec!["$".to_owned()],
+                                                                    "2 + $".to_owned())])]);
+        let actual = Query::parse("map {2 + $}");
 
         assert_eq!(expected, actual);
     }

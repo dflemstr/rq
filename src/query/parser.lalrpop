@@ -26,7 +26,7 @@ expr: query::Expression = {
     <string> => query::Expression::Value(value::Value::String(<>)),
     <ident> => query::Expression::Value(value::Value::String(<>)),
     <integer> => query::Expression::Value(value::Value::I64(<>)),
-    <closure> => query::Expression::Function(vec!["@".to_owned()], <>),
+    <closure> => query::Expression::Function(vec!["$".to_owned()], <>),
     <arg:ident> arrow <c:closure> => query::Expression::Function(vec![arg.to_owned()], c),
     open_paren <args:sep<ident, comma>> close_paren arrow <c:closure> => query::Expression::Function(args, c),
 };
