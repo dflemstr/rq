@@ -6,6 +6,7 @@ use duk;
 use ordered_float;
 
 use error;
+use query;
 use value;
 
 const API_JS: &'static str = include_str!("../api.js");
@@ -14,6 +15,7 @@ const PRELUDE_JS: &'static str = include_str!("../prelude.js");
 const MODULES: &'static [(&'static str, &'static str)] = &[
     ("jsonpath.js", include_str!("../js/jsonpath.min.js")),
     ("lodash.js", include_str!("../js/lodash.custom.min.js")),
+    ("minieval.js", include_str!("../js/minieval.min.js")),
 ];
 
 #[derive(Debug)]
@@ -23,6 +25,7 @@ pub struct Context {
 
 #[derive(Debug)]
 pub struct Process<'a> {
+    duk: &'a duk::Context,
     thread: duk::Reference<'a>,
     process: duk::Reference<'a>,
     resume: duk::Reference<'a>,
@@ -69,6 +72,7 @@ impl Context {
         let thread = try!(thread_ctor.new(&[&run]));
 
         Ok(Process {
+            duk: &self.duk,
             thread: thread,
             process: process,
             resume: resume,
@@ -121,10 +125,31 @@ impl<'a> Process<'a> {
         }
     }
 
-    pub fn run_start(&mut self, args: &[value::Value]) -> error::Result<()> {
+    pub fn run_start(&mut self, args: &[query::Expression]) -> error::Result<()> {
         if let State::Start = self.state {
-            let values = args.iter().map(|v| value_to_duk(v.clone())).collect::<Vec<_>>();
-            let result = try!(self.resume.call(&[&self.thread, &duk::Value::Array(values)]));
+            let global = self.duk.global_object();
+            let rq_ns = try!(global.get("rq"));
+            let create_function = try!(rq_ns.get("createFunction"));
+
+            let array_ctor = try!(global.get("Array"));
+            let array = try!(array_ctor.new(&[]));
+
+            for arg in args {
+                match arg {
+                    &query::Expression::Value(ref v) => {
+                        let v = value_to_duk(v.clone());
+                        try!(array.call_method("push", &[&v]));
+                    },
+                    &query::Expression::Function(ref args, ref body) => {
+                        let args = duk::Value::Array(args.iter().map(|arg| duk::Value::String(arg.clone())).collect());
+                        let body = duk::Value::String(body.clone());
+                        let function = try!(create_function.call(&[&args, &body]));
+                        try!(array.call_method("push", &[&function]));
+                    }
+                }
+            }
+
+            let result = try!(self.resume.call(&[&self.thread, &array]));
             try!(self.handle_yield(&result));
             Ok(())
         } else {
