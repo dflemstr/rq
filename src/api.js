@@ -6,9 +6,8 @@
  * The `rq` namespace, containing the `rq` API.
  *
  * @namespace
- * @type {{}}
  */
-rq = {};
+var rq = {};
 
 /**
  * The type of `this` for all of the rq stream processing functions (defined for example in
@@ -23,55 +22,64 @@ rq.Context = function Context(log) {
    *
    * @type {rq.Logger}
    */
-  this.log = log;
+  this.log = log; // Writable because Process overwrites it.
 
   /**
-   * The current value from the input value stream.  Will be `undefined` until `this.await()` has
-   * been called and returned `true`.
-   *
-   * @type {*}
+   * The current value from the input value stream.  Will be `undefined` until {@link
+    * rq.Context#pull} has been called and returned `true`.
    */
   this.value = undefined;
-};
 
-/**
- * Awaits the next value in the input value stream.
- *
- * @return {boolean} whether there is another value in the stream; this value is available as
- *   `this.value`.
- */
-rq.Context.prototype.await = function await() {
-  var result = Duktape.Thread.yield({type: 'await'});
+  /**
+   * Pulls the next value in the input value stream, storing it into `this.value`.
+   *
+   * @return {boolean} Whether there was another value in the stream.
+   */
+  this.pull = function pull() {
+    var result = Duktape.Thread['yield']({type: 'await'});
 
-  if (result.hasNext) {
-    this.value = result.next;
-    return true;
-  } else {
-    return false;
-  }
-};
+    if (result.hasNext) {
+      this.value = result.next;
+      return true;
+    } else {
+      return false;
+    }
+  };
 
-/**
- * Emits a value value into the output value stream.
- *
- * @param {*} value The value to emit.
- */
-rq.Context.prototype.emit = function emit(value) {
-  Duktape.Thread.yield({type: 'emit', value: value});
-};
+  /**
+   * Pushes a value into the output value stream.
+   *
+   * @param {*} value The value to push.
+   */
+  this.push = function push(value) {
+    Duktape.Thread['yield']({type: 'emit', value: value});
+  };
 
-rq.Context.prototype.collect = function collect() {
-  var result = [];
-  while (this.await()) {
-    result.push(this.value);
-  }
-  return result;
-};
+  /**
+   * Collects all values from the input stream, consuming it fully.
+   *
+   * @returns {Array} The values that were in the input stream.
+   */
+  this.collect = function collect() {
+    var result = [];
+    while (this.pull()) {
+      result.push(this.value);
+    }
+    return result;
+  };
 
-rq.Context.prototype.spread = function publish(values) {
-  for (var i = 0; i < values.length; i++) {
-    this.emit(values[i]);
-  }
+  /**
+   * Spreads the specified values into the output stream, pushing each of them in order.
+   *
+   * @param {Array} values The values to push to the output stream.
+   */
+  this.spread = function spread(values) {
+    for (var i = 0; i < values.length; i++) {
+      this.push(values[i]);
+    }
+  };
+
+  Object.seal(this);
 };
 
 /**
@@ -83,71 +91,77 @@ rq.Context.prototype.spread = function publish(values) {
 rq.Logger = function Logger(name) {
   this.log = new Duktape.Logger(name);
   this.log.l = 0;
-};
 
-/**
- * Logs something at the trace level.
- *
- * @param {...*} args Arbitrary values to log.
- */
-rq.Logger.prototype.trace = function trace(args) {
-  this.log.trace.apply(this.log, arguments);
-};
+  /**
+   * Logs something at the trace level.
+   *
+   * @param {...*} args Arbitrary values to log.
+   */
+  this.trace = function trace(args) {
+    this.log.trace.apply(this.log, arguments);
+  };
 
-/**
- * Logs something at the debug level.
- *
- * @param {...*} args Arbitrary values to log.
- */
-rq.Logger.prototype.debug = function debug(args) {
-  this.log.debug.apply(this.log, arguments);
-};
+  /**
+   * Logs something at the debug level.
+   *
+   * @param {...*} args Arbitrary values to log.
+   */
+  this.debug = function debug(args) {
+    this.log.debug.apply(this.log, arguments);
+  };
 
-/**
- * Logs something at the info level.
- *
- * @param {...*} args Arbitrary values to log.
- */
-rq.Logger.prototype.info = function info(args) {
-  this.log.info.apply(this.log, arguments);
-};
+  /**
+   * Logs something at the info level.
+   *
+   * @param {...*} args Arbitrary values to log.
+   */
+  this.info = function info(args) {
+    this.log.info.apply(this.log, arguments);
+  };
 
-/**
- * Logs something at the warning level.
- *
- * @param {...*} args Arbitrary values to log.
- */
-rq.Logger.prototype.warn = function warn(args) {
-  this.log.warn.apply(this.log, arguments);
-};
+  /**
+   * Logs something at the warning level.
+   *
+   * @param {...*} args Arbitrary values to log.
+   */
+  this.warn = function warn(args) {
+    this.log.warn.apply(this.log, arguments);
+  };
 
-/**
- * Logs something at the error level.
- *
- * @param {...*} args Arbitrary values to log.
- */
-rq.Logger.prototype.error = function error(args) {
-  this.log.error.apply(this.log, arguments);
-};
+  /**
+   * Logs something at the error level.
+   *
+   * @param {...*} args Arbitrary values to log.
+   */
+  this.error = function error(args) {
+    this.log.error.apply(this.log, arguments);
+  };
 
-/**
- * Logs something at the fatal level.
- *
- * @param {...*} args Arbitrary values to log.
- */
-rq.Logger.prototype.fatal = function fatal(args) {
-  this.log.fatal.apply(this.log, arguments);
+  /**
+   * Logs something at the fatal level.
+   *
+   * @param {...*} args Arbitrary values to log.
+   */
+  this.fatal = function fatal(args) {
+    this.log.fatal.apply(this.log, arguments);
+  };
+
+  Object.freeze(this);
 };
 
 /**
  * Utility functions used by many rq processes.
  *
- * @type {{}}
  * @namespace
  */
 rq.util = {};
 
-rq.util.log = new rq.Logger('rq.util');
+/**
+ * The log object used by this module.
+ *
+ * @type {rq.Logger}
+ */
+Object.defineProperty(rq.util, 'log', {value: new rq.Logger('rq.util')});
 
 /**
  * A lens that can be used to interact with some encapsulated value.
@@ -168,12 +182,19 @@ rq.util.Lens = function Lens(get, set) {
    * @param {*} value The new value to set.
    */
   this.set = set;
+
+  Object.freeze(this);
 };
 
 /**
  * Evaluates a path into an object, returning an array of `Lens`es with the targets of the path.
  *
- * @param {(Object|Array<*>)} obj The object to traverse.
+ * The supported path syntaxes include [JSONPath][1] and [JSON pointers][2].
+ *
+ * [1]: https://github.com/dchester/jsonpath
+ * [2]: https://tools.ietf.org/html/rfc6901
+ *
+ * @param {(Object|Array)} obj The object to traverse.
  * @param {string} path The path into the object.
  * @return {Array<rq.util.Lens>} A lens that can be used to manipulate the targeted values.
  */
@@ -229,12 +250,13 @@ rq.util.path = function path(obj, path) {
   }
 };
 
+Object.freeze(rq.util);
+
 /**
  * An rq process that encapsulates a coroutine.  It's probably not a good idea to construct an
  * instance of this manually.
  *
  * @constructor
- * @package
  */
 rq.Process = function Process(fn) {
   var ctx = new rq.Context(new rq.Logger(fn.fileName + '/' + fn.name));
@@ -274,4 +296,8 @@ rq.Process = function Process(fn) {
   this.resume = function resume(thread, result) {
     return Duktape.Thread.resume(thread, result);
   };
+
+  Object.freeze(this);
 };
+
+Object.freeze(rq);
