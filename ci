@@ -46,7 +46,7 @@ function ci-deploy {
 
 function ci-deploy-gh-pages {
     curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-    sudo apt-get install -y nodejs-legacy
+    sudo apt-get install -y nodejs nodejs-legacy
     sudo npm install -g jsdoc
     cargo doc
     jsdoc -c jsdoc/conf.json -d target/doc/js src/js/api.js src/js/prelude.js
