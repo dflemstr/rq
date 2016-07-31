@@ -39,6 +39,10 @@ error_chain! {
             description("illegal state")
             display("illegal state: {}", msg)
         }
+        SyntaxError(msg: String) {
+            description("syntax error")
+            display("syntax error: {}", msg)
+        }
         ProcessNotFound(name: String) {
             description("process not found")
             display("no such process: {}", name)

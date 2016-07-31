@@ -1,18 +1,24 @@
 /**
  * This is the rq standard library as implemented in Javascript.
+ *
+ * Note that the examples in this file are doctests.  Any line with the format:
+ *
+ *     <input> → <process> <args>* → <output>
+ *
+ * ...will be verified as part of the build.
  */
 
 // Regex for converting (most) lodash Array JSDoc:
 // Search: "_\.(\w+)\(\[([^])]+?)\](?:, ([^)]+))?\);\n \* // => \[(.*)\]$"
-// Replace: "$2 → $1($3) → $4"
+// Replace: "$2 => $1($3) => $4"
 
 /**
  * Passes through all of the values it sees untouched.
  *
  * @static
  * @example
- * {a: 2, b: 3} → id() → {a: 2, b: 3}
- * true         → id() → true
+ * {"a": 2, "b": 3} → id → {"a": 2, "b": 3}
+ * true             → id → true
  */
 function id() {
   while (this.pull()) {
@@ -25,8 +31,8 @@ function id() {
  *
  * @static
  * @example
- * {a: {b: {c: 3} } } → select('/a/b') → {c: 3}
- * {a: {b: {c: 3} } } → select('/a/x') → (nothing)
+ * {"a": {"b": {"c": 3} } } → select "/a/b" → {"c": 3}
+ * {"a": {"b": {"c": 3} } } → select "/a/x" → (nothing)
  *
  * @param {string} path the field path to follow
  */
@@ -54,8 +60,8 @@ function select(path) {
  *
  * @static
  * @example
- * {a: {b: 2, c: true} } → modify('/a/b', n => n + 2) → {a: {b: 4, c: true} }
- * {a: {b: 2, c: true} } → modify('/a/x', n => n + 2) → {a: {b: 2, c: true} }
+ * {"a": {"b": 2, "c": true} } → modify "/a/b" n => {n + 2} → {"a": {"b": 4, "c": true} }
+ * {"a": {"b": 2, "c": true} } → modify "/a/x" n => {n + 2} → {"a": {"b": 2, "c": true} }
  *
  * @param {string} path the field path to follow
  * @param {function(*): *} f the function to apply
@@ -73,6 +79,7 @@ function modify(path, f) {
 
 /**
  * Logs each value that passes through to the info log.
+ *
  * @static
  */
 function tee() {
@@ -87,7 +94,7 @@ function tee() {
  *
  * @static
  * @example
- * true, [], 1 → collect() → [true, [], 1]
+ * true [] 1 → collect → [true, [], 1]
  */
 function collect() {
   this.push(this.collect());
@@ -98,7 +105,7 @@ function collect() {
  *
  * @static
  * @example
- * [1, 2], [3, 4], 5 → spread() → 1, 2, 3, 4, 5
+ * [1, 2] [3, 4] 5 → spread → 1 2 3 4 5
  */
 function spread() {
   while (this.pull()) {
@@ -124,8 +131,8 @@ function spread() {
  * @static
  * @param {number} [size=1] The length of each chunk
  * @example
- * 'a', 'b', 'c', 'd' → chunk(2) → ['a', 'b'], ['c', 'd']
- * 'a', 'b', 'c', 'd' → chunk(3) → ['a', 'b', 'c'], ['d']
+ * "a" "b" "c" "d" → chunk 2 → ["a", "b"] ["c", "d"]
+ * "a" "b" "c" "d" → chunk 3 → ["a", "b", "c"] ["d"]
  */
 function chunk(size) {
   this.spread(require('lodash.js').chunk(this.collect(), size));
@@ -137,7 +144,7 @@ function chunk(size) {
  *
  * @static
  * @example
- * 0, 1, false, 2, '', 3 → compact() → 1, 2, 3
+ * 0 1 false 2 "" 3 → compact → 1 2 3
  */
 function compact() {
   this.spread(require('lodash.js').compact(this.collect()));
@@ -148,10 +155,10 @@ function compact() {
  *
  * @static
  * @example
- * [1], 2, [3], [[4]] → concat() → [1, 2, 3, [4]]
+ * [1] 2 [3] [[4]] → concat → [1, 2, 3, [4]]
  */
 function concat() {
-  this.spread(require('lodash.js').concat.apply(null, this.collect()));
+  this.emit(require('lodash.js').concat.apply(null, this.collect()));
 }
 
 /**
@@ -164,7 +171,7 @@ function concat() {
  * @param {Array} [values] The values to exclude.
  * @see without, xor
  * @example
- * 2, 1 → difference([2, 3]) → 1
+ * 2 1 → difference [2, 3] → 1
  */
 function difference(values) {
   this.spread(require('lodash.js').difference(this.collect(), values));
@@ -181,10 +188,10 @@ function difference(values) {
  * @param {Function} [iteratee=_.identity] The iteratee invoked per element.
  * @example
  *
- * 2.1, 1.2 → differenceBy([2.3, 3.4], Math.floor) → 1.2
+ * 2.1 1.2 → differenceBy [2.3, 3.4] {Math.floor} → 1.2
  *
  * // The `property` iteratee shorthand.
- * { 'x': 2 }, { 'x': 1 } → differenceBy([{ 'x': 1 }], 'x') → { 'x': 2 }
+ * {"x": 2} {"x": 1} → differenceBy [{"x": 1}] "x" → {"x": 2}
  */
 function differenceBy(values, iteratee) {
   this.spread(require('lodash.js').differenceBy(this.collect(), values, iteratee));
@@ -192,15 +199,15 @@ function differenceBy(values, iteratee) {
 
 /**
  * This method is like `difference` except that it accepts `comparator`
- * which is invoked to compare elements of the input to `values`. The comparator is invoked with two
+ * which is invoked to compare elements of the input to `values`. The comparator is invoked with
+ * two
  * arguments: (inputVal, othVal).
  *
  * @static
  * @param {Array} [values] The values to exclude.
  * @param {Function} [comparator] The comparator invoked per element.
  * @example
- *
- * { 'x': 1, 'y': 2 }, { 'x': 2, 'y': 1 } → differenceWith([{ 'x': 1, 'y': 2 }], _.isEqual) → { 'x': 2, 'y': 1 }
+ * {"x": 1, "y": 2} {"x": 2, "y": 1} → differenceWith [{"x": 1, "y": 2}] {_.isEqual} → {"x": 2, "y": 1}
  */
 function differenceWith(values, comparator) {
   this.spread(require('lodash.js').differenceWith(this.collect(), values, comparator));
@@ -212,10 +219,10 @@ function differenceWith(values, comparator) {
  * @static
  * @param {number} [n=1] The number of elements to drop.
  * @example
- * 1, 2, 3 → drop() → 2, 3
- * 1, 2, 3 → drop(2) → 3
- * 1, 2, 3 → drop(5) → (empty)
- * 1, 2, 3 → drop(0) → 1, 2, 3
+ * 1 2 3 → drop   → 2 3
+ * 1 2 3 → drop 2 → 3
+ * 1 2 3 → drop 5 → (empty)
+ * 1 2 3 → drop 0 → 1 2 3
  */
 function drop(n) {
   this.spread(require('lodash.js').drop(this.collect(), n));
@@ -227,10 +234,10 @@ function drop(n) {
  * @static
  * @param {number} [n=1] The number of elements to drop.
  * @example
- * 1, 2, 3 → dropRight() → 1, 2
- * 1, 2, 3 → dropRight(2) → 1
- * 1, 2, 3 → dropRight(5) → (empty)
- * 1, 2, 3 → dropRight(0) → 1, 2, 3
+ * 1 2 3 → dropRight   → 1 2
+ * 1 2 3 → dropRight 2 → 1
+ * 1 2 3 → dropRight 5 → (empty)
+ * 1 2 3 → dropRight 0 → 1 2 3
  */
 function dropRight(n) {
   this.spread(require('lodash.js').dropRight(this.collect(), n));
@@ -408,8 +415,7 @@ function findLastIndex(predicate, fromIndex) {
  * @static
  * @example
  *
- * _.flatten([1, [2, [3, [4]], 5]]);
- * // => [1, 2, [3, [4]], 5]
+ * 1  [2, [3, [4]] 5 → flatten → 1 2 [3, [4]] 5
  */
 function flatten() {
   this.spread(require('lodash.js').flatten(this.collect()));
@@ -421,8 +427,7 @@ function flatten() {
  * @static
  * @example
  *
- * _.flattenDeep([1, [2, [3, [4]], 5]]);
- * // => [1, 2, 3, 4, 5]
+ * 1 [2, [3, [4]] 5] → flattenDeep → 1 2 3 4 5
  */
 function flattenDeep() {
   this.spread(require('lodash.js').flattenDeep(this.collect()));
@@ -452,11 +457,9 @@ function flattenDepth(depth) {
  * from key-value `pairs`.
  *
  * @static
- * @param {Array} pairs The key-value pairs.
  * @example
  *
- * _.fromPairs([['a', 1], ['b', 2]]);
- * // => { 'a': 1, 'b': 2 }
+ * ["a", 1] ["b", 2] → fromPairs → {"a": 1, "b": 2}
  */
 function fromPairs() {
   this.push(require('lodash.js').fromPairs(this.collect()));
@@ -469,11 +472,8 @@ function fromPairs() {
  * @alias first
  * @example
  *
- * _.head([1, 2, 3]);
- * // => 1
- *
- * _.head([]);
- * // => undefined
+ * 1 2 3   → head → 1
+ * (empty) → head → null
  */
 function head() {
   this.push(require('lodash.js').head(this.collect()));
@@ -490,12 +490,9 @@ function head() {
  * @param {number} [fromIndex=0] The index to search from.
  * @example
  *
- * _.indexOf([1, 2, 1, 2], 2);
- * // => 1
- *
+ * 1 2 1 2 → indexOf 2   → 1
  * // Search from the `fromIndex`.
- * _.indexOf([1, 2, 1, 2], 2, 2);
- * // => 3
+ * 1 2 1 2 → indexOf 2 2 → 3
  */
 function indexOf(value, fromIndex) {
   this.push(require('lodash.js').indexOf(this.collect(), value, fromIndex));
@@ -507,7 +504,7 @@ function indexOf(value, fromIndex) {
  * @static
  * @example
  *
- * 1, 2, 3 → initial() → 1, 2
+ * 1, 2, 3 → initial → 1, 2
  */
 function initial() {
   this.push(require('lodash.js').initial(this.collect()));

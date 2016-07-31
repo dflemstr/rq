@@ -149,24 +149,18 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
 fn run_source_sink<I, O>(args: &Args,
                          _paths: &rq::config::Paths,
                          source: I,
-                         mut sink: O)
+                         sink: O)
                          -> rq::error::Result<()>
     where I: rq::value::Source,
           O: rq::value::Sink
 {
-    use record_query::value::Source;
-
     let query = rq::query::Query::parse(if args.arg_query.is_empty() {
         "id"
     } else {
         &args.arg_query
     });
-    let query_context = rq::query::Context::new();
-    let mut results = try!(query.evaluate(&query_context, source));
-    while let Some(result) = try!(results.read()) {
-        try!(sink.write(result));
-    }
-    Ok(())
+
+    record_query::run_query(&query, source, sink)
 }
 
 fn load_descriptors(paths: &rq::config::Paths)

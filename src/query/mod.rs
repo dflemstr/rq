@@ -1,11 +1,9 @@
 mod context;
-
-mod parser {
-    include!(concat!(env!("OUT_DIR"), "/query/parser.rs"));
-}
+mod parser;
 
 use error;
 use value;
+
 pub use self::context::Context;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
