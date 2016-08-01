@@ -185,9 +185,19 @@ fn log_error(args: &Args, error: rq::error::Error) {
             }
         },
         _ => {
-            error!("Encountered: {}", error);
+            let main_str = format!("{}", error);
+            let mut main_lines = main_str.lines();
+            error!("Encountered: {}", main_lines.next().unwrap());
+            for line in main_lines {
+                error!("  {}", line);
+            }
             for e in error.iter().skip(1) {
-                error!("Caused by: {}", e);
+                let sub_str = format!("{}", e);
+                let mut sub_lines = sub_str.lines();
+                error!("Caused by: {}", sub_lines.next().unwrap());
+                for line in sub_lines {
+                    error!("  {}", line);
+                }
             }
         },
     }

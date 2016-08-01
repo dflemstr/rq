@@ -12,6 +12,8 @@
 // Search: "_\.(\w+)\(\[([^])]+?)\](?:, ([^)]+))?\);\n \* // => \[(.*)\]$"
 // Replace: "$2 => $1($3) => $4"
 
+var _ = require('lodash.js');
+
 /**
  * Passes through all of the values it sees untouched.
  *

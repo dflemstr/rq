@@ -1,5 +1,6 @@
 use std::char;
 use std::collections;
+use std::fmt;
 use std::iter;
 use std::str;
 
@@ -14,13 +15,13 @@ impl_rdp! {
         query   = { process ~ (["|"] ~ process)* ~ eoi }
         process = { ident ~ expression* }
 
-        expression = { value | function }
+        expression = { value | lambda }
 
         ident = @{
             (['a'..'z'] | ['A'..'Z'] | ["_"]) ~ (['a'..'z'] | ['A'..'Z'] | ["_"] | ['0'..'9'])*
         }
 
-        function = { args ~ ["=>"] ~ body }
+        lambda = { args ~ ["=>"] ~ body }
         args = { ["("] ~ ident ~ ([","] ~ ident)* ~ [")"] }
         body = { ["{"] ~ (body | !["}"] ~ any)* ~ ["}"] }
 
@@ -88,7 +89,7 @@ impl_rdp! {
                 trace!("build_expression value={:?}", value);
                 query::Expression::Value(value)
             },
-            (_: function, _: args, args: build_args(), &body: body) => {
+            (_: lambda, _: args, args: build_args(), &body: body) => {
                 let args = args.into_iter().collect();
                 let body = body[1..body.len() - 1].to_owned();
                 trace!("build_expression args={:?} body={:?}", args, body);
@@ -178,6 +179,34 @@ impl_rdp! {
     }
 }
 
+impl fmt::Display for Rule {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let d = match *self {
+            Rule::query => "query",
+            Rule::process => "process",
+            Rule::expression => "expression",
+            Rule::ident => "identifier",
+            Rule::lambda => "lambda",
+            Rule::args => "lambda argument list",
+            Rule::body => "lambda body",
+            Rule::object => "object literal",
+            Rule::pair => "object key/value pair",
+            Rule::array => "array literal",
+            Rule::value => "value",
+            Rule::_true => "\"true\"",
+            Rule::_false => "\"false\"",
+            Rule::_null => "\"null\"",
+            Rule::string => "string literal",
+            Rule::number => "number",
+
+            Rule::any => "any character",
+            Rule::eoi => "end of input",
+        };
+
+        f.write_str(d)
+    }
+}
+
 pub fn parse_query(input: &str) -> error::Result<query::Query> {
     let mut parser = Rdp::new(StringInput::new(input));
     if parser.query() {
@@ -185,10 +214,10 @@ pub fn parse_query(input: &str) -> error::Result<query::Query> {
     } else {
         let (ref rules, pos) = parser.expected();
         let description = if rules.len() == 1 {
-            format!("unexpected input at {}, expected {:?}", pos, rules[0])
+            format!("unexpected input at {}, expected {}", pos, rules[0])
         } else {
             let rule_strings = rules.iter()
-                .map(|r| format!("{:?}", r))
+                .map(|r| format!("{}", r))
                 .collect::<Vec<_>>();
             let rule_desc =
                 format!("{} or {}",
