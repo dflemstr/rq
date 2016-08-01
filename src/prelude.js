@@ -260,7 +260,7 @@ function dropRight(n) {
  * // The `matchesProperty` iteratee shorthand.
  * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → dropRightWhile ["a", false] → {"u": "b", "a": true}
  * // The `property` iteratee shorthand.
- * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → dropRightWhile "a" → {"u": "b", "a": true} → {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false}
+ * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → dropRightWhile "a" → {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false}
  */
 function dropRightWhile(predicate) {
   this.spread(require('lodash.js').dropRightWhile(this.collect(), predicate));
@@ -275,23 +275,13 @@ function dropRightWhile(predicate) {
  * @param {Function} [predicate=_.identity]
  *  The function invoked per iteration.
  * @example
- *
- * var users = [
- *   { 'user': 'barney',  'active': false },
- *   { 'user': 'fred',    'active': false },
- *   { 'user': 'pebbles', 'active': true }
- * ];
- *
- * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → dropWhile (o)=>{!o.a} → {"u": "p", "a": false}
- *
+ * {"u": "b", "a": false} {"u": "f", "a": false} {"u": "p", "a": true} → dropWhile (o)=>{!o.a} → {"u": "p", "a": true}
  * // The `matches` iteratee shorthand.
- * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → dropWhile {"u": "b', "a": false} → {"u": "f", "a": false} {"u": "p", "a": false}
- *
+ * {"u": "b", "a": false} {"u": "f", "a": false} {"u": "p", "a": true} → dropWhile {"u": "b", "a": false} → {"u": "f", "a": false} {"u": "p", "a": true}
  * // The `matchesProperty` iteratee shorthand.
- * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → dropWhile ["active", false] → {"u": "p", "a": false}
- *
+ * {"u": "b", "a": false} {"u": "f", "a": false} {"u": "p", "a": true} → dropWhile ["a", false] → {"u": "p", "a": true}
  * // The `property` iteratee shorthand.
- * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → dropWhile "active" → {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false}
+ * {"u": "b", "a": false} {"u": "f", "a": false} {"u": "p", "a": true} → dropWhile "a" → {"u": "b", "a": false} {"u": "f", "a": false} {"u": "p", "a": true}
  */
 function dropWhile(predicate) {
   this.spread(require('lodash.js').dropWhile(this.collect(), predicate));
@@ -301,14 +291,12 @@ function dropWhile(predicate) {
  * Fills elements of the input stream with `value` from `start` up to, but not
  * including, `end`.
  *
- * **Note:** This method mutates the input stream.
- *
  * @static
  * @param {*} value The value to fill the input stream with.
  * @param {number} [start=0] The start position.
  * @param {number} [end=array.length] The end position.
  * @example
- * 4 6 8 10 → fill("*", 1, 3) → 4 "*" "*" 10
+ * 4 6 8 10 → fill "*" 1 3 → 4 "*" "*" 10
  */
 function fill(value, start, end) {
   this.spread(require('lodash.js').fill(this.collect(), value, start, end));
@@ -329,21 +317,13 @@ function fill(value, start, end) {
  *   { 'user': 'fred',    'active': false },
  *   { 'user': 'pebbles', 'active': true }
  * ];
- *
- * _.findIndex(users, function(o) { return o.user == 'barney'; });
- * // => 0
- *
+ * {"u": "b", "a": false } {"u": "f", "a": false } {"u": "p", "a": true } → findIndex (o)=>{o.user == 'b'} → 0
  * // The `matches` iteratee shorthand.
- * _.findIndex(users, { 'user': 'fred', 'active': false });
- * // => 1
- *
+ * {"u": "b", "a": false } {"u": "f", "a": false } {"u": "p", "a": true } → findIndex {"u": "f", "a": false} → 1
  * // The `matchesProperty` iteratee shorthand.
- * _.findIndex(users, ['active', false]);
- * // => 0
- *
+ * {"u": "b", "a": false } {"u": "f", "a": false } {"u": "p", "a": true } → findIndex ["a", false] → 0
  * // The `property` iteratee shorthand.
- * _.findIndex(users, 'active');
- * // => 2
+ * {"u": "b", "a": false } {"u": "f", "a": false } {"u": "p", "a": true } → findIndex "a" → 2
  */
 function findIndex(predicate, fromIndex) {
   this.push(require('lodash.js').findIndex(this.collect(), predicate, fromIndex));
