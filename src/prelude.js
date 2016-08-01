@@ -207,7 +207,7 @@ function differenceBy(values, iteratee) {
  * @param {Array} [values] The values to exclude.
  * @param {Function} [comparator] The comparator invoked per element.
  * @example
- * {"x": 1, "y": 2} {"x": 2, "y": 1} → differenceWith [{"x": 1, "y": 2}] {_.isEqual} → {"x": 2, "y": 1}
+ * {"x": 1, "y": 2} {"x": 2, "y": 1} → differenceWith [{"x": 1, "y": 2}] (a, b)=>{_.isEqual(a, b)} → {"x": 2, "y": 1}
  */
 function differenceWith(values, comparator) {
   this.spread(require('lodash.js').differenceWith(this.collect(), values, comparator));

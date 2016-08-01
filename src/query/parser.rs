@@ -36,24 +36,28 @@ impl_rdp! {
         _null = { ["null"] }
 
         string  = @{ ["\""] ~ (escape | !(["\""] | ["\\"]) ~ any)* ~ ["\""] }
-        escape  = { ["\\"] ~ (["\""] | ["\\"] | ["/"] | ["b"] | ["f"] | ["n"] | ["r"] | ["t"] | unicode) }
-        unicode = { ["u"] ~ hex ~ hex ~ hex ~ hex }
-        hex     = { ['0'..'9'] | ['a'..'f'] | ['A'..'F'] }
+        escape  = _{ ["\\"] ~ (["\""] | ["\\"] | ["/"] | ["b"] | ["f"] | ["n"] | ["r"] | ["t"] | unicode) }
+        unicode = _{ ["u"] ~ hex ~ hex ~ hex ~ hex }
+        hex     = _{ ['0'..'9'] | ['a'..'f'] | ['A'..'F'] }
 
         number = @{ ["-"]? ~ int ~ (["."] ~ ['0'..'9']+ ~ exp? | exp)? }
-        int    =  { ["0"] | ['1'..'9'] ~ ['0'..'9']* }
-        exp    =  { (["E"] | ["e"]) ~ (["+"] | ["-"])? ~ int }
+        int    = _{ ["0"] | ['1'..'9'] ~ ['0'..'9']* }
+        exp    = _{ (["E"] | ["e"]) ~ (["+"] | ["-"])? ~ int }
 
         whitespace = _{ [" "] | ["\t"] | ["\r"] | ["\n"] }
     }
 
     process! {
         build_query(&self) -> query::Query {
-            (_: query, processes: build_processes()) =>
-                query::Query(processes.into_iter().collect()),
+            (_: query, processes: build_processes()) => {
+                let processes = processes.into_iter().collect();
+                trace!("build_query processes={:?}", processes);
+                query::Query(processes)
+            },
         }
         build_processes(&self) -> collections::LinkedList<query::Process> {
             (_: process, process: build_process(), mut tail: build_processes()) => {
+                trace!("build_processes process={:?} tail={:?}", process, tail);
                 tail.push_front(process);
                 tail
             },
@@ -63,11 +67,15 @@ impl_rdp! {
         }
         build_process(&self) -> query::Process {
             (&id: ident, args: build_expressions()) => {
-                query::Process(id.to_owned(), args.into_iter().collect())
+                let id = id.to_owned();
+                let args = args.into_iter().collect();
+                trace!("build_process id={:?} args={:?}", id, args);
+                query::Process(id, args)
             },
         }
         build_expressions(&self) -> collections::LinkedList<query::Expression> {
             (_: expression, expression: build_expression(), mut tail: build_expressions()) => {
+                trace!("build_expressions expression={:?} tail={:?}", expression, tail);
                 tail.push_front(expression);
                 tail
             },
@@ -77,34 +85,57 @@ impl_rdp! {
         }
         build_expression(&self) -> query::Expression {
             (_: value, value: build_value()) => {
+                trace!("build_expression value={:?}", value);
                 query::Expression::Value(value)
             },
             (_: function, _: args, args: build_args(), &body: body) => {
-                query::Expression::Function(args.into_iter().collect(), body.to_owned())
+                let args = args.into_iter().collect();
+                let body = body[1..body.len() - 1].to_owned();
+                trace!("build_expression args={:?} body={:?}", args, body);
+                query::Expression::Function(args, body)
             },
         }
         build_value(&self) -> value::Value {
             (&string: string) => {
-                value::Value::String(unescape_string(string))
+                let string = unescape_string(string);
+                trace!("build_value string={:?}", string);
+                value::Value::String(string)
             },
             (&number: number) => {
-                value::Value::from_f64(number.parse().unwrap())
+                let number = number.parse().unwrap();
+                trace!("build_value number={:?}", number);
+                value::Value::from_f64(number)
             },
             (&ident: ident) => {
-                value::Value::String(ident.to_owned())
+                let ident = ident.to_owned();
+                trace!("build_value ident={:?}", ident);
+                value::Value::String(ident)
             },
             (_: object, object: build_object()) => {
+                trace!("build_value object={:?}", object);
                 value::Value::Map(object)
             },
             (_: array, array: build_array()) => {
-                value::Value::Sequence(array.into_iter().collect())
+                let array = array.into_iter().collect();
+                trace!("build_value array={:?}", array);
+                value::Value::Sequence(array)
             },
-            (_: _true) => value::Value::Bool(true),
-            (_: _false) => value::Value::Bool(false),
-            (_: _null) => value::Value::Unit,
+            (_: _true) => {
+                trace!("build_value bool=true");
+                value::Value::Bool(true)
+            },
+            (_: _false) => {
+                trace!("build_value bool=false");
+                value::Value::Bool(false)
+            },
+            (_: _null) => {
+                trace!("build_value null");
+                value::Value::Unit
+            },
         }
         build_args(&self) -> collections::LinkedList<String> {
             (&arg: ident, mut tail: build_args()) => {
+                trace!("build_args arg={:?} tail={:?}", arg, tail);
                 tail.push_front(arg.to_owned());
                 tail
             },
@@ -114,6 +145,7 @@ impl_rdp! {
         }
         build_object(&self) -> collections::BTreeMap<value::Value, value::Value> {
             (_: pair, pair: build_pair(), mut tail: build_object()) => {
+                trace!("build_object pair={:?} tail={:?}", pair, tail);
                 tail.insert(pair.0, pair.1);
                 tail
             },
@@ -123,14 +155,19 @@ impl_rdp! {
         }
         build_pair(&self) -> (value::Value, value::Value) {
             (&key: ident, _: value, value: build_value()) => {
-                (value::Value::String(key.to_owned()), value)
+                let key = key.to_owned();
+                trace!("build_pair key={:?} value={:?}", key, value);
+                (value::Value::String(key), value)
             },
             (&key: string, _: value, value: build_value()) => {
-                (value::Value::String(unescape_string(key)), value)
+                let key = unescape_string(key);
+                trace!("build_pair key={:?} value={:?}", key, value);
+                (value::Value::String(key), value)
             },
         }
         build_array(&self) -> collections::LinkedList<value::Value> {
             (_: value, value: build_value(), mut tail: build_array()) => {
+                trace!("build_array value={:?} tail={:?}", value, tail);
                 tail.push_front(value);
                 tail
             },
