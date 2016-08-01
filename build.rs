@@ -9,9 +9,7 @@ use std::path;
 
 fn main() {
     env_logger::init().unwrap();
-    if cfg!(test) {
-        gen_js_doctests().unwrap();
-    }
+    gen_js_doctests().unwrap();
 }
 
 fn gen_js_doctests() -> io::Result<()> {

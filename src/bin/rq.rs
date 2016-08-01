@@ -154,11 +154,11 @@ fn run_source_sink<I, O>(args: &Args,
     where I: rq::value::Source,
           O: rq::value::Sink
 {
-    let query = rq::query::Query::parse(if args.arg_query.is_empty() {
+    let query = try!(rq::query::Query::parse(if args.arg_query.is_empty() {
         "id"
     } else {
         &args.arg_query
-    });
+    }));
 
     record_query::run_query(&query, source, sink)
 }

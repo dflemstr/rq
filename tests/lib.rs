@@ -1,3 +1,4 @@
+extern crate env_logger;
 extern crate record_query;
 extern crate serde_json;
 
@@ -6,6 +7,7 @@ mod js_doctest {
     use std::io;
     use std::str;
 
+    use env_logger;
     use serde_json;
 
     use record_query;
@@ -21,6 +23,7 @@ mod js_doctest {
     }
 
     fn run_js_doctest(input: &str, query_str: &str, expected_output_str: &str) {
+        let _ = env_logger::init();
         let mut actual_output_bytes = Vec::new();
 
         {
@@ -28,7 +31,7 @@ mod js_doctest {
             let source = value::json::source(&mut cursor);
             let sink = value::json::sink(&mut actual_output_bytes);
 
-            let query = query::Query::parse(&query_str);
+            let query = query::Query::parse(&query_str).unwrap();
             record_query::run_query(&query, source, sink).unwrap();
         }
 

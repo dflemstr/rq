@@ -60,8 +60,8 @@ function select(path) {
  *
  * @static
  * @example
- * {"a": {"b": 2, "c": true} } → modify "/a/b" n => {n + 2} → {"a": {"b": 4, "c": true} }
- * {"a": {"b": 2, "c": true} } → modify "/a/x" n => {n + 2} → {"a": {"b": 2, "c": true} }
+ * {"a": {"b": 2, "c": true} } → modify "/a/b" (n)=>{n + 2} → {"a": {"b": 4, "c": true} }
+ * {"a": {"b": 2, "c": true} } → modify "/a/x" (n)=>{n + 2} → {"a": {"b": 2, "c": true} }
  *
  * @param {string} path the field path to follow
  * @param {function(*): *} f the function to apply
@@ -158,7 +158,7 @@ function compact() {
  * [1] 2 [3] [[4]] → concat → [1, 2, 3, [4]]
  */
 function concat() {
-  this.emit(require('lodash.js').concat.apply(null, this.collect()));
+  this.push(require('lodash.js').concat.apply(null, this.collect()));
 }
 
 /**
@@ -188,7 +188,7 @@ function difference(values) {
  * @param {Function} [iteratee=_.identity] The iteratee invoked per element.
  * @example
  *
- * 2.1 1.2 → differenceBy [2.3, 3.4] {Math.floor} → 1.2
+ * 2.1 1.2 → differenceBy [2.3, 3.4] (x)=>{Math.floor(x)} → 1.2
  *
  * // The `property` iteratee shorthand.
  * {"x": 2} {"x": 1} → differenceBy [{"x": 1}] "x" → {"x": 2}
@@ -252,29 +252,16 @@ function dropRight(n) {
  * @param {Function} [predicate=_.identity] The function invoked per iteration.
  * @example
  *
- * var users = [
- *   { 'user': 'barney',  'active': true },
- *   { 'user': 'fred',    'active': false },
- *   { 'user': 'pebbles', 'active': false }
- * ];
- *
- * _.dropRightWhile(users, function(o) { return !o.active; });
- * // => objects for ['barney']
- *
+ * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → dropRightWhile (o)=>{!o.a} → {"u": "b", "a": true}
  * // The `matches` iteratee shorthand.
- * _.dropRightWhile(users, { 'user': 'pebbles', 'active': false });
- * // => objects for ['barney', 'fred']
- *
+ * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → dropRightWhile {"u": "p", "a": false} → {"u": "b", "a": true} {"u": "f", "a": false}
  * // The `matchesProperty` iteratee shorthand.
- * _.dropRightWhile(users, ['active', false]);
- * // => objects for ['barney']
- *
+ * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → dropRightWhile ["a", false] → {"u": "b", "a": true}
  * // The `property` iteratee shorthand.
- * _.dropRightWhile(users, 'active');
- * // => objects for ['barney', 'fred', 'pebbles']
+ * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → dropRightWhile "a" → {"u": "b", "a": true} → {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false}
  */
-function dropRightWhile(n, predicate) {
-  this.spread(require('lodash.js').dropRightWhile(this.collect(), n, predicate));
+function dropRightWhile(predicate) {
+  this.spread(require('lodash.js').dropRightWhile(this.collect(), predicate));
 }
 
 /**
@@ -293,23 +280,19 @@ function dropRightWhile(n, predicate) {
  *   { 'user': 'pebbles', 'active': true }
  * ];
  *
- * _.dropWhile(users, function(o) { return !o.active; });
- * // => objects for ['pebbles']
+ * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → dropWhile (o)=>{!o.a} → {"u": "p", "a": false}
  *
  * // The `matches` iteratee shorthand.
- * _.dropWhile(users, { 'user': 'barney', 'active': false });
- * // => objects for ['fred', 'pebbles']
+ * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → dropWhile {"u": "b', "a": false} → {"u": "f", "a": false} {"u": "p", "a": false}
  *
  * // The `matchesProperty` iteratee shorthand.
- * _.dropWhile(users, ['active', false]);
- * // => objects for ['pebbles']
+ * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → dropWhile ["active", false] → {"u": "p", "a": false}
  *
  * // The `property` iteratee shorthand.
- * _.dropWhile(users, 'active');
- * // => objects for ['barney', 'fred', 'pebbles']
+ * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → dropWhile "active" → {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false}
  */
-function dropWhile(n, predicate) {
-  this.spread(require('lodash.js').dropWhile(this.collect(), n, predicate));
+function dropWhile(predicate) {
+  this.spread(require('lodash.js').dropWhile(this.collect(), predicate));
 }
 
 /**
@@ -323,17 +306,7 @@ function dropWhile(n, predicate) {
  * @param {number} [start=0] The start position.
  * @param {number} [end=array.length] The end position.
  * @example
- *
- * var array = [1, 2, 3];
- *
- * _.fill(array, 'a');
- * console.log(array);
- * // => ['a', 'a', 'a']
- *
- * _.fill(Array(3), 2);
- * // => [2, 2, 2]
- *
- * 4, 6, 8, 10 → fill('*', 1, 3) → 4, '*', '*', 10
+ * 4 6 8 10 → fill("*", 1, 3) → 4 "*" "*" 10
  */
 function fill(value, start, end) {
   this.spread(require('lodash.js').fill(this.collect(), value, start, end));
@@ -1185,17 +1158,13 @@ function uniqWith(comparator) {
 }
 
 /**
- * This method is like `zip` except that it accepts an array of grouped
+ * This method is like `zip` except that it accepts a stream of grouped
  * elements and creates an array regrouping the elements to their pre-zip
  * configuration.
  *
  * @static
  * @example
- *
- * var zipped = 'a', 'b' → zip([1, 2], [true, false]) → ['a', 1, true], ['b', 2, false]
- *
- * _.unzip(zipped);
- * // => [['a', 'b'], [1, 2], [true, false]]
+ * ["a", 1, true] ["b", 2, false] → unzip → ["a", "b"] [1, 2] [true, false]
  */
 function unzip() {
   this.spread(require('lodash.js').unzip(this.collect()));
@@ -1304,10 +1273,9 @@ function xorWith(comparator) {
  * second elements of the given arrays, and so on.
  *
  * @static
- * @param {...Array} [arrays] The arrays to process.
  * @example
  *
- * 'a', 'b' → zip([1, 2], [true, false]) → ['a', 1, true], ['b', 2, false]
+ * ["a", "b"] [1, 2] [true, false] → zip → ["a", 1, true] ["b", 2, false]
  */
 function zip() {
   this.spread(require('lodash.js').zip.apply(null, this.collect()));
@@ -1353,8 +1321,8 @@ function zipWith(iteratee) {
  *  The iteratee to transform keys.
  * @example
  *
- * 6.1, 4.2, 6.3 → countBy(Math.floor) → { '4': 1, '6': 2 }
- * 'one', 'two', 'three' → countBy('length') → { '3': 2, '5': 1 }
+ * 6.1 4.2 6.3         → countBy (x)=>{Math.floor(x)} → {"4": 1, "6": 2}
+ * "one" "two" "three" → countBy "length"             → {"3": 2, "5": 1}
  */
 function countBy(iteratee) {
   this.push(require('lodash.js').countBy(this.collect(), iteratee));
