@@ -7,10 +7,7 @@ version = "0.1.0"
 
 [build-dependencies]
 env_logger = "0.3.2"
-
-[build-dependencies.lalrpop]
-git = "https://github.com/dflemstr/lalrpop.git"
-path = "lalrpop"
+regex = "0.1.73"
 
 [dependencies]
 ansi_term = "0.7.2"
@@ -22,6 +19,7 @@ glob = "0.2.11"
 log = "0.3.6"
 nix = "0.5.0"
 ordered-float = "0.2.1"
+pest = "0.3.2"
 protobuf = "1.0.18"
 rustc-serialize = "0.3.19"
 serde = "0.7.0"
@@ -30,12 +28,8 @@ serde_json = "0.7.0"
 xdg-basedir = "1.0.0"
 
 [dependencies.duk]
-git = "https://github.com/dflemstr/duk.git"
 features = ["debug", "logging"]
-
-[dependencies.lalrpop-util]
-git = "https://github.com/dflemstr/lalrpop.git"
-path = "lalrpop-util"
+git = "https://github.com/dflemstr/duk.git"
 
 [dependencies.serde_protobuf]
 path = "serde_protobuf"

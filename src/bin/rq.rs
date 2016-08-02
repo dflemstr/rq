@@ -149,24 +149,18 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
 fn run_source_sink<I, O>(args: &Args,
                          _paths: &rq::config::Paths,
                          source: I,
-                         mut sink: O)
+                         sink: O)
                          -> rq::error::Result<()>
     where I: rq::value::Source,
           O: rq::value::Sink
 {
-    use record_query::value::Source;
-
-    let query = rq::query::Query::parse(if args.arg_query.is_empty() {
+    let query = try!(rq::query::Query::parse(if args.arg_query.is_empty() {
         "id"
     } else {
         &args.arg_query
-    });
-    let query_context = rq::query::Context::new();
-    let mut results = try!(query.evaluate(&query_context, source));
-    while let Some(result) = try!(results.read()) {
-        try!(sink.write(result));
-    }
-    Ok(())
+    }));
+
+    record_query::run_query(&query, source, sink)
 }
 
 fn load_descriptors(paths: &rq::config::Paths)
@@ -191,9 +185,19 @@ fn log_error(args: &Args, error: rq::error::Error) {
             }
         },
         _ => {
-            error!("Encountered: {}", error);
+            let main_str = format!("{}", error);
+            let mut main_lines = main_str.lines();
+            error!("Encountered: {}", main_lines.next().unwrap());
+            for line in main_lines {
+                error!("  {}", line);
+            }
             for e in error.iter().skip(1) {
-                error!("Caused by: {}", e);
+                let sub_str = format!("{}", e);
+                let mut sub_lines = sub_str.lines();
+                error!("Caused by: {}", sub_lines.next().unwrap());
+                for line in sub_lines {
+                    error!("  {}", line);
+                }
             }
         },
     }
