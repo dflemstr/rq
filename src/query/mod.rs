@@ -113,17 +113,17 @@ mod test {
         let expected =
             Query(vec![Process("dostuff".to_owned(),
                                vec![Expression::Value(value::Value::String("foo".to_owned())),
-                                    Expression::Function(vec!["$".to_owned()],
-                                                         "$+3".to_owned()),
+                                    Expression::Function(vec!["x".to_owned()],
+                                                         "x+3".to_owned()),
                                     Expression::Function(vec!["a".to_owned(),
                                                               "b".to_owned(),
                                                               "c".to_owned()],
                                                          "a + b - c".to_owned())]),
                        Process("other".to_owned(),
                                vec![Expression::Value(value::Value::String("xyz".to_owned())),
-                                    Expression::Value(value::Value::I64(2))]),
+                                    Expression::Value(value::Value::from_f64(2.0))]),
                        Process("bar".to_owned(), vec![])]);
-        let actual = Query::parse("dostuff foo {$+3} (a, b, c) => {a + b - c} | other xyz 2 | bar").unwrap();
+        let actual = Query::parse("dostuff foo (x)=>{x+3} (a, b, c) => {a + b - c} | other xyz 2 | bar").unwrap();
 
         assert_eq!(expected, actual);
     }
@@ -167,7 +167,7 @@ mod test {
     #[test]
     fn parse_process_one_arg_integer() {
         let expected = Query(vec![Process("select".to_owned(),
-                                          vec![Expression::Value(value::Value::I64(52))])]);
+                                          vec![Expression::Value(value::Value::from_f64(52.0))])]);
         let actual = Query::parse("select 52").unwrap();
 
         assert_eq!(expected, actual);
@@ -176,17 +176,8 @@ mod test {
     #[test]
     fn parse_process_one_arg_negative_integer() {
         let expected = Query(vec![Process("select".to_owned(),
-                                          vec![Expression::Value(value::Value::I64(-52))])]);
+                                          vec![Expression::Value(value::Value::from_f64(-52.0))])]);
         let actual = Query::parse("select -52").unwrap();
-
-        assert_eq!(expected, actual);
-    }
-
-    #[test]
-    fn parse_process_one_arg_negative_integer_spaced() {
-        let expected = Query(vec![Process("select".to_owned(),
-                                          vec![Expression::Value(value::Value::I64(-52))])]);
-        let actual = Query::parse("select - 52").unwrap();
 
         assert_eq!(expected, actual);
     }
@@ -226,29 +217,9 @@ mod test {
     #[test]
     fn parse_process_function_arg() {
         let expected = Query(vec![Process("map".to_owned(),
-                                          vec![Expression::Function(vec!["$".to_owned()],
-                                                                    "2 + $".to_owned())])]);
-        let actual = Query::parse("map {2 + $}").unwrap();
-
-        assert_eq!(expected, actual);
-    }
-
-    #[test]
-    fn parse_process_function_arg_single_named_param() {
-        let expected = Query(vec![Process("map".to_owned(),
-                                          vec![Expression::Function(vec!["a".to_owned()],
-                                                                    "2 + a".to_owned())])]);
-        let actual = Query::parse("map a => {2 + a}").unwrap();
-
-        assert_eq!(expected, actual);
-    }
-
-    #[test]
-    fn parse_process_function_arg_single_named_param_parens() {
-        let expected = Query(vec![Process("map".to_owned(),
-                                          vec![Expression::Function(vec!["a".to_owned()],
-                                                                    "2 + a".to_owned())])]);
-        let actual = Query::parse("map (a) => {2 + a}").unwrap();
+                                          vec![Expression::Function(vec!["x".to_owned()],
+                                                                    "2 + x".to_owned())])]);
+        let actual = Query::parse("map (x)=>{2 + x}").unwrap();
 
         assert_eq!(expected, actual);
     }

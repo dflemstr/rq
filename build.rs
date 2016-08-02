@@ -38,6 +38,10 @@ fn gen_js_doctests() -> io::Result<()> {
         let args = cap.at(3).unwrap().trim();
         let output = cap.at(4).unwrap().replace("(empty)", "").trim().to_owned();
 
+        if output.contains("(not tested)") {
+            continue;
+        }
+
         let ordinal = ordinals.entry(process).or_insert(0);
         *ordinal += 1;
 
