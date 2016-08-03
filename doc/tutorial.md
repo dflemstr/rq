@@ -96,6 +96,14 @@ A full list of processes is available
 [here](http://dflemstr.github.io/rq/js/global.html).  The most
 commonly used processes are:
 
+**Pass-through**
+
+  - [`id`](http://dflemstr.github.io/rq/js/global.html#id)
+    Passes through each input unmodified (this is the default process)
+  - [`tee`](http://dflemstr.github.io/rq/js/global.html#tee)
+    Like `id`, but logs each passed through value.  The arguments can
+    be used to give the log lines a tag.
+
 **Path traversal**
 
   - [`select`](http://dflemstr.github.io/rq/js/global.html#select)
