@@ -1,4 +1,4 @@
-/**
+/*
  * This file contains the rq Javascript API implementation.  It's used by for example `prelude.js`.
  */
 

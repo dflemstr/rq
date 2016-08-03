@@ -1,4 +1,4 @@
-/**
+/*
  * This is the rq standard library as implemented in Javascript.
  *
  * Note that the examples in this file are doctests.  Any line with the format:
