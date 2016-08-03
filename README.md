@@ -1,10 +1,11 @@
-# rq [![Build Status](https://travis-ci.org/dflemstr/rq.svg?branch=master)](https://travis-ci.org/dflemstr/rq)
+# `rq` [![Build Status](https://travis-ci.org/dflemstr/rq.svg?branch=master)](https://travis-ci.org/dflemstr/rq)
 
-**tl;dr:**
+This is the home of the tool called `rq` (record query).
 
-    curl -sSLf sh.dflemstr.name/rq | sh
+  - [Demo](doc/demo.md)
+  - [Tutorial](doc/tutorial.md)
 
-This is the home of the tool called `rq` (record query).  I created it
+I created it
 out of frustration while manipulating data records on hundreds of
 different machines and never having the right tools available.
 
