@@ -38,6 +38,28 @@ function ci-test {
     cargo test --target="$TARGET"
 }
 
+function ci-coverage {
+    wget https://github.com/SimonKagstrom/kcov/archive/master.tar.gz
+    tar xzf master.tar.gz
+    cd kcov-master
+    mkdir build
+    cd build
+    cmake ..
+    make
+    sudo make install
+    cd ../..
+    rm -rf kcov-master
+
+    for file in target/debug/rq-* target/debug/lib-*
+    do
+        mkdir -p "target/cov/$(basename $file)"
+        kcov --exclude-pattern=/.cargo,/usr/lib --verify "target/cov/$(basename $file)" "$file"
+    done
+
+    bash <(curl -s https://codecov.io/bash)
+    echo "Uploaded code coverage"
+}
+
 function ci-deploy {
     cargo build --release --target="$TARGET"
     mkdir -p "target/deploy/$TARGET"
@@ -65,6 +87,8 @@ case "$1" in
         shift; ci-install "$@" ;;
     test )
         shift; ci-test "$@" ;;
+    coverage )
+        shift; for-target x86_64-unknown-linux-gnu ci-coverage "$@" ;;
     deploy )
         shift; ci-deploy "$@" ;;
     deploy-gh-pages )
