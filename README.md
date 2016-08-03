@@ -6,7 +6,9 @@ formats.  It was created with love out of the best parts of Rust, C
 and Javascript, and is distributed as a dependency-free binary on many
 operating systems and architectures.
 
-  - [Demo](doc/demo.md)
-  - [Tutorial](doc/tutorial.md)
+  - [Demo](doc/demo.md) — Showing off misc. `rq` features.
+  - [Tutorial](doc/tutorial.md) — Learn `rq` from scratch.
   - [Process quick reference](https://dflemstr.github.io/rq/js/global.html)
-  - [Development](doc/development.md)
+    — Quickly find a process you need.
+  - [Protobuf](doc/protobuf.md) — Configure Protobuf specifics.
+  - [Development](doc/development.md) — Contribute to `rq`.
