@@ -33,7 +33,7 @@ See https://github.com/dflemstr/rq for in-depth documentation.
 
 Usage:
   rq (--help|--version)
-  rq [-j|-c|-p <type>] [-J|-C|-P <type>] [-l <spec>|-q] [--trace] [--] [<query>]
+  rq [-h|-j|-c|-p <type>] [-H|-J|-C|-P <type>] [-l <spec>|-q] [--trace] [--] [<query>]
   rq [-l <spec>|-q] [--trace] protobuf add <schema> [--base <path>]
 
 Options:
@@ -42,6 +42,10 @@ Options:
   --version
       Show the program name and version.
 
+  -h, --input-hjson
+      Input is a HJSON document.
+  -H, --output-hjson
+      Output should be formatted as HJSON values.
   -j, --input-json
       Input is white-space separated JSON values.
   -J, --output-json
@@ -124,6 +128,9 @@ fn run(args: &Args, paths: &rq::config::Paths) -> rq::error::Result<()> {
     } else if args.flag_input_cbor {
         let source = rq::value::cbor::source(&mut input);
         run_source(args, paths, source)
+    } else if args.flag_input_hjson {
+        let source = try!(rq::value::hjson::source(&mut input));
+        run_source(args, paths, source)
     } else {
         let source = rq::value::json::source(&mut input);
         run_source(args, paths, source)
@@ -139,6 +146,9 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
         Err(rq::error::Error::unimplemented("protobuf serialization".to_owned()))
     } else if args.flag_output_cbor {
         let sink = rq::value::cbor::sink(&mut output);
+        run_source_sink(args, paths, source, sink)
+    } else if args.flag_output_hjson {
+        let sink = rq::value::hjson::sink(&mut output);
         run_source_sink(args, paths, source, sink)
     } else {
         let sink = rq::value::json::sink(&mut output);

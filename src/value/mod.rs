@@ -9,6 +9,7 @@ use serde_json;
 use error;
 
 pub mod cbor;
+pub mod hjson;
 pub mod json;
 pub mod protobuf;
 

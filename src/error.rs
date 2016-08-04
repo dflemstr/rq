@@ -5,6 +5,7 @@ use duk;
 use glob;
 use protobuf;
 use serde_cbor;
+use serde_hjson;
 use serde_json;
 use serde_protobuf;
 use xdg_basedir;
@@ -23,6 +24,7 @@ error_chain! {
         string::FromUtf8Error, Utf8, "UTF-8 error";
         protobuf::ProtobufError, NativeProtobuf, "native protobuf error";
         serde_cbor::Error, Cbor, "CBOR error";
+        serde_hjson::Error, Hjson, "HJSON error";
         serde_json::Error, Json, "JSON error";
         serde_protobuf::Error, Protobuf, "protobuf error";
         xdg_basedir::Error, XdgBasedir, "XDG basedir error";
