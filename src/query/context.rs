@@ -12,11 +12,10 @@ use value;
 const API_JS: &'static str = include_str!("../api.js");
 const PRELUDE_JS: &'static str = include_str!("../prelude.js");
 
-const MODULES: &'static [(&'static str, &'static str)] = &[
-    ("jsonpath.js", include_str!("../js/jsonpath.min.js")),
-    ("lodash.js", include_str!("../js/lodash.custom.min.js")),
-    ("minieval.js", include_str!("../js/minieval.min.js")),
-];
+const MODULES: &'static [(&'static str, &'static str)] =
+    &[("jsonpath.js", include_str!("../js/jsonpath.min.js")),
+      ("lodash.js", include_str!("../js/lodash.custom.min.js")),
+      ("minieval.js", include_str!("../js/minieval.min.js"))];
 
 #[derive(Debug)]
 pub struct Context {
@@ -88,7 +87,7 @@ impl Context {
         for &(name, data) in MODULES {
             if &canonical_name == name {
                 debug!("Loading JS module {:?}", name);
-                return Some(data.to_owned())
+                return Some(data.to_owned());
             }
         }
         warn!("Could not load JS module {:?}", canonical_name);
@@ -141,11 +140,13 @@ impl<'a> Process<'a> {
                         try!(array.call_method("push", &[&v]));
                     },
                     &query::Expression::Function(ref args, ref body) => {
-                        let args = duk::Value::Array(args.iter().map(|arg| duk::Value::String(arg.clone())).collect());
+                        let args = duk::Value::Array(args.iter()
+                            .map(|arg| duk::Value::String(arg.clone()))
+                            .collect());
                         let body = duk::Value::String(body.clone());
                         let function = try!(create_function.call(&[&args, &body]));
                         try!(array.call_method("push", &[&function]));
-                    }
+                    },
                 }
             }
 

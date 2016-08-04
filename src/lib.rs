@@ -23,7 +23,10 @@ pub mod proto_index;
 pub mod query;
 pub mod value;
 
-pub fn run_query<I, O>(query: &query::Query, source: I, mut sink: O) -> error::Result<()> where I: value::Source, O: value::Sink {
+pub fn run_query<I, O>(query: &query::Query, source: I, mut sink: O) -> error::Result<()>
+    where I: value::Source,
+          O: value::Sink
+{
     let query_context = query::Context::new();
 
     let mut results = try!(query.evaluate(&query_context, source));

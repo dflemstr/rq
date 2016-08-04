@@ -123,7 +123,9 @@ mod test {
                                vec![Expression::Value(value::Value::String("xyz".to_owned())),
                                     Expression::Value(value::Value::from_f64(2.0))]),
                        Process("bar".to_owned(), vec![])]);
-        let actual = Query::parse("dostuff foo (x)=>{x+3} (a, b, c) => {a + b - c} | other xyz 2 | bar").unwrap();
+        let actual = Query::parse("dostuff foo (x)=>{x+3} (a, b, c) => {a + b - c} | other xyz 2 \
+                                   | bar")
+            .unwrap();
 
         assert_eq!(expected, actual);
     }

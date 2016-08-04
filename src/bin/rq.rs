@@ -82,9 +82,9 @@ Options:
 
 fn main() {
     let args: Args = Args::docopt()
-                         .version(Some(VERSION.to_owned()))
-                         .decode()
-                         .unwrap_or_else(|e| e.exit());
+        .version(Some(VERSION.to_owned()))
+        .decode()
+        .unwrap_or_else(|e| e.exit());
 
     setup_log(args.flag_log.as_ref().map(String::as_ref), args.flag_quiet);
 
