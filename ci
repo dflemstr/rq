@@ -50,10 +50,9 @@ function ci-coverage {
     cd ../..
     rm -rf kcov-master
 
-    for file in target/$TARGET/debug/rq-* target/$TARGET/debug/record_query-*
+    for file in target/$TARGET/debug/rq-* target/$TARGET/debug/record_query-* target/$TARGET/debug/lib-*
     do
-        mkdir -p "target/cov/$(basename "$file")"
-        kcov --exclude-pattern=/.cargo,/usr/lib --verify "target/cov/$(basename "$file")" "$file"
+        kcov --exclude-pattern=/.cargo,/usr/lib --verify "target/cov" "$file"
     done
 
     bash <(curl -s https://codecov.io/bash)

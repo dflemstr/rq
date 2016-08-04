@@ -24,6 +24,7 @@ addons:
       - cmake
       - gcc
       - binutils-dev
+      - libiberty-dev
       - gcc-multilib
 
 before_install:
