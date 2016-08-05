@@ -11,6 +11,7 @@ extern crate ordered_float;
 #[macro_use]
 extern crate pest;
 extern crate protobuf;
+extern crate rmp;
 extern crate serde;
 extern crate serde_cbor;
 extern crate serde_hjson;

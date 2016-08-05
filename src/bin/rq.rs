@@ -33,7 +33,7 @@ See https://github.com/dflemstr/rq for in-depth documentation.
 
 Usage:
   rq (--help|--version)
-  rq [-h|-j|-c|-p <type>] [-H|-J|-C|-P <type>] [-l <spec>|-q] [--trace] [--] [<query>]
+  rq [-j|-c|-h|-m|-p <type>] [-J|-C|-H|-M|-P <type>] [-l <spec>|-q] [--trace] [--] [<query>]
   rq [-l <spec>|-q] [--trace] protobuf add <schema> [--base <path>]
 
 Options:
@@ -42,10 +42,6 @@ Options:
   --version
       Show the program name and version.
 
-  -h, --input-hjson
-      Input is a HJSON document.
-  -H, --output-hjson
-      Output should be formatted as HJSON values.
   -j, --input-json
       Input is white-space separated JSON values.
   -J, --output-json
@@ -54,6 +50,14 @@ Options:
       Input is a series of CBOR values.
   -C, --output-cbor
       Output is a series of CBOR values.
+  -h, --input-hjson
+      Input is a HJSON document.
+  -H, --output-hjson
+      Output should be formatted as HJSON values.
+  -m, --input-message-pack
+      Input is formatted as MessagePack.
+  -M, --output-message-pack
+      Output should be formatted as MessagePack values.
   -p <type>, --input-protobuf <type>
       Input is a single protocol buffer object.  The argument refers to the
       fully qualified name of the message type (including the leading '.').
@@ -128,6 +132,9 @@ fn run(args: &Args, paths: &rq::config::Paths) -> rq::error::Result<()> {
     } else if args.flag_input_cbor {
         let source = rq::value::cbor::source(&mut input);
         run_source(args, paths, source)
+    } else if args.flag_input_message_pack {
+        let source = rq::value::messagepack::source(&mut input);
+        run_source(args, paths, source)
     } else if args.flag_input_hjson {
         let source = try!(rq::value::hjson::source(&mut input));
         run_source(args, paths, source)
@@ -146,6 +153,9 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
         Err(rq::error::Error::unimplemented("protobuf serialization".to_owned()))
     } else if args.flag_output_cbor {
         let sink = rq::value::cbor::sink(&mut output);
+        run_source_sink(args, paths, source, sink)
+    } else if args.flag_output_message_pack {
+        let sink = rq::value::messagepack::sink(&mut output);
         run_source_sink(args, paths, source, sink)
     } else if args.flag_output_hjson {
         let sink = rq::value::hjson::sink(&mut output);

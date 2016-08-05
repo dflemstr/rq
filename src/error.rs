@@ -4,6 +4,7 @@ use std::string;
 use duk;
 use glob;
 use protobuf;
+use rmp;
 use serde_cbor;
 use serde_hjson;
 use serde_json;
@@ -23,6 +24,8 @@ error_chain! {
         io::Error, IO, "IO error";
         string::FromUtf8Error, Utf8, "UTF-8 error";
         protobuf::ProtobufError, NativeProtobuf, "native protobuf error";
+        rmp::decode::value::Error, MessagePackDecode, "MessagePack decode error";
+        rmp::encode::value::Error, MessagePackEncode, "MessagePack encode error";
         serde_cbor::Error, Cbor, "CBOR error";
         serde_hjson::Error, Hjson, "HJSON error";
         serde_json::Error, Json, "JSON error";

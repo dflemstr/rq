@@ -11,6 +11,7 @@ use error;
 pub mod cbor;
 pub mod hjson;
 pub mod json;
+pub mod messagepack;
 pub mod protobuf;
 
 #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
