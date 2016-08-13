@@ -12,7 +12,7 @@
 // Search: "_\.(\w+)\(\[([^])]+?)\](?:, ([^)]+))?\);\n \* // => \[(.*)\]$"
 // Replace: "$2 => $1($3) => $4"
 
-var _ = require('lodash.js');
+var _ = require('lodash');
 
 /**
  * Passes through all of the values it sees untouched.
@@ -136,7 +136,7 @@ function spread() {
  * "a" "b" "c" "d" → chunk 3 → ["a", "b", "c"] ["d"]
  */
 function chunk(size) {
-  this.spread(require('lodash.js').chunk(this.collect(), size));
+  this.spread(require('lodash').chunk(this.collect(), size));
 }
 
 /**
@@ -148,7 +148,7 @@ function chunk(size) {
  * 0 1 false 2 "" 3 → compact → 1 2 3
  */
 function compact() {
-  this.spread(require('lodash.js').compact(this.collect()));
+  this.spread(require('lodash').compact(this.collect()));
 }
 
 /**
@@ -159,7 +159,7 @@ function compact() {
  * [1] 2 [3] [[4]] → concat → [1, 2, 3, [4]]
  */
 function concat() {
-  this.push(require('lodash.js').concat.apply(null, this.collect()));
+  this.push(require('lodash').concat.apply(null, this.collect()));
 }
 
 /**
@@ -175,7 +175,7 @@ function concat() {
  * 2 1 → difference [2, 3] → 1
  */
 function difference(values) {
-  this.spread(require('lodash.js').difference(this.collect(), values));
+  this.spread(require('lodash').difference(this.collect(), values));
 }
 
 /**
@@ -193,7 +193,7 @@ function difference(values) {
  * {"x": 2} {"x": 1} → differenceBy [{"x": 1}] "x" → {"x": 2}
  */
 function differenceBy(values, iteratee) {
-  this.spread(require('lodash.js').differenceBy(this.collect(), values, iteratee));
+  this.spread(require('lodash').differenceBy(this.collect(), values, iteratee));
 }
 
 /**
@@ -208,7 +208,7 @@ function differenceBy(values, iteratee) {
  * {"x": 1, "y": 2} {"x": 2, "y": 1} → differenceWith [{"x": 1, "y": 2}] (a, b)=>{_.isEqual(a, b)} → {"x": 2, "y": 1}
  */
 function differenceWith(values, comparator) {
-  this.spread(require('lodash.js').differenceWith(this.collect(), values, comparator));
+  this.spread(require('lodash').differenceWith(this.collect(), values, comparator));
 }
 
 /**
@@ -223,7 +223,7 @@ function differenceWith(values, comparator) {
  * 1 2 3 → drop 0 → 1 2 3
  */
 function drop(n) {
-  this.spread(require('lodash.js').drop(this.collect(), n));
+  this.spread(require('lodash').drop(this.collect(), n));
 }
 
 /**
@@ -238,7 +238,7 @@ function drop(n) {
  * 1 2 3 → dropRight 0 → 1 2 3
  */
 function dropRight(n) {
-  this.spread(require('lodash.js').dropRight(this.collect(), n));
+  this.spread(require('lodash').dropRight(this.collect(), n));
 }
 
 /**
@@ -258,7 +258,7 @@ function dropRight(n) {
  * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → dropRightWhile "a" → {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false}
  */
 function dropRightWhile(predicate) {
-  this.spread(require('lodash.js').dropRightWhile(this.collect(), predicate));
+  this.spread(require('lodash').dropRightWhile(this.collect(), predicate));
 }
 
 /**
@@ -279,7 +279,7 @@ function dropRightWhile(predicate) {
  * {"u": "b", "a": false} {"u": "f", "a": false} {"u": "p", "a": true} → dropWhile "a" → {"u": "b", "a": false} {"u": "f", "a": false} {"u": "p", "a": true}
  */
 function dropWhile(predicate) {
-  this.spread(require('lodash.js').dropWhile(this.collect(), predicate));
+  this.spread(require('lodash').dropWhile(this.collect(), predicate));
 }
 
 /**
@@ -294,7 +294,7 @@ function dropWhile(predicate) {
  * 4 6 8 10 → fill "*" 1 3 → 4 "*" "*" 10
  */
 function fill(value, start, end) {
-  this.spread(require('lodash.js').fill(this.collect(), value, start, end));
+  this.spread(require('lodash').fill(this.collect(), value, start, end));
 }
 
 /**
@@ -315,7 +315,7 @@ function fill(value, start, end) {
  * {"u": "b", "a": false} {"u": "f", "a": false} {"u": "p", "a": true} → findIndex "a" → 2
  */
 function findIndex(predicate, fromIndex) {
-  this.push(require('lodash.js').findIndex(this.collect(), predicate, fromIndex));
+  this.push(require('lodash').findIndex(this.collect(), predicate, fromIndex));
 }
 
 /**
@@ -336,7 +336,7 @@ function findIndex(predicate, fromIndex) {
  * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → findLastIndex "a" → 0
  */
 function findLastIndex(predicate, fromIndex) {
-  this.push(require('lodash.js').findLastIndex(this.collect(), predicate, fromIndex));
+  this.push(require('lodash').findLastIndex(this.collect(), predicate, fromIndex));
 }
 
 /**
@@ -347,7 +347,7 @@ function findLastIndex(predicate, fromIndex) {
  * 1  [2, [3, [4]], 5] → flatten → 1 2 [3, [4]] 5
  */
 function flatten() {
-  this.spread(require('lodash.js').flatten(this.collect()));
+  this.spread(require('lodash').flatten(this.collect()));
 }
 
 /**
@@ -358,7 +358,7 @@ function flatten() {
  * 1 [2, [3, [4]], 5] → flattenDeep → 1 2 3 4 5
  */
 function flattenDeep() {
-  this.spread(require('lodash.js').flattenDeep(this.collect()));
+  this.spread(require('lodash').flattenDeep(this.collect()));
 }
 
 /**
@@ -371,7 +371,7 @@ function flattenDeep() {
  * 1 [2, [3, [4]], 5] → flattenDepth 2 → 1 2 3 [4] 5
  */
 function flattenDepth(depth) {
-  this.spread(require('lodash.js').flattenDepth(this.collect(), depth));
+  this.spread(require('lodash').flattenDepth(this.collect(), depth));
 }
 
 /**
@@ -383,7 +383,7 @@ function flattenDepth(depth) {
  * ["a", 1] ["b", 2] → fromPairs → {"a": 1, "b": 2}
  */
 function fromPairs() {
-  this.push(require('lodash.js').fromPairs(this.collect()));
+  this.push(require('lodash').fromPairs(this.collect()));
 }
 
 /**
@@ -396,7 +396,7 @@ function fromPairs() {
  * (empty) → head → null
  */
 function head() {
-  this.push(require('lodash.js').head(this.collect()));
+  this.push(require('lodash').head(this.collect()));
 }
 
 /**
@@ -414,7 +414,7 @@ function head() {
  * 1 2 1 2 → indexOf 2 2 → 3
  */
 function indexOf(value, fromIndex) {
-  this.push(require('lodash.js').indexOf(this.collect(), value, fromIndex));
+  this.push(require('lodash').indexOf(this.collect(), value, fromIndex));
 }
 
 /**
@@ -425,7 +425,7 @@ function indexOf(value, fromIndex) {
  * 1 2 3 → initial → 1 2
  */
 function initial() {
-  this.spread(require('lodash.js').initial(this.collect()));
+  this.spread(require('lodash').initial(this.collect()));
 }
 
 /**
@@ -440,7 +440,7 @@ function initial() {
  * 2 1 → intersection [2, 3] → 2
  */
 function intersection(values) {
-  this.spread(require('lodash.js').intersection(this.collect(), values));
+  this.spread(require('lodash').intersection(this.collect(), values));
 }
 
 /**
@@ -458,7 +458,7 @@ function intersection(values) {
  * {"x": 1} → intersectionBy [{"x": 2}, {"x": 1}] "x" → {"x": 1}
  */
 function intersectionBy(values, iteratee) {
-  this.spread(require('lodash.js').intersectionBy(this.collect(), values, iteratee));
+  this.spread(require('lodash').intersectionBy(this.collect(), values, iteratee));
 }
 
 /**
@@ -474,7 +474,7 @@ function intersectionBy(values, iteratee) {
  * {"x": 1, "y": 2} {"x": 2, "y": 1} → intersectionWith [{"x": 1, "y": 1}, {"x": 1, "y": 2}] (a, b)=>{_.isEqual(a, b)} → {"x": 1, "y": 2}
  */
 function intersectionWith(values, comparator) {
-  this.spread(require('lodash.js').intersectionWith(this.collect(), values, comparator));
+  this.spread(require('lodash').intersectionWith(this.collect(), values, comparator));
 }
 
 /**
@@ -487,7 +487,7 @@ function intersectionWith(values, comparator) {
  * "a" "b" "c" → join "~" → "a~b~c"
  */
 function join(separator) {
-  this.push(require('lodash.js').join(this.collect(), separator));
+  this.push(require('lodash').join(this.collect(), separator));
 }
 
 /**
@@ -498,7 +498,7 @@ function join(separator) {
  * 1 2 3 → last → 3
  */
 function last() {
-  this.push(require('lodash.js').last(this.collect()));
+  this.push(require('lodash').last(this.collect()));
 }
 
 /**
@@ -513,7 +513,7 @@ function last() {
  * 1 2 1 2 → lastIndexOf 2 2 → 1
  */
 function lastIndexOf(value, fromIndex) {
-  this.push(require('lodash.js').lastIndexOf(this.collect(), value, fromIndex));
+  this.push(require('lodash').lastIndexOf(this.collect(), value, fromIndex));
 }
 
 /**
@@ -527,7 +527,7 @@ function lastIndexOf(value, fromIndex) {
  * "a" "b" "c" "d" → nth -2 → "c"
  */
 function nth(n) {
-  this.push(require('lodash.js').nth(this.collect(), n));
+  this.push(require('lodash').nth(this.collect(), n));
 }
 
 // pull, pullAll, pullAllBy, pullAllWith, pullAt, remove don't make sense
@@ -541,7 +541,7 @@ function nth(n) {
  * 1 2 3 → reverse → 3 2 1
  */
 function reverse() {
-  this.spread(require('lodash.js').reverse(this.collect()));
+  this.spread(require('lodash').reverse(this.collect()));
 }
 
 /**
@@ -554,7 +554,7 @@ function reverse() {
  * 1 2 3 4 → slice 1 3 → 2 3
  */
 function slice(start, end) {
-  this.spread(require('lodash.js').slice(this.collect(), start, end));
+  this.spread(require('lodash').slice(this.collect(), start, end));
 }
 
 /**
@@ -568,7 +568,7 @@ function slice(start, end) {
  * 30 50 → sortedIndex 40 → 1
  */
 function sortedIndex(value) {
-  this.push(require('lodash.js').sortedIndex(this.collect(), value));
+  this.push(require('lodash').sortedIndex(this.collect(), value));
 }
 
 /**
@@ -587,7 +587,7 @@ function sortedIndex(value) {
  * {"x": 4} {"x": 5} → sortedIndexBy {"x": 4} "x" → 0
  */
 function sortedIndexBy(value, iteratee) {
-  this.push(require('lodash.js').sortedIndexBy(this.collect(), value, iteratee));
+  this.push(require('lodash').sortedIndexBy(this.collect(), value, iteratee));
 }
 
 /**
@@ -600,7 +600,7 @@ function sortedIndexBy(value, iteratee) {
  * 4 5 5 5 6 → sortedIndexOf 5 → 1
  */
 function sortedIndexOf(value) {
-  this.push(require('lodash.js').sortedIndexOf(this.collect(), value));
+  this.push(require('lodash').sortedIndexOf(this.collect(), value));
 }
 
 /**
@@ -615,7 +615,7 @@ function sortedIndexOf(value) {
  * 4 5 5 5 6 → sortedLastIndex 5 → 4
  */
 function sortedLastIndex(value) {
-  this.push(require('lodash.js').sortedLastIndex(this.collect(), value));
+  this.push(require('lodash').sortedLastIndex(this.collect(), value));
 }
 
 /**
@@ -634,7 +634,7 @@ function sortedLastIndex(value) {
  * {"x": 4} {"x": 5} → sortedLastIndexBy {"x": 4} "x" → 1
  */
 function sortedLastIndexBy(value, iteratee) {
-  this.push(require('lodash.js').sortedLastIndexBy(this.collect(), value, iteratee));
+  this.push(require('lodash').sortedLastIndexBy(this.collect(), value, iteratee));
 }
 
 /**
@@ -647,7 +647,7 @@ function sortedLastIndexBy(value, iteratee) {
  * 4 5 5 5 6 → sortedLastIndexOf 5 → 3
  */
 function sortedLastIndexOf(value) {
-  this.push(require('lodash.js').sortedLastIndexOf(this.collect(), value));
+  this.push(require('lodash').sortedLastIndexOf(this.collect(), value));
 }
 
 /**
@@ -659,7 +659,7 @@ function sortedLastIndexOf(value) {
  * 1 1 2 → sortedUniq → 1 2
  */
 function sortedUniq() {
-  this.spread(require('lodash.js').sortedUniq(this.collect()));
+  this.spread(require('lodash').sortedUniq(this.collect()));
 }
 
 /**
@@ -672,7 +672,7 @@ function sortedUniq() {
  * 1.1 1.2 2.3 2.4 → sortedUniqBy (x)=>{Math.floor(x)} → 1.1 2.3
  */
 function sortedUniqBy(iteratee) {
-  this.spread(require('lodash.js').sortedUniqBy(this.collect(), iteratee));
+  this.spread(require('lodash').sortedUniqBy(this.collect(), iteratee));
 }
 
 /**
@@ -683,7 +683,7 @@ function sortedUniqBy(iteratee) {
  * 1 2 3 → tail → 2 3
  */
 function tail() {
-  this.spread(require('lodash.js').tail(this.collect()));
+  this.spread(require('lodash').tail(this.collect()));
 }
 
 /**
@@ -699,7 +699,7 @@ function tail() {
  * 1 2 3 → take 0 → (empty)
  */
 function take(n) {
-  this.spread(require('lodash.js').take(this.collect(), n));
+  this.spread(require('lodash').take(this.collect(), n));
 }
 
 /**
@@ -715,7 +715,7 @@ function take(n) {
  * 1 2 3 → takeRight 0 → (empty)
  */
 function takeRight(n) {
-  this.spread(require('lodash.js').takeRight(this.collect(), n));
+  this.spread(require('lodash').takeRight(this.collect(), n));
 }
 
 /**
@@ -736,7 +736,7 @@ function takeRight(n) {
  * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → takeRightWhile "a" → (empty)
  */
 function takeRightWhile(predicate) {
-  this.spread(require('lodash.js').takeRightWhile(this.collect(), predicate));
+  this.spread(require('lodash').takeRightWhile(this.collect(), predicate));
 }
 
 /**
@@ -757,7 +757,7 @@ function takeRightWhile(predicate) {
  * {"u": "b", "a": false} {"u": "f", "a": false} {"u": "p", "a": true} → takeWhile "a" → (empty)
  */
 function takeWhile(predicate) {
-  this.spread(require('lodash.js').takeWhile(this.collect(), predicate));
+  this.spread(require('lodash').takeWhile(this.collect(), predicate));
 }
 
 /**
@@ -771,7 +771,7 @@ function takeWhile(predicate) {
  * 2 → union [1, 2] → 2 1
  */
 function union(values) {
-  this.spread(require('lodash.js').union(this.collect(), values));
+  this.spread(require('lodash').union(this.collect(), values));
 }
 
 /**
@@ -790,7 +790,7 @@ function union(values) {
  * {"x": 1} → unionBy [{"x": 2}, {"x": 1}] "x" → {"x": 1} {"x": 2}
  */
 function unionBy(values, iteratee) {
-  this.spread(require('lodash.js').unionBy(this.collect(), values, iteratee));
+  this.spread(require('lodash').unionBy(this.collect(), values, iteratee));
 }
 
 /**
@@ -805,7 +805,7 @@ function unionBy(values, iteratee) {
  * {"x": 1, "y": 2} {"x": 2, "y": 1} → unionWith [{"x": 1, "y": 1}, {"x": 1, "y": 2}] (a, b)=>{_.isEqual(a, b)} → {"x": 1, "y": 2} {"x": 2, "y": 1} {"x": 1, "y": 1}
  */
 function unionWith(values, comparator) {
-  this.spread(require('lodash.js').unionWith(this.collect(), values, comparator));
+  this.spread(require('lodash').unionWith(this.collect(), values, comparator));
 }
 
 /**
@@ -819,7 +819,7 @@ function unionWith(values, comparator) {
  * 2 1 2 → uniq → 2 1
  */
 function uniq() {
-  this.spread(require('lodash.js').uniq(this.collect()));
+  this.spread(require('lodash').uniq(this.collect()));
 }
 
 /**
@@ -836,7 +836,7 @@ function uniq() {
  * {"x": 1} {"x": 2} {"x": 1} → uniqBy "x" → {"x": 1} {"x": 2}
  */
 function uniqBy(iteratee) {
-  this.spread(require('lodash.js').uniqBy(this.collect(), iteratee));
+  this.spread(require('lodash').uniqBy(this.collect(), iteratee));
 }
 
 /**
@@ -850,7 +850,7 @@ function uniqBy(iteratee) {
  * {"x": 1, "y": 2} {"x": 2, "y": 1} {"x": 1, "y": 2} → uniqWith (a, b)=>{_.isEqual(a, b)} → {"x": 1, "y": 2} {"x": 2, "y": 1}
  */
 function uniqWith(comparator) {
-  this.spread(require('lodash.js').uniqWith(this.collect(), comparator));
+  this.spread(require('lodash').uniqWith(this.collect(), comparator));
 }
 
 /**
@@ -863,7 +863,7 @@ function uniqWith(comparator) {
  * ["a", 1, true] ["b", 2, false] → unzip → ["a", "b"] [1, 2] [true, false]
  */
 function unzip() {
-  this.spread(require('lodash.js').unzip(this.collect()));
+  this.spread(require('lodash').unzip(this.collect()));
 }
 
 /**
@@ -878,7 +878,7 @@ function unzip() {
  * [1, 10, 100] [2, 20, 200] → unzipWith (a, b)=>{_.add(a, b)} → 3 30 300
  */
 function unzipWith(iteratee) {
-  this.spread(require('lodash.js').unzipWith(this.collect(), iteratee));
+  this.spread(require('lodash').unzipWith(this.collect(), iteratee));
 }
 
 /**
@@ -895,7 +895,7 @@ function unzipWith(iteratee) {
 function without(values) {
   var args = Array.prototype.slice.call(arguments);
   args.unshift(this.collect());
-  this.spread(require('lodash.js').without.apply(null, args));
+  this.spread(require('lodash').without.apply(null, args));
 }
 
 /**
@@ -911,7 +911,7 @@ function without(values) {
  * 2 1 → xor [2, 3] → 1 3
  */
 function xor(values) {
-  this.spread(require('lodash.js').xor(this.collect(), values));
+  this.spread(require('lodash').xor(this.collect(), values));
 }
 
 /**
@@ -930,7 +930,7 @@ function xor(values) {
  * {"x": 1} → xorBy [{"x": 2}, {"x": 1}] "x" → {"x": 2}
  */
 function xorBy(values, iteratee) {
-  this.spread(require('lodash.js').xorBy(this.collect(), values, iteratee));
+  this.spread(require('lodash').xorBy(this.collect(), values, iteratee));
 }
 
 /**
@@ -945,7 +945,7 @@ function xorBy(values, iteratee) {
  * {"x": 1, "y": 2} {"x": 2, "y": 1} → xorWith [{"x": 1, "y": 1}, {"x": 1, "y": 2}] (a, b)=>{_.isEqual(a, b)} → {"x": 2, "y": 1} {"x": 1, "y": 1}
  */
 function xorWith(values, comparator) {
-  this.spread(require('lodash.js').xorWith(this.collect(), values, comparator));
+  this.spread(require('lodash').xorWith(this.collect(), values, comparator));
 }
 
 /**
@@ -958,7 +958,7 @@ function xorWith(values, comparator) {
  * ["a", "b"] [1, 2] [true, false] → zip → ["a", 1, true] ["b", 2, false]
  */
 function zip() {
-  this.spread(require('lodash.js').zip.apply(null, this.collect()));
+  this.spread(require('lodash').zip.apply(null, this.collect()));
 }
 
 // zipObject and zipObjectDeep don't make sense
@@ -980,7 +980,7 @@ function zipWith(iteratee) {
     args.push(this.value);
   }
   args.push(iteratee);
-  this.spread(require('lodash.js').zipWith.apply(null, args));
+  this.spread(require('lodash').zipWith.apply(null, args));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1007,7 +1007,7 @@ function zipWith(iteratee) {
  * {"u": "b", "g": 36, "a": false} {"u": "f", "g": 40, "a": false} → every "a" → false
  */
 function every(predicate) {
-  this.push(require('lodash.js').every(this.collect(), predicate));
+  this.push(require('lodash').every(this.collect(), predicate));
 }
 
 /**
@@ -1025,7 +1025,7 @@ function every(predicate) {
  * "one" "two" "three" → countBy "length"             → {"3": 2, "5": 1}
  */
 function countBy(iteratee) {
-  this.push(require('lodash.js').countBy(this.collect(), iteratee));
+  this.push(require('lodash').countBy(this.collect(), iteratee));
 }
 
 /**
@@ -1049,7 +1049,7 @@ function countBy(iteratee) {
  * {"u": "b", "g": 36, "a": true} {"u": "f", "g": 40, "a": false} → filter "a" → {"u": "b", "g": 36, "a": true}
  */
 function filter(predicate) {
-  this.spread(require('lodash.js').filter(this.collect(), predicate));
+  this.spread(require('lodash').filter(this.collect(), predicate));
 }
 
 /**
@@ -1071,7 +1071,7 @@ function filter(predicate) {
  * {"u": "b", "g": 36, "a": true} {"u": "f", "g": 40, "a": false} {"u": "p", "g": 1, "a": true} → find "a" → {"u": "b", "g": 36, "a": true}
  */
 function find(predicate, fromIndex) {
-  this.push(require('lodash.js').find(this.collect(), predicate, fromIndex));
+  this.push(require('lodash').find(this.collect(), predicate, fromIndex));
 }
 
 /**
@@ -1086,7 +1086,7 @@ function find(predicate, fromIndex) {
  * 1 2 3 4 → findLast (n)=>{n % 2 == 1} → 3
  */
 function findLast(predicate, fromIndex) {
-  this.push(require('lodash.js').findLast(this.collect(), predicate, fromIndex));
+  this.push(require('lodash').findLast(this.collect(), predicate, fromIndex));
 }
 /**
  * Creates a flattened array of values by running each element in the input stream
@@ -1100,7 +1100,7 @@ function findLast(predicate, fromIndex) {
  * 1 2 → flatMap (n)=>{[n, n]} → 1 1 2 2
  */
 function flatMap(iteratee) {
-  this.spread(require('lodash.js').flatMap(this.collect(), iteratee));
+  this.spread(require('lodash').flatMap(this.collect(), iteratee));
 }
 
 /**
@@ -1114,7 +1114,7 @@ function flatMap(iteratee) {
  * 1 2 → flatMapDeep (n)=>{[[[n, n]]]} → 1 1 2 2
  */
 function flatMapDeep(iteratee) {
-  this.spread(require('lodash.js').flatMapDeep(this.collect(), iteratee));
+  this.spread(require('lodash').flatMapDeep(this.collect(), iteratee));
 }
 
 /**
@@ -1129,7 +1129,7 @@ function flatMapDeep(iteratee) {
  * 1 2 → flatMapDepth (n)=>{[[[n, n]]]} 2 → [1, 1] [2, 2]
  */
 function flatMapDepth(iteratee, depth) {
-  this.spread(require('lodash.js').flatMapDepth(this.collect(), iteratee, depth));
+  this.spread(require('lodash').flatMapDepth(this.collect(), iteratee, depth));
 }
 
 // forEach and forEachRight make no sense
@@ -1151,7 +1151,7 @@ function flatMapDepth(iteratee, depth) {
  * "one" "two" "three" → groupBy "length" → {"3": ["one", "two"], "5": ["three"]}
  */
 function groupBy(iteratee) {
-  this.push(require('lodash.js').groupBy(this.collect(), iteratee));
+  this.push(require('lodash').groupBy(this.collect(), iteratee));
 }
 
 /**
@@ -1171,7 +1171,7 @@ function groupBy(iteratee) {
  * 1 2 3 → includes 1 2 → false
  */
 function includes(value, fromIndex) {
-  this.push(require('lodash.js').includes(this.collect(), value, fromIndex));
+  this.push(require('lodash').includes(this.collect(), value, fromIndex));
 }
 
 /**
@@ -1191,7 +1191,7 @@ function includes(value, fromIndex) {
 function invokeMap(path, args) {
   var fullArgs = Array.prototype.slice.call(arguments);
   fullArgs.unshift(this.collect());
-  this.spread(require('lodash.js').invokeMap.apply(null, fullArgs));
+  this.spread(require('lodash').invokeMap.apply(null, fullArgs));
 }
 
 /**
@@ -1208,7 +1208,7 @@ function invokeMap(path, args) {
  * {"dir": "left", "code": 97} {"dir": "right", "code": 100} → keyBy "dir" → {"left": {"dir": "left", "code": 97}, "right": {"dir": "right", "code": 100}}
  */
 function keyBy(iteratee) {
-  this.push(require('lodash.js').keyBy(this.collect(), iteratee));
+  this.push(require('lodash').keyBy(this.collect(), iteratee));
 }
 
 /**
@@ -1233,7 +1233,7 @@ function keyBy(iteratee) {
  * {"u": "b"} {"u": "f"} → map "u" → "b" "f"
  */
 function map(iteratee) {
-  this.spread(require('lodash.js').map(this.collect(), iteratee));
+  this.spread(require('lodash').map(this.collect(), iteratee));
 }
 
 /**
@@ -1251,7 +1251,7 @@ function map(iteratee) {
  * {"u": "f", "g": 48} {"u": "b", "g": 34} {"u": "f", "g": 40} {"u": "b", "g": 36} → orderBy ["u", "g"] ["asc", "desc"] → {"u": "b", "g": 36} {"u": "b", "g": 34} {"u": "f", "g": 48} {"u": "f", "g": 40}
  */
 function orderBy(iteratees, orders) {
-  this.spread(require('lodash.js').orderBy(this.collect(), iteratees, orders));
+  this.spread(require('lodash').orderBy(this.collect(), iteratees, orders));
 }
 
 /**
@@ -1272,7 +1272,7 @@ function orderBy(iteratees, orders) {
  * {"u": "b", "g": 36, "a": false} {"u": "f", "g": 40, "a": true} {"u": "p", "g": 1, "a": false} → partition "a" → [{"u": "f", "g": 40, "a": true}] [{"u": "b", "g": 36, "a": false}, {"u": "p", "g": 1, "a": false}]
  */
 function partition(predicate) {
-  this.spread(require('lodash.js').partition(this.collect(), predicate));
+  this.spread(require('lodash').partition(this.collect(), predicate));
 }
 
 /**
@@ -1298,7 +1298,7 @@ function partition(predicate) {
  * 1 2 → reduce (sum, n)=>{sum + n} 0 → 3
  */
 function reduce(iteratee, accumulator) {
-  this.push(require('lodash.js').reduce(this.collect(), iteratee, accumulator));
+  this.push(require('lodash').reduce(this.collect(), iteratee, accumulator));
 }
 
 /**
@@ -1313,7 +1313,7 @@ function reduce(iteratee, accumulator) {
  * [0, 1] [2, 3] [4, 5] → reduceRight (flattened, other)=>{flattened.concat(other)} [] → [4, 5, 2, 3, 0, 1]
  */
 function reduceRight(iteratee, accumulator) {
-  this.push(require('lodash.js').reduceRight(this.collect(), iteratee, accumulator));
+  this.push(require('lodash').reduceRight(this.collect(), iteratee, accumulator));
 }
 
 /**
@@ -1333,7 +1333,7 @@ function reduceRight(iteratee, accumulator) {
  * {"u": "b", "g": 36, "a": false} {"u": "f", "g": 40, "a": true} → reject "a" → {"u": "b", "g": 36, "a": false}
  */
 function reject(predicate) {
-  this.spread(require('lodash.js').reject(this.collect(), predicate));
+  this.spread(require('lodash').reject(this.collect(), predicate));
 }
 
 /**
@@ -1344,7 +1344,7 @@ function reject(predicate) {
  * 1 2 3 4 → sample → 2 (not tested)
  */
 function sample() {
-  this.push(require('lodash.js').sample(this.collect()));
+  this.push(require('lodash').sample(this.collect()));
 }
 
 /**
@@ -1359,7 +1359,7 @@ function sample() {
  * 1 2 3 → sampleSize 4 → 2 3 1 (not tested)
  */
 function sampleSize(n) {
-  this.push(require('lodash.js').sampleSize(this.collect(), n));
+  this.push(require('lodash').sampleSize(this.collect(), n));
 }
 
 /**
@@ -1371,7 +1371,7 @@ function sampleSize(n) {
  * 1 2 3 4 → shuffle → 4 1 3 2 (not tested)
  */
 function shuffle() {
-  this.spread(require('lodash.js').shuffle(this.collect()));
+  this.spread(require('lodash').shuffle(this.collect()));
 }
 
 /**
@@ -1382,7 +1382,7 @@ function shuffle() {
  * 1 2 3 → size → 3
  */
 function size() {
-  this.push(require('lodash.js').size(this.collect()));
+  this.push(require('lodash').size(this.collect()));
 }
 
 /**
@@ -1404,7 +1404,7 @@ function size() {
  * {"u": "b", "a": true} {"u": "f", "a": false} → some "a" → true
  */
 function some(predicate) {
-  this.push(require('lodash.js').some(this.collect(), predicate));
+  this.push(require('lodash').some(this.collect(), predicate));
 }
 
 /**
@@ -1422,7 +1422,7 @@ function some(predicate) {
  * {"u": "f", "g": 48} {"u": "b", "g": 36} {"u": "f", "g": 40} {"u": "b", "g": 34} → sortBy "u" (o)=>{o.a/10} → {"u": "b", "g": 36} {"u": "b", "g": 34} {"u": "f", "g": 48} {"u": "f", "g": 40}
  */
 function sortBy(iteratees) {
-  this.spread(require('lodash.js').orderBy(this.collect(), iteratees));
+  this.spread(require('lodash').orderBy(this.collect(), iteratees));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1440,7 +1440,7 @@ function sortBy(iteratees) {
  * (empty) → now → 1470104632000 (not tested)
  */
 function now() {
-  this.push(require('lodash.js').now());
+  this.push(require('lodash').now());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1465,7 +1465,7 @@ function now() {
  * (empty) → max → null
  */
 function max() {
-  this.push(require('lodash.js').max(this.collect()));
+  this.push(require('lodash').max(this.collect()));
 }
 
 /**
@@ -1481,7 +1481,7 @@ function max() {
  * {"n": 1} {"n": 2} → maxBy "n" → {"n": 2}
  */
 function maxBy(iteratee) {
-  this.push(require('lodash.js').maxBy(this.collect(), iteratee));
+  this.push(require('lodash').maxBy(this.collect(), iteratee));
 }
 
 /**
@@ -1493,7 +1493,7 @@ function maxBy(iteratee) {
  * (empty) → mean → null
  */
 function mean() {
-  this.push(require('lodash.js').mean(this.collect()));
+  this.push(require('lodash').mean(this.collect()));
 }
 
 /**
@@ -1509,7 +1509,7 @@ function mean() {
  * {"n": 4} {"n": 2} {"n": 8} {"n": 6} → meanBy "n" → 5
  */
 function meanBy(iteratee) {
-  this.push(require('lodash.js').meanBy(this.collect(), iteratee));
+  this.push(require('lodash').meanBy(this.collect(), iteratee));
 }
 
 /**
@@ -1522,7 +1522,7 @@ function meanBy(iteratee) {
  * (empty) → min → null
  */
 function min() {
-  this.push(require('lodash.js').min(this.collect()));
+  this.push(require('lodash').min(this.collect()));
 }
 
 /**
@@ -1538,7 +1538,7 @@ function min() {
  * {"n": 1} {"n": 2} → minBy "n" → {"n": 1}
  */
 function minBy(iteratee) {
-  this.push(require('lodash.js').minBy(this.collect(), iteratee));
+  this.push(require('lodash').minBy(this.collect(), iteratee));
 }
 
 // multiply, round, subtract don't make sense
@@ -1552,7 +1552,7 @@ function minBy(iteratee) {
  * (empty) → sum → 0
  */
 function sum() {
-  this.push(require('lodash.js').sum(this.collect()));
+  this.push(require('lodash').sum(this.collect()));
 }
 
 /**
@@ -1568,7 +1568,7 @@ function sum() {
  * {"n": 4} {"n": 2} {"n": 8} {"n": 6} → sumBy "n" → 20
  */
 function sumBy(iteratee) {
-  this.push(require('lodash.js').sumBy(this.collect(), iteratee));
+  this.push(require('lodash').sumBy(this.collect(), iteratee));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1599,5 +1599,5 @@ function sumBy(iteratee) {
  * (empty) → random 1.2 1.5 → 1.3 (not tested)
  */
 function random(lower, upper, floating) {
-  this.push(require('lodash.js').random(lower, upper, floating));
+  this.push(require('lodash').random(lower, upper, floating));
 }

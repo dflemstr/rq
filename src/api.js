@@ -233,7 +233,7 @@ rq.util.path = function path(obj, path) {
     } else if (path.charAt(0) == '$') {
       // Assume it's a JSON path
 
-      var jp = require('jsonpath.js');
+      var jp = require('jsonpath');
 
       return jp.paths(obj, path).map(function(innerPath) {
         return new rq.util.Lens(function get() {
@@ -301,7 +301,7 @@ rq.Process = function Process(fn) {
 };
 
 rq.createFunction = function createFunction(args, body) {
-  return require('minieval.js').createFunction(body, args);
+  return require('minieval').createFunction(body, args);
 };
 
 Object.freeze(rq);

@@ -80,7 +80,8 @@ impl Context {
     }
 
     fn resolve_module(name: String, context: String) -> String {
-        String::from(&*path::Path::new(&context).join(name).to_string_lossy())
+        debug!("Resolving module {:?} from {:?}", name, context);
+        String::from(&*path::Path::new(&context).join(name).with_extension("js").to_string_lossy())
     }
 
     fn load_module(canonical_name: String) -> Option<String> {
