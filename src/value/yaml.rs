@@ -12,7 +12,9 @@ pub struct YamlSource(vec::IntoIter<yaml_rust::Yaml>);
 pub struct YamlSink<W>(W) where W: io::Write;
 
 #[inline]
-pub fn source<R>(mut r: R) -> error::Result<YamlSource> where R: io::Read {
+pub fn source<R>(mut r: R) -> error::Result<YamlSource>
+    where R: io::Read
+{
     let mut string = String::new();
     try!(r.read_to_string(&mut string));
     let values = try!(yaml_rust::YamlLoader::load_from_str(&string));
@@ -20,7 +22,9 @@ pub fn source<R>(mut r: R) -> error::Result<YamlSource> where R: io::Read {
 }
 
 #[inline]
-pub fn sink<W>(w: W) -> YamlSink<W> where W: io::Write {
+pub fn sink<W>(w: W) -> YamlSink<W>
+    where W: io::Write
+{
     YamlSink(w)
 }
 
@@ -40,7 +44,9 @@ impl value::Source for YamlSource {
     }
 }
 
-impl<W> value::Sink for YamlSink<W> where W: io::Write {
+impl<W> value::Sink for YamlSink<W>
+    where W: io::Write
+{
     #[inline]
     fn write(&mut self, value: value::Value) -> error::Result<()> {
         try!(serde_yaml::ser::to_writer(&mut self.0, &value));
