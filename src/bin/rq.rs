@@ -234,12 +234,16 @@ fn log_error(args: &Args, error: rq::error::Error) {
 
     if args.flag_trace || env::var("RUST_BACKTRACE").as_ref().map(String::as_str) == Ok("1") {
         error!("");
-        error!("Backtrace:");
-        for line in format!("{:?}", error.backtrace()).lines() {
-            error!("  {}", line);
+        if let Some(backtrace) = error.backtrace() {
+            error!("Backtrace:");
+            for line in format!("{:?}", backtrace).lines() {
+                error!("  {}", line);
+            }
+        } else {
+            error!("(No backtrace available)");
         }
     } else {
-        error!("(Re-run with (-t|--trace) or RUST_BACKTRACE=1 for a backtrace)");
+        error!("(Re-run with --trace or RUST_BACKTRACE=1 for a backtrace)");
     }
 }
 
