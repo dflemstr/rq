@@ -9,7 +9,9 @@ use serde_cbor;
 use serde_hjson;
 use serde_json;
 use serde_protobuf;
+use serde_yaml;
 use xdg_basedir;
+use yaml_rust;
 
 error_chain! {
     types {
@@ -21,18 +23,20 @@ error_chain! {
     }
 
     foreign_links {
-        io::Error, IO, "IO error";
-        string::FromUtf8Error, Utf8, "UTF-8 error";
-        protobuf::ProtobufError, NativeProtobuf, "native protobuf error";
-        rmp::decode::value::Error, MessagePackDecode, "MessagePack decode error";
-        rmp::encode::value::Error, MessagePackEncode, "MessagePack encode error";
-        serde_cbor::Error, Cbor, "CBOR error";
-        serde_hjson::Error, Hjson, "HJSON error";
-        serde_json::Error, Json, "JSON error";
-        serde_protobuf::Error, Protobuf, "protobuf error";
-        xdg_basedir::Error, XdgBasedir, "XDG basedir error";
-        glob::GlobError, Glob, "glob error";
-        glob::PatternError, GlobPattern, "glob pattern error";
+        io::Error, IO;
+        string::FromUtf8Error, Utf8;
+        protobuf::ProtobufError, NativeProtobuf;
+        rmp::decode::value::Error, MessagePackDecode;
+        rmp::encode::value::Error, MessagePackEncode;
+        serde_cbor::Error, Cbor;
+        serde_hjson::Error, Hjson;
+        serde_json::Error, Json;
+        serde_protobuf::Error, Protobuf;
+        serde_yaml::Error, Yaml;
+        yaml_rust::ScanError, YamlDecode;
+        xdg_basedir::Error, XdgBasedir;
+        glob::GlobError, Glob;
+        glob::PatternError, GlobPattern;
     }
 
     errors {

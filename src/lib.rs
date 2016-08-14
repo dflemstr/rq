@@ -1,5 +1,5 @@
 // For pest parser generation
-#![recursion_limit = "80"]
+#![recursion_limit = "1024"]
 
 extern crate duk;
 #[macro_use]
@@ -17,7 +17,9 @@ extern crate serde_cbor;
 extern crate serde_hjson;
 extern crate serde_json;
 extern crate serde_protobuf;
+extern crate serde_yaml;
 extern crate xdg_basedir;
+extern crate yaml_rust;
 
 pub mod config;
 pub mod error;

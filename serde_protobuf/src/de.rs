@@ -140,6 +140,23 @@ impl<'a> Deserializer<'a> {
 impl<'a> serde::Deserializer for Deserializer<'a> {
     type Error = error::Error;
 
+    forward_to_deserialize! {
+        deserialize_bool,
+        deserialize_f64, deserialize_f32,
+        deserialize_u8, deserialize_u16, deserialize_u32, deserialize_u64, deserialize_usize,
+        deserialize_i8, deserialize_i16, deserialize_i32, deserialize_i64, deserialize_isize,
+        deserialize_char, deserialize_str, deserialize_string,
+        deserialize_ignored_any,
+        deserialize_bytes,
+        deserialize_unit_struct, deserialize_unit,
+        deserialize_seq, deserialize_seq_fixed_size,
+        deserialize_map, deserialize_newtype_struct, deserialize_struct_field,
+        deserialize_tuple,
+        deserialize_enum,
+        deserialize_struct, deserialize_tuple_struct,
+        deserialize_option
+    }
+
     #[inline]
     fn deserialize<V>(&mut self, mut visitor: V) -> Result<V::Value, Self::Error>
         where V: serde::de::Visitor
@@ -211,25 +228,28 @@ impl<'a> MessageKeyDeserializer<'a> {
 impl<'a> serde::Deserializer for MessageKeyDeserializer<'a> {
     type Error = error::Error;
 
+    forward_to_deserialize! {
+        deserialize_bool,
+        deserialize_f64, deserialize_f32,
+        deserialize_u8, deserialize_u16, deserialize_u32, deserialize_u64, deserialize_usize,
+        deserialize_i8, deserialize_i16, deserialize_i32, deserialize_i64, deserialize_isize,
+        deserialize_char, deserialize_str, deserialize_string,
+        deserialize_ignored_any,
+        deserialize_bytes,
+        deserialize_unit_struct, deserialize_unit,
+        deserialize_seq, deserialize_seq_fixed_size,
+        deserialize_map, deserialize_newtype_struct, deserialize_struct_field,
+        deserialize_tuple,
+        deserialize_enum,
+        deserialize_struct, deserialize_tuple_struct,
+        deserialize_option
+    }
+
     #[inline]
     fn deserialize<V>(&mut self, mut visitor: V) -> error::Result<V::Value>
         where V: serde::de::Visitor
     {
         visitor.visit_str(self.descriptor.name())
-    }
-
-    #[inline]
-    fn deserialize_i64<V>(&mut self, mut visitor: V) -> error::Result<V::Value>
-        where V: serde::de::Visitor
-    {
-        visitor.visit_i32(self.descriptor.number())
-    }
-
-    #[inline]
-    fn deserialize_u64<V>(&mut self, mut visitor: V) -> error::Result<V::Value>
-        where V: serde::de::Visitor
-    {
-        visitor.visit_u32(self.descriptor.number() as u32)
     }
 }
 
@@ -249,6 +269,23 @@ impl<'a> MessageFieldDeserializer<'a> {
 
 impl<'a> serde::Deserializer for MessageFieldDeserializer<'a> {
     type Error = error::Error;
+
+    forward_to_deserialize! {
+        deserialize_bool,
+        deserialize_f64, deserialize_f32,
+        deserialize_u8, deserialize_u16, deserialize_u32, deserialize_u64, deserialize_usize,
+        deserialize_i8, deserialize_i16, deserialize_i32, deserialize_i64, deserialize_isize,
+        deserialize_char, deserialize_str, deserialize_string,
+        deserialize_ignored_any,
+        deserialize_bytes,
+        deserialize_unit_struct, deserialize_unit,
+        deserialize_seq, deserialize_seq_fixed_size,
+        deserialize_map, deserialize_newtype_struct, deserialize_struct_field,
+        deserialize_tuple,
+        deserialize_enum,
+        deserialize_struct, deserialize_tuple_struct,
+        deserialize_option
+    }
 
     #[inline]
     fn deserialize<V>(&mut self, mut visitor: V) -> error::Result<V::Value>
@@ -336,6 +373,23 @@ impl<'a> ValueDeserializer<'a> {
 
 impl<'a> serde::Deserializer for ValueDeserializer<'a> {
     type Error = error::Error;
+
+    forward_to_deserialize! {
+        deserialize_bool,
+        deserialize_f64, deserialize_f32,
+        deserialize_u8, deserialize_u16, deserialize_u32, deserialize_u64, deserialize_usize,
+        deserialize_i8, deserialize_i16, deserialize_i32, deserialize_i64, deserialize_isize,
+        deserialize_char, deserialize_str, deserialize_string,
+        deserialize_ignored_any,
+        deserialize_bytes,
+        deserialize_unit_struct, deserialize_unit,
+        deserialize_seq, deserialize_seq_fixed_size,
+        deserialize_map, deserialize_newtype_struct, deserialize_struct_field,
+        deserialize_tuple,
+        deserialize_enum,
+        deserialize_struct, deserialize_tuple_struct,
+        deserialize_option
+    }
 
     #[inline]
     fn deserialize<V>(&mut self, visitor: V) -> error::Result<V::Value>

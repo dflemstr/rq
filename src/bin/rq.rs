@@ -33,7 +33,7 @@ See https://github.com/dflemstr/rq for in-depth documentation.
 
 Usage:
   rq (--help|--version)
-  rq [-j|-c|-h|-m|-p <type>] [-J|-C|-H|-M|-P <type>] [-l <spec>|-q] [--trace] [--] [<query>]
+  rq [-j|-c|-h|-m|-p <type>|-y] [-J|-C|-H|-M|-P <type>|-Y] [-l <spec>|-q] [--trace] [--] [<query>]
   rq [-l <spec>|-q] [--trace] protobuf add <schema> [--base <path>]
 
 Options:
@@ -43,9 +43,9 @@ Options:
       Show the program name and version.
 
   -j, --input-json
-      Input is white-space separated JSON values.
+      Input is white-space separated JSON values (default).
   -J, --output-json
-      Output should be formatted as JSON values.
+      Output should be formatted as JSON values (default).
   -c, --input-cbor
       Input is a series of CBOR values.
   -C, --output-cbor
@@ -65,6 +65,10 @@ Options:
       Output should be formatted as protocol buffer objects.  The argument
       refers to the fully qualified name of the message type (including the
       leading '.').
+  -y, --input-yaml
+      Input is a series of YAML documents.
+  -Y, --output-yaml
+      Output should be formatted as YAML documents.
 
   <query>
       A query indicating how to transform each record.
@@ -138,6 +142,9 @@ fn run(args: &Args, paths: &rq::config::Paths) -> rq::error::Result<()> {
     } else if args.flag_input_hjson {
         let source = try!(rq::value::hjson::source(&mut input));
         run_source(args, paths, source)
+    } else if args.flag_input_yaml {
+        let source = try!(rq::value::yaml::source(&mut input));
+        run_source(args, paths, source)
     } else {
         let source = rq::value::json::source(&mut input);
         run_source(args, paths, source)
@@ -159,6 +166,9 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
         run_source_sink(args, paths, source, sink)
     } else if args.flag_output_hjson {
         let sink = rq::value::hjson::sink(&mut output);
+        run_source_sink(args, paths, source, sink)
+    } else if args.flag_output_yaml {
+        let sink = rq::value::yaml::sink(&mut output);
         run_source_sink(args, paths, source, sink)
     } else {
         let sink = rq::value::json::sink(&mut output);

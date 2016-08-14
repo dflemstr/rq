@@ -11,10 +11,10 @@ repository = "https://github.com/dflemstr/rq/tree/master/serde_protobuf"
 version = "0.1.1"
 
 [dependencies]
-linked-hash-map = "0.0.10"
-log = "0.3.6"
-protobuf = "1.0.20"
-serde = "0.7.5"
+linked-hash-map = "*"
+log = "*"
+protobuf = "*"
+serde = "*"
 
-[dev-dependencies]
-serde-value = "0.2.1"
+[dev-dependencies.serde-value]
+git = "https://github.com/dflemstr/serde-value.git"

@@ -200,6 +200,7 @@ impl fmt::Display for Rule {
             Rule::number => "number",
 
             Rule::any => "any character",
+            Rule::soi => "start of input",
             Rule::eoi => "end of input",
         };
 

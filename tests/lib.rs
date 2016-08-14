@@ -35,10 +35,37 @@ mod js_doctest {
             record_query::run_query(&query, source, sink).unwrap();
         }
 
-        let expected_output = parse_json_stream(expected_output_str.as_bytes());
-        let actual_output = parse_json_stream(&actual_output_bytes);
+        let mut expected_output = parse_json_stream(expected_output_str.as_bytes());
+        let mut actual_output = parse_json_stream(&actual_output_bytes);
+
+        for v in &mut expected_output {
+            normalize_json_numbers(v);
+        }
+
+        for v in &mut actual_output {
+            normalize_json_numbers(v);
+        }
 
         assert_eq!(expected_output, actual_output);
+    }
+
+    fn normalize_json_numbers(value: &mut serde_json::Value) {
+        use serde_json::Value::*;
+        match value {
+            &mut I64(v) => *value = F64(v as f64),
+            &mut U64(v) => *value = F64(v as f64),
+            &mut Array(ref mut vs) => {
+                for v in vs {
+                    normalize_json_numbers(v);
+                }
+            },
+            &mut Object(ref mut vs) => {
+                for (_, v) in vs {
+                    normalize_json_numbers(v);
+                }
+            }
+            _ => (),
+        }
     }
 
     macro_rules! js_doctest {

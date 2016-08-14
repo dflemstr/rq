@@ -16,7 +16,11 @@ extern crate linked_hash_map;
 #[macro_use]
 extern crate log;
 extern crate protobuf;
+#[macro_use]
 extern crate serde;
+
+#[macro_use]
+mod forward;
 
 pub mod de;
 pub mod descriptor;

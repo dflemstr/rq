@@ -13,6 +13,7 @@ pub mod hjson;
 pub mod json;
 pub mod messagepack;
 pub mod protobuf;
+pub mod yaml;
 
 #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub enum Value {

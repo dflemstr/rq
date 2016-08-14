@@ -150,7 +150,7 @@ macro_rules! assert_subset {
 macro_rules! roundtrip {
     ($t:ty, $v:ident, $s:stmt) => {
         {
-            use serde::Deserialize;
+            use serde::de::Deserialize;
 
             let mut file = fs::File::open("testdata/descriptors.pb").unwrap();
             let proto = protobuf::parse_from_reader(&mut file).unwrap();
