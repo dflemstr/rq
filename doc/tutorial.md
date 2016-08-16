@@ -35,7 +35,8 @@ worth it):
 Some format flags take an argument to configure them, for example
 Google Protocol Buffers:
 
-    $ rq -p .example.Person <<< person.pb
+    $ rq protobuf add example.proto
+    $ rq -p .example.Person < person.pb
     {"name":"John","age":34}
 
 ## Transforming records
