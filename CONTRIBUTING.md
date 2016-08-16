@@ -10,12 +10,8 @@ for more info):
 The Rust installer will give you further platform-specific
 instructions (e.g. if you're missing other development tools).
 
-To build `rq`, navigate to the source directory, and switch to the
-nightly Rust toolchain:
-
-    rustup override add nightly
-
-Now you can run the tests for the project (including JSDoc tests):
+To build `rq`, navigate to the source directory.  Now you can run the
+tests for the project (including JSDoc tests):
 
     cargo test
 
