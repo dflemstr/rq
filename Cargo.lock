@@ -4,7 +4,6 @@ version = "0.1.0"
 dependencies = [
  "ansi_term 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "docopt 0.6.82 (registry+https://github.com/rust-lang/crates.io-index)",
- "docopt_macros 0.6.85 (registry+https://github.com/rust-lang/crates.io-index)",
  "duk 0.1.0 (git+https://github.com/dflemstr/duk.git)",
  "env_logger 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "error-chain 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -101,14 +100,6 @@ dependencies = [
  "regex 0.1.73 (registry+https://github.com/rust-lang/crates.io-index)",
  "rustc-serialize 0.3.19 (registry+https://github.com/rust-lang/crates.io-index)",
  "strsim 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
-name = "docopt_macros"
-version = "0.6.85"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-dependencies = [
- "docopt 0.6.82 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]

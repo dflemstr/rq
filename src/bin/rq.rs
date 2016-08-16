@@ -1,6 +1,3 @@
-#![feature(plugin)]
-#![plugin(docopt_macros)]
-
 extern crate ansi_term;
 extern crate docopt;
 extern crate duk;
@@ -21,7 +18,7 @@ use record_query as rq;
 
 const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 
-docopt!(pub Args derive Debug, concat!("
+const DOCOPT: &'static str = concat!("
 rq - record query v", env!("CARGO_PKG_VERSION"), "
 
 A tool for manipulating data records.
@@ -86,14 +83,38 @@ Options:
       Enable (back)trace output on error.
   -q, --quiet
       Log nothing.
-"),
-        flag_input_protobuf: Option<String>,
-        flag_output_protobuf: Option<String>,
-        flag_log: Option<String>,
-        flag_base: Option<String>);
+");
+
+#[derive(Debug, RustcDecodable)]
+pub struct Args {
+    pub cmd_protobuf: bool,
+    pub arg_schema: String,
+    pub flag_input_json: bool,
+    pub flag__: bool,
+    pub flag_input_protobuf: Option<String>,
+    pub flag_output_protobuf: Option<String>,
+    pub arg_query: String,
+    pub flag_input_cbor: bool,
+    pub flag_version: bool,
+    pub flag_input_hjson: bool,
+    pub flag_help: bool,
+    pub flag_output_hjson: bool,
+    pub flag_trace: bool,
+    pub flag_input_yaml: bool,
+    pub flag_output_cbor: bool,
+    pub flag_log: Option<String>,
+    pub flag_output_message_pack: bool,
+    pub cmd_add: bool,
+    pub flag_output_json: bool,
+    pub flag_output_yaml: bool,
+    pub flag_base: Option<String>,
+    pub flag_quiet: bool,
+    pub flag_input_message_pack: bool,
+}
 
 fn main() {
-    let args: Args = Args::docopt()
+    let args: Args = docopt::Docopt::new(DOCOPT)
+        .unwrap()
         .version(Some(VERSION.to_owned()))
         .decode()
         .unwrap_or_else(|e| e.exit());

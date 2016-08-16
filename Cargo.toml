@@ -12,7 +12,6 @@ regex = "*"
 [dependencies]
 ansi_term = "*"
 docopt = "*"
-docopt_macros = "*"
 env_logger = "*"
 error-chain = "*"
 glob = "*"
