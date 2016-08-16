@@ -9,7 +9,7 @@ There is a generic best-effort installer available via the dreaded
 
     curl -sSLf sh.dflemstr.name/rq | sh
 
-# Arch Linux
+## Arch Linux
 
 There is a package available for AUR, so it can be installed with for
 example `pacaur`:
