@@ -18,7 +18,7 @@ use record_query as rq;
 
 const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 
-const DOCOPT: &'static str = concat!("
+pub const DOCOPT: &'static str = concat!("
 rq - record query v", env!("CARGO_PKG_VERSION"), "
 
 A tool for manipulating data records.
@@ -330,8 +330,14 @@ fn format_log_record(record: &log::LogRecord) -> String {
 mod test {
     use super::*;
 
+    use docopt;
+
     fn parse_args(args: &[&str]) -> Args {
-        let a = Args::docopt().argv(args).decode().unwrap();
+        let a = docopt::Docopt::new(DOCOPT)
+            .unwrap()
+            .argv(args)
+            .decode()
+            .unwrap();
         println!("{:?}", a);
         a
     }
