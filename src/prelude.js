@@ -25,7 +25,7 @@ var _ = require('lodash');
 function id() {
   while (this.pull()) {
     this.push(this.value);
- }
+  }
 }
 
 /**
@@ -47,12 +47,12 @@ function select(path) {
         var lens = lenses[i];
         var value = lens.get();
         self.push(value);
-     }
-   } else {
+      }
+    } else {
       this.log.warn('path', JSON.stringify(path), 'did not match a value in',
                     JSON.stringify(this.value));
-   }
- }
+    }
+  }
 }
 
 /**
@@ -73,9 +73,9 @@ function modify(path, f) {
     for (var i = 0; i < lenses.length; i++) {
       var lens = lenses[i];
       lens.set(f(lens.get()));
-   }
+    }
     this.push(this.value);
- }
+  }
 }
 
 /**
@@ -87,7 +87,7 @@ function tee() {
   while (this.pull()) {
     this.log.info(JSON.stringify(this.value));
     this.push(this.value);
- }
+  }
 }
 
 /**
@@ -112,10 +112,10 @@ function spread() {
   while (this.pull()) {
     if (Array.isArray(this.value)) {
       this.spread(this.value);
-   } else {
+    } else {
       this.push(this.value);
-   }
- }
+    }
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
