@@ -63,8 +63,8 @@ function ci-deploy {
     cargo build --release --target="$TARGET"
     mkdir -p "target/deploy/$TARGET"
     cp "target/$TARGET/release/rq" "target/deploy/$TARGET/rq"
-    mkdir -p "target/release"
-    cp "target/$TARGET/release/rq" "target/release/rq-$TARGET"
+    mkdir -p "target/deploy-release"
+    cp "target/$TARGET/release/rq" "target/deploy-release/rq-$TARGET"
 }
 
 function ci-deploy-gh-pages {
