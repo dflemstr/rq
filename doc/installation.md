@@ -2,6 +2,12 @@
 
 There are many different ways to install `rq`.
 
+  * [Generic](#generic)
+  * [Manual download](#manual-download)
+  * [GitHub releases](#github-releases)
+  * [Arch Linux](#arch-linux)
+  * [Mac OS X](#mac-os-x)
+
 ## Generic
 
 There is a generic best-effort installer available via the dreaded
