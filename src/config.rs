@@ -67,7 +67,6 @@ impl Paths {
     }
 }
 
-
 fn find<P>(home: &path::Path, dirs: &[P], pattern: &str) -> error::Result<Vec<path::PathBuf>>
     where P: AsRef<path::Path>
 {

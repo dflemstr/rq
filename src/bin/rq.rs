@@ -11,6 +11,7 @@ extern crate rustc_serialize;
 extern crate serde_protobuf;
 
 use std::env;
+use std::fs;
 use std::io;
 use std::path;
 
@@ -125,20 +126,20 @@ pub enum Format {
 }
 
 fn main() {
+    let paths = rq::config::Paths::new().unwrap();
+
     let args: Args = docopt::Docopt::new(DOCOPT)
         .unwrap()
         .version(Some(VERSION.to_owned()))
         .decode()
-        .unwrap_or_else(|e| e.exit());
+        .unwrap_or_else(|e| handle_docopt_error(&paths, e));
 
     setup_log(args.flag_log.as_ref().map(String::as_ref), args.flag_quiet);
 
-    main_with_args(&args).unwrap_or_else(|e| log_error(&args, e));
+    main_with_args(&args, &paths).unwrap_or_else(|e| log_error(&args, e));
 }
 
-fn main_with_args(args: &Args) -> rq::error::Result<()> {
-    let paths = rq::config::Paths::new().unwrap();
-
+fn main_with_args(args: &Args, paths: &rq::config::Paths) -> rq::error::Result<()> {
     if args.cmd_protobuf {
         if args.cmd_add {
             let schema = path::Path::new(&args.arg_schema);
@@ -173,12 +174,23 @@ fn run(args: &Args, paths: &rq::config::Paths) -> rq::error::Result<()> {
         let source = rq::value::messagepack::source(&mut input);
         run_source(args, paths, source)
     } else if args.flag_input_hjson {
+        if !try!(has_ran_help(paths)) {
+            warn!("You started rq in HJSON input mode (-h|--input-hjson).");
+            warn!("Maybe you meant to use --help?");
+            warn!("(Run rq --help once to suppress this warning)");
+        }
+
         let source = try!(rq::value::hjson::source(&mut input));
         run_source(args, paths, source)
     } else if args.flag_input_yaml {
         let source = try!(rq::value::yaml::source(&mut input));
         run_source(args, paths, source)
     } else {
+        if !args.flag_input_json && !try!(has_ran_help(paths)) {
+            warn!("You started rq without any input flags, which puts it in JSON input mode.");
+            warn!("It's now waiting for JSON input, which might not be what you wanted.");
+            warn!("Specify (-j|--input-json) explicitly or run rq --help once to suppress this warning.");
+        }
         let source = rq::value::json::source(&mut input);
         run_source(args, paths, source)
     }
@@ -261,6 +273,30 @@ fn infer_format() -> Format {
     } else {
         Format::Compact
     }
+}
+
+fn has_ran_help(paths: &rq::config::Paths) -> rq::error::Result<bool> {
+    paths.find_config("has-ran-help").map(|v| !v.is_empty()).map_err(From::from)
+}
+
+fn set_ran_help(paths: &rq::config::Paths) -> rq::error::Result<()> {
+    let file = paths.preferred_config("has-ran-help");
+
+    if let Some(parent) = file.parent() {
+        try!(fs::create_dir_all(parent));
+    }
+
+    try!(fs::File::create(&file));
+
+    Ok(())
+}
+
+fn handle_docopt_error(paths: &rq::config::Paths, e: docopt::Error) -> ! {
+    if !e.fatal() {
+        set_ran_help(paths).unwrap();
+    }
+
+    e.exit()
 }
 
 fn log_error(args: &Args, error: rq::error::Error) {
