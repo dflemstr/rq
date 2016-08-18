@@ -20,8 +20,8 @@ version.
 ## Manual download
 
 If you don't trust the above script (all it does is to detect your
-architecture and run `curl`), you can also manually download `rq`
-for your architecture.
+architecture and run `curl`), you can also manually download `rq` for
+your architecture.
 
   * [x86_64-unknown-linux-musl](https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-unknown-linux-musl/rq)
   * [x86_64-unknown-linux-gnu](https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-unknown-linux-gnu/rq)
@@ -56,7 +56,7 @@ There is a Homebrew tap available.  Add it like this:
 
 This will let you install the latest version of `rq` (recommended):
 
-    brew install -HEAD rq
+    brew install --HEAD rq
 
 Note that the compilation might take some time, use `-v` for details.
 

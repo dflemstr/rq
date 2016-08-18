@@ -1,9 +1,8 @@
 # Tutorial
 
-`rq` has many installation options; you can always get the latest
-version via:
-
-    curl -sSLf sh.dflemstr.name/rq | sh
+This assumes that `rq` is installed.  See
+[installation](installation.md) for more details on how to do that if
+you want to follow along.
 
 ## Input/Output
 
