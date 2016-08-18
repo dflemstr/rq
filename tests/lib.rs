@@ -29,7 +29,7 @@ mod js_doctest {
         {
             let mut cursor = io::Cursor::new(input.as_bytes());
             let source = value::json::source(&mut cursor);
-            let sink = value::json::sink(&mut actual_output_bytes);
+            let sink = value::json::sink_compact(&mut actual_output_bytes);
 
             let query = query::Query::parse(&query_str).unwrap();
             record_query::run_query(&query, source, sink).unwrap();

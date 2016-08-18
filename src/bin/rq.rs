@@ -30,7 +30,7 @@ See https://github.com/dflemstr/rq for in-depth documentation.
 
 Usage:
   rq (--help|--version)
-  rq [-j|-c|-h|-m|-p <type>|-y] [-J|-C|-H|-M|-P <type>|-Y] [-l <spec>|-q] [--trace] [--] [<query>]
+  rq [-j|-c|-h|-m|-p <type>|-y] [-J|-C|-H|-M|-P <type>|-Y] [--format <format>] [-l <spec>|-q] [--trace] [--] [<query>]
   rq [-l <spec>|-q] [--trace] protobuf add <schema> [--base <path>]
 
 Options:
@@ -67,6 +67,11 @@ Options:
   -Y, --output-yaml
       Output should be formatted as YAML documents.
 
+  --format <format>
+      Force stylistic output formatting.  Can be one of 'compact' or
+      'readable' and the default is inferred from the terminal
+      environment.
+
   <query>
       A query indicating how to transform each record.
 
@@ -87,29 +92,36 @@ Options:
 
 #[derive(Debug, RustcDecodable)]
 pub struct Args {
-    pub cmd_protobuf: bool,
-    pub arg_schema: String,
-    pub flag_input_json: bool,
-    pub flag__: bool,
-    pub flag_input_protobuf: Option<String>,
-    pub flag_output_protobuf: Option<String>,
     pub arg_query: String,
-    pub flag_input_cbor: bool,
-    pub flag_version: bool,
-    pub flag_input_hjson: bool,
-    pub flag_help: bool,
-    pub flag_output_hjson: bool,
-    pub flag_trace: bool,
-    pub flag_input_yaml: bool,
-    pub flag_output_cbor: bool,
-    pub flag_log: Option<String>,
-    pub flag_output_message_pack: bool,
+    pub arg_schema: String,
     pub cmd_add: bool,
-    pub flag_output_json: bool,
-    pub flag_output_yaml: bool,
+    pub cmd_protobuf: bool,
+    pub flag__: bool,
     pub flag_base: Option<String>,
-    pub flag_quiet: bool,
+    pub flag_format: Option<Format>,
+    pub flag_help: bool,
+    pub flag_input_cbor: bool,
+    pub flag_input_hjson: bool,
+    pub flag_input_json: bool,
     pub flag_input_message_pack: bool,
+    pub flag_input_protobuf: Option<String>,
+    pub flag_input_yaml: bool,
+    pub flag_log: Option<String>,
+    pub flag_output_cbor: bool,
+    pub flag_output_hjson: bool,
+    pub flag_output_json: bool,
+    pub flag_output_message_pack: bool,
+    pub flag_output_protobuf: Option<String>,
+    pub flag_output_yaml: bool,
+    pub flag_quiet: bool,
+    pub flag_trace: bool,
+    pub flag_version: bool,
+}
+
+#[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd, RustcDecodable)]
+pub enum Format {
+    Compact,
+    Readable,
 }
 
 fn main() {
@@ -177,6 +189,24 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
 {
     let mut output = io::stdout();
 
+    let format = args.flag_format.unwrap_or_else(infer_format);
+
+    macro_rules! dispatch_format {
+        ($compact:expr, $readable:expr) => {
+            match format {
+                Format::Compact => {
+                    let sink = $compact(&mut output);
+                    run_source_sink(args, paths, source, sink)
+                }
+                Format::Readable => {
+                    let sink = $readable(&mut output);
+                    run_source_sink(args, paths, source, sink)
+                }
+                // TODO: add colored support eventually
+            }
+        }
+    }
+
     if let Some(_) = args.flag_output_protobuf {
         Err(rq::error::Error::unimplemented("protobuf serialization".to_owned()))
     } else if args.flag_output_cbor {
@@ -186,14 +216,16 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
         let sink = rq::value::messagepack::sink(&mut output);
         run_source_sink(args, paths, source, sink)
     } else if args.flag_output_hjson {
-        let sink = rq::value::hjson::sink(&mut output);
-        run_source_sink(args, paths, source, sink)
+        // TODO: add HJSON ugly printing eventually; now it's always "readable"
+        dispatch_format!(rq::value::hjson::sink,
+                         rq::value::hjson::sink)
     } else if args.flag_output_yaml {
-        let sink = rq::value::yaml::sink(&mut output);
-        run_source_sink(args, paths, source, sink)
+        // TODO: add YAML ugly printing eventually; now it's always "readable"
+        dispatch_format!(rq::value::yaml::sink,
+                         rq::value::yaml::sink)
     } else {
-        let sink = rq::value::json::sink(&mut output);
-        run_source_sink(args, paths, source, sink)
+        dispatch_format!(rq::value::json::sink_compact,
+                         rq::value::json::sink_readable)
     }
 }
 
@@ -218,6 +250,17 @@ fn load_descriptors(paths: &rq::config::Paths)
                     -> rq::error::Result<serde_protobuf::descriptor::Descriptors> {
     let descriptors_proto = try!(rq::proto_index::compile_descriptor_set(paths));
     Ok(serde_protobuf::descriptor::Descriptors::from_proto(&descriptors_proto))
+}
+
+fn infer_format() -> Format {
+    use nix::unistd;
+    use nix::sys::ioctl;
+
+    if unistd::isatty(ioctl::libc::STDOUT_FILENO).unwrap_or(false) {
+        Format::Readable
+    } else {
+        Format::Compact
+    }
 }
 
 fn log_error(args: &Args, error: rq::error::Error) {
@@ -459,5 +502,17 @@ mod test {
         assert!(a.cmd_protobuf);
         assert!(a.cmd_add);
         assert_eq!(a.arg_schema, "schema.proto");
+    }
+
+    #[test]
+    fn test_docopt_format_compact() {
+        let a = parse_args(&["rq", "--format", "compact"]);
+        assert_eq!(a.flag_format, Some(Format::Compact));
+    }
+
+    #[test]
+    fn test_docopt_format_readable() {
+        let a = parse_args(&["rq", "--format", "readable"]);
+        assert_eq!(a.flag_format, Some(Format::Readable));
     }
 }

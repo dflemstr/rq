@@ -17,7 +17,6 @@ struct Formatter {
     current_is_array: bool,
     stack: Vec<bool>,
     at_colon: bool,
-    indent: &'static [u8],
     braces_same_line: bool,
 }
 
@@ -68,16 +67,11 @@ impl<W> value::Sink for HjsonSink<W>
 
 impl Formatter {
     fn new() -> Self {
-        Formatter::with_indent(b"  ")
-    }
-
-    fn with_indent(indent: &'static [u8]) -> Self {
         Formatter {
             current_indent: 0,
             current_is_array: false,
             stack: Vec::new(),
             at_colon: false,
-            indent: indent,
             braces_same_line: false,
         }
     }
@@ -102,7 +96,7 @@ impl serde_hjson::ser::Formatter for Formatter {
         where W: io::Write
     {
         try!(writer.write_all(b"\n"));
-        indent(writer, self.current_indent, self.indent)
+        indent(writer, self.current_indent)
     }
 
     fn colon<W>(&mut self, writer: &mut W) -> serde_hjson::Result<()>
@@ -118,7 +112,7 @@ impl serde_hjson::ser::Formatter for Formatter {
         self.current_indent -= 1;
         self.current_is_array = self.stack.pop().unwrap();
         try!(writer.write(b"\n"));
-        try!(indent(writer, self.current_indent, self.indent));
+        try!(indent(writer, self.current_indent));
         writer.write_all(&[ch]).map_err(From::from)
     }
 
@@ -128,7 +122,7 @@ impl serde_hjson::ser::Formatter for Formatter {
         self.at_colon = false;
         try!(writer.write_all(b"\n"));
         let ii = self.current_indent as i32 + add_indent;
-        indent(writer, if ii < 0 { 0 } else { ii as usize }, self.indent)
+        indent(writer, if ii < 0 { 0 } else { ii as usize })
     }
 
     fn start_value<W>(&mut self, writer: &mut W) -> serde_hjson::Result<()>
@@ -142,11 +136,11 @@ impl serde_hjson::ser::Formatter for Formatter {
     }
 }
 
-fn indent<W>(wr: &mut W, n: usize, s: &[u8]) -> serde_hjson::Result<()>
+fn indent<W>(wr: &mut W, n: usize) -> serde_hjson::Result<()>
     where W: io::Write
 {
     for _ in 0..n {
-        try!(wr.write_all(s));
+        try!(wr.write_all(b"  "));
     }
 
     Ok(())
