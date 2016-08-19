@@ -1,6 +1,7 @@
 // For pest parser generation
 #![recursion_limit = "1024"]
 
+extern crate ansi_term;
 extern crate duk;
 #[macro_use]
 extern crate error_chain;

@@ -1,5 +1,7 @@
+use std::char;
 use std::io;
 
+use ansi_term;
 use serde;
 use serde_json;
 
@@ -21,6 +23,13 @@ pub trait FormatterClone {
 #[derive(Clone, Debug)]
 pub struct ReadableFormatter {
     current_indent: usize,
+
+    bracket_style: ansi_term::Style,
+    colon_style: ansi_term::Style,
+    comma_style: ansi_term::Style,
+
+    field_style: ansi_term::Style,
+    value_style: ansi_term::Style,
 }
 
 #[inline]
@@ -83,6 +92,13 @@ impl ReadableFormatter {
     fn new() -> ReadableFormatter {
         ReadableFormatter {
             current_indent: 0,
+
+            bracket_style: ansi_term::Colour::White.bold(),
+            colon_style: ansi_term::Colour::White.bold(),
+            comma_style: ansi_term::Colour::White.bold(),
+
+            field_style: ansi_term::Colour::Blue.bold(),
+            value_style: ansi_term::Colour::Green.normal(),
         }
     }
 }
@@ -92,17 +108,25 @@ impl serde_json::ser::Formatter for ReadableFormatter {
         where W: io::Write
     {
         self.current_indent += 1;
-        writer.write_all(&[ch]).map_err(From::from)
+        // TODO: optimize this maybe?
+        let char_str = format!("{}", char::from_u32(ch as u32).unwrap());
+        try!(write!(writer, "{}", self.bracket_style.paint(char_str)));
+
+        if ch as char == '{' {
+            try!(write!(writer, "{}", self.field_style.prefix()));
+        }
+        Ok(())
     }
 
     fn comma<W>(&mut self, writer: &mut W, first: bool) -> serde_json::error::Result<()>
         where W: io::Write
     {
-        if first {
-            try!(writer.write_all(b"\n"));
-        } else {
-            try!(writer.write_all(b",\n"));
+        if !first {
+            try!(write!(writer, "{}", self.comma_style.paint(",")));
         }
+        try!(writer.write_all(b"\n"));
+
+        try!(write!(writer, "{}", self.field_style.prefix()));
 
         indent(writer, self.current_indent)
     }
@@ -110,7 +134,12 @@ impl serde_json::ser::Formatter for ReadableFormatter {
     fn colon<W>(&mut self, writer: &mut W) -> serde_json::error::Result<()>
         where W: io::Write
     {
-        writer.write_all(b": ").map_err(From::from)
+        try!(write!(writer, "{}", self.colon_style.paint(":")));
+        try!(write!(writer, " "));
+
+        try!(write!(writer, "{}", self.value_style.prefix()));
+
+        Ok(())
     }
 
     fn close<W>(&mut self, writer: &mut W, ch: u8) -> serde_json::error::Result<()>
@@ -120,7 +149,11 @@ impl serde_json::ser::Formatter for ReadableFormatter {
         try!(writer.write(b"\n"));
         try!(indent(writer, self.current_indent));
 
-        writer.write_all(&[ch]).map_err(From::from)
+        // TODO: optimize this maybe?
+        let char_str = format!("{}", char::from_u32(ch as u32).unwrap());
+        try!(write!(writer, "{}", self.bracket_style.paint(char_str)));
+
+        Ok(())
     }
 }
 
