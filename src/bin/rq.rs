@@ -393,7 +393,7 @@ fn format_log_record(record: &log::LogRecord) -> String {
                         front.paint(record.location().module_path()),
                         back.paint("]"),
                         normal.paint(" "),
-                        back.paint(format!("{}", record.args()))];
+                        front.paint(format!("{}", record.args()))];
 
         format!("{}", ANSIStrings(strings))
     } else {
