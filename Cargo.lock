@@ -1,6 +1,6 @@
 [root]
 name = "record-query"
-version = "0.2.3"
+version = "0.2.4"
 dependencies = [
  "ansi_term 0.8.0 (git+https://github.com/dflemstr/rust-ansi-term.git)",
  "docopt 0.6.82 (registry+https://github.com/rust-lang/crates.io-index)",
