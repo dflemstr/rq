@@ -3,7 +3,6 @@ use std::mem;
 use std::path;
 
 use duk;
-use ordered_float;
 
 use error;
 use query;
@@ -241,7 +240,33 @@ fn value_from_duk(value: duk::Value) -> value::Value {
     match value {
         duk::Value::Null | duk::Value::Undefined => value::Value::Unit,
         duk::Value::Boolean(v) => value::Value::Bool(v),
-        duk::Value::Number(v) => value::Value::F64(ordered_float::OrderedFloat(v)), // TODO: do something smarter
+        duk::Value::Number(v) => {
+            if (v as u8) as f64 == v {
+                value::Value::U8(v as u8)
+            } else if (v as u16) as f64 == v {
+                value::Value::U16(v as u16)
+            } else if (v as u32) as f64 == v {
+                value::Value::U32(v as u32)
+            } else if (v as u64) as f64 == v {
+                value::Value::U64(v as u64)
+            } else if (v as usize) as f64 == v {
+                value::Value::USize(v as usize)
+            } else if (v as i8) as f64 == v {
+                value::Value::I8(v as i8)
+            } else if (v as i16) as f64 == v {
+                value::Value::I16(v as i16)
+            } else if (v as i32) as f64 == v {
+                value::Value::I32(v as i32)
+            } else if (v as i64) as f64 == v {
+                value::Value::I64(v as i64)
+            } else if (v as isize) as f64 == v {
+                value::Value::ISize(v as isize)
+            } else if (v as f32) as f64 == v {
+                value::Value::from_f32(v as f32)
+            } else {
+                value::Value::from_f64(v)
+            }
+        },
         duk::Value::String(v) => value::Value::String(v),
         duk::Value::Array(v) => value::Value::Sequence(v.into_iter().map(value_from_duk).collect()),
         duk::Value::Object(v) => {
