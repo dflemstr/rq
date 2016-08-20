@@ -1,3 +1,17 @@
+# Contributing
+
+Contributions to `rq` are very welcome; please track contributions via
+the [issue tracker](https://github.com/dflemstr/rq/issues).
+
+All issues are marked as either `Bug`s or `Issue`s.  They can also be
+tagged with an experience level `E-` which is one of `E-easy`,
+`E-medium`, `E-hard`, `E-mentor` and the most likely languages
+involved in the change `L-` which can be `L-rust`, `L-js` or `L-c`.
+
+`rq` is not directly affiliated with Spotify but the project still
+adheres to its
+[code of conduct](https://github.com/spotify/code-of-conduct/blob/master/code-of-conduct.md).
+
 # Development
 
 `rq` is mostly written in the [Rust programming language][rust].
