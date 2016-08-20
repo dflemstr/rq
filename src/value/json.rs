@@ -20,9 +20,16 @@ pub trait FormatterClone {
     fn clone_formatter(&self) -> Self;
 }
 
+#[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
+enum Context {
+  Object,
+  Array,
+}
+
 #[derive(Clone, Debug)]
 pub struct ReadableFormatter {
     current_indent: usize,
+    context: Context,
 
     bracket_style: ansi_term::Style,
     colon_style: ansi_term::Style,
@@ -92,6 +99,7 @@ impl ReadableFormatter {
     fn new() -> ReadableFormatter {
         ReadableFormatter {
             current_indent: 0,
+            context: Context::Array,
 
             bracket_style: ansi_term::Colour::White.bold(),
             colon_style: ansi_term::Colour::White.bold(),
@@ -109,12 +117,15 @@ impl serde_json::ser::Formatter for ReadableFormatter {
     {
         self.current_indent += 1;
         // TODO: optimize this maybe?
-        let char_str = format!("{}", char::from_u32(ch as u32).unwrap());
+        let char_str = format!("{}", ch as char);
         try!(write!(writer, "{}", self.bracket_style.paint(char_str)));
 
-        if ch as char == '{' {
-            try!(write!(writer, "{}", self.field_style.prefix()));
-        }
+        self.context = match ch as char {
+            '{' =>  Context::Object,
+            '[' => Context::Array,
+            _ => Context::Array,
+        };
+
         Ok(())
     }
 
@@ -126,14 +137,20 @@ impl serde_json::ser::Formatter for ReadableFormatter {
         }
         try!(writer.write_all(b"\n"));
 
-        try!(write!(writer, "{}", self.field_style.prefix()));
+        try!(indent(writer, self.current_indent));
 
-        indent(writer, self.current_indent)
+        match self.context {
+            Context::Object => try!(write!(writer, "{}", self.field_style.prefix())),
+            Context::Array => try!(write!(writer, "{}", self.value_style.prefix())),
+        }
+
+        Ok(())
     }
 
     fn colon<W>(&mut self, writer: &mut W) -> serde_json::error::Result<()>
         where W: io::Write
     {
+        try!(write!(writer, "{}", self.field_style.suffix()));
         try!(write!(writer, "{}", self.colon_style.paint(":")));
         try!(write!(writer, " "));
 
@@ -146,11 +163,17 @@ impl serde_json::ser::Formatter for ReadableFormatter {
         where W: io::Write
     {
         self.current_indent -= 1;
+
+        match self.context {
+            Context::Object => try!(write!(writer, "{}", self.field_style.suffix())),
+            Context::Array => try!(write!(writer, "{}", self.value_style.suffix())),
+        }
+
         try!(writer.write(b"\n"));
         try!(indent(writer, self.current_indent));
 
         // TODO: optimize this maybe?
-        let char_str = format!("{}", char::from_u32(ch as u32).unwrap());
+        let char_str = format!("{}", ch as char);
         try!(write!(writer, "{}", self.bracket_style.paint(char_str)));
 
         Ok(())
