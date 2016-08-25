@@ -23,13 +23,13 @@ function install-musl {
 }
 
 function ci-install {
-    local default_target
-
     for-target x86_64-unknown-linux-musl install-musl
 
     curl "$rustup_init_url" -sSf | sh -s -- -y --default-toolchain="$TOOLCHAIN"
-    default_target="$(rustup target list | grep default | awk '{print $1}' | sed -E "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g")"
-    if [[ "$TARGET" != "$default_target" ]]; then rustup target add "$TARGET"; fi
+
+    if ! rustup target list | grep -F '(default)' | grep -Fq "$TARGET"
+    then rustup target add "$TARGET"
+    fi
 }
 
 function ci-test {
