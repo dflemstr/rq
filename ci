@@ -28,7 +28,7 @@ function ci-install {
     for-target x86_64-unknown-linux-musl install-musl
 
     curl "$rustup_init_url" -sSf | sh -s -- -y --default-toolchain="$TOOLCHAIN"
-    default_target="$(rustup target list | grep default | awk '{print $1}' | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g")"
+    default_target="$(rustup target list | grep default | awk '{print $1}' | sed -E "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g")"
     if [[ "$TARGET" != "$default_target" ]]; then rustup target add "$TARGET"; fi
 }
 
