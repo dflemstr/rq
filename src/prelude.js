@@ -1224,8 +1224,8 @@ function keyBy(iteratee) {
 
 /**
  * Creates a stream of values by running each element in the input stream thru
- * `iteratee`. The iteratee is invoked with three arguments:
- * (value, index|key, collection).
+ * `iteratee`. The iteratee is invoked with two arguments:
+ * (value, index).
  *
  * Many lodash methods are guarded to work as iteratees for methods like
  * `every`, `filter`, `map`, `mapValues`, `reject`, and `some`.
@@ -1240,11 +1240,19 @@ function keyBy(iteratee) {
  * @param {Function} [iteratee=_.identity] The function invoked per iteration.
  * @example
  * 4 8 → map (x)=>{x*x} → 16 64
+ * // With index
+ * 4 8 → map (x, i)=>{x + i} → 4 9
  * // The `property` iteratee shorthand.
  * {"u": "b"} {"u": "f"} → map "u" → "b" "f"
  */
 function map(iteratee) {
-  this.spread(require('lodash').map(this.collect(), iteratee));
+  iteratee = _.iteratee(iteratee);
+
+  var i = 0;
+  while (this.pull()) {
+    this.push(iteratee(this.value, i));
+    i++;
+  }
 }
 
 /**
