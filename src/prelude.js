@@ -132,11 +132,36 @@ function spread() {
  * @static
  * @param {number} [size=1] The length of each chunk
  * @example
- * "a" "b" "c" "d" → chunk 2 → ["a", "b"] ["c", "d"]
- * "a" "b" "c" "d" → chunk 3 → ["a", "b", "c"] ["d"]
+ * "a" "b" "c" "d" → chunk    → ["a"] ["b"] ["c"] ["d"]
+ * "a" "b" "c" "d" → chunk  2 → ["a", "b"] ["c", "d"]
+ * "a" "b" "c" "d" → chunk  3 → ["a", "b", "c"] ["d"]
+ *
+ * // Edge cases
+ * "a" "b" "c" "d" → chunk -1 → (empty)
+ * "a" "b" "c" "d" → chunk  0 → (empty)
  */
 function chunk(size) {
-  this.spread(require('lodash').chunk(this.collect(), size));
+  if (size === undefined) {
+    size = 1;
+  } else {
+    size = Math.max(0, _.toInteger(size));
+  }
+
+  if (size > 0) {
+    var buffer = [];
+
+    while (this.pull()) {
+      buffer.push(this.value);
+      if (buffer.length >= size) {
+        this.push(buffer);
+        buffer = [];
+      }
+    }
+
+    if (buffer.length > 0) {
+      this.push(buffer);
+    }
+  }
 }
 
 /**
