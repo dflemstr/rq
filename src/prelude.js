@@ -1055,8 +1055,8 @@ function countBy(iteratee) {
 
 /**
  * Iterates over elements of the input stream, returning an array of all elements
- * `predicate` returns truthy for. The predicate is invoked with three
- * arguments: (value, index|key, collection).
+ * `predicate` returns truthy for. The predicate is invoked with two
+ * arguments: (value, index).
  *
  * **Note:** Unlike `remove`, this method returns a new array.
  *
@@ -1065,6 +1065,9 @@ function countBy(iteratee) {
  *  The function invoked per iteration.
  * @see _.reject
  * @example
+ * "a" "b"  "c"   → filter (s)=>{"a" === s}     → "a"
+ * "a" "ab" "abc" → filter (s)=>{s.length == 2} → "ab"
+ * "a" "ab" "abc" → filter (s, i)=>{i % 2 == 0} → "a" "abc"
  * {"u": "b", "g": 36, "a": true} {"u": "f", "g": 40, "a": false} → filter (o)=>{!o.a} → {"u": "f", "g": 40, "a": false}
  * // The `matches` iteratee shorthand.
  * {"u": "b", "g": 36, "a": true} {"u": "f", "g": 40, "a": false} → filter {"g": 36, "a": true} → {"u": "b", "g": 36, "a": true}
@@ -1074,7 +1077,15 @@ function countBy(iteratee) {
  * {"u": "b", "g": 36, "a": true} {"u": "f", "g": 40, "a": false} → filter "a" → {"u": "b", "g": 36, "a": true}
  */
 function filter(predicate) {
-  this.spread(require('lodash').filter(this.collect(), predicate));
+  predicate = _.iteratee(predicate);
+
+  var i = 0;
+  while (this.pull()) {
+    if (predicate(this.value, i)) {
+      this.push(this.value);
+    }
+    i++;
+  }
 }
 
 /**
@@ -1238,8 +1249,8 @@ function keyBy(iteratee) {
 
 /**
  * Creates a stream of values by running each element in the input stream thru
- * `iteratee`. The iteratee is invoked with three arguments:
- * (value, index|key, collection).
+ * `iteratee`. The iteratee is invoked with two arguments:
+ * (value, index).
  *
  * Many lodash methods are guarded to work as iteratees for methods like
  * `every`, `filter`, `map`, `mapValues`, `reject`, and `some`.
@@ -1254,11 +1265,19 @@ function keyBy(iteratee) {
  * @param {Function} [iteratee=_.identity] The function invoked per iteration.
  * @example
  * 4 8 → map (x)=>{x*x} → 16 64
+ * // With index
+ * 4 8 → map (x, i)=>{x + i} → 4 9
  * // The `property` iteratee shorthand.
  * {"u": "b"} {"u": "f"} → map "u" → "b" "f"
  */
 function map(iteratee) {
-  this.spread(require('lodash').map(this.collect(), iteratee));
+  iteratee = _.iteratee(iteratee);
+
+  var i = 0;
+  while (this.pull()) {
+    this.push(iteratee(this.value, i));
+    i++;
+  }
 }
 
 /**
