@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 # TODO: Replace with https://sh.rustup.rs when it supports -y and such
-rustup_init_url='https://raw.githubusercontent.com/rust-lang-nursery/rustup.rs/master/rustup-init.sh'
+rustup_init_url='https://static.rust-lang.org/rustup.sh'
 
 function for-target {
     local wanted_target
@@ -25,11 +25,7 @@ function install-musl {
 function ci-install {
     for-target x86_64-unknown-linux-musl install-musl
 
-    curl "$rustup_init_url" -sSf | sh -s -- -y --default-toolchain="$TOOLCHAIN"
-
-    if ! rustup target list | grep -F '(default)' | grep -Fq "$TARGET"
-    then rustup target add "$TARGET"
-    fi
+    curl "$rustup_init_url" -sSLf | sh -s -- -y --spec="$TOOLCHAIN" --with-target="$TARGET"
 }
 
 function ci-test {
