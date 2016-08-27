@@ -15,6 +15,13 @@ returns each input record unmodified:
     true
     {"a":2.5}
 
+## Highlighting
+
+This Markdown document doesn't do the `rq` output justice.  The output
+of `rq` is actually very colorful!
+
+![highlighting](image/highlighting.png)
+
 ## Record formats
 
 You can configure the input and output formats to use with flags (see
