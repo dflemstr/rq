@@ -1,8 +1,5 @@
 #!/bin/bash -e
 
-# TODO: Replace with https://sh.rustup.rs when it supports -y and such
-rustup_init_url='https://static.rust-lang.org/rustup.sh'
-
 function for-target {
     local wanted_target
     wanted_target=$1
@@ -24,8 +21,6 @@ function install-musl {
 
 function ci-install {
     for-target x86_64-unknown-linux-musl install-musl
-
-    curl "$rustup_init_url" -sSLf | sh -s -- -y --spec="$TOOLCHAIN" --with-target="$TARGET"
 }
 
 function ci-test {
