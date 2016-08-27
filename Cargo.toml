@@ -11,9 +11,11 @@ regex = "*"
 
 [dependencies]
 docopt = "*"
+dtoa = "*"
 env_logger = "*"
 error-chain = "*"
 glob = "*"
+itoa = "*"
 log = "*"
 nix = "*"
 ordered-float = "*"
@@ -24,7 +26,6 @@ rustc-serialize = "*"
 serde = "*"
 serde-hjson = "*"
 serde_cbor = "*"
-serde_json = "*"
 serde_yaml = "*"
 xdg-basedir = "*"
 yaml-rust = "*"
@@ -35,6 +36,10 @@ git = "https://github.com/dflemstr/rust-ansi-term.git"
 [dependencies.duk]
 features = ["debug", "logging"]
 git = "https://github.com/dflemstr/duk.git"
+
+[dependencies.serde_json]
+git = "https://github.com/dflemstr/json.git"
+branch = "string-formatter-forwarding"
 
 [dependencies.serde_protobuf]
 path = "serde_protobuf"
