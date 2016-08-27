@@ -1,0 +1,23 @@
+[package]
+authors = ["David Flemström <david.flemstrom@gmail.com>"]
+description = "Support for Apache Avro in combination with serde"
+documentation = "http://dflemstr.github.io/rq/serde-avro/"
+homepage = "https://github.com/dflemstr/rq/tree/master/serde-avro"
+include = ["src/**/*", "tests/**/*", "testdata/**/*", "Cargo.toml"]
+keywords = ["serde", "avro", "apache"]
+license = "Apache-2.0"
+name = "serde-avro"
+repository = "https://github.com/dflemstr/rq/tree/master/serde-avro"
+version = "0.1.0"
+
+[dependencies]
+flate2 = "*"
+linked-hash-map = "*"
+serde = "*"
+serde_json = "*"
+snappy = "*"
+
+[dev-dependencies]
+
+[dev-dependencies.serde-value]
+git = "https://github.com/dflemstr/serde-value.git"

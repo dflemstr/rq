@@ -37,6 +37,9 @@ git = "https://github.com/dflemstr/rust-ansi-term.git"
 features = ["debug", "logging"]
 git = "https://github.com/dflemstr/duk.git"
 
+[dependencies.serde-avro]
+path = "serde-avro"
+
 [dependencies.serde_json]
 branch = "string-formatter-forwarding"
 git = "https://github.com/dflemstr/json.git"
