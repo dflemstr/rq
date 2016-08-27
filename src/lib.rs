@@ -2,10 +2,12 @@
 #![recursion_limit = "1024"]
 
 extern crate ansi_term;
+extern crate dtoa;
 extern crate duk;
 #[macro_use]
 extern crate error_chain;
 extern crate glob;
+extern crate itoa;
 #[macro_use]
 extern crate log;
 extern crate ordered_float;
