@@ -20,9 +20,9 @@ dependencies = [
  "rustc-serialize 0.3.19 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 0.8.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde-hjson 0.8.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde-protobuf 0.1.1",
  "serde_cbor 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_json 0.8.1 (git+https://github.com/dflemstr/json.git?branch=string-formatter-forwarding)",
- "serde_protobuf 0.1.1",
  "serde_yaml 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "xdg-basedir 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "yaml-rust 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -305,6 +305,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "serde-protobuf"
+version = "0.1.1"
+dependencies = [
+ "linked-hash-map 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "log 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "protobuf 1.0.24 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde 0.8.4 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "serde_cbor"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -321,16 +331,6 @@ dependencies = [
  "dtoa 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "itoa 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "num-traits 0.1.35 (registry+https://github.com/rust-lang/crates.io-index)",
- "serde 0.8.4 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
-name = "serde_protobuf"
-version = "0.1.1"
-dependencies = [
- "linked-hash-map 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "log 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)",
- "protobuf 1.0.24 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 0.8.4 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
