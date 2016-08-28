@@ -8,6 +8,7 @@ use serde_json;
 
 use error;
 
+pub mod avro;
 pub mod cbor;
 pub mod hjson;
 pub mod json;
