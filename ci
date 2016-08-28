@@ -29,8 +29,9 @@ function ci-install {
 }
 
 function ci-test {
-    serde_protobuf/gen-test
-    cargo test --manifest-path serde_protobuf/Cargo.toml --target "$TARGET"
+    serde-protobuf/gen-test
+    cargo test --manifest-path serde-protobuf/Cargo.toml --target "$TARGET"
+    cargo test --manifest-path serde-avro/Cargo.toml --target "$TARGET"
     cargo test --target="$TARGET"
 }
 
