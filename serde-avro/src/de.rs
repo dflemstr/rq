@@ -5,7 +5,7 @@ use header;
 use schema;
 use serde;
 use serde_json;
-use snappy;
+use snap;
 use std::borrow;
 use std::io;
 
@@ -369,13 +369,10 @@ impl<R> Blocks<R>
                 try!(reader.read_to_end(buffer));
             },
             Codec::Snappy => {
-                let mut compressed = Vec::with_capacity(compressed_size as usize);
                 {
-                    let mut limited = (&mut self.input).take(compressed_size as u64);
-                    try!(limited.read_to_end(&mut compressed));
-                    try!(snappy::uncompress_to(&compressed, buffer).map_err(|_| {
-                        io::Error::new(io::ErrorKind::InvalidInput, "bad snappy compressed block")
-                    }));
+                    let limited = (&mut self.input).take(compressed_size as u64);
+                    let mut reader = snap::Reader::new(limited);
+                    try!(reader.read_to_end(buffer));
                 }
                 // Skip CRC checksum for now
                 try!(self.input.read_exact(&mut vec![0; 4]));

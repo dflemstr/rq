@@ -28,7 +28,7 @@ log = "*"
 serde = "*"
 serde_json = "*"
 serde_macros = { version = "*", optional = true }
-snappy = "*"
+snap = "*"
 
 [dev-dependencies]
 

@@ -12,7 +12,7 @@ extern crate linked_hash_map;
 extern crate log;
 extern crate serde;
 extern crate serde_json;
-extern crate snappy;
+extern crate snap;
 
 #[macro_use]
 mod forward;
