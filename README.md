@@ -27,6 +27,7 @@ operating systems and architectures.
 
 | Format                  | Read | Write |
 |-------------------------|------|-------|
+| Apache Avro             | ✔️    | ✖️     |
 | CBOR                    | ✔️    | ✔️     |
 | HJSON                   | ✔️    | ✔️     |
 | JSON                    | ✔️    | ✔️     |
