@@ -16,6 +16,7 @@ extern crate pest;
 extern crate protobuf;
 extern crate rmp;
 extern crate serde;
+extern crate serde_avro;
 extern crate serde_cbor;
 extern crate serde_hjson;
 extern crate serde_json;

@@ -31,7 +31,7 @@ See https://github.com/dflemstr/rq for in-depth documentation.
 
 Usage:
   rq (--help|--version)
-  rq [-j|-c|-h|-m|-p <type>|-y] [-J|-C|-H|-M|-P <type>|-Y] [--format <format>] [-l <spec>|-q] [--trace] [--] [<query>]
+  rq [-j|-a|-c|-h|-m|-p <type>|-y] [-J|-A <type>|-C|-H|-M|-P <type>|-Y] [--format <format>] [-l <spec>|-q] [--trace] [--] [<query>]
   rq [-l <spec>|-q] [--trace] protobuf add <schema> [--base <path>]
 
 Options:
@@ -44,6 +44,10 @@ Options:
       Input is white-space separated JSON values (default).
   -J, --output-json
       Output should be formatted as JSON values (default).
+  -a, --input-avro
+      Input is an Apache Avro container file.
+  -A <type>, --output-avro <type>
+      Output should be formatted as Apache Avro messages.
   -c, --input-cbor
       Input is a series of CBOR values.
   -C, --output-cbor
@@ -101,6 +105,7 @@ pub struct Args {
     pub flag_base: Option<String>,
     pub flag_format: Option<Format>,
     pub flag_help: bool,
+    pub flag_input_avro: bool,
     pub flag_input_cbor: bool,
     pub flag_input_hjson: bool,
     pub flag_input_json: bool,
@@ -108,6 +113,7 @@ pub struct Args {
     pub flag_input_protobuf: Option<String>,
     pub flag_input_yaml: bool,
     pub flag_log: Option<String>,
+    pub flag_output_avro: Option<String>,
     pub flag_output_cbor: bool,
     pub flag_output_hjson: bool,
     pub flag_output_json: bool,
@@ -167,6 +173,9 @@ fn run(args: &Args, paths: &rq::config::Paths) -> rq::error::Result<()> {
         let stream = protobuf::CodedInputStream::new(&mut input);
         let source = try!(rq::value::protobuf::source(&proto_descriptors, name, stream));
         run_source(args, paths, source)
+    } else if args.flag_input_avro {
+        let source = try!(rq::value::avro::source(&mut input));
+        run_source(args, paths, source)
     } else if args.flag_input_cbor {
         let source = rq::value::cbor::source(&mut input);
         run_source(args, paths, source)
@@ -221,6 +230,8 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
 
     if let Some(_) = args.flag_output_protobuf {
         Err(rq::error::Error::unimplemented("protobuf serialization".to_owned()))
+    } else if let Some(_) = args.flag_output_avro {
+        Err(rq::error::Error::unimplemented("avro serialization".to_owned()))
     } else if args.flag_output_cbor {
         let sink = rq::value::cbor::sink(&mut output);
         run_source_sink(args, paths, source, sink)

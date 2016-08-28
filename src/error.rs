@@ -5,6 +5,7 @@ use duk;
 use glob;
 use protobuf;
 use rmp;
+use serde_avro;
 use serde_cbor;
 use serde_hjson;
 use serde_json;
@@ -20,6 +21,7 @@ error_chain! {
 
     links {
         duk::Error, duk::ErrorKind, Duk;
+        serde_avro::error::Error, serde_avro::error::ErrorKind, Avro;
     }
 
     foreign_links {
