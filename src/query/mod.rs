@@ -27,6 +27,10 @@ pub enum Expression {
 }
 
 impl Query {
+    pub fn empty() -> Query {
+        Query(Vec::new())
+    }
+
     pub fn parse(raw: &str) -> error::Result<Query> {
         parser::parse_query(raw)
     }
@@ -97,8 +101,12 @@ impl<'a, S> value::Source for Output<'a, S>
     where S: value::Source
 {
     fn read(&mut self) -> error::Result<Option<value::Value>> {
-        let last_idx = self.processes.len() - 1;
-        self.run_process(last_idx)
+        if self.processes.is_empty() {
+            self.source.read()
+        } else {
+            let last_idx = self.processes.len() - 1;
+            self.run_process(last_idx)
+        }
     }
 }
 
