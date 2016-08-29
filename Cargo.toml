@@ -10,6 +10,7 @@ env_logger = "*"
 regex = "*"
 
 [dependencies]
+ansi_term = "*"
 docopt = "*"
 dtoa = "*"
 env_logger = "*"
@@ -30,9 +31,6 @@ serde_yaml = "*"
 xdg-basedir = "*"
 yaml-rust = "*"
 
-[dependencies.ansi_term]
-git = "https://github.com/dflemstr/rust-ansi-term.git"
-
 [dependencies.duk]
 features = ["debug", "logging"]
 git = "https://github.com/dflemstr/duk.git"
@@ -41,8 +39,8 @@ git = "https://github.com/dflemstr/duk.git"
 path = "serde-avro"
 
 [dependencies.serde_json]
-branch = "string-formatter-forwarding"
-git = "https://github.com/dflemstr/json.git"
+branch = "v0.9.0"
+git = "https://github.com/serde-rs/json.git"
 
 [dependencies.serde-protobuf]
 path = "serde-protobuf"
