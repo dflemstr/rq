@@ -29,8 +29,3 @@ serde = "*"
 serde_json = "*"
 serde_macros = { version = "*", optional = true }
 snap = "*"
-
-[dev-dependencies]
-
-[dev-dependencies.serde-value]
-git = "https://github.com/dflemstr/serde-value.git"
