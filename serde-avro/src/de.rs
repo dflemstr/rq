@@ -61,7 +61,7 @@ struct ArrayVisitor<'a, R>
 {
     input: &'a mut R,
     registry: &'a schema::SchemaRegistry,
-    elem_schema: schema::Schema,
+    elem_schema: &'a schema::Schema,
     remainder: BlockRemainder,
 }
 
@@ -70,7 +70,7 @@ struct MapVisitor<'a, R>
 {
     input: &'a mut R,
     registry: &'a schema::SchemaRegistry,
-    value_schema: schema::Schema,
+    value_schema: &'a schema::Schema,
     remainder: BlockRemainder,
 }
 
@@ -128,7 +128,7 @@ impl<'a, R> Deserializer<'a, io::BufReader<Blocks<R>>>
 
             let root_schema = try!(try!(registry.add_json(&schema_json))
                     .ok_or(Error::from(ErrorKind::NoRootType)))
-                .resolve(&registry);
+                .into_resolved(&registry);
 
             let blocks = Blocks::new(input, codec, header.sync.to_vec());
             let registry_cow = borrow::Cow::Owned(registry);
@@ -516,7 +516,7 @@ impl<'a, R> ArrayVisitor<'a, R>
 {
     fn new(input: &'a mut R,
            registry: &'a schema::SchemaRegistry,
-           elem_schema: schema::Schema)
+           elem_schema: &'a schema::Schema)
            -> ArrayVisitor<'a, R> {
         ArrayVisitor {
             input: input,
@@ -559,7 +559,7 @@ impl<'a, R> MapVisitor<'a, R>
 {
     fn new(input: &'a mut R,
            registry: &'a schema::SchemaRegistry,
-           value_schema: schema::Schema)
+           value_schema: &'a schema::Schema)
            -> MapVisitor<'a, R> {
         MapVisitor {
             input: input,

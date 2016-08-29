@@ -115,12 +115,10 @@ lazy_static! {
 }
 
 impl SchemaRef {
-    pub fn resolve(&self, registry: &SchemaRegistry) -> Schema {
-        // TODO: figure out the lifetimes here (the result *either* has the lifetime of self or
-        // registry) so we don't have to clone
+    pub fn resolve<'a>(&'a self, registry: &'a SchemaRegistry) -> &'a Schema {
         match *self {
-            SchemaRef::Direct(ref schema) => schema.clone(),
-            SchemaRef::Indirect(id) => registry.schemata[id.0].clone(),
+            SchemaRef::Direct(ref schema) => schema,
+            SchemaRef::Indirect(id) => &registry.schemata[id.0],
         }
     }
 
@@ -703,7 +701,7 @@ mod test {
                     .unwrap()
                     .field_type()
                     .resolve(&schema_registry) {
-                    Schema::Record(ref record) => {
+                    &Schema::Record(ref record) => {
                         assert_eq!("example.avro.User", record.name());
                     },
                     _ => unreachable!(),
@@ -735,7 +733,7 @@ mod test {
                     .unwrap()
                     .field_type()
                     .resolve(&schema_registry) {
-                    Schema::Record(ref record) => {
+                    &Schema::Record(ref record) => {
                         assert_eq!("example.avro.User", record.name());
                     },
                     _ => unreachable!(),
