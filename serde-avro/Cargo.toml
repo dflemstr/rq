@@ -26,6 +26,9 @@ serde_json = "0.8.1"
 serde_macros = { version = "0.8.4", optional = true }
 snap = "0.1.2"
 
+[dev-dependencies.serde-value]
+git = "https://github.com/dflemstr/serde-value.git"
+
 [features]
 default = ["serde_codegen"]
 unstable = ["serde_macros"]

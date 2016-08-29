@@ -359,25 +359,30 @@ impl<R> Blocks<R>
 
         match self.codec {
             Codec::Null => {
+                debug!("Copying block data with null codec");
                 let mut limited = (&mut self.input).take(compressed_size as u64);
                 buffer.reserve(compressed_size as usize);
                 try!(limited.read_to_end(buffer));
             },
             Codec::Deflate => {
+                debug!("Copying block data with deflate codec");
                 let limited = (&mut self.input).take(compressed_size as u64);
                 let mut reader = flate2::read::DeflateDecoder::new(limited);
                 try!(reader.read_to_end(buffer));
             },
             Codec::Snappy => {
-                {
-                    let limited = (&mut self.input).take(compressed_size as u64);
-                    let mut reader = snap::Reader::new(limited);
-                    try!(reader.read_to_end(buffer));
-                }
+                debug!("Copying block data with snappy codec");
+                let mut compressed = vec![0; compressed_size as usize - 4];
+                try!(self.input.read_exact(&mut compressed));
+                let decompressed_size = try!(snap::decompress_len(&compressed));
+                debug!("Decompressed block is expected to be {} bytes", decompressed_size);
+                buffer.resize(decompressed_size, 0);
+                try!(snap::Decoder::new().decompress(&compressed, buffer));
                 // Skip CRC checksum for now
                 try!(self.input.read_exact(&mut vec![0; 4]));
             },
         }
+        debug!("Uncompressed block contains {} bytes", buffer.len());
 
         let mut sync_marker = vec![0; 16];
         try!(self.input.read_exact(&mut sync_marker));
