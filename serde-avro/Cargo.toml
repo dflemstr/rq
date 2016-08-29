@@ -2,7 +2,7 @@
 authors = ["David Flemström <david.flemstrom@gmail.com>"]
 build = "build.rs"
 description = "Support for Apache Avro in combination with serde"
-documentation = "http://dflemstr.github.io/rq/serde-avro/"
+documentation = "https://docs.rs/serde-avro"
 homepage = "https://github.com/dflemstr/rq/tree/master/serde-avro"
 include = ["build.rs", "src/**/*", "tests/**/*", "testdata/**/*", "Cargo.toml"]
 keywords = ["serde", "avro", "apache"]
