@@ -1,7 +1,10 @@
 #![cfg_attr(feature = "serde_macros", feature(plugin, custom_derive))]
 #![cfg_attr(feature = "serde_macros", plugin(serde_macros))]
 
+#![recursion_limit = "1024"]
+
 extern crate byteorder;
+extern crate crc;
 #[macro_use]
 extern crate error_chain;
 extern crate flate2;

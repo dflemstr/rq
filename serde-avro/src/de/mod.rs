@@ -1,46 +1,33 @@
 use byteorder;
 use error::{self, Error, ErrorKind};
-use flate2;
 use header;
 use schema;
 use serde;
 use serde_json;
-use snap;
 use std::borrow;
 use std::io;
 
+pub mod read;
+mod util;
+
 pub struct Deserializer<'a, R>
-    where R: io::BufRead
+    where R: io::Read + read::Limit
 {
     input: R,
     registry: borrow::Cow<'a, schema::SchemaRegistry>,
     schema: borrow::Cow<'a, schema::Schema>,
 }
+
 struct DeserializerImpl<'a, R>
-    where R: io::BufRead + 'a
+    where R: io::Read + 'a
 {
     input: &'a mut R,
     registry: &'a schema::SchemaRegistry,
     schema: &'a schema::Schema,
 }
 
-enum Codec {
-    Null,
-    Deflate,
-    Snappy,
-}
-
-pub struct Blocks<R>
-    where R: io::Read
-{
-    input: R,
-    codec: Codec,
-    sync_marker: Vec<u8>,
-    current_block: io::Cursor<Vec<u8>>,
-}
-
 struct RecordVisitor<'a, R>
-    where R: io::BufRead + 'a
+    where R: io::Read + 'a
 {
     input: &'a mut R,
     registry: &'a schema::SchemaRegistry,
@@ -57,7 +44,7 @@ enum BlockRemainder {
 }
 
 struct ArrayVisitor<'a, R>
-    where R: io::BufRead + 'a
+    where R: io::Read + 'a
 {
     input: &'a mut R,
     registry: &'a schema::SchemaRegistry,
@@ -66,7 +53,7 @@ struct ArrayVisitor<'a, R>
 }
 
 struct MapVisitor<'a, R>
-    where R: io::BufRead + 'a
+    where R: io::Read + 'a
 {
     input: &'a mut R,
     registry: &'a schema::SchemaRegistry,
@@ -75,7 +62,7 @@ struct MapVisitor<'a, R>
 }
 
 impl<'a, R> Deserializer<'a, R>
-    where R: io::BufRead
+    where R: io::Read + read::Limit
 {
     pub fn new(input: R,
                registry: &'a schema::SchemaRegistry,
@@ -98,19 +85,18 @@ impl<'a, R> Deserializer<'a, R>
     }
 }
 
-impl<'a, R> Deserializer<'a, io::BufReader<Blocks<R>>>
+impl<'a, R> Deserializer<'a, read::Blocks<R>>
     where R: io::Read
 {
     // TODO: this uses a ridiculous number of buffers... We can cut that down significantly
-    pub fn from_container(input: R) -> error::Result<Deserializer<'static, io::BufReader<Blocks<io::BufReader<R>>>>> {
+    pub fn from_container(mut input: R) -> error::Result<Deserializer<'static, read::Blocks<R>>> {
         use serde::de::Deserialize;
-
-        let mut input = io::BufReader::new(input);
 
         let header = {
             debug!("Parsing container header");
+            let direct = read::Direct::new(&mut input, 1);
             let mut header_de =
-                Deserializer::new(&mut input, &schema::EMPTY_REGISTRY, &schema::FILE_HEADER);
+                Deserializer::new(direct, &schema::EMPTY_REGISTRY, &schema::FILE_HEADER);
             try!(header::Header::deserialize(&mut header_de))
         };
         debug!("Container header: {:?}", header);
@@ -118,7 +104,7 @@ impl<'a, R> Deserializer<'a, io::BufReader<Blocks<R>>>
         if &[b'O', b'b', b'j', 1] != &*header.magic {
             Err(ErrorKind::BadFileMagic(header.magic.to_vec()).into())
         } else {
-            let codec = try!(Codec::parse(header.meta.get("avro.codec").map(AsRef::as_ref)));
+            let codec = try!(read::Codec::parse(header.meta.get("avro.codec").map(AsRef::as_ref)));
             let schema_data = try!(header.meta
                 .get("avro.schema")
                 .ok_or(Error::from(ErrorKind::NoSchema)));
@@ -130,16 +116,16 @@ impl<'a, R> Deserializer<'a, io::BufReader<Blocks<R>>>
                     .ok_or(Error::from(ErrorKind::NoRootType)))
                 .into_resolved(&registry);
 
-            let blocks = Blocks::new(input, codec, header.sync.to_vec());
+            let blocks = read::Blocks::new(input, codec, header.sync.to_vec());
             let registry_cow = borrow::Cow::Owned(registry);
             let schema_cow = borrow::Cow::Owned(root_schema);
-            Ok(Deserializer::new_cow(io::BufReader::new(blocks), registry_cow, schema_cow))
+            Ok(Deserializer::new_cow(blocks, registry_cow, schema_cow))
         }
     }
 }
 
 impl<'a, R> serde::Deserializer for Deserializer<'a, R>
-    where R: io::BufRead
+    where R: io::Read + read::Limit
 {
     type Error = error::Error;
 
@@ -164,12 +150,16 @@ impl<'a, R> serde::Deserializer for Deserializer<'a, R>
     fn deserialize<V>(&mut self, visitor: V) -> Result<V::Value, Self::Error>
         where V: serde::de::Visitor
     {
+        if !try!(self.input.take_limit()) {
+            return Err(serde::de::Error::end_of_stream());
+        }
+
         DeserializerImpl::new(&mut self.input, &*self.registry, &*self.schema).deserialize(visitor)
     }
 }
 
 impl<'a, R> DeserializerImpl<'a, R>
-    where R: io::BufRead
+    where R: io::Read
 {
     pub fn new(input: &'a mut R,
                registry: &'a schema::SchemaRegistry,
@@ -188,10 +178,6 @@ impl<'a, R> DeserializerImpl<'a, R>
         use schema::Schema;
         use byteorder::ReadBytesExt;
 
-        if try!(self.input.fill_buf()).is_empty() {
-            return Err(serde::de::Error::end_of_stream());
-        }
-
         match *self.schema {
             Schema::Null => {
                 debug!("Deserializing null");
@@ -204,12 +190,12 @@ impl<'a, R> DeserializerImpl<'a, R>
                 visitor.visit_bool(v != 0)
             },
             Schema::Int => {
-                let v = try!(read_int(self.input));
+                let v = try!(util::read_int(self.input));
                 debug!("Deserializing int {:?}", v);
                 visitor.visit_i32(v)
             },
             Schema::Long => {
-                let v = try!(read_long(self.input));
+                let v = try!(util::read_long(self.input));
                 debug!("Deserializing long {:?}", v);
                 visitor.visit_i64(v)
             },
@@ -224,7 +210,7 @@ impl<'a, R> DeserializerImpl<'a, R>
                 visitor.visit_f64(v)
             },
             Schema::Bytes => {
-                let len = try!(read_long(self.input));
+                let len = try!(util::read_long(self.input));
 
                 if len < 0 {
                     Err(ErrorKind::NegativeLength.into())
@@ -236,7 +222,7 @@ impl<'a, R> DeserializerImpl<'a, R>
                 }
             },
             Schema::String => {
-                let len = try!(read_long(self.input));
+                let len = try!(util::read_long(self.input));
 
                 if len < 0 {
                     Err(ErrorKind::NegativeLength.into())
@@ -255,7 +241,7 @@ impl<'a, R> DeserializerImpl<'a, R>
             },
             Schema::Enum(ref inner) => {
                 debug!("Deserializing enum of type {:?}", inner.name());
-                let v = try!(read_int(self.input));
+                let v = try!(util::read_int(self.input));
                 visitor.visit_str(inner.symbols()[v as usize].as_str())
             },
             Schema::Array(ref inner) => {
@@ -270,7 +256,7 @@ impl<'a, R> DeserializerImpl<'a, R>
             },
             Schema::Union(ref inner) => {
                 debug!("Deserializing union");
-                let variant = try!(read_long(self.input));
+                let variant = try!(util::read_long(self.input));
                 let schema = inner[variant as usize].resolve(&self.registry);
                 DeserializerImpl::new(self.input, self.registry, &schema).deserialize(visitor)
             },
@@ -286,7 +272,7 @@ impl<'a, R> DeserializerImpl<'a, R>
 
 
 impl<'a, R> serde::Deserializer for DeserializerImpl<'a, R>
-    where R: io::BufRead
+    where R: io::Read
 {
     type Error = error::Error;
 
@@ -315,101 +301,8 @@ impl<'a, R> serde::Deserializer for DeserializerImpl<'a, R>
     }
 }
 
-impl Codec {
-    fn parse(codec: Option<&[u8]>) -> error::Result<Codec> {
-        match codec {
-            None | Some(b"null") => Ok(Codec::Null),
-            Some(b"deflate") => Ok(Codec::Deflate),
-            Some(b"snappy") => Ok(Codec::Snappy),
-            Some(codec) => {
-                Err(ErrorKind::UnsupportedCodec(String::from_utf8_lossy(codec).into_owned()).into())
-            },
-        }
-    }
-}
-
-impl<R> Blocks<R>
-    where R: io::Read
-{
-    fn new(input: R, codec: Codec, sync_marker: Vec<u8>) -> Blocks<R> {
-        Blocks {
-            input: input,
-            codec: codec,
-            sync_marker: sync_marker,
-            current_block: io::Cursor::new(Vec::new()),
-        }
-    }
-
-    fn fill_buffer(&mut self) -> io::Result<()> {
-        use std::io::Read;
-
-        let mut buffer = self.current_block.get_mut();
-        buffer.clear();
-
-        let obj_count = match read_long(&mut self.input) {
-            Ok(c) => c,
-            Err(ref e) if e.kind() == io::ErrorKind::UnexpectedEof => return Ok(()),
-            Err(e) => return Err(e),
-        };
-
-        let compressed_size = try!(read_long(&mut self.input));
-        debug!("Loading block with compressed size {} containing {} objects",
-               compressed_size,
-               obj_count);
-
-        match self.codec {
-            Codec::Null => {
-                debug!("Copying block data with null codec");
-                let mut limited = (&mut self.input).take(compressed_size as u64);
-                buffer.reserve(compressed_size as usize);
-                try!(limited.read_to_end(buffer));
-            },
-            Codec::Deflate => {
-                debug!("Copying block data with deflate codec");
-                let limited = (&mut self.input).take(compressed_size as u64);
-                let mut reader = flate2::read::DeflateDecoder::new(limited);
-                try!(reader.read_to_end(buffer));
-            },
-            Codec::Snappy => {
-                debug!("Copying block data with snappy codec");
-                let mut compressed = vec![0; compressed_size as usize - 4];
-                try!(self.input.read_exact(&mut compressed));
-                let decompressed_size = try!(snap::decompress_len(&compressed));
-                debug!("Decompressed block is expected to be {} bytes", decompressed_size);
-                buffer.resize(decompressed_size, 0);
-                try!(snap::Decoder::new().decompress(&compressed, buffer));
-                // Skip CRC checksum for now
-                try!(self.input.read_exact(&mut vec![0; 4]));
-            },
-        }
-        debug!("Uncompressed block contains {} bytes", buffer.len());
-
-        let mut sync_marker = vec![0; 16];
-        try!(self.input.read_exact(&mut sync_marker));
-
-        if self.sync_marker != sync_marker {
-            Err(io::Error::new(io::ErrorKind::InvalidInput, "bad snappy sync marker"))
-        } else {
-            Ok(())
-        }
-    }
-}
-
-impl<R> io::Read for Blocks<R>
-    where R: io::Read
-{
-    fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
-        if self.current_block.position() as usize == self.current_block.get_ref().len() {
-            try!(self.fill_buffer());
-            self.current_block.set_position(0)
-        }
-
-        self.current_block.read(buf)
-    }
-}
-
 impl<'a, R> RecordVisitor<'a, R>
-    where R: io::BufRead
+    where R: io::Read
 {
     fn new(input: &'a mut R,
            registry: &'a schema::SchemaRegistry,
@@ -425,7 +318,7 @@ impl<'a, R> RecordVisitor<'a, R>
 }
 
 impl<'a, R> serde::de::MapVisitor for RecordVisitor<'a, R>
-    where R: io::BufRead
+    where R: io::Read
 {
     type Error = error::Error;
 
@@ -493,7 +386,7 @@ impl BlockRemainder {
         match *self {
             BlockRemainder::Start |
             BlockRemainder::Count(0) => {
-                let n = try!(read_block_size(reader));
+                let n = try!(util::read_block_size(reader));
                 if n == 0 {
                     *self = BlockRemainder::End;
                     Ok(false)
@@ -517,7 +410,7 @@ impl BlockRemainder {
 }
 
 impl<'a, R> ArrayVisitor<'a, R>
-    where R: io::BufRead
+    where R: io::Read
 {
     fn new(input: &'a mut R,
            registry: &'a schema::SchemaRegistry,
@@ -533,7 +426,7 @@ impl<'a, R> ArrayVisitor<'a, R>
 }
 
 impl<'a, R> serde::de::SeqVisitor for ArrayVisitor<'a, R>
-    where R: io::BufRead
+    where R: io::Read
 {
     type Error = error::Error;
 
@@ -560,7 +453,7 @@ impl<'a, R> serde::de::SeqVisitor for ArrayVisitor<'a, R>
 }
 
 impl<'a, R> MapVisitor<'a, R>
-    where R: io::BufRead
+    where R: io::Read
 {
     fn new(input: &'a mut R,
            registry: &'a schema::SchemaRegistry,
@@ -576,7 +469,7 @@ impl<'a, R> MapVisitor<'a, R>
 }
 
 impl<'a, R> serde::de::MapVisitor for MapVisitor<'a, R>
-    where R: io::BufRead
+    where R: io::Read
 {
     type Error = error::Error;
 
@@ -607,62 +500,5 @@ impl<'a, R> serde::de::MapVisitor for MapVisitor<'a, R>
                 panic!("map visitor end() called before any call to visit_key()")
             },
         }
-    }
-}
-
-fn read_block_size<R: io::Read>(reader: &mut R) -> error::Result<usize> {
-    let n = try!(read_long(reader));
-    let n = if n < 0 {
-        try!(read_long(reader)); // discard
-        n.abs()
-    } else {
-        n
-    };
-    Ok(n as usize)
-}
-
-fn read_int<R: io::Read>(reader: &mut R) -> error::Result<i32> {
-    let v = try!(read_long(reader));
-    if v < (i32::min_value() as i64) || v > (i32::max_value() as i64) {
-        Err(ErrorKind::IntegerOverflow.into())
-    } else {
-        Ok(v as i32)
-    }
-}
-
-fn read_long<R: io::Read>(reader: &mut R) -> io::Result<i64> {
-    let unsigned = try!(decode_var_len_u64(reader));
-    Ok(decode_zig_zag(unsigned))
-}
-
-// Taken from the rust-avro functions with the same name...
-// TODO: credit this when creating an ATTRIBUTIONS file or something
-
-fn decode_var_len_u64<R: io::Read>(reader: &mut R) -> io::Result<u64> {
-    use byteorder::ReadBytesExt;
-
-    let mut num = 0;
-    let mut i = 0;
-    loop {
-        let byte = try!(reader.read_u8());
-
-        if i >= 9 && byte & 0b1111_1110 != 0 {
-            // 10th byte
-            return Err(io::Error::new(io::ErrorKind::InvalidData, "integer overflow"));
-        }
-        num |= (byte as u64 & 0b0111_1111) << (i * 7);
-        if byte & 0b1000_0000 == 0 {
-            break;
-        }
-        i += 1;
-    }
-    Ok(num)
-}
-
-fn decode_zig_zag(num: u64) -> i64 {
-    if num & 1 == 1 {
-        !(num >> 1) as i64
-    } else {
-        (num >> 1) as i64
     }
 }
