@@ -1017,13 +1017,15 @@ function zipWith(iteratee) {
 /**
  * Checks if `predicate` returns truthy for **all** elements of the input stream.
  * Iteration is stopped once `predicate` returns falsey. The predicate is
- * invoked with three arguments: (value, index|key, collection).
+ * invoked with two arguments: (value, index).
  *
  * @static
  * @param {Function} [predicate=_.identity]
  *  The function invoked per iteration.
  * @example
  * true 1 null "yes" → every (x)=>{Boolean(x)} → false
+ * // With index
+ * 1 2 3 → every (x, i) => { i + 1 == x } → true
  * // The `matches` iteratee shorthand.
  * {"u": "b", "g": 36, "a": false} {"u": "f", "g": 40, "a": false} → every {"u": "b", "a": false} → false
  * // The `matchesProperty` iteratee shorthand.
@@ -1032,7 +1034,18 @@ function zipWith(iteratee) {
  * {"u": "b", "g": 36, "a": false} {"u": "f", "g": 40, "a": false} → every "a" → false
  */
 function every(predicate) {
-  this.push(require('lodash').every(this.collect(), predicate));
+  predicate = _.iteratee(predicate);
+
+  var i = 0;
+  while (this.pull()) {
+    if (!predicate(this.value, i)) {
+      this.push(false);
+      return;
+    }
+    i++;
+  }
+
+  this.push(true);
 }
 
 /**
@@ -1090,13 +1103,12 @@ function filter(predicate) {
 
 /**
  * Iterates over elements of the input stream, returning the first element
- * `predicate` returns truthy for. The predicate is invoked with three
- * arguments: (value, index|key, collection).
+ * `predicate` returns truthy for. The predicate is invoked with two
+ * arguments: (value, index).
  *
  * @static
  * @param {Function} [predicate=_.identity]
  *  The function invoked per iteration.
- * @param {number} [fromIndex=0] The index to search from.
  * @example
  * {"u": "b", "g": 36, "a": true} {"u": "f", "g": 40, "a": false} {"u": "p", "g": 1, "a": true} → find (o)=>{o.g < 40} → {"u": "b", "g": 36, "a": true}
  * // The `matches` iteratee shorthand.
@@ -1106,8 +1118,17 @@ function filter(predicate) {
  * // The `property` iteratee shorthand.
  * {"u": "b", "g": 36, "a": true} {"u": "f", "g": 40, "a": false} {"u": "p", "g": 1, "a": true} → find "a" → {"u": "b", "g": 36, "a": true}
  */
-function find(predicate, fromIndex) {
-  this.push(require('lodash').find(this.collect(), predicate, fromIndex));
+function find(predicate) {
+  predicate = _.iteratee(predicate);
+
+  var i = 0;
+  while (this.pull()) {
+    if (predicate(this.value, i)) {
+      this.push(this.value);
+      return;
+    }
+    i++;
+  }
 }
 
 /**
@@ -1377,7 +1398,15 @@ function reduceRight(iteratee, accumulator) {
  * {"u": "b", "g": 36, "a": false} {"u": "f", "g": 40, "a": true} → reject "a" → {"u": "b", "g": 36, "a": false}
  */
 function reject(predicate) {
-  this.spread(require('lodash').reject(this.collect(), predicate));
+  predicate = _.iteratee(predicate);
+
+  var i = 0;
+  while (this.pull()) {
+    if (!predicate(this.value, i)) {
+      this.push(this.value);
+    }
+    i++;
+  }
 }
 
 /**
@@ -1432,14 +1461,14 @@ function size() {
 /**
  * Checks if `predicate` returns truthy for **any** element of the input stream.
  * Iteration is stopped once `predicate` returns truthy. The predicate is
- * invoked with three arguments: (value, index|key, collection).
+ * invoked with two arguments: (value, index).
  *
  * @static
  * @param {Function} [predicate=_.identity] The function invoked per iteration.
- * @param- {Object} [guard] Enables use as an iteratee for methods like `map`.
- *  else `false`.
  * @example
  * null 0 "yes" false → some (x)=>{Boolean(x)} → true
+ * // With index
+ * 5 1 8 → some (x, i) => { i == x } → true
  * // The `matches` iteratee shorthand.
  * {"u": "b", "a": true} {"u": "f", "a": false} → some {"u": "b", "a": false} → false
  * // The `matchesProperty` iteratee shorthand.
@@ -1448,7 +1477,18 @@ function size() {
  * {"u": "b", "a": true} {"u": "f", "a": false} → some "a" → true
  */
 function some(predicate) {
-  this.push(require('lodash').some(this.collect(), predicate));
+  predicate = _.iteratee(predicate);
+
+  var i = 0;
+  while (this.pull()) {
+    if (predicate(this.value, i)) {
+      this.push(true);
+      return;
+    }
+    i++;
+  }
+
+  this.push(false);
 }
 
 /**
