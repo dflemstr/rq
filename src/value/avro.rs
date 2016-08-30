@@ -4,7 +4,7 @@ use serde_avro;
 use std::io;
 use value;
 
-pub struct AvroSource<R>(serde_avro::de::Deserializer<'static, io::BufReader<serde_avro::de::Blocks<io::BufReader<R>>>>) where R: io::Read;
+pub struct AvroSource<R>(serde_avro::de::Deserializer<'static, serde_avro::de::read::Blocks<R>>) where R: io::Read;
 
 #[inline]
 pub fn source<R>(input: R) -> error::Result<AvroSource<R>> where R: io::Read {

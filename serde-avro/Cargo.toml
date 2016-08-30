@@ -12,10 +12,14 @@ repository = "https://github.com/dflemstr/rq/tree/master/serde-avro"
 version = "0.1.0"
 
 [build-dependencies]
-serde_codegen = { version = "0.8.4", optional = true }
+
+[build-dependencies.serde_codegen]
+optional = true
+version = "0.8.4"
 
 [dependencies]
 byteorder = "0.5.3"
+crc = "1.3.0"
 error-chain = "0.5.0"
 flate2 = "0.2.14"
 lazy_static = "0.2.1"
@@ -23,8 +27,13 @@ linked-hash-map = "0.3.0"
 log = "0.3.6"
 serde = "0.8.4"
 serde_json = "0.8.1"
-serde_macros = { version = "0.8.4", optional = true }
 snap = "0.1.2"
+
+[dependencies.serde_macros]
+optional = true
+version = "0.8.4"
+
+[dev-dependencies]
 
 [dev-dependencies.serde-value]
 git = "https://github.com/dflemstr/serde-value.git"
