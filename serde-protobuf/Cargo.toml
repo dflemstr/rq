@@ -8,13 +8,13 @@ keywords = ["serde", "protocol", "buffers", "protobuf", "google"]
 license = "Apache-2.0"
 name = "serde-protobuf"
 repository = "https://github.com/dflemstr/rq/tree/master/serde-protobuf"
-version = "0.2.0"
+version = "0.3.0"
 
 [dependencies]
-linked-hash-map = "*"
-log = "*"
-protobuf = "*"
-serde = "*"
+linked-hash-map = "0.3.0"
+log = "0.3.6"
+protobuf = "1.0.24"
+serde = "0.8.5"
 
-[dev-dependencies.serde-value]
-git = "https://github.com/dflemstr/serde-value.git"
+[dev-dependencies]
+serde-value = "0.3.0"
