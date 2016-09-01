@@ -9,7 +9,7 @@ keywords = ["serde", "avro", "apache"]
 license = "Apache-2.0"
 name = "serde-avro"
 repository = "https://github.com/dflemstr/rq/tree/master/serde-avro"
-version = "0.1.0"
+version = "0.2.0"
 
 [build-dependencies]
 
@@ -34,9 +34,7 @@ optional = true
 version = "0.8.4"
 
 [dev-dependencies]
-
-[dev-dependencies.serde-value]
-git = "https://github.com/dflemstr/serde-value.git"
+serde-value = "0.3.0"
 
 [features]
 default = ["serde_codegen"]
