@@ -9,7 +9,7 @@ keywords = ["serde", "avro", "apache"]
 license = "Apache-2.0"
 name = "serde-avro"
 repository = "https://github.com/dflemstr/rq/tree/master/serde-avro"
-version = "0.2.0"
+version = "0.3.0"
 
 [build-dependencies]
 
