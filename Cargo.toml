@@ -25,7 +25,9 @@ protobuf = "*"
 rmp = "*"
 rustc-serialize = "*"
 serde = "*"
+serde-avro = "0.3.0"
 serde-hjson = "*"
+serde-protobuf = "0.3.0"
 serde_cbor = "*"
 serde_yaml = "*"
 xdg-basedir = "*"
@@ -35,15 +37,9 @@ yaml-rust = "*"
 features = ["debug", "logging"]
 git = "https://github.com/dflemstr/duk.git"
 
-[dependencies.serde-avro]
-path = "serde-avro"
-
 [dependencies.serde_json]
 branch = "v0.9.0"
 git = "https://github.com/serde-rs/json.git"
-
-[dependencies.serde-protobuf]
-path = "serde-protobuf"
 
 [profile]
 
