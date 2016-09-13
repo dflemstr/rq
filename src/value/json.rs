@@ -97,7 +97,7 @@ impl<W, F> value::Sink for JsonSink<W, F>
 
 impl ReadableFormatter {
     fn new() -> ReadableFormatter {
-        use ansi_term::Colour;
+        use ansi_term::{Colour, Style};
 
         ReadableFormatter {
             current_indent: 0,
@@ -115,12 +115,12 @@ impl ReadableFormatter {
             string_char_style: Colour::Green.normal(),
             string_escape_style: Colour::Green.dimmed(),
 
-            array_bracket_style: Colour::White.bold(),
-            array_comma_style: Colour::White.bold(),
+            array_bracket_style: Style::default().bold(),
+            array_comma_style: Style::default().bold(),
 
-            object_brace_style: Colour::White.bold(),
-            object_colon_style: Colour::White.bold(),
-            object_comma_style: Colour::White.bold(),
+            object_brace_style: Style::default().bold(),
+            object_colon_style: Style::default().bold(),
+            object_comma_style: Style::default().bold(),
             object_key_quote_style: Colour::Blue.dimmed(),
             object_key_char_style: Colour::Blue.normal(),
             object_key_escape_style: Colour::Blue.dimmed(),
