@@ -31,7 +31,7 @@ See https://github.com/dflemstr/rq for in-depth documentation.
 
 Usage:
   rq (--help|--version)
-  rq [-j|-a|-c|-h|-m|-p <type>|-y] [-J|-A <type>|-C|-H|-M|-P <type>|-Y] [--format <format>] [-l <spec>|-q] [--trace] [--] [<query>]
+  rq [-j|-a|-c|-h|-m|-p <type>|-t|-y] [-J|-A <type>|-C|-H|-M|-P <type>|-T|-Y] [--format <format>] [-l <spec>|-q] [--trace] [--] [<query>]
   rq [-l <spec>|-q] [--trace] protobuf add <schema> [--base <path>]
 
 Options:
@@ -67,6 +67,10 @@ Options:
       Output should be formatted as protocol buffer objects.  The argument
       refers to the fully qualified name of the message type (including the
       leading '.').
+  -t, --input-toml
+      Input is formatted as TOML document.
+  -T, --output-toml
+      Output should be formatted as TOML document.
   -y, --input-yaml
       Input is a series of YAML documents.
   -Y, --output-yaml
@@ -111,6 +115,7 @@ pub struct Args {
     pub flag_input_json: bool,
     pub flag_input_message_pack: bool,
     pub flag_input_protobuf: Option<String>,
+    pub flag_input_toml: bool,
     pub flag_input_yaml: bool,
     pub flag_log: Option<String>,
     pub flag_output_avro: Option<String>,
@@ -119,6 +124,7 @@ pub struct Args {
     pub flag_output_json: bool,
     pub flag_output_message_pack: bool,
     pub flag_output_protobuf: Option<String>,
+    pub flag_output_toml: bool,
     pub flag_output_yaml: bool,
     pub flag_quiet: bool,
     pub flag_trace: bool,
@@ -191,6 +197,9 @@ fn run(args: &Args, paths: &rq::config::Paths) -> rq::error::Result<()> {
 
         let source = try!(rq::value::hjson::source(&mut input));
         run_source(args, paths, source)
+    } else if args.flag_input_toml {
+        let source = try!(rq::value::toml::source(&mut input));
+        run_source(args, paths, source)
     } else if args.flag_input_yaml {
         let source = try!(rq::value::yaml::source(&mut input));
         run_source(args, paths, source)
@@ -242,6 +251,10 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
         // TODO: add HJSON ugly printing eventually; now it's always "readable"
         dispatch_format!(rq::value::hjson::sink,
                          rq::value::hjson::sink)
+    } else if args.flag_output_toml {
+        // TODO: add TOML ugly printing eventually; now it's always "readable"
+        dispatch_format!(rq::value::toml::sink,
+                         rq::value::toml::sink)
     } else if args.flag_output_yaml {
         // TODO: add YAML ugly printing eventually; now it's always "readable"
         dispatch_format!(rq::value::yaml::sink,

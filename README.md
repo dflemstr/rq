@@ -34,3 +34,4 @@ operating systems and architectures.
 | MessagePack             | ✔️    | ✔️     |
 | Google Protocol Buffers | ✔️    | ✖️     |
 | YAML                    | ✔️    | ✔️     |
+| TOML                    | ✔️    | ✔️     |

@@ -23,6 +23,7 @@ extern crate serde_json;
 extern crate serde_protobuf;
 extern crate serde_yaml;
 extern crate xdg_basedir;
+extern crate toml;
 extern crate yaml_rust;
 
 pub mod config;
