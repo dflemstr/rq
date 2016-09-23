@@ -1,13 +1,14 @@
-use std::io;
-use std::str;
+
 
 use ansi_term;
 use dtoa;
+
+use error;
 use itoa;
 use serde;
 use serde_json;
-
-use error;
+use std::io;
+use std::str;
 use value;
 
 pub struct JsonSource<R>(serde_json::StreamDeserializer<value::Value, io::Bytes<R>>)
@@ -86,8 +87,8 @@ impl<W, F> value::Sink for JsonSink<W, F>
     #[inline]
     fn write(&mut self, v: value::Value) -> error::Result<()> {
         {
-            let mut serializer =
-                serde_json::ser::Serializer::with_formatter(&mut self.0, self.1.clone());
+            let mut serializer = serde_json::ser::Serializer::with_formatter(&mut self.0,
+                                                                             self.1.clone());
             try!(serde::Serialize::serialize(&v, &mut serializer));
         }
         try!(self.0.write_all(b"\n"));
@@ -208,7 +209,10 @@ impl serde_json::ser::Formatter for ReadableFormatter {
     /// Writes a string fragment that doesn't need any escaping to the
     /// specified writer.
     #[inline]
-    fn write_string_fragment<W>(&mut self, writer: &mut W, fragment: &[u8]) -> serde_json::Result<()>
+    fn write_string_fragment<W>(&mut self,
+                                writer: &mut W,
+                                fragment: &[u8])
+                                -> serde_json::Result<()>
         where W: io::Write
     {
         let style = if self.is_in_object_key {
@@ -223,7 +227,10 @@ impl serde_json::ser::Formatter for ReadableFormatter {
 
     /// Writes a character escape code to the specified writer.
     #[inline]
-    fn write_char_escape<W>(&mut self, writer: &mut W, char_escape: serde_json::ser::CharEscape) -> serde_json::Result<()>
+    fn write_char_escape<W>(&mut self,
+                            writer: &mut W,
+                            char_escape: serde_json::ser::CharEscape)
+                            -> serde_json::Result<()>
         where W: io::Write
     {
         use serde_json::ser::CharEscape::*;
@@ -245,14 +252,17 @@ impl serde_json::ser::Formatter for ReadableFormatter {
             Tab => "\\t",
             AsciiControl(byte) => {
                 static HEX_DIGITS: [u8; 16] = *b"0123456789abcdef";
-                let bytes = &[b'\\', b'u', b'0', b'0',
+                let bytes = &[b'\\',
+                              b'u',
+                              b'0',
+                              b'0',
                               HEX_DIGITS[(byte >> 4) as usize],
                               HEX_DIGITS[(byte & 0xF) as usize]];
                 let s = unsafe { str::from_utf8_unchecked(bytes) };
 
                 // Need to return early because of allocated String
                 return write!(writer, "{}", style.paint(s)).map_err(From::from);
-            }
+            },
         };
 
         write!(writer, "{}", style.paint(s)).map_err(From::from)

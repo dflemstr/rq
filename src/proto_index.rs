@@ -1,12 +1,13 @@
+
+
+use config;
+use error;
+
+use protobuf;
 use std::cmp;
 use std::fs;
 use std::path;
 use std::process;
-
-use protobuf;
-
-use config;
-use error;
 
 pub fn add_file(paths: &config::Paths,
                 relative_to: &path::Path,

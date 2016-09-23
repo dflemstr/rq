@@ -1,7 +1,5 @@
-use std::io;
-use std::string;
 
-use duk;
+
 use glob;
 use protobuf;
 use rmp;
@@ -11,8 +9,11 @@ use serde_hjson;
 use serde_json;
 use serde_protobuf;
 use serde_yaml;
-use xdg_basedir;
+use std::io;
+use std::string;
 use toml;
+use v8;
+use xdg_basedir;
 use yaml_rust;
 
 error_chain! {
@@ -21,8 +22,8 @@ error_chain! {
     }
 
     links {
-        duk::Error, duk::ErrorKind, Duk;
         serde_avro::error::Error, serde_avro::error::ErrorKind, Avro;
+        v8::error::Error, v8::error::ErrorKind, V8;
     }
 
     foreign_links {

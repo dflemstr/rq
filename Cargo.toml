@@ -34,13 +34,12 @@ toml = { version = "0.2.1", features = ["serde"] }
 xdg-basedir = "*"
 yaml-rust = "*"
 
-[dependencies.duk]
-features = ["debug", "logging"]
-git = "https://github.com/dflemstr/duk.git"
-
 [dependencies.serde_json]
 branch = "v0.9.0"
 git = "https://github.com/serde-rs/json.git"
+
+[dependencies.v8]
+git = "https://github.com/dflemstr/v8-rs.git"
 
 [profile]
 

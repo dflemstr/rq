@@ -1,12 +1,11 @@
-use std::collections;
-use std::fmt;
-use std::io;
+use error;
 
 use ordered_float;
 use serde;
 use serde_json;
-
-use error;
+use std::collections;
+use std::fmt;
+use std::io;
 
 pub mod avro;
 pub mod cbor;

@@ -22,9 +22,9 @@ var _ = require('lodash');
  * {"a": 2, "b": 3} → id → {"a": 2, "b": 3}
  * true             → id → true
  */
-function id() {
-  while (this.pull()) {
-    this.push(this.value);
+function* id() {
+  while (yield* this.pull()) {
+    yield* this.push(this.value);
   }
 }
 
@@ -38,15 +38,15 @@ function id() {
  *
  * @param {string} path the field path to follow
  */
-function select(path) {
+function* select(path) {
   var self = this;
-  while (this.pull()) {
+  while (yield* this.pull()) {
     var lenses = rq.util.path(this.value, path);
     if (lenses.length > 0) {
       for (var i = 0; i < lenses.length; i++) {
         var lens = lenses[i];
         var value = lens.get();
-        self.push(value);
+        yield* self.push(value);
       }
     } else {
       this.log.warn('path', JSON.stringify(path), 'did not match a value in',
@@ -67,14 +67,14 @@ function select(path) {
  * @param {string} path the field path to follow
  * @param {function(*): *} f the function to apply
  */
-function modify(path, f) {
-  while (this.pull()) {
+function* modify(path, f) {
+  while (yield* this.pull()) {
     var lenses = rq.util.path(this.value, path);
     for (var i = 0; i < lenses.length; i++) {
       var lens = lenses[i];
       lens.set(f(lens.get()));
     }
-    this.push(this.value);
+    yield* this.push(this.value);
   }
 }
 
@@ -83,10 +83,10 @@ function modify(path, f) {
  *
  * @static
  */
-function tee() {
-  while (this.pull()) {
+function* tee() {
+  while (yield* this.pull()) {
     this.log.info(JSON.stringify(this.value));
-    this.push(this.value);
+    yield* this.push(this.value);
   }
 }
 
@@ -97,8 +97,8 @@ function tee() {
  * @example
  * true [] 1 → collect → [true, [], 1]
  */
-function collect() {
-  this.push(this.collect());
+function* collect() {
+  yield* this.push((yield* this.collect()));
 }
 
 /**
@@ -108,12 +108,12 @@ function collect() {
  * @example
  * [1, 2] [3, 4] 5 → spread → 1 2 3 4 5
  */
-function spread() {
-  while (this.pull()) {
+function* spread() {
+  while (yield* this.pull()) {
     if (Array.isArray(this.value)) {
-      this.spread(this.value);
+      yield* this.spread(this.value);
     } else {
-      this.push(this.value);
+      yield* this.push(this.value);
     }
   }
 }
@@ -140,7 +140,7 @@ function spread() {
  * "a" "b" "c" "d" → chunk -1 → (empty)
  * "a" "b" "c" "d" → chunk  0 → (empty)
  */
-function chunk(size) {
+function* chunk(size) {
   if (size === undefined) {
     size = 1;
   } else {
@@ -150,16 +150,16 @@ function chunk(size) {
   if (size > 0) {
     var buffer = [];
 
-    while (this.pull()) {
+    while (yield* this.pull()) {
       buffer.push(this.value);
       if (buffer.length >= size) {
-        this.push(buffer);
+        yield* this.push(buffer);
         buffer = [];
       }
     }
 
     if (buffer.length > 0) {
-      this.push(buffer);
+      yield* this.push(buffer);
     }
   }
 }
@@ -172,8 +172,8 @@ function chunk(size) {
  * @example
  * 0 1 false 2 "" 3 → compact → 1 2 3
  */
-function compact() {
-  this.spread(require('lodash').compact(this.collect()));
+function* compact() {
+  yield* this.spread(require('lodash').compact((yield* this.collect())));
 }
 
 /**
@@ -183,8 +183,8 @@ function compact() {
  * @example
  * [1] 2 [3] [[4]] → concat → [1, 2, 3, [4]]
  */
-function concat() {
-  this.push(require('lodash').concat.apply(null, this.collect()));
+function* concat() {
+  yield* this.push(require('lodash').concat.apply(null, (yield* this.collect())));
 }
 
 /**
@@ -199,8 +199,8 @@ function concat() {
  * @example
  * 2 1 → difference [2, 3] → 1
  */
-function difference(values) {
-  this.spread(require('lodash').difference(this.collect(), values));
+function* difference(values) {
+  yield* this.spread(require('lodash').difference((yield* this.collect()), values));
 }
 
 /**
@@ -217,8 +217,8 @@ function difference(values) {
  * // The `property` iteratee shorthand.
  * {"x": 2} {"x": 1} → differenceBy [{"x": 1}] "x" → {"x": 2}
  */
-function differenceBy(values, iteratee) {
-  this.spread(require('lodash').differenceBy(this.collect(), values, iteratee));
+function* differenceBy(values, iteratee) {
+  yield* this.spread(require('lodash').differenceBy((yield* this.collect()), values, iteratee));
 }
 
 /**
@@ -232,8 +232,8 @@ function differenceBy(values, iteratee) {
  * @example
  * {"x": 1, "y": 2} {"x": 2, "y": 1} → differenceWith [{"x": 1, "y": 2}] (a, b)=>{_.isEqual(a, b)} → {"x": 2, "y": 1}
  */
-function differenceWith(values, comparator) {
-  this.spread(require('lodash').differenceWith(this.collect(), values, comparator));
+function* differenceWith(values, comparator) {
+  yield* this.spread(require('lodash').differenceWith((yield* this.collect()), values, comparator));
 }
 
 /**
@@ -247,8 +247,8 @@ function differenceWith(values, comparator) {
  * 1 2 3 → drop 5 → (empty)
  * 1 2 3 → drop 0 → 1 2 3
  */
-function drop(n) {
-  this.spread(require('lodash').drop(this.collect(), n));
+function* drop(n) {
+  yield* this.spread(require('lodash').drop((yield* this.collect()), n));
 }
 
 /**
@@ -262,8 +262,8 @@ function drop(n) {
  * 1 2 3 → dropRight 5 → (empty)
  * 1 2 3 → dropRight 0 → 1 2 3
  */
-function dropRight(n) {
-  this.spread(require('lodash').dropRight(this.collect(), n));
+function* dropRight(n) {
+  yield* this.spread(require('lodash').dropRight((yield* this.collect()), n));
 }
 
 /**
@@ -282,8 +282,8 @@ function dropRight(n) {
  * // The `property` iteratee shorthand.
  * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → dropRightWhile "a" → {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false}
  */
-function dropRightWhile(predicate) {
-  this.spread(require('lodash').dropRightWhile(this.collect(), predicate));
+function* dropRightWhile(predicate) {
+  yield* this.spread(require('lodash').dropRightWhile((yield* this.collect()), predicate));
 }
 
 /**
@@ -303,8 +303,8 @@ function dropRightWhile(predicate) {
  * // The `property` iteratee shorthand.
  * {"u": "b", "a": false} {"u": "f", "a": false} {"u": "p", "a": true} → dropWhile "a" → {"u": "b", "a": false} {"u": "f", "a": false} {"u": "p", "a": true}
  */
-function dropWhile(predicate) {
-  this.spread(require('lodash').dropWhile(this.collect(), predicate));
+function* dropWhile(predicate) {
+  yield* this.spread(require('lodash').dropWhile((yield* this.collect()), predicate));
 }
 
 /**
@@ -318,8 +318,8 @@ function dropWhile(predicate) {
  * @example
  * 4 6 8 10 → fill "*" 1 3 → 4 "*" "*" 10
  */
-function fill(value, start, end) {
-  this.spread(require('lodash').fill(this.collect(), value, start, end));
+function* fill(value, start, end) {
+  yield* this.spread(require('lodash').fill((yield* this.collect()), value, start, end));
 }
 
 /**
@@ -339,8 +339,8 @@ function fill(value, start, end) {
  * // The `property` iteratee shorthand.
  * {"u": "b", "a": false} {"u": "f", "a": false} {"u": "p", "a": true} → findIndex "a" → 2
  */
-function findIndex(predicate, fromIndex) {
-  this.push(require('lodash').findIndex(this.collect(), predicate, fromIndex));
+function* findIndex(predicate, fromIndex) {
+  yield* this.push(require('lodash').findIndex((yield* this.collect()), predicate, fromIndex));
 }
 
 /**
@@ -360,8 +360,8 @@ function findIndex(predicate, fromIndex) {
  * // The `property` iteratee shorthand.
  * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → findLastIndex "a" → 0
  */
-function findLastIndex(predicate, fromIndex) {
-  this.push(require('lodash').findLastIndex(this.collect(), predicate, fromIndex));
+function* findLastIndex(predicate, fromIndex) {
+  yield* this.push(require('lodash').findLastIndex((yield* this.collect()), predicate, fromIndex));
 }
 
 /**
@@ -371,8 +371,8 @@ function findLastIndex(predicate, fromIndex) {
  * @example
  * 1  [2, [3, [4]], 5] → flatten → 1 2 [3, [4]] 5
  */
-function flatten() {
-  this.spread(require('lodash').flatten(this.collect()));
+function* flatten() {
+  yield* this.spread(require('lodash').flatten((yield* this.collect())));
 }
 
 /**
@@ -382,8 +382,8 @@ function flatten() {
  * @example
  * 1 [2, [3, [4]], 5] → flattenDeep → 1 2 3 4 5
  */
-function flattenDeep() {
-  this.spread(require('lodash').flattenDeep(this.collect()));
+function* flattenDeep() {
+  yield* this.spread(require('lodash').flattenDeep((yield* this.collect())));
 }
 
 /**
@@ -395,8 +395,8 @@ function flattenDeep() {
  * 1 [2, [3, [4]], 5] → flattenDepth 1 → 1 2 [3, [4]] 5
  * 1 [2, [3, [4]], 5] → flattenDepth 2 → 1 2 3 [4] 5
  */
-function flattenDepth(depth) {
-  this.spread(require('lodash').flattenDepth(this.collect(), depth));
+function* flattenDepth(depth) {
+  yield* this.spread(require('lodash').flattenDepth((yield* this.collect()), depth));
 }
 
 /**
@@ -407,8 +407,8 @@ function flattenDepth(depth) {
  * @example
  * ["a", 1] ["b", 2] → fromPairs → {"a": 1, "b": 2}
  */
-function fromPairs() {
-  this.push(require('lodash').fromPairs(this.collect()));
+function* fromPairs() {
+  yield* this.push(require('lodash').fromPairs((yield* this.collect())));
 }
 
 /**
@@ -420,8 +420,8 @@ function fromPairs() {
  * 1 2 3   → head → 1
  * (empty) → head → null
  */
-function head() {
-  this.push(require('lodash').head(this.collect()));
+function* head() {
+  yield* this.push(require('lodash').head((yield* this.collect())));
 }
 
 /**
@@ -438,8 +438,8 @@ function head() {
  * // Search from the `fromIndex`.
  * 1 2 1 2 → indexOf 2 2 → 3
  */
-function indexOf(value, fromIndex) {
-  this.push(require('lodash').indexOf(this.collect(), value, fromIndex));
+function* indexOf(value, fromIndex) {
+  yield* this.push(require('lodash').indexOf((yield* this.collect()), value, fromIndex));
 }
 
 /**
@@ -449,8 +449,8 @@ function indexOf(value, fromIndex) {
  * @example
  * 1 2 3 → initial → 1 2
  */
-function initial() {
-  this.spread(require('lodash').initial(this.collect()));
+function* initial() {
+  yield* this.spread(require('lodash').initial((yield* this.collect())));
 }
 
 /**
@@ -464,8 +464,8 @@ function initial() {
  * @example
  * 2 1 → intersection [2, 3] → 2
  */
-function intersection(values) {
-  this.spread(require('lodash').intersection(this.collect(), values));
+function* intersection(values) {
+  yield* this.spread(require('lodash').intersection((yield* this.collect()), values));
 }
 
 /**
@@ -482,8 +482,8 @@ function intersection(values) {
  * // The `property` iteratee shorthand.
  * {"x": 1} → intersectionBy [{"x": 2}, {"x": 1}] "x" → {"x": 1}
  */
-function intersectionBy(values, iteratee) {
-  this.spread(require('lodash').intersectionBy(this.collect(), values, iteratee));
+function* intersectionBy(values, iteratee) {
+  yield* this.spread(require('lodash').intersectionBy((yield* this.collect()), values, iteratee));
 }
 
 /**
@@ -498,8 +498,8 @@ function intersectionBy(values, iteratee) {
  * @example
  * {"x": 1, "y": 2} {"x": 2, "y": 1} → intersectionWith [{"x": 1, "y": 1}, {"x": 1, "y": 2}] (a, b)=>{_.isEqual(a, b)} → {"x": 1, "y": 2}
  */
-function intersectionWith(values, comparator) {
-  this.spread(require('lodash').intersectionWith(this.collect(), values, comparator));
+function* intersectionWith(values, comparator) {
+  yield* this.spread(require('lodash').intersectionWith((yield* this.collect()), values, comparator));
 }
 
 /**
@@ -511,8 +511,8 @@ function intersectionWith(values, comparator) {
  * "a" "b" "c" → join     → "a,b,c"
  * "a" "b" "c" → join "~" → "a~b~c"
  */
-function join(separator) {
-  this.push(require('lodash').join(this.collect(), separator));
+function* join(separator) {
+  yield* this.push(require('lodash').join((yield* this.collect()), separator));
 }
 
 /**
@@ -522,8 +522,8 @@ function join(separator) {
  * @example
  * 1 2 3 → last → 3
  */
-function last() {
-  this.push(require('lodash').last(this.collect()));
+function* last() {
+  yield* this.push(require('lodash').last((yield* this.collect())));
 }
 
 /**
@@ -537,8 +537,8 @@ function last() {
  * 1 2 1 2 → lastIndexOf 2   → 3
  * 1 2 1 2 → lastIndexOf 2 2 → 1
  */
-function lastIndexOf(value, fromIndex) {
-  this.push(require('lodash').lastIndexOf(this.collect(), value, fromIndex));
+function* lastIndexOf(value, fromIndex) {
+  yield* this.push(require('lodash').lastIndexOf((yield* this.collect()), value, fromIndex));
 }
 
 /**
@@ -551,8 +551,8 @@ function lastIndexOf(value, fromIndex) {
  * "a" "b" "c" "d" → nth  1 → "b"
  * "a" "b" "c" "d" → nth -2 → "c"
  */
-function nth(n) {
-  this.push(require('lodash').nth(this.collect(), n));
+function* nth(n) {
+  yield* this.push(require('lodash').nth((yield* this.collect()), n));
 }
 
 // pull, pullAll, pullAllBy, pullAllWith, pullAt, remove don't make sense
@@ -565,8 +565,8 @@ function nth(n) {
  * @example
  * 1 2 3 → reverse → 3 2 1
  */
-function reverse() {
-  this.spread(require('lodash').reverse(this.collect()));
+function* reverse() {
+  yield* this.spread(require('lodash').reverse((yield* this.collect())));
 }
 
 /**
@@ -578,8 +578,8 @@ function reverse() {
  * @example
  * 1 2 3 4 → slice 1 3 → 2 3
  */
-function slice(start, end) {
-  this.spread(require('lodash').slice(this.collect(), start, end));
+function* slice(start, end) {
+  yield* this.spread(require('lodash').slice((yield* this.collect()), start, end));
 }
 
 /**
@@ -592,8 +592,8 @@ function slice(start, end) {
  * @example
  * 30 50 → sortedIndex 40 → 1
  */
-function sortedIndex(value) {
-  this.push(require('lodash').sortedIndex(this.collect(), value));
+function* sortedIndex(value) {
+  yield* this.push(require('lodash').sortedIndex((yield* this.collect()), value));
 }
 
 /**
@@ -611,8 +611,8 @@ function sortedIndex(value) {
  * // The `property` iteratee shorthand.
  * {"x": 4} {"x": 5} → sortedIndexBy {"x": 4} "x" → 0
  */
-function sortedIndexBy(value, iteratee) {
-  this.push(require('lodash').sortedIndexBy(this.collect(), value, iteratee));
+function* sortedIndexBy(value, iteratee) {
+  yield* this.push(require('lodash').sortedIndexBy((yield* this.collect()), value, iteratee));
 }
 
 /**
@@ -624,8 +624,8 @@ function sortedIndexBy(value, iteratee) {
  * @example
  * 4 5 5 5 6 → sortedIndexOf 5 → 1
  */
-function sortedIndexOf(value) {
-  this.push(require('lodash').sortedIndexOf(this.collect(), value));
+function* sortedIndexOf(value) {
+  yield* this.push(require('lodash').sortedIndexOf((yield* this.collect()), value));
 }
 
 /**
@@ -639,8 +639,8 @@ function sortedIndexOf(value) {
  * @example
  * 4 5 5 5 6 → sortedLastIndex 5 → 4
  */
-function sortedLastIndex(value) {
-  this.push(require('lodash').sortedLastIndex(this.collect(), value));
+function* sortedLastIndex(value) {
+  yield* this.push(require('lodash').sortedLastIndex((yield* this.collect()), value));
 }
 
 /**
@@ -658,8 +658,8 @@ function sortedLastIndex(value) {
  * // The `property` iteratee shorthand.
  * {"x": 4} {"x": 5} → sortedLastIndexBy {"x": 4} "x" → 1
  */
-function sortedLastIndexBy(value, iteratee) {
-  this.push(require('lodash').sortedLastIndexBy(this.collect(), value, iteratee));
+function* sortedLastIndexBy(value, iteratee) {
+  yield* this.push(require('lodash').sortedLastIndexBy((yield* this.collect()), value, iteratee));
 }
 
 /**
@@ -671,8 +671,8 @@ function sortedLastIndexBy(value, iteratee) {
  * @example
  * 4 5 5 5 6 → sortedLastIndexOf 5 → 3
  */
-function sortedLastIndexOf(value) {
-  this.push(require('lodash').sortedLastIndexOf(this.collect(), value));
+function* sortedLastIndexOf(value) {
+  yield* this.push(require('lodash').sortedLastIndexOf((yield* this.collect()), value));
 }
 
 /**
@@ -683,8 +683,8 @@ function sortedLastIndexOf(value) {
  * @example
  * 1 1 2 → sortedUniq → 1 2
  */
-function sortedUniq() {
-  this.spread(require('lodash').sortedUniq(this.collect()));
+function* sortedUniq() {
+  yield* this.spread(require('lodash').sortedUniq((yield* this.collect())));
 }
 
 /**
@@ -696,8 +696,8 @@ function sortedUniq() {
  * @example
  * 1.1 1.2 2.3 2.4 → sortedUniqBy (x)=>{Math.floor(x)} → 1.1 2.3
  */
-function sortedUniqBy(iteratee) {
-  this.spread(require('lodash').sortedUniqBy(this.collect(), iteratee));
+function* sortedUniqBy(iteratee) {
+  yield* this.spread(require('lodash').sortedUniqBy((yield* this.collect()), iteratee));
 }
 
 /**
@@ -707,8 +707,8 @@ function sortedUniqBy(iteratee) {
  * @example
  * 1 2 3 → tail → 2 3
  */
-function tail() {
-  this.spread(require('lodash').tail(this.collect()));
+function* tail() {
+  yield* this.spread(require('lodash').tail((yield* this.collect())));
 }
 
 /**
@@ -723,8 +723,8 @@ function tail() {
  * 1 2 3 → take 5 → 1 2 3
  * 1 2 3 → take 0 → (empty)
  */
-function take(n) {
-  this.spread(require('lodash').take(this.collect(), n));
+function* take(n) {
+  yield* this.spread(require('lodash').take((yield* this.collect()), n));
 }
 
 /**
@@ -739,8 +739,8 @@ function take(n) {
  * 1 2 3 → takeRight 5 → 1 2 3
  * 1 2 3 → takeRight 0 → (empty)
  */
-function takeRight(n) {
-  this.spread(require('lodash').takeRight(this.collect(), n));
+function* takeRight(n) {
+  yield* this.spread(require('lodash').takeRight((yield* this.collect()), n));
 }
 
 /**
@@ -760,8 +760,8 @@ function takeRight(n) {
  * // The `property` iteratee shorthand.
  * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → takeRightWhile "a" → (empty)
  */
-function takeRightWhile(predicate) {
-  this.spread(require('lodash').takeRightWhile(this.collect(), predicate));
+function* takeRightWhile(predicate) {
+  yield* this.spread(require('lodash').takeRightWhile((yield* this.collect()), predicate));
 }
 
 /**
@@ -781,8 +781,8 @@ function takeRightWhile(predicate) {
  * // The `property` iteratee shorthand.
  * {"u": "b", "a": false} {"u": "f", "a": false} {"u": "p", "a": true} → takeWhile "a" → (empty)
  */
-function takeWhile(predicate) {
-  this.spread(require('lodash').takeWhile(this.collect(), predicate));
+function* takeWhile(predicate) {
+  yield* this.spread(require('lodash').takeWhile((yield* this.collect()), predicate));
 }
 
 /**
@@ -795,8 +795,8 @@ function takeWhile(predicate) {
  * @example
  * 2 → union [1, 2] → 2 1
  */
-function union(values) {
-  this.spread(require('lodash').union(this.collect(), values));
+function* union(values) {
+  yield* this.spread(require('lodash').union((yield* this.collect()), values));
 }
 
 /**
@@ -814,8 +814,8 @@ function union(values) {
  * // The `property` iteratee shorthand.
  * {"x": 1} → unionBy [{"x": 2}, {"x": 1}] "x" → {"x": 1} {"x": 2}
  */
-function unionBy(values, iteratee) {
-  this.spread(require('lodash').unionBy(this.collect(), values, iteratee));
+function* unionBy(values, iteratee) {
+  yield* this.spread(require('lodash').unionBy((yield* this.collect()), values, iteratee));
 }
 
 /**
@@ -829,8 +829,8 @@ function unionBy(values, iteratee) {
  * @example
  * {"x": 1, "y": 2} {"x": 2, "y": 1} → unionWith [{"x": 1, "y": 1}, {"x": 1, "y": 2}] (a, b)=>{_.isEqual(a, b)} → {"x": 1, "y": 2} {"x": 2, "y": 1} {"x": 1, "y": 1}
  */
-function unionWith(values, comparator) {
-  this.spread(require('lodash').unionWith(this.collect(), values, comparator));
+function* unionWith(values, comparator) {
+  yield* this.spread(require('lodash').unionWith((yield* this.collect()), values, comparator));
 }
 
 /**
@@ -843,8 +843,8 @@ function unionWith(values, comparator) {
  * @example
  * 2 1 2 → uniq → 2 1
  */
-function uniq() {
-  this.spread(require('lodash').uniq(this.collect()));
+function* uniq() {
+  yield* this.spread(require('lodash').uniq((yield* this.collect())));
 }
 
 /**
@@ -860,8 +860,8 @@ function uniq() {
  * // The `property` iteratee shorthand.
  * {"x": 1} {"x": 2} {"x": 1} → uniqBy "x" → {"x": 1} {"x": 2}
  */
-function uniqBy(iteratee) {
-  this.spread(require('lodash').uniqBy(this.collect(), iteratee));
+function* uniqBy(iteratee) {
+  yield* this.spread(require('lodash').uniqBy((yield* this.collect()), iteratee));
 }
 
 /**
@@ -874,8 +874,8 @@ function uniqBy(iteratee) {
  * @example
  * {"x": 1, "y": 2} {"x": 2, "y": 1} {"x": 1, "y": 2} → uniqWith (a, b)=>{_.isEqual(a, b)} → {"x": 1, "y": 2} {"x": 2, "y": 1}
  */
-function uniqWith(comparator) {
-  this.spread(require('lodash').uniqWith(this.collect(), comparator));
+function* uniqWith(comparator) {
+  yield* this.spread(require('lodash').uniqWith((yield* this.collect()), comparator));
 }
 
 /**
@@ -887,8 +887,8 @@ function uniqWith(comparator) {
  * @example
  * ["a", 1, true] ["b", 2, false] → unzip → ["a", "b"] [1, 2] [true, false]
  */
-function unzip() {
-  this.spread(require('lodash').unzip(this.collect()));
+function* unzip() {
+  yield* this.spread(require('lodash').unzip((yield* this.collect())));
 }
 
 /**
@@ -902,8 +902,8 @@ function unzip() {
  * @example
  * [1, 10, 100] [2, 20, 200] → unzipWith (a, b)=>{_.add(a, b)} → 3 30 300
  */
-function unzipWith(iteratee) {
-  this.spread(require('lodash').unzipWith(this.collect(), iteratee));
+function* unzipWith(iteratee) {
+  yield* this.spread(require('lodash').unzipWith((yield* this.collect()), iteratee));
 }
 
 /**
@@ -917,10 +917,10 @@ function unzipWith(iteratee) {
  * @example
  * 2 1 2 3 → without 1 2 → 3
  */
-function without(values) {
+function* without(values) {
   var args = Array.prototype.slice.call(arguments);
-  args.unshift(this.collect());
-  this.spread(require('lodash').without.apply(null, args));
+  args.unshift((yield* this.collect()));
+  yield* this.spread(require('lodash').without.apply(null, args));
 }
 
 /**
@@ -935,8 +935,8 @@ function without(values) {
  * @example
  * 2 1 → xor [2, 3] → 1 3
  */
-function xor(values) {
-  this.spread(require('lodash').xor(this.collect(), values));
+function* xor(values) {
+  yield* this.spread(require('lodash').xor((yield* this.collect()), values));
 }
 
 /**
@@ -954,8 +954,8 @@ function xor(values) {
  * // The `property` iteratee shorthand.
  * {"x": 1} → xorBy [{"x": 2}, {"x": 1}] "x" → {"x": 2}
  */
-function xorBy(values, iteratee) {
-  this.spread(require('lodash').xorBy(this.collect(), values, iteratee));
+function* xorBy(values, iteratee) {
+  yield* this.spread(require('lodash').xorBy((yield* this.collect()), values, iteratee));
 }
 
 /**
@@ -969,8 +969,8 @@ function xorBy(values, iteratee) {
  * @example
  * {"x": 1, "y": 2} {"x": 2, "y": 1} → xorWith [{"x": 1, "y": 1}, {"x": 1, "y": 2}] (a, b)=>{_.isEqual(a, b)} → {"x": 2, "y": 1} {"x": 1, "y": 1}
  */
-function xorWith(values, comparator) {
-  this.spread(require('lodash').xorWith(this.collect(), values, comparator));
+function* xorWith(values, comparator) {
+  yield* this.spread(require('lodash').xorWith((yield* this.collect()), values, comparator));
 }
 
 /**
@@ -982,8 +982,8 @@ function xorWith(values, comparator) {
  * @example
  * ["a", "b"] [1, 2] [true, false] → zip → ["a", 1, true] ["b", 2, false]
  */
-function zip() {
-  this.spread(require('lodash').zip.apply(null, this.collect()));
+function* zip() {
+  yield* this.spread(require('lodash').zip.apply(null, (yield* this.collect())));
 }
 
 // zipObject and zipObjectDeep don't make sense
@@ -999,13 +999,13 @@ function zip() {
  *
  * [1, 2] [10, 20] [100, 200] → zipWith (a, b, c)=>{a + b + c} → 111 222
  */
-function zipWith(iteratee) {
+function* zipWith(iteratee) {
   var args = [];
-  while (this.pull()) {
+  while (yield* this.pull()) {
     args.push(this.value);
   }
   args.push(iteratee);
-  this.spread(require('lodash').zipWith.apply(null, args));
+  yield* this.spread(require('lodash').zipWith.apply(null, args));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1033,19 +1033,19 @@ function zipWith(iteratee) {
  * // The `property` iteratee shorthand.
  * {"u": "b", "g": 36, "a": false} {"u": "f", "g": 40, "a": false} → every "a" → false
  */
-function every(predicate) {
+function* every(predicate) {
   predicate = _.iteratee(predicate);
 
   var i = 0;
-  while (this.pull()) {
+  while (yield* this.pull()) {
     if (!predicate(this.value, i)) {
-      this.push(false);
+      yield* this.push(false);
       return;
     }
     i++;
   }
 
-  this.push(true);
+  yield* this.push(true);
 }
 
 /**
@@ -1062,8 +1062,8 @@ function every(predicate) {
  * 6.1 4.2 6.3         → countBy (x)=>{Math.floor(x)} → {"4": 1, "6": 2}
  * "one" "two" "three" → countBy "length"             → {"3": 2, "5": 1}
  */
-function countBy(iteratee) {
-  this.push(require('lodash').countBy(this.collect(), iteratee));
+function* countBy(iteratee) {
+  yield* this.push(require('lodash').countBy((yield* this.collect()), iteratee));
 }
 
 /**
@@ -1089,13 +1089,13 @@ function countBy(iteratee) {
  * // The `property` iteratee shorthand.
  * {"u": "b", "g": 36, "a": true} {"u": "f", "g": 40, "a": false} → filter "a" → {"u": "b", "g": 36, "a": true}
  */
-function filter(predicate) {
+function* filter(predicate) {
   predicate = _.iteratee(predicate);
 
   var i = 0;
-  while (this.pull()) {
+  while (yield* this.pull()) {
     if (predicate(this.value, i)) {
-      this.push(this.value);
+      yield* this.push(this.value);
     }
     i++;
   }
@@ -1118,13 +1118,13 @@ function filter(predicate) {
  * // The `property` iteratee shorthand.
  * {"u": "b", "g": 36, "a": true} {"u": "f", "g": 40, "a": false} {"u": "p", "g": 1, "a": true} → find "a" → {"u": "b", "g": 36, "a": true}
  */
-function find(predicate) {
+function* find(predicate) {
   predicate = _.iteratee(predicate);
 
   var i = 0;
-  while (this.pull()) {
+  while (yield* this.pull()) {
     if (predicate(this.value, i)) {
-      this.push(this.value);
+      yield* this.push(this.value);
       return;
     }
     i++;
@@ -1142,8 +1142,8 @@ function find(predicate) {
  * @example
  * 1 2 3 4 → findLast (n)=>{n % 2 == 1} → 3
  */
-function findLast(predicate, fromIndex) {
-  this.push(require('lodash').findLast(this.collect(), predicate, fromIndex));
+function* findLast(predicate, fromIndex) {
+  yield* this.push(require('lodash').findLast((yield* this.collect()), predicate, fromIndex));
 }
 /**
  * Creates a flattened array of values by running each element in the input stream
@@ -1156,8 +1156,8 @@ function findLast(predicate, fromIndex) {
  * @example
  * 1 2 → flatMap (n)=>{[n, n]} → 1 1 2 2
  */
-function flatMap(iteratee) {
-  this.spread(require('lodash').flatMap(this.collect(), iteratee));
+function* flatMap(iteratee) {
+  yield* this.spread(require('lodash').flatMap((yield* this.collect()), iteratee));
 }
 
 /**
@@ -1170,8 +1170,8 @@ function flatMap(iteratee) {
  * @example
  * 1 2 → flatMapDeep (n)=>{[[[n, n]]]} → 1 1 2 2
  */
-function flatMapDeep(iteratee) {
-  this.spread(require('lodash').flatMapDeep(this.collect(), iteratee));
+function* flatMapDeep(iteratee) {
+  yield* this.spread(require('lodash').flatMapDeep((yield* this.collect()), iteratee));
 }
 
 /**
@@ -1185,8 +1185,8 @@ function flatMapDeep(iteratee) {
  * @example
  * 1 2 → flatMapDepth (n)=>{[[[n, n]]]} 2 → [1, 1] [2, 2]
  */
-function flatMapDepth(iteratee, depth) {
-  this.spread(require('lodash').flatMapDepth(this.collect(), iteratee, depth));
+function* flatMapDepth(iteratee, depth) {
+  yield* this.spread(require('lodash').flatMapDepth((yield* this.collect()), iteratee, depth));
 }
 
 // forEach and forEachRight make no sense
@@ -1207,8 +1207,8 @@ function flatMapDepth(iteratee, depth) {
  * // The `property` iteratee shorthand.
  * "one" "two" "three" → groupBy "length" → {"3": ["one", "two"], "5": ["three"]}
  */
-function groupBy(iteratee) {
-  this.push(require('lodash').groupBy(this.collect(), iteratee));
+function* groupBy(iteratee) {
+  yield* this.push(require('lodash').groupBy((yield* this.collect()), iteratee));
 }
 
 /**
@@ -1227,8 +1227,8 @@ function groupBy(iteratee) {
  * 1 2 3 → includes 1   → true
  * 1 2 3 → includes 1 2 → false
  */
-function includes(value, fromIndex) {
-  this.push(require('lodash').includes(this.collect(), value, fromIndex));
+function* includes(value, fromIndex) {
+  yield* this.push(require('lodash').includes((yield* this.collect()), value, fromIndex));
 }
 
 /**
@@ -1245,10 +1245,10 @@ function includes(value, fromIndex) {
  * [5, 1, 7] [3, 2, 1] → invokeMap "sort" → [1, 5, 7] [1, 2, 3]
  * "123" "456" → invokeMap "split" "" → ["1", "2", "3"] ["4", "5", "6"]
  */
-function invokeMap(path, args) {
+function* invokeMap(path, args) {
   var fullArgs = Array.prototype.slice.call(arguments);
-  fullArgs.unshift(this.collect());
-  this.spread(require('lodash').invokeMap.apply(null, fullArgs));
+  fullArgs.unshift((yield* this.collect()));
+  yield* this.spread(require('lodash').invokeMap.apply(null, fullArgs));
 }
 
 /**
@@ -1264,8 +1264,8 @@ function invokeMap(path, args) {
  * {"dir": "left", "code": 97} {"dir": "right", "code": 100} → keyBy (o)=>{String.fromCharCode(o.code)} → {"a": {"dir": "left", "code": 97}, "d": {"dir": "right", "code": 100}}
  * {"dir": "left", "code": 97} {"dir": "right", "code": 100} → keyBy "dir" → {"left": {"dir": "left", "code": 97}, "right": {"dir": "right", "code": 100}}
  */
-function keyBy(iteratee) {
-  this.push(require('lodash').keyBy(this.collect(), iteratee));
+function* keyBy(iteratee) {
+  yield* this.push(require('lodash').keyBy((yield* this.collect()), iteratee));
 }
 
 /**
@@ -1291,12 +1291,12 @@ function keyBy(iteratee) {
  * // The `property` iteratee shorthand.
  * {"u": "b"} {"u": "f"} → map "u" → "b" "f"
  */
-function map(iteratee) {
+function* map(iteratee) {
   iteratee = _.iteratee(iteratee);
 
   var i = 0;
-  while (this.pull()) {
-    this.push(iteratee(this.value, i));
+  while (yield* this.pull()) {
+    yield* this.push(iteratee(this.value, i));
     i++;
   }
 }
@@ -1315,8 +1315,8 @@ function map(iteratee) {
  * @example
  * {"u": "f", "g": 48} {"u": "b", "g": 34} {"u": "f", "g": 40} {"u": "b", "g": 36} → orderBy ["u", "g"] ["asc", "desc"] → {"u": "b", "g": 36} {"u": "b", "g": 34} {"u": "f", "g": 48} {"u": "f", "g": 40}
  */
-function orderBy(iteratees, orders) {
-  this.spread(require('lodash').orderBy(this.collect(), iteratees, orders));
+function* orderBy(iteratees, orders) {
+  yield* this.spread(require('lodash').orderBy((yield* this.collect()), iteratees, orders));
 }
 
 /**
@@ -1336,8 +1336,8 @@ function orderBy(iteratees, orders) {
  * // The `property` iteratee shorthand.
  * {"u": "b", "g": 36, "a": false} {"u": "f", "g": 40, "a": true} {"u": "p", "g": 1, "a": false} → partition "a" → [{"u": "f", "g": 40, "a": true}] [{"u": "b", "g": 36, "a": false}, {"u": "p", "g": 1, "a": false}]
  */
-function partition(predicate) {
-  this.spread(require('lodash').partition(this.collect(), predicate));
+function* partition(predicate) {
+  yield* this.spread(require('lodash').partition((yield* this.collect()), predicate));
 }
 
 /**
@@ -1362,8 +1362,8 @@ function partition(predicate) {
  * @example
  * 1 2 → reduce (sum, n)=>{sum + n} 0 → 3
  */
-function reduce(iteratee, accumulator) {
-  this.push(require('lodash').reduce(this.collect(), iteratee, accumulator));
+function* reduce(iteratee, accumulator) {
+  yield* this.push(require('lodash').reduce((yield* this.collect()), iteratee, accumulator));
 }
 
 /**
@@ -1377,8 +1377,8 @@ function reduce(iteratee, accumulator) {
  * @example
  * [0, 1] [2, 3] [4, 5] → reduceRight (flattened, other)=>{flattened.concat(other)} [] → [4, 5, 2, 3, 0, 1]
  */
-function reduceRight(iteratee, accumulator) {
-  this.push(require('lodash').reduceRight(this.collect(), iteratee, accumulator));
+function* reduceRight(iteratee, accumulator) {
+  yield* this.push(require('lodash').reduceRight((yield* this.collect()), iteratee, accumulator));
 }
 
 /**
@@ -1397,13 +1397,13 @@ function reduceRight(iteratee, accumulator) {
  * // The `property` iteratee shorthand.
  * {"u": "b", "g": 36, "a": false} {"u": "f", "g": 40, "a": true} → reject "a" → {"u": "b", "g": 36, "a": false}
  */
-function reject(predicate) {
+function* reject(predicate) {
   predicate = _.iteratee(predicate);
 
   var i = 0;
-  while (this.pull()) {
+  while (yield* this.pull()) {
     if (!predicate(this.value, i)) {
-      this.push(this.value);
+      yield* this.push(this.value);
     }
     i++;
   }
@@ -1416,8 +1416,8 @@ function reject(predicate) {
  * @example
  * 1 2 3 4 → sample → 2 (not tested)
  */
-function sample() {
-  this.push(require('lodash').sample(this.collect()));
+function* sample() {
+  yield* this.push(require('lodash').sample((yield* this.collect())));
 }
 
 /**
@@ -1431,8 +1431,8 @@ function sample() {
  * 1 2 3 → sampleSize 2 → 3 1 (not tested)
  * 1 2 3 → sampleSize 4 → 2 3 1 (not tested)
  */
-function sampleSize(n) {
-  this.push(require('lodash').sampleSize(this.collect(), n));
+function* sampleSize(n) {
+  yield* this.push(require('lodash').sampleSize((yield* this.collect()), n));
 }
 
 /**
@@ -1443,8 +1443,8 @@ function sampleSize(n) {
  * @example
  * 1 2 3 4 → shuffle → 4 1 3 2 (not tested)
  */
-function shuffle() {
-  this.spread(require('lodash').shuffle(this.collect()));
+function* shuffle() {
+  yield* this.spread(require('lodash').shuffle((yield* this.collect())));
 }
 
 /**
@@ -1454,8 +1454,8 @@ function shuffle() {
  * @example
  * 1 2 3 → size → 3
  */
-function size() {
-  this.push(require('lodash').size(this.collect()));
+function* size() {
+  yield* this.push(require('lodash').size((yield* this.collect())));
 }
 
 /**
@@ -1476,19 +1476,19 @@ function size() {
  * // The `property` iteratee shorthand.
  * {"u": "b", "a": true} {"u": "f", "a": false} → some "a" → true
  */
-function some(predicate) {
+function* some(predicate) {
   predicate = _.iteratee(predicate);
 
   var i = 0;
-  while (this.pull()) {
+  while (yield* this.pull()) {
     if (predicate(this.value, i)) {
-      this.push(true);
+      yield* this.push(true);
       return;
     }
     i++;
   }
 
-  this.push(false);
+  yield* this.push(false);
 }
 
 /**
@@ -1505,8 +1505,8 @@ function some(predicate) {
  * {"u": "f", "g": 48} {"u": "b", "g": 36} {"u": "f", "g": 40} {"u": "b", "g": 34} → sortBy ["u", "g"] → {"u": "b", "g": 34} {"u": "b", "g": 36} {"u": "f", "g": 40} {"u": "f", "g": 48}
  * {"u": "f", "g": 48} {"u": "b", "g": 36} {"u": "f", "g": 40} {"u": "b", "g": 34} → sortBy "u" (o)=>{o.a/10} → {"u": "b", "g": 36} {"u": "b", "g": 34} {"u": "f", "g": 48} {"u": "f", "g": 40}
  */
-function sortBy(iteratees) {
-  this.spread(require('lodash').orderBy(this.collect(), iteratees));
+function* sortBy(iteratees) {
+  yield* this.spread(require('lodash').orderBy((yield* this.collect()), iteratees));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1523,8 +1523,8 @@ function sortBy(iteratees) {
  * @example
  * (empty) → now → 1470104632000 (not tested)
  */
-function now() {
-  this.push(require('lodash').now());
+function* now() {
+  yield* this.push(require('lodash').now());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1548,8 +1548,8 @@ function now() {
  * 4 2 8 6 → max → 8
  * (empty) → max → null
  */
-function max() {
-  this.push(require('lodash').max(this.collect()));
+function* max() {
+  yield* this.push(require('lodash').max((yield* this.collect())));
 }
 
 /**
@@ -1564,8 +1564,8 @@ function max() {
  * // The `property` iteratee shorthand.
  * {"n": 1} {"n": 2} → maxBy "n" → {"n": 2}
  */
-function maxBy(iteratee) {
-  this.push(require('lodash').maxBy(this.collect(), iteratee));
+function* maxBy(iteratee) {
+  yield* this.push(require('lodash').maxBy((yield* this.collect()), iteratee));
 }
 
 /**
@@ -1576,8 +1576,8 @@ function maxBy(iteratee) {
  * 4 2 8 6 → mean → 5
  * (empty) → mean → null
  */
-function mean() {
-  this.push(require('lodash').mean(this.collect()));
+function* mean() {
+  yield* this.push(require('lodash').mean((yield* this.collect())));
 }
 
 /**
@@ -1592,8 +1592,8 @@ function mean() {
  * // The `property` iteratee shorthand.
  * {"n": 4} {"n": 2} {"n": 8} {"n": 6} → meanBy "n" → 5
  */
-function meanBy(iteratee) {
-  this.push(require('lodash').meanBy(this.collect(), iteratee));
+function* meanBy(iteratee) {
+  yield* this.push(require('lodash').meanBy((yield* this.collect()), iteratee));
 }
 
 /**
@@ -1605,8 +1605,8 @@ function meanBy(iteratee) {
  * 4 2 8 6 → min → 2
  * (empty) → min → null
  */
-function min() {
-  this.push(require('lodash').min(this.collect()));
+function* min() {
+  yield* this.push(require('lodash').min((yield* this.collect())));
 }
 
 /**
@@ -1621,8 +1621,8 @@ function min() {
  * // The `property` iteratee shorthand.
  * {"n": 1} {"n": 2} → minBy "n" → {"n": 1}
  */
-function minBy(iteratee) {
-  this.push(require('lodash').minBy(this.collect(), iteratee));
+function* minBy(iteratee) {
+  yield* this.push(require('lodash').minBy((yield* this.collect()), iteratee));
 }
 
 // multiply, round, subtract don't make sense
@@ -1635,8 +1635,8 @@ function minBy(iteratee) {
  * 4 2 8 6 → sum → 20
  * (empty) → sum → 0
  */
-function sum() {
-  this.push(require('lodash').sum(this.collect()));
+function* sum() {
+  yield* this.push(require('lodash').sum((yield* this.collect())));
 }
 
 /**
@@ -1651,8 +1651,8 @@ function sum() {
  * // The `property` iteratee shorthand.
  * {"n": 4} {"n": 2} {"n": 8} {"n": 6} → sumBy "n" → 20
  */
-function sumBy(iteratee) {
-  this.push(require('lodash').sumBy(this.collect(), iteratee));
+function* sumBy(iteratee) {
+  yield* this.push(require('lodash').sumBy((yield* this.collect()), iteratee));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1682,6 +1682,6 @@ function sumBy(iteratee) {
  * (empty) → random 5 true → 3.2 (not tested)
  * (empty) → random 1.2 1.5 → 1.3 (not tested)
  */
-function random(lower, upper, floating) {
-  this.push(require('lodash').random(lower, upper, floating));
+function* random(lower, upper, floating) {
+  yield* this.push(require('lodash').random(lower, upper, floating));
 }

@@ -1,9 +1,10 @@
-use std::io;
+
+
+use error;
 
 use serde;
 use serde_cbor;
-
-use error;
+use std::io;
 use value;
 
 pub struct CborSource<R>(serde_cbor::de::Deserializer<R>) where R: io::Read;
