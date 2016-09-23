@@ -12,6 +12,7 @@ use serde_json;
 use serde_protobuf;
 use serde_yaml;
 use xdg_basedir;
+use toml;
 use yaml_rust;
 
 error_chain! {
@@ -36,6 +37,9 @@ error_chain! {
         serde_protobuf::Error, Protobuf;
         serde_yaml::Error, Yaml;
         yaml_rust::ScanError, YamlDecode;
+        toml::ParserError, TomlParse;
+        toml::DecodeError, TomlDecode;
+        toml::Error, TomlEncode;
         xdg_basedir::Error, XdgBasedir;
         glob::GlobError, Glob;
         glob::PatternError, GlobPattern;
