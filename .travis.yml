@@ -6,10 +6,6 @@ matrix:
   include:
     - os: linux
       env: TOOLCHAIN=stable TARGET=x86_64-unknown-linux-gnu
-    - os: linux
-      env: TOOLCHAIN=nightly-2016-07-19 TARGET=x86_64-unknown-linux-musl
-    - os: osx
-      env: TOOLCHAIN=stable TARGET=x86_64-apple-darwin
 
 addons:
   apt:
