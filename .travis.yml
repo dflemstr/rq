@@ -6,6 +6,8 @@ matrix:
   include:
     - os: linux
       env: TOOLCHAIN=stable TARGET=x86_64-unknown-linux-gnu
+    - os: linux
+      env: TOOLCHAIN=stable TARGET=x86_64-unknown-linux-musl
 
 addons:
   apt:
@@ -28,6 +30,7 @@ addons:
 env:
   global:
     - CC=gcc-6
+    - REALGCC=gcc-6
     - CXX=g++-6
 
 before_install:
