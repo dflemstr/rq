@@ -3,7 +3,6 @@
 
 extern crate ansi_term;
 extern crate dtoa;
-extern crate duk;
 #[macro_use]
 extern crate error_chain;
 extern crate glob;
@@ -22,6 +21,7 @@ extern crate serde_hjson;
 extern crate serde_json;
 extern crate serde_protobuf;
 extern crate serde_yaml;
+extern crate v8;
 extern crate xdg_basedir;
 extern crate toml;
 extern crate yaml_rust;

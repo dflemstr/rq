@@ -1,9 +1,10 @@
-use std::io;
+
+
+use error;
 
 use ordered_float;
 use rmp;
-
-use error;
+use std::io;
 use value;
 
 pub struct MessagePackSource<R>(R) where R: io::Read;

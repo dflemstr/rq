@@ -2,9 +2,9 @@ mod context;
 mod parser;
 
 use error;
-use value;
 
 pub use self::context::Context;
+use value;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Query(Vec<Process>);
@@ -13,11 +13,14 @@ pub struct Query(Vec<Process>);
 pub struct Process(String, Vec<Expression>);
 
 #[derive(Debug)]
+struct RunningProcess<'a>(&'a Process, context::Process<'a>);
+
+#[derive(Debug)]
 pub struct Output<'a, S>
     where S: value::Source
 {
     source: S,
-    processes: Vec<(&'a Process, context::Process<'a>)>,
+    processes: Vec<Option<RunningProcess<'a>>>,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -44,7 +47,7 @@ impl Query {
         let mut processes = Vec::with_capacity(self.0.len());
 
         for def in self.0.iter() {
-            processes.push((def, try!(context.process(&def.0))));
+            processes.push(Some(RunningProcess(def, try!(context.process(&def.0)))));
         }
 
         Ok(Output {
@@ -57,41 +60,55 @@ impl Query {
 impl<'a, S> Output<'a, S>
     where S: value::Source
 {
-    fn run_process(&mut self, idx: usize) -> error::Result<Option<value::Value>> {
-        // TODO: this is a very procedural thing, maybe make more functional/recursive
+    fn run_process_idx(&mut self, idx: usize) -> error::Result<Option<value::Value>> {
+        match self.processes[idx].take() {
+            None => Ok(None),
+            Some(mut process) => {
+                let result = try!(self.run_process(idx, &mut process));
+                self.processes[idx] = Some(process);
+                Ok(result)
+            },
+        }
+    }
+
+    fn run_process(&mut self,
+                   idx: usize,
+                   process: &mut RunningProcess<'a>)
+                   -> error::Result<Option<value::Value>> {
+        let RunningProcess(ref decl, ref mut instance) = *process;
         loop {
-            if self.processes[idx].1.is_start() {
-                let (def, ref mut process) = self.processes[idx];
-                trace!("Process moving out of start: {} {:?}", idx, def);
-                try!(process.run_start(&def.1));
-                trace!("Process moved out of start: {} {:?}", idx, def);
-            } else if self.processes[idx].1.is_await() {
-                let value = try!(if idx == 0 {
-                    self.source.read()
-                } else {
-                    self.run_process(idx - 1)
-                });
-                trace!("Process moving out of await: {} {:?}",
-                       idx,
-                       self.processes[idx].0);
-                try!(self.processes[idx].1.run_await(value));
-                trace!("Process moved out of await: {} {:?}",
-                       idx,
-                       self.processes[idx].0);
-            } else if self.processes[idx].1.is_emit() {
-                trace!("Process moving out of emit: {} {:?}",
-                       idx,
-                       self.processes[idx].0);
-                let value = try!(self.processes[idx].1.run_emit());
-                trace!("Process moved out of emit: {} {:?}",
-                       idx,
-                       self.processes[idx].0);
-                return Ok(Some(value));
-            } else if self.processes[idx].1.is_end() {
-                trace!("Process ended: {} {:?}", idx, self.processes[idx].0);
-                return Ok(None);
-            } else {
-                panic!("Process in unknown state: {:?}", self.processes[idx])
+            match instance.state.resume() {
+                context::Resume::Start(s) => {
+                    trace!("Process moving out of start: {} {:?}", idx, decl);
+                    instance.state = try!(s.run(&instance, &decl.1));
+                    trace!("Process moved out of start: {} {:?}", idx, decl);
+                },
+                context::Resume::Pending(p) => {
+                    trace!("Process moving out of pending: {} {:?}", idx, decl);
+                    instance.state = try!(p.run(&instance));
+                    trace!("Process moved out of pending: {} {:?}", idx, decl);
+                },
+                context::Resume::Await(a) => {
+                    let value = try!(if idx == 0 {
+                        self.source.read()
+                    } else {
+                        self.run_process_idx(idx - 1)
+                    });
+                    trace!("Process moving out of await: {} {:?}", idx, decl);
+                    instance.state = try!(a.run(&instance, value));
+                    trace!("Process moved out of await: {} {:?}", idx, decl);
+                },
+                context::Resume::Emit(e) => {
+                    trace!("Process moving out of emit: {} {:?}", idx, decl);
+                    let (state, value) = try!(e.run());
+                    instance.state = state;
+                    trace!("Process moved out of emit: {} {:?}", idx, decl);
+                    return Ok(Some(value));
+                },
+                context::Resume::End => {
+                    trace!("Process ended: {} {:?}", idx, decl);
+                    return Ok(None);
+                },
             }
         }
     }
@@ -105,7 +122,7 @@ impl<'a, S> value::Source for Output<'a, S>
             self.source.read()
         } else {
             let last_idx = self.processes.len() - 1;
-            self.run_process(last_idx)
+            self.run_process_idx(last_idx)
         }
     }
 }

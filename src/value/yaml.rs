@@ -1,12 +1,13 @@
-use std::io;
-use std::vec;
+
+
+use error;
 
 use serde;
 use serde_yaml;
-use yaml_rust;
-
-use error;
+use std::io;
+use std::vec;
 use value;
+use yaml_rust;
 
 pub struct YamlSource(vec::IntoIter<yaml_rust::Yaml>);
 pub struct YamlSink<W>(W) where W: io::Write;

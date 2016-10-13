@@ -1,11 +1,12 @@
-use std::io;
-use std::mem;
-use std::vec;
+
+
+use error;
 
 use serde;
 use serde_hjson;
-
-use error;
+use std::io;
+use std::mem;
+use std::vec;
 use value;
 
 pub struct HjsonSource(serde_hjson::StreamDeserializer<value::Value, vec::IntoIter<u8>>);

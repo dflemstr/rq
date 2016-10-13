@@ -32,7 +32,7 @@ mod js_doctest {
             let sink = value::json::sink_compact(&mut actual_output_bytes);
 
             let query = query::Query::parse(&query_str).unwrap();
-            record_query::run_query(&query, source, sink).unwrap();
+            record_query::run_query(&query, source, sink).map_err(|e| {println!("{}", e); e}).unwrap();
         }
 
         let expected_output = parse_json_stream(expected_output_str.as_bytes());

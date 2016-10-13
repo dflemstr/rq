@@ -1,13 +1,14 @@
+
+
+use error;
+
+use pest::prelude::*;
+use query;
 use std::char;
 use std::collections;
 use std::fmt;
 use std::iter;
 use std::str;
-
-use pest::prelude::*;
-
-use error;
-use query;
 use value;
 
 impl_rdp! {

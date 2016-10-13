@@ -1,9 +1,10 @@
-use std::io;
 
-use serde;
-use toml;
 
 use error;
+
+use serde;
+use std::io;
+use toml;
 use value;
 
 pub struct TomlSource(Option<toml::Table>);
@@ -21,7 +22,7 @@ pub fn source<R>(mut r: R) -> error::Result<TomlSource>
         Some(t) => t,
         None => {
             return Err(parser.errors.remove(0).into());
-        }
+        },
     };
     Ok(TomlSource(Some(table)))
 }

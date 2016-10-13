@@ -1,6 +1,5 @@
 extern crate ansi_term;
 extern crate docopt;
-extern crate duk;
 extern crate env_logger;
 #[macro_use]
 extern crate log;
@@ -9,92 +8,129 @@ extern crate protobuf;
 extern crate record_query;
 extern crate rustc_serialize;
 extern crate serde_protobuf;
+extern crate v8;
 
+
+use record_query as rq;
 use std::env;
 use std::fs;
 use std::io;
 use std::path;
 
-use record_query as rq;
-
 const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 
-pub const DOCOPT: &'static str = concat!("
-rq - record query v", env!("CARGO_PKG_VERSION"), "
+pub const DOCOPT: &'static str =
+    concat!("
+rq - record query v",
+            env!("CARGO_PKG_VERSION"),
+            "
 
 A tool for manipulating data records.
 
-Records are read from stdin, processed, and written to stdout.  The tool accepts
-a query in the custom rq query language as its main command-line arguments.
+Records are read from stdin, processed, \
+             and written to stdout.  The tool accepts
+a query in the custom rq query language as \
+             its main command-line arguments.
 
-See https://github.com/dflemstr/rq for in-depth documentation.
+See https://github.com/dflemstr/rq for in-depth \
+             documentation.
 
 Usage:
   rq (--help|--version)
-  rq [-j|-a|-c|-h|-m|-p <type>|-t|-y] [-J|-A <type>|-C|-H|-M|-P <type>|-T|-Y] [--format <format>] [-l <spec>|-q] [--trace] [--] [<query>]
-  rq [-l <spec>|-q] [--trace] protobuf add <schema> [--base <path>]
+  rq [-j|-a|-c|-h|-m|-p \
+             <type>|-t|-y] [-J|-A <type>|-C|-H|-M|-P <type>|-T|-Y] [--format <format>] [-l \
+             <spec>|-q] [--trace] [--] [<query>]
+  rq [-l <spec>|-q] [--trace] protobuf add \
+             <schema> [--base <path>]
 
 Options:
   --help
       Show this screen.
   --version
-      Show the program name and version.
+      \
+             Show the program name and version.
 
   -j, --input-json
-      Input is white-space separated JSON values (default).
+      Input is white-space \
+             separated JSON values (default).
   -J, --output-json
-      Output should be formatted as JSON values (default).
+      Output should be \
+             formatted as JSON values (default).
   -a, --input-avro
-      Input is an Apache Avro container file.
+      Input is an Apache \
+             Avro container file.
   -A <type>, --output-avro <type>
-      Output should be formatted as Apache Avro messages.
+      Output should be \
+             formatted as Apache Avro messages.
   -c, --input-cbor
-      Input is a series of CBOR values.
+      Input is a series of \
+             CBOR values.
   -C, --output-cbor
       Output is a series of CBOR values.
-  -h, --input-hjson
+  -h, \
+             --input-hjson
       Input is a HJSON document.
   -H, --output-hjson
-      Output should be formatted as HJSON values.
+      Output \
+             should be formatted as HJSON values.
   -m, --input-message-pack
-      Input is formatted as MessagePack.
+      Input is \
+             formatted as MessagePack.
   -M, --output-message-pack
-      Output should be formatted as MessagePack values.
+      Output should be \
+             formatted as MessagePack values.
   -p <type>, --input-protobuf <type>
-      Input is a single protocol buffer object.  The argument refers to the
-      fully qualified name of the message type (including the leading '.').
-  -P <type>, --output-protobuf <type>
-      Output should be formatted as protocol buffer objects.  The argument
-      refers to the fully qualified name of the message type (including the
+      Input \
+             is a single protocol buffer object.  The argument refers to the
+      fully \
+             qualified name of the message type (including the leading '.').
+  -P <type>, \
+             --output-protobuf <type>
+      Output should be formatted as protocol buffer \
+             objects.  The argument
+      refers to the fully qualified name of the message type \
+             (including the
       leading '.').
   -t, --input-toml
-      Input is formatted as TOML document.
+      Input is formatted as \
+             TOML document.
   -T, --output-toml
-      Output should be formatted as TOML document.
+      Output should be formatted as TOML \
+             document.
   -y, --input-yaml
       Input is a series of YAML documents.
-  -Y, --output-yaml
+  -Y, \
+             --output-yaml
       Output should be formatted as YAML documents.
 
-  --format <format>
+  --format \
+             <format>
       Force stylistic output formatting.  Can be one of 'compact' or
-      'readable' and the default is inferred from the terminal
+      \
+             'readable' and the default is inferred from the terminal
       environment.
 
-  <query>
+  \
+             <query>
       A query indicating how to transform each record.
 
   --base <path>
-      Directories are significant when dealing with protocol buffer
-      schemas.  This specifies the base directory used to normalize schema
+      \
+             Directories are significant when dealing with protocol buffer
+      schemas.  This \
+             specifies the base directory used to normalize schema
       file paths [default: .]
 
-  -l <spec>, --log <spec>
-      Configure logging using the supplied specification, in the format of
-      `env_logger`, for example `rq=info,duk=trace/[0-9]+ objects kept`.
+  \
+             -l <spec>, --log <spec>
+      Configure logging using the supplied specification, \
+             in the format of
+      `env_logger`, for example `rq=info,duk=trace/[0-9]+ objects \
+             kept`.
       See: https://doc.rust-lang.org/log/env_logger
   --trace
-      Enable (back)trace output on error.
+      Enable \
+             (back)trace output on error.
   -q, --quiet
       Log nothing.
 ");
@@ -207,7 +243,8 @@ fn run(args: &Args, paths: &rq::config::Paths) -> rq::error::Result<()> {
         if !args.flag_input_json && !try!(has_ran_help(paths)) {
             warn!("You started rq without any input flags, which puts it in JSON input mode.");
             warn!("It's now waiting for JSON input, which might not be what you wanted.");
-            warn!("Specify (-j|--input-json) explicitly or run rq --help once to suppress this warning.");
+            warn!("Specify (-j|--input-json) explicitly or run rq --help once to suppress this \
+                   warning.");
         }
         let source = rq::value::json::source(&mut input);
         run_source(args, paths, source)
@@ -249,16 +286,13 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
         run_source_sink(args, paths, source, sink)
     } else if args.flag_output_hjson {
         // TODO: add HJSON ugly printing eventually; now it's always "readable"
-        dispatch_format!(rq::value::hjson::sink,
-                         rq::value::hjson::sink)
+        dispatch_format!(rq::value::hjson::sink, rq::value::hjson::sink)
     } else if args.flag_output_toml {
         // TODO: add TOML ugly printing eventually; now it's always "readable"
-        dispatch_format!(rq::value::toml::sink,
-                         rq::value::toml::sink)
+        dispatch_format!(rq::value::toml::sink, rq::value::toml::sink)
     } else if args.flag_output_yaml {
         // TODO: add YAML ugly printing eventually; now it's always "readable"
-        dispatch_format!(rq::value::yaml::sink,
-                         rq::value::yaml::sink)
+        dispatch_format!(rq::value::yaml::sink, rq::value::yaml::sink)
     } else {
         dispatch_format!(rq::value::json::sink_compact,
                          rq::value::json::sink_readable)
@@ -328,14 +362,11 @@ fn log_error(args: &Args, error: rq::error::Error) {
 
     match *error.kind() {
         ErrorKind::Msg(ref m) => error!("{}", m),
-        ErrorKind::Duk(duk::ErrorKind::Js(ref e)) => {
-            if let Some(ref stack) = e.stack {
-                error!("Error while executing Javascript:");
-                for line in stack.lines() {
-                    error!("{}", line);
-                }
-            } else {
-                error!("Error while executing Javascript: {}", e.message);
+        ErrorKind::V8(v8::error::ErrorKind::Javascript(ref msg, ref stack_trace)) => {
+            error!("Error while executing Javascript: {}", msg);
+
+            for line in format!("{}", stack_trace).lines() {
+                error!("{}", line);
             }
         },
         _ => {
@@ -429,11 +460,13 @@ fn format_log_record(record: &log::LogRecord) -> String {
 
 }
 
+// HI David!
+
 #[cfg(test)]
 mod test {
-    use super::*;
 
     use docopt;
+    use super::*;
 
     fn parse_args(args: &[&str]) -> Args {
         let a = docopt::Docopt::new(DOCOPT)

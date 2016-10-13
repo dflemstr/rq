@@ -7,7 +7,7 @@
  *
  * @namespace
  */
-var rq = {};
+var rq = rq || {};
 
 /**
  * The type of `this` for all of the rq stream processing functions (defined for example in
@@ -35,8 +35,8 @@ rq.Context = function Context(log) {
    *
    * @return {boolean} Whether there was another value in the stream.
    */
-  this.pull = function pull() {
-    var result = Duktape.Thread['yield']({type: 'await'});
+  this.pull = function* pull() {
+    var result = yield {type: 'await'};
 
     if (result.hasNext) {
       this.value = result.next;
@@ -51,8 +51,8 @@ rq.Context = function Context(log) {
    *
    * @param {*} value The value to push.
    */
-  this.push = function push(value) {
-    Duktape.Thread['yield']({type: 'emit', value: value});
+  this.push = function* push(value) {
+    yield {type: 'emit', value: value};
   };
 
   /**
@@ -60,9 +60,9 @@ rq.Context = function Context(log) {
    *
    * @returns {Array} The values that were in the input stream.
    */
-  this.collect = function collect() {
+  this.collect = function* collect() {
     var result = [];
-    while (this.pull()) {
+    while (yield* this.pull()) {
       result.push(this.value);
     }
     return result;
@@ -73,9 +73,9 @@ rq.Context = function Context(log) {
    *
    * @param {Array} values The values to push to the output stream.
    */
-  this.spread = function spread(values) {
+  this.spread = function* spread(values) {
     for (var i = 0; i < values.length; i++) {
-      this.push(values[i]);
+      yield* this.push(values[i]);
     }
   };
 
@@ -89,16 +89,13 @@ rq.Context = function Context(log) {
  * @constructor
  */
 rq.Logger = function Logger(name) {
-  this.log = new Duktape.Logger(name);
-  this.log.l = 0;
-
   /**
    * Logs something at the trace level.
    *
    * @param {...*} args Arbitrary values to log.
    */
   this.trace = function trace(args) {
-    this.log.trace.apply(this.log, arguments);
+    rq.native.log(0, name, ...arguments);
   };
 
   /**
@@ -107,7 +104,7 @@ rq.Logger = function Logger(name) {
    * @param {...*} args Arbitrary values to log.
    */
   this.debug = function debug(args) {
-    this.log.debug.apply(this.log, arguments);
+    rq.native.log(1, name, ...arguments);
   };
 
   /**
@@ -116,7 +113,7 @@ rq.Logger = function Logger(name) {
    * @param {...*} args Arbitrary values to log.
    */
   this.info = function info(args) {
-    this.log.info.apply(this.log, arguments);
+    rq.native.log(2, name, ...arguments);
   };
 
   /**
@@ -125,7 +122,7 @@ rq.Logger = function Logger(name) {
    * @param {...*} args Arbitrary values to log.
    */
   this.warn = function warn(args) {
-    this.log.warn.apply(this.log, arguments);
+    rq.native.log(3, name, ...arguments);
   };
 
   /**
@@ -134,16 +131,7 @@ rq.Logger = function Logger(name) {
    * @param {...*} args Arbitrary values to log.
    */
   this.error = function error(args) {
-    this.log.error.apply(this.log, arguments);
-  };
-
-  /**
-   * Logs something at the fatal level.
-   *
-   * @param {...*} args Arbitrary values to log.
-   */
-  this.fatal = function fatal(args) {
-    this.log.fatal.apply(this.log, arguments);
+    rq.native.log(4, name, ...arguments);
   };
 
   Object.freeze(this);
@@ -208,7 +196,7 @@ rq.util.path = function path(obj, path) {
       });
 
       if (elems.length === 0) {
-        throw new Error('Path projection is empty: ' + JSON.stringify(path));
+        throw new Error(`Path projection is empty: ${JSON.stringify(path)}`);
       }
 
       var last = elems.pop();
@@ -240,13 +228,13 @@ rq.util.path = function path(obj, path) {
           return jp.value(obj, innerPath);
         }, function set(v) {
           jp.value(obj, innerPath, v);
-        })
+        });
       });
     } else {
-      throw new Error('Unrecognized path syntax: ' + JSON.stringify(path));
+      throw new Error(`Unrecognized path syntax: ${JSON.stringify(path)}`);
     }
   } else {
-    throw new Error('Cannot be used as a path: ' + JSON.stringify(path));
+    throw new Error(`Cannot be used as a path: ${JSON.stringify(path)}`);
   }
 };
 
@@ -259,42 +247,37 @@ Object.freeze(rq.util);
  * @constructor
  */
 rq.Process = function Process(fn) {
-  var ctx = new rq.Context(new rq.Logger(fn.fileName + '/' + fn.name));
-  var boundFn = fn.bind(ctx);
+  var ctx = new rq.Context(new rq.Logger(fn.name));
+  var generator = undefined;
 
-  this.run = function run(args) {
-    // Replace logger by more detailed one
-    var name = fn.fileName + '/' + fn.name + '(' + args.map(JSON.stringify).join(', ') + ')';
-    ctx.log = new rq.Logger(name);
-
-    // TODO: Right now, Duktape doesn't support Function.prototype.apply with coroutines, so we need
-    // this hack
-    switch (args.length) {
-      case 0:
-        return boundFn();
-      case 1:
-        return boundFn(args[0]);
-      case 2:
-        return boundFn(args[0], args[1]);
-      case 3:
-        return boundFn(args[0], args[1], args[2]);
-      case 4:
-        return boundFn(args[0], args[1], args[2], args[3]);
-      case 5:
-        return boundFn(args[0], args[1], args[2], args[3], args[4]);
-      case 6:
-        return boundFn(args[0], args[1], args[2], args[3], args[4], args[5]);
-      case 7:
-        return boundFn(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
-      case 8:
-        return boundFn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
-      default:
-        throw new Error('For now, only functions with up to 8 arguments are supported');
+  this.resume = function resume(params) {
+    switch (params.type) {
+    case 'start': {
+      // Replace logger by more detailed one
+      var name = `${fn.name}(${params.args.map(JSON.stringify).join(', ')})`;
+      ctx.log = new rq.Logger(name);
+      ctx.log.info('start: done');
+      generator = fn.apply(ctx, params.args);
+      break;
     }
-  };
-
-  this.resume = function resume(thread, result) {
-    return Duktape.Thread.resume(thread, result);
+    case 'pending': {
+      var pendingResult = generator.next().value;
+      ctx.log.info('pending: done', JSON.stringify(pendingResult));
+      return pendingResult;
+    }
+    case 'await': {
+      if (params.hasNext) {
+        ctx.log.info('await: value', JSON.stringify(params.next));
+      } else {
+        ctx.log.info('await: no more upstream values');
+      }
+      var awaitResult = generator.next(params).value;
+      ctx.log.info('await: done', JSON.stringify(awaitResult));
+      return awaitResult;
+    }
+    default:
+      throw Error(`Unrecognized resume type ${params.type}`);
+    }
   };
 
   Object.freeze(this);

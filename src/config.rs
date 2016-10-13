@@ -1,9 +1,10 @@
-use std::path;
 
-use glob;
-use xdg_basedir::dirs;
 
 use error;
+
+use glob;
+use std::path;
+use xdg_basedir::dirs;
 
 #[derive(Debug)]
 pub struct Paths {

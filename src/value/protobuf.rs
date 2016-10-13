@@ -1,10 +1,11 @@
+
+
+use error;
 use protobuf;
 use serde;
 
 use serde_protobuf;
 use serde_protobuf::descriptor;
-
-use error;
 use value;
 
 pub struct ProtobufSource<'a>(serde_protobuf::de::Deserializer<'a>, bool);
