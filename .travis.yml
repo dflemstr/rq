@@ -13,15 +13,26 @@ matrix:
 
 addons:
   apt:
+    sources:
+      - sourceline: 'ppa:pinepain/libv8-5.4'
+      - ubuntu-toolchain-r-test
     packages:
+      # Modern compilers
+      - gcc-6
+      - g++-6
+      # The V8 version that we want to bind
+      - libv8-5.4-dev
+      - libicu-dev
+      # Coverage deps
       - libcurl4-openssl-dev
       - libelf-dev
       - libdw-dev
-      - cmake
-      - gcc
       - binutils-dev
-      - libiberty-dev
-      - gcc-multilib
+
+env:
+  global:
+    - CC=gcc-6
+    - CXX=g++-6
 
 before_install:
   - export PATH="$HOME/.cargo/bin:$HOME/musl/bin:$PATH"
