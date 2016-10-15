@@ -256,24 +256,14 @@ rq.Process = function Process(fn) {
       // Replace logger by more detailed one
       var name = `${fn.name}(${params.args.map(JSON.stringify).join(', ')})`;
       ctx.log = new rq.Logger(name);
-      ctx.log.info('start: done');
       generator = fn.apply(ctx, params.args);
       break;
     }
     case 'pending': {
-      var pendingResult = generator.next().value;
-      ctx.log.info('pending: done', JSON.stringify(pendingResult));
-      return pendingResult;
+      return generator.next().value;
     }
     case 'await': {
-      if (params.hasNext) {
-        ctx.log.info('await: value', JSON.stringify(params.next));
-      } else {
-        ctx.log.info('await: no more upstream values');
-      }
-      var awaitResult = generator.next(params).value;
-      ctx.log.info('await: done', JSON.stringify(awaitResult));
-      return awaitResult;
+      return generator.next(params).value;
     }
     default:
       throw Error(`Unrecognized resume type ${params.type}`);
