@@ -5,7 +5,10 @@ dist: trusty
 matrix:
   include:
     - os: linux
-      env: TOOLCHAIN=stable TARGET=x86_64-unknown-linux-gnu
+      env: TOOLCHAIN=stable TARGET=x86_64-unknown-linux-gnu CC=gcc-6 CXX=g++-6
+    - os: osx
+      osx_image: xcode8
+      env: TOOLCHAIN=stable TARGET=x86_64-apple-darwin
 
 addons:
   apt:
@@ -24,11 +27,6 @@ addons:
       - libelf-dev
       - libdw-dev
       - binutils-dev
-
-env:
-  global:
-    - CC=gcc-6
-    - CXX=g++-6
 
 before_install:
   - export PATH="$HOME/.cargo/bin:$HOME/musl/bin:$PATH"
