@@ -22,9 +22,15 @@ function install-musl {
     make -sj install
 }
 
+function install-v8-brew {
+    brew tap dflemstr/v8
+    brew update
+    brew install -v dflemstr/v8/v8
+}
+
 function ci-install {
     for-target x86_64-unknown-linux-musl install-musl
-
+    for-target x86_64-apple-darwin install-v8-brew
     curl "$rustup_init_url" -sSLf | sh -s -- -y --spec="$TOOLCHAIN" --with-target="$TARGET"
 }
 

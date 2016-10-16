@@ -1,7 +1,4 @@
-
-
 use error;
-
 use serde;
 use serde_yaml;
 use std::io;
@@ -50,7 +47,7 @@ impl<W> value::Sink for YamlSink<W>
 {
     #[inline]
     fn write(&mut self, value: value::Value) -> error::Result<()> {
-        try!(serde_yaml::ser::to_writer(&mut self.0, &value));
+        try!(serde_yaml::to_writer(&mut self.0, &value));
         try!(self.0.write(b"\n"));
         Ok(())
     }
