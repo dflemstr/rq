@@ -77,10 +77,10 @@ then
     fi
 fi
 
-if [ "$os" = unknown-linux-gnu ] && [ "$cpu" = x86_64 ]
-then
-    os=unknown-linux-musl
-fi
+# if [ "$os" = unknown-linux-gnu ] && [ "$cpu" = x86_64 ]
+# then
+#     os=unknown-linux-musl
+# fi
 
 arch="$cpu-$os"
 url="$base/$arch/rq"
