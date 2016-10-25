@@ -10,6 +10,11 @@ matrix:
       osx_image: xcode8
       env: TOOLCHAIN=stable TARGET=x86_64-apple-darwin
 
+env:
+  global:
+    - V8_LIBS=$TRAVIS_BUILD_DIR/v8-build/lib/libv8uber.a
+    - V8_SOURCE=$TRAVIS_BUILD_DIR/v8-build
+
 addons:
   apt:
     sources:
@@ -19,9 +24,6 @@ addons:
       # Modern compilers
       - gcc-6
       - g++-6
-      # The V8 version that we want to bind
-      - libv8-5.4-dev
-      - libicu-dev
       # Coverage deps
       - libcurl4-openssl-dev
       - libelf-dev
