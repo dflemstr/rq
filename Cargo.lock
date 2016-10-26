@@ -315,7 +315,7 @@ name = "post-expansion"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "quote 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "quote 0.3.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "syn 0.9.2 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -326,7 +326,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "quote"
-version = "0.3.4"
+version = "0.3.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
@@ -438,7 +438,7 @@ version = "0.8.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "post-expansion 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "quote 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "quote 0.3.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_codegen_internals 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "syn 0.9.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "syntex 0.46.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -513,7 +513,7 @@ name = "syn"
 version = "0.9.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "quote 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "quote 0.3.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "unicode-xid 0.0.3 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -654,7 +654,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "v8"
 version = "0.6.0"
-source = "git+https://github.com/dflemstr/v8-rs.git#03a8c9e906d3a0800342f7ab55477917b03402a8"
+source = "git+https://github.com/dflemstr/v8-rs.git#53865b485db00452b1dc82f70ad4c0a601474783"
 dependencies = [
  "error-chain 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "lazy_static 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -664,7 +664,7 @@ dependencies = [
 [[package]]
 name = "v8-api"
 version = "0.5.0"
-source = "git+https://github.com/dflemstr/v8-rs.git#03a8c9e906d3a0800342f7ab55477917b03402a8"
+source = "git+https://github.com/dflemstr/v8-rs.git#53865b485db00452b1dc82f70ad4c0a601474783"
 dependencies = [
  "clang 0.12.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "env_logger 0.3.5 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -674,7 +674,7 @@ dependencies = [
 [[package]]
 name = "v8-sys"
 version = "0.12.0"
-source = "git+https://github.com/dflemstr/v8-rs.git#03a8c9e906d3a0800342f7ab55477917b03402a8"
+source = "git+https://github.com/dflemstr/v8-rs.git#53865b485db00452b1dc82f70ad4c0a601474783"
 dependencies = [
  "bindgen 0.19.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "clang 0.12.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -750,7 +750,7 @@ dependencies = [
 "checksum pest 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "2f6666c81a6359af7a9dbc48f596d6f318a9dbaefdec248581ab836dc0c1f082"
 "checksum post-expansion 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "31a834a6060acaef74a8d878f6ca37a2b86fefe042bbfe70689ba587e42526f9"
 "checksum protobuf 1.0.24 (registry+https://github.com/rust-lang/crates.io-index)" = "6ec4c2fe04370298218a09ab53a534febf54c160c5554e4de987b6d73c916d5d"
-"checksum quote 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)" = "a3fe8511ce1b46a0020e076d277bdb60b3af454f0e9822b5e13d9c2c5090d4c8"
+"checksum quote 0.3.5 (registry+https://github.com/rust-lang/crates.io-index)" = "ea1e0c9bc6bfb0a60d539aab6e338207c1a5456e62f5bd5375132cee119aa4b3"
 "checksum regex 0.1.77 (registry+https://github.com/rust-lang/crates.io-index)" = "64b03446c466d35b42f2a8b203c8e03ed8b91c0f17b56e1f84f7210a257aa665"
 "checksum regex-syntax 0.3.7 (registry+https://github.com/rust-lang/crates.io-index)" = "48f0573bcee95a48da786f8823465b5f2a1fae288a55407aca991e5b3e0eae11"
 "checksum rmp 0.7.5 (registry+https://github.com/rust-lang/crates.io-index)" = "a2da68cc45d803dfd68724d767363d82c6f76293a2bf5fe6ded34f640ee01447"

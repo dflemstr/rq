@@ -5,7 +5,6 @@ use query;
 use std::cell;
 use std::collections;
 use std::mem;
-use std::rc;
 use std::str;
 use v8;
 use value;
@@ -14,16 +13,11 @@ const API_JS: &'static str = include_str!("../api.js");
 const PRELUDE_JS: &'static str = include_str!("../prelude.js");
 
 const MODULES: &'static [(&'static str, &'static str)] =
-    &[("jsonpath", include_str!("../js/jsonpath.min.js")),
-      ("lodash", include_str!("../js/lodash.custom.min.js")),
-      ("minieval", include_str!("../js/minieval.min.js"))];
-
-type ModuleContextCache = rc::Rc<cell::RefCell<collections::HashMap<String, v8::Context>>>;
+    &[("jsonpath", include_str!("../js/jsonpath.js")), ("lodash", include_str!("../js/lodash.js"))];
 
 #[derive(Debug)]
 pub struct Context {
     isolate: v8::Isolate,
-    module_context_cache: ModuleContextCache,
 }
 
 #[derive(Debug)]
@@ -67,12 +61,8 @@ pub struct ResumeEmit(value::Value);
 impl Context {
     pub fn new() -> Context {
         let isolate = v8::Isolate::new();
-        let module_context_cache = rc::Rc::new(cell::RefCell::new(collections::HashMap::new()));
 
-        Context {
-            isolate: isolate,
-            module_context_cache: module_context_cache,
-        }
+        Context { isolate: isolate }
     }
 
     pub fn process(&self, name: &str) -> error::Result<Process> {
@@ -81,7 +71,7 @@ impl Context {
 
         let log_fun = build_log_fun(&self.isolate, &context);
 
-        let require_fun = build_require(&self.isolate, &context, self.module_context_cache.clone());
+        let require_fun = build_require(&self.isolate, &context);
 
         // TODO: convert api.js and prelude.js to modules so we can just use load_module
         let rq_native_obj = v8::value::Object::new(&self.isolate, &context);
@@ -274,12 +264,13 @@ fn build_log_fun(isolate: &v8::Isolate, outer_context: &v8::Context) -> v8::valu
     }))
 }
 
-fn build_require(isolate: &v8::Isolate,
-                 context: &v8::Context,
-                 module_context_cache: ModuleContextCache)
-                 -> v8::value::Function {
+type ModuleCache = cell::RefCell<collections::HashMap<String, v8::value::Object>>;
+
+fn build_require(isolate: &v8::Isolate, outer_context: &v8::Context) -> v8::value::Function {
+    let context = outer_context.clone();
+    let module_cache = cell::RefCell::new(collections::HashMap::new());
     v8::value::Function::new(isolate,
-                             context,
+                             outer_context,
                              1,
                              Box::new(move |mut info| {
         let isolate = info.isolate;
@@ -290,7 +281,7 @@ fn build_require(isolate: &v8::Isolate,
 
             for &(name, source) in MODULES.iter() {
                 if name == required_name {
-                    return load_module(&isolate, &module_context_cache, name, source);
+                    return load_module(&isolate, &context, &module_cache, name, source);
                 }
             }
 
@@ -302,59 +293,53 @@ fn build_require(isolate: &v8::Isolate,
 }
 
 fn load_module(isolate: &v8::Isolate,
-               module_context_cache: &ModuleContextCache,
+               context: &v8::Context,
+               module_cache: &ModuleCache,
                name: &str,
                source: &str)
                -> v8::Value {
-    let exports_key = v8::value::String::from_str(&isolate, "exports");
-    let module_key = v8::value::String::from_str(&isolate, "module");
+    let exports_key = v8::value::String::from_str(isolate, "exports");
 
-    let (should_init, context) = {
-        let mut cache = module_context_cache.borrow_mut();
-        match cache.entry(name.to_owned()) {
-            collections::hash_map::Entry::Occupied(o) => (false, o.get().clone()),
-            collections::hash_map::Entry::Vacant(v) => {
-                (true, v.insert(v8::Context::new(&isolate)).clone())
-            },
-        }
+    let (module_value, should_init) = match module_cache.borrow_mut().entry(name.to_owned()) {
+        collections::hash_map::Entry::Occupied(o) => {
+            debug!("Re-using already loaded module {}", name);
+            (o.get().clone(), false)
+        },
+        collections::hash_map::Entry::Vacant(v) => {
+            debug!("Loading module {} for the first time", name);
+            (v.insert(v8::value::Object::new(isolate, context)).clone(), true)
+        },
     };
 
-    let global = context.global();
-
     if should_init {
-        let require_key = v8::value::String::from_str(&isolate, "require");
+        let exports_value = v8::value::Object::new(isolate, context);
 
-        let exports_value = v8::value::Object::new(isolate, &context);
+        let id_key = v8::value::String::from_str(isolate, "id");
+        let id_value = v8::value::String::from_str(isolate, name);
+        module_value.set(context, &id_key, &id_value);
+        module_value.set(context, &exports_key, &exports_value);
 
-        let module = v8::value::Object::new(isolate, &context);
-        let id_key = v8::value::String::from_str(&isolate, "id");
-        let id_value = v8::value::String::from_str(&isolate, name);
-        module.set(&context, &id_key, &id_value);
-        module.set(&context, &exports_key, &exports_value);
-
-        global.set(&context,
-                   &exports_key,
-                   &exports_value);
-        global.set(&context, &module_key, &module);
-        global.set(&context,
-                   &require_key,
-                   &build_require(isolate, &context, module_context_cache.clone()));
-
-        let source_name = v8::value::String::from_str(&isolate, &format!("{}.js", name));
-        let source = v8::value::String::from_str(&isolate, source);
-        let script = v8::Script::compile_with_name(&isolate, &context, &source_name, &source)
+        let source_name = v8::value::String::from_str(isolate, &format!("{}.js", name));
+        let source = v8::value::String::from_str(isolate, source);
+        let script = v8::Script::compile_with_name(isolate, context, &source_name, &source)
             .unwrap();
 
-        script.run(&context).unwrap();
+        let module_key = v8::value::String::from_str(isolate, "module");
+
+        let global = context.global();
+        let old_module = global.get(context, &module_key);
+        let old_exports = global.get(context, &exports_key);
+
+        global.set(context, &module_key, &module_value);
+        global.set(context, &exports_key, &exports_value);
+
+        script.run(context).unwrap();
+
+        global.set(context, &module_key, &old_module);
+        global.set(context, &exports_key, &old_exports);
     }
 
-    let module_value = global.get(&context, &module_key);
-    if module_value.is_object() {
-        let module_value = module_value.into_object().unwrap();
-        module_value.get(&context, &exports_key)
-    } else {
-        global.get(&context, &exports_key)
-    }
+    module_value.get(context, &exports_key)
 }
 
 fn load_embedded_file(isolate: &v8::Isolate,
@@ -369,12 +354,17 @@ fn load_embedded_file(isolate: &v8::Isolate,
     Ok(())
 }
 
-fn expr_to_v8(isolate: &v8::Isolate, context: &v8::Context, expr: &query::Expression) -> error::Result<v8::Value> {
+fn expr_to_v8(isolate: &v8::Isolate,
+              context: &v8::Context,
+              expr: &query::Expression)
+              -> error::Result<v8::Value> {
     match *expr {
         query::Expression::Value(ref v) => Ok(value_to_v8(isolate, context, v)),
         query::Expression::Function(ref args, ref body) => {
             let function_key = v8::value::String::from_str(isolate, "Function");
-            let mut args = args.iter().map(|a| v8::value::String::from_str(isolate, a).into()).collect::<Vec<v8::Value>>();
+            let mut args = args.iter()
+                .map(|a| v8::value::String::from_str(isolate, a).into())
+                .collect::<Vec<v8::Value>>();
             args.push(v8::value::String::from_str(isolate, &format!("return {};", body)).into());
 
             let arg_refs = args.iter().collect::<Vec<&v8::Value>>();
