@@ -3863,7 +3863,7 @@ case 6:
 break;
 case 7:yy.ast.set({ operation: "member" }); yy.ast.push()
 break;
-case 8:yy.ast.set({ operation: "subscript" }); yy.ast.push()
+case 8:yy.ast.set({ operation: "subscript" }); yy.ast.push() 
 break;
 case 9:yy.ast.set({ scope: "child" })
 break;
@@ -4752,10 +4752,10 @@ Handlers.prototype._fns = {
 };
 
 Handlers.prototype._fns['subscript-child-string_literal'] =
-        Handlers.prototype._fns['member-child-identifier'];
+	Handlers.prototype._fns['member-child-identifier'];
 
 Handlers.prototype._fns['member-child-numeric_literal'] =
-        Handlers.prototype._fns['subscript-child-numeric_literal'];
+	Handlers.prototype._fns['subscript-child-numeric_literal'];
 
 Handlers.prototype._fns['member-descendant-numeric_literal'] =
     Handlers.prototype._fns['subscript-descendant-string_literal'] =
@@ -4956,7 +4956,6 @@ JSONPath.prototype.query = function(obj, string, count) {
 };
 
 JSONPath.prototype.paths = function(obj, string, count) {
-  throw typeof obj;
 
   assert.ok(obj instanceof Object, "obj needs to be an object");
   assert.ok(string, "we need a path");
@@ -5887,7 +5886,7 @@ var unparse = require('escodegen').generate;
 module.exports = function (ast, vars) {
     if (!vars) vars = {};
     var FAIL = {};
-
+    
     var result = (function walk (node) {
         if (node.type === 'Literal') {
             return node.value;
@@ -5928,7 +5927,7 @@ module.exports = function (ast, vars) {
             if (l === FAIL) return FAIL;
             var r = walk(node.right);
             if (r === FAIL) return FAIL;
-
+            
             var op = node.operator;
             if (op === '==') return l == r;
             if (op === '===') return l === r;
@@ -5948,7 +5947,7 @@ module.exports = function (ast, vars) {
             if (op === '^') return l ^ r;
             if (op === '&&') return l && r;
             if (op === '||') return l || r;
-
+            
             return FAIL;
         }
         else if (node.type === 'Identifier') {
@@ -5960,7 +5959,7 @@ module.exports = function (ast, vars) {
         else if (node.type === 'CallExpression') {
             var callee = walk(node.callee);
             if (callee === FAIL) return FAIL;
-
+            
             var ctx = node.callee.object ? walk(node.callee.object) : FAIL;
             if (ctx === FAIL) ctx = null;
 
@@ -5992,7 +5991,7 @@ module.exports = function (ast, vars) {
         }
         else return FAIL;
     })(ast);
-
+    
     return result === FAIL ? undefined : result;
 };
 
