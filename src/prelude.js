@@ -2093,4 +2093,357 @@ function* random(lower, upper, floating) {
   }
 }
 
-// TODO: more lodash stuff
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/// lodash wrappers - Number                                                                     ///
+///                                                                                              ///
+/// NOTE: These are not streaming!                                                               ///
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function* assign(...sources) {
+  while (yield* this.pull()) {
+    yield* this.push(_.assign(this.value, ...sources));
+  }
+}
+
+// assignIn, assignInWith, assignWith don't make sense
+
+function* at(...paths) {
+  while (yield* this.pull()) {
+    yield* this.push(_.at(this.value, ...paths));
+  }
+}
+
+function* defaults(...sources) {
+  while (yield* this.pull()) {
+    yield* this.push(_.defaults(this.value, ...sources));
+  }
+}
+
+function* defaultsDeep(...sources) {
+  while (yield* this.pull()) {
+    yield* this.push(_.defaultsDeep(this.value, ...sources));
+  }
+}
+
+function* findKey(predicate) {
+  while (yield* this.pull()) {
+    yield* this.push(_.findKey(this.value, predicate));
+  }
+}
+
+function* findLastKey(predicate) {
+  while (yield* this.pull()) {
+    yield* this.push(_.findLastKey(this.value, predicate));
+  }
+}
+
+// forIn, forInRight, forOwn don't make sense
+
+function* get(path, defaultValue) {
+  while (yield* this.pull()) {
+    yield* this.push(_.get(this.value, path, defaultValue));
+  }
+}
+
+function* has(path) {
+  while (yield* this.pull()) {
+    yield* this.push(_.has(this.value, path));
+  }
+}
+
+// hasIn doesn't make sense
+
+function* invert() {
+  while (yield* this.pull()) {
+    yield* this.push(_.invert(this.value));
+  }
+}
+
+function* invertBy() {
+  while (yield* this.pull()) {
+    yield* this.push(_.invertBy(this.value));
+  }
+}
+
+function* invoke(path, ...args) {
+  while (yield* this.pull()) {
+    yield* this.push(_.invoke(this.value, path, ...args));
+  }
+}
+
+function* keys() {
+  while (yield* this.pull()) {
+    yield* this.push(_.keys(this.value));
+  }
+}
+
+function* mapKeys(iteratee) {
+  while (yield* this.pull()) {
+    yield* this.push(_.mapKeys(this.value, iteratee));
+  }
+}
+
+function* mapValues(iteratee) {
+  while (yield* this.pull()) {
+    yield* this.push(_.mapValues(this.value, iteratee));
+  }
+}
+
+function* merge(...sources) {
+  while (yield* this.pull()) {
+    yield* this.push(_.merge(this.value, ...sources));
+  }
+}
+
+function* omit(...props) {
+  while (yield* this.pull()) {
+    yield* this.push(_.omit(this.value, props));
+  }
+}
+
+function* pick(...props) {
+  while (yield* this.pull()) {
+    yield* this.push(_.pick(this.value, props));
+  }
+}
+
+function* pickBy(predicate) {
+  while (yield* this.pull()) {
+    yield* this.push(_.pickBy(this.value, predicate));
+  }
+}
+
+function* result(path, defaultValue) {
+  while (yield* this.pull()) {
+    yield* this.push(_.result(this.value, path, defaultValue));
+  }
+}
+
+function* set(path, value) {
+  while (yield* this.pull()) {
+    yield* this.push(_.set(this.value, path, value));
+  }
+}
+
+function* toPairs() {
+  while (yield* this.pull()) {
+    yield* this.push(_.toPairs(this.value));
+  }
+}
+
+function* transform(iteratee, accumulator) {
+  while (yield* this.pull()) {
+    yield* this.push(_.transform(this.value, iteratee, accumulator));
+  }
+}
+
+function* unset(path) {
+  while (yield* this.pull()) {
+    yield* this.push(_.unset(this.value, path));
+  }
+}
+
+function* update(path, updater) {
+  while (yield* this.pull()) {
+    yield* this.push(_.update(this.value, path, updater));
+  }
+}
+
+function* updateWith(path, updater, customizer) {
+  while (yield* this.pull()) {
+    yield* this.push(_.updateWith(this.value, path, updater, customizer));
+  }
+}
+
+function* values() {
+  while (yield* this.pull()) {
+    yield* this.push(_.values(this.value));
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/// lodash wrappers - String                                                                     ///
+///                                                                                              ///
+/// NOTE: These are not streaming!                                                               ///
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function* camelCase() {
+  while (yield* this.pull()) {
+    yield* this.push(_.camelCase(this.value));
+  }
+}
+
+function* capitalize() {
+  while (yield* this.pull()) {
+    yield* this.push(_.capitalize(this.value));
+  }
+}
+
+function* deburr() {
+  while (yield* this.pull()) {
+    yield* this.push(_.deburr(this.value));
+  }
+}
+
+function* endsWith(target, position) {
+  while (yield* this.pull()) {
+    yield* this.push(_.endsWith(this.value, target, position));
+  }
+}
+
+function* escape() {
+  while (yield* this.pull()) {
+    yield* this.push(_.escape(this.value));
+  }
+}
+
+function* escapeRegExp() {
+  while (yield* this.pull()) {
+    yield* this.push(_.escapeRegExp(this.value));
+  }
+}
+
+function* kebabCase() {
+  while (yield* this.pull()) {
+    yield* this.push(_.kebabCase(this.value));
+  }
+}
+
+function* lowerCase() {
+  while (yield* this.pull()) {
+    yield* this.push(_.lowerCase(this.value));
+  }
+}
+
+function* lowerFirst() {
+  while (yield* this.pull()) {
+    yield* this.push(_.lowerFirst(this.value));
+  }
+}
+
+function* pad(length, chars) {
+  while (yield* this.pull()) {
+    yield* this.push(_.pad(this.value, length, chars));
+  }
+}
+
+function* padEnd(length, chars) {
+  while (yield* this.pull()) {
+    yield* this.push(_.padEnd(this.value, length, chars));
+  }
+}
+
+function* padStart(length, chars) {
+  while (yield* this.pull()) {
+    yield* this.push(_.padStart(this.value, length, chars));
+  }
+}
+
+function* parseInt() {
+  while (yield* this.pull()) {
+    yield* this.push(_.parseInt(this.value));
+  }
+}
+
+function* repeat(n) {
+  while (yield* this.pull()) {
+    yield* this.push(_.repeat(this.value, n));
+  }
+}
+
+function* replace(pattern, replacement) {
+  while (yield* this.pull()) {
+    yield* this.push(_.replace(this.value, pattern, replacement));
+  }
+}
+
+function* snakeCase() {
+  while (yield* this.pull()) {
+    yield* this.push(_.snakeCase(this.value));
+  }
+}
+
+function* split(separator, limit) {
+  while (yield* this.pull()) {
+    yield* this.push(_.split(this.value, separator, limit));
+  }
+}
+
+function* startCase() {
+  while (yield* this.pull()) {
+    yield* this.push(_.startCase(this.value));
+  }
+}
+
+function* startsWith(target, position) {
+  while (yield* this.pull()) {
+    yield* this.push(_.startsWith(this.value, target, position));
+  }
+}
+
+function* template(string, options) {
+  var template = _.template(string, options);
+  while (yield* this.pull()) {
+    yield* this.push(template(this.value));
+  }
+}
+
+function* toLower() {
+  while (yield* this.pull()) {
+    yield* this.push(_.toLower(this.value));
+  }
+}
+
+function* toUpper() {
+  while (yield* this.pull()) {
+    yield* this.push(_.toUpper(this.value));
+  }
+}
+
+function* trim(chars) {
+  while (yield* this.pull()) {
+    yield* this.push(_.trim(this.value, chars));
+  }
+}
+
+function* trimEnd(chars) {
+  while (yield* this.pull()) {
+    yield* this.push(_.trimEnd(this.value, chars));
+  }
+}
+
+function* trimStart(chars) {
+  while (yield* this.pull()) {
+    yield* this.push(_.trimStart(this.value, chars));
+  }
+}
+
+function* truncate(options) {
+  while (yield* this.pull()) {
+    yield* this.push(_.truncate(this.value, options));
+  }
+}
+
+function* unescape() {
+  while (yield* this.pull()) {
+    yield* this.push(_.unescape(this.value));
+  }
+}
+
+function* upperCase() {
+  while (yield* this.pull()) {
+    yield* this.push(_.upperCase(this.value));
+  }
+}
+
+function* upperFirst() {
+  while (yield* this.pull()) {
+    yield* this.push(_.upperFirst(this.value));
+  }
+}
+
+function* words() {
+  while (yield* this.pull()) {
+    yield* this.push(_.words(this.value));
+  }
+}
