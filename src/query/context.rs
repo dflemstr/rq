@@ -114,6 +114,16 @@ impl Context {
             state: State::Start,
         })
     }
+
+    pub fn run_enqueued_tasks(&self) {
+        self.isolate.run_enqueued_tasks();
+    }
+}
+
+impl<'a> Process<'a> {
+    pub fn context(&self) -> &Context {
+        self.context
+    }
 }
 
 impl State {

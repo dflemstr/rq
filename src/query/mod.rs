@@ -77,6 +77,8 @@ impl<'a, S> Output<'a, S>
                    -> error::Result<Option<value::Value>> {
         let RunningProcess(ref decl, ref mut instance) = *process;
         loop {
+            instance.context().run_enqueued_tasks();
+
             match instance.state.resume() {
                 context::Resume::Start(s) => {
                     trace!("Process moving out of start: {} {:?}", idx, decl);
