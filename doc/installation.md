@@ -23,7 +23,6 @@ If you don't trust the above script (all it does is to detect your
 architecture and run `curl`), you can also manually download `rq` for
 your architecture.
 
-  * [x86_64-unknown-linux-musl](https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-unknown-linux-musl/rq)
   * [x86_64-unknown-linux-gnu](https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-unknown-linux-gnu/rq)
   * [x86_64-apple-darwin](https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-gnu/rq)
 
