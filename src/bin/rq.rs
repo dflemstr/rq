@@ -17,7 +17,7 @@ use std::fs;
 use std::io;
 use std::path;
 
-const VERSION: &'static str = env!("CARGO_PKG_VERSION");
+const VERSION: &'static str = rq_git_version!();
 
 pub const DOCOPT: &'static str =
     concat!("
