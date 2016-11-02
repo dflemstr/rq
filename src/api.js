@@ -273,8 +273,4 @@ rq.Process = function Process(fn) {
   Object.freeze(this);
 };
 
-rq.createFunction = function createFunction(args, body) {
-  return require('minieval').createFunction(body, args);
-};
-
 Object.freeze(rq);
