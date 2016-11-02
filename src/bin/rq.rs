@@ -459,8 +459,6 @@ fn format_log_record(record: &log::LogRecord) -> String {
 
 }
 
-// HI David!
-
 #[cfg(test)]
 mod test {
 
