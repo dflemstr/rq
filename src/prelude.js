@@ -1598,24 +1598,62 @@ function* now() {
 
 // castArray, clone, cloneDeep, cloneDeepWith, cloneWith don't make sense
 
+/**
+ * Checks if input objects conform to `source` by invoking the predicate
+ * properties of `source` with the corresponding property values of each
+ * input object.
+ *
+ * **Note:** This method is equivalent to `conforms` when `source` is
+ * partially applied.
+ *
+ * @param {Object} source The object of property predicates to conform to.
+ * @example
+ * {"a": 1, "b": 2 } → conformsTo {"b": (n)=>{ n > 1 } } → true (not tested)
+ * {"a": 1, "b": 2 } → conformsTo {"b": (n)=>{ n > 2 } } → false (not tested)
+ */
 function* conformsTo(source) {
   while (yield* this.pull()) {
     yield* this.push(_.conformsTo(this.value, source));
   }
 }
 
+/**
+ * Performs a
+ * [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
+ * comparison between two values to determine if they are equivalent.
+ *
+ * @param {*} other The other value to compare.
+ * @example
+ * 2 3     → eq 2   → true false
+ * "a" "b" → eq "a" → true false
+ * {}      → eq {}  → false
+ */
 function* eq(other) {
   while (yield* this.pull()) {
     yield* this.push(_.eq(this.value, other));
   }
 }
 
+/**
+ * Checks if each input value is greater than `other`.
+ *
+ * @param {*} other The other value to compare.
+ * @example
+ * 1 2 3 → gt 2 → false false true
+ */
 function* gt(other) {
   while (yield* this.pull()) {
     yield* this.push(_.gt(this.value, other));
   }
 }
 
+/**
+ * Checks if each input value is greater than or equal to `other`.
+ *
+ * @param {*} other The other value to compare.
+ * @example
+ * 1 2 3 → gte 2 → false true true
+ */
 function* gte(other) {
   while (yield* this.pull()) {
     yield* this.push(_.gte(this.value, other));
@@ -1624,42 +1662,78 @@ function* gte(other) {
 
 // isArguments doesn't make sense
 
+/**
+ * Checks if each input value is classified as an `Array` object.
+ *
+ * @example
+ * [1, 2, 3] "abc" true {"length": 2} → isArray → true false false false
+ */
 function* isArray() {
   while (yield* this.pull()) {
     yield* this.push(_.isArray(this.value));
   }
 }
 
+/**
+ * Checks if each input value is classified as an `ArrayBuffer` object.
+ */
 function* isArrayBuffer() {
   while (yield* this.pull()) {
     yield* this.push(_.isArrayBuffer(this.value));
   }
 }
 
+/**
+ * Checks if each input value is array-like. A value is considered array-like if it's
+ * not a function and has a `value.length` that's an integer greater than or
+ * equal to `0` and less than or equal to `Number.MAX_SAFE_INTEGER`.
+ *
+ * @example
+ * [1, 2, 3] "abc" true {"length": 2} → isArrayLike → true true false true
+ */
 function* isArrayLike() {
   while (yield* this.pull()) {
     yield* this.push(_.isArrayLike(this.value));
   }
 }
 
+/**
+ * This method is like `isArrayLike` except that it also checks if `value`
+ * is an object.
+ *
+ * @example
+ * [1, 2, 3] "abc" true {"length": 2} → isArrayLikeObject → true false false true
+ */
 function* isArrayLikeObject() {
   while (yield* this.pull()) {
     yield* this.push(_.isArrayLikeObject(this.value));
   }
 }
 
+/**
+ * Checks if each input value is classified as a boolean primitive or object.
+ *
+ * @example
+ * false null → isBoolean → true false
+ */
 function* isBoolean() {
   while (yield* this.pull()) {
     yield* this.push(_.isBoolean(this.value));
   }
 }
 
+/**
+ * Checks if each input value is a buffer.
+ */
 function* isBuffer() {
   while (yield* this.pull()) {
     yield* this.push(_.isBuffer(this.value));
   }
 }
 
+/**
+ * Checks if each input value is classified as a `Date` object.
+ */
 function* isDate() {
   while (yield* this.pull()) {
     yield* this.push(_.isDate(this.value));
@@ -1668,18 +1742,56 @@ function* isDate() {
 
 // isElement doesn't make sense
 
+/**
+ * Checks if `value` is an empty object, collection, map, or set.
+ *
+ * Objects are considered empty if they have no own enumerable string keyed
+ * properties.
+ *
+ * Array-like values such as `arguments` objects, arrays, buffers, strings, or
+ * jQuery-like collections are considered empty if they have a `length` of `0`.
+ * Similarly, maps and sets are considered empty if they have a `size` of `0`.
+ *
+ * @example
+ * null true 1 [1, 2, 3] {"a": 1} → isEmpty → true true true false false
+ */
 function* isEmpty() {
   while (yield* this.pull()) {
     yield* this.push(_.isEmpty(this.value));
   }
 }
 
+/**
+ * Performs a deep comparison between two values to determine if they are
+ * equivalent.
+ *
+ * **Note:** This method supports comparing arrays, array buffers, booleans,
+ * date objects, error objects, maps, numbers, `Object` objects, regexes,
+ * sets, strings, symbols, and typed arrays. `Object` objects are compared
+ * by their own, not inherited, enumerable properties. Functions and DOM
+ * nodes are **not** supported.
+ *
+ * @param {*} other The other value to compare.
+ * @example
+ * {"a": 1} 2 {"a": 2} → isEqual {"a": 1} → true false false
+ */
 function* isEqual(other) {
   while (yield* this.pull()) {
     yield* this.push(_.isEqual(this.value, other));
   }
 }
 
+/**
+ * This method is like `isEqual` except that it accepts `customizer` which
+ * is invoked to compare values. If `customizer` returns `undefined`, comparisons
+ * are handled by the method instead. The `customizer` is invoked with up to
+ * six arguments: (objValue, othValue [, index|key, object, other, stack]).
+ *
+ * @param {*} other The other value to compare.
+ * @param {Function} [customizer] The function to customize comparisons.
+ * @example
+ * 1.2 2.1 3.2 → isEqualWith 1.2 (x, y)=>{Math.floor(x) == Math.ceil(y)} → true false false
+ */
 function* isEqualWith(other, customizer) {
   while (yield* this.pull()) {
     yield* this.push(_.isEqual(this.value, other, customizer));
