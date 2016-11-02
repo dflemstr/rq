@@ -3,7 +3,7 @@ authors = ["David Flemström <david.flemstrom@gmail.com>"]
 build = "build.rs"
 license = "Apache-2.0"
 name = "record-query"
-version = "0.6.0"
+version = "0.7.0"
 
 [build-dependencies]
 env_logger = "*"
