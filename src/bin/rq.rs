@@ -5,11 +5,11 @@ extern crate env_logger;
 extern crate log;
 extern crate nix;
 extern crate protobuf;
+#[macro_use(rq_git_version)]
 extern crate record_query;
 extern crate rustc_serialize;
 extern crate serde_protobuf;
 extern crate v8;
-
 
 use record_query as rq;
 use std::env;
@@ -21,8 +21,7 @@ const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 
 pub const DOCOPT: &'static str =
     concat!("
-rq - record query v",
-            env!("CARGO_PKG_VERSION"),
+rq - record query ", rq_git_version!(),
             "
 
 A tool for manipulating data records.

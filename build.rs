@@ -6,6 +6,7 @@ use std::env;
 use std::fs;
 use std::io;
 use std::path;
+use std::process;
 
 fn main() {
     env_logger::init().unwrap();
@@ -16,6 +17,18 @@ fn gen_js_doctests() -> io::Result<()> {
     use std::fmt::Write;
 
     let out_dir = env::var("OUT_DIR").unwrap();
+
+    let git_version = try!(process::Command::new("git")
+        .args(&["describe", "--tags", "--always"])
+        .output()
+        .map(|o| String::from_utf8(drop_last(o.stdout)).unwrap()));
+    let build_info_path = path::Path::new(&out_dir).join("build_info.rs");
+
+    let mut build_info_file = try!(fs::File::create(build_info_path));
+    let mut build_info = String::new();
+    writeln!(build_info, "#[macro_export]").unwrap();
+    writeln!(build_info, "macro_rules! rq_git_version {{ () => {{ {:?} }} }}", git_version).unwrap();
+    try!(io::Write::write_all(&mut build_info_file, build_info.as_bytes()));
 
     let source_path = path::Path::new("src/prelude.js");
     let target_path = path::Path::new(&out_dir).join("js_doctests.rs");
@@ -52,4 +65,9 @@ fn gen_js_doctests() -> io::Result<()> {
     try!(io::Write::write_all(&mut target_file, target.as_bytes()));
 
     Ok(())
+}
+
+fn drop_last<A>(mut vec: Vec<A>) -> Vec<A> {
+    vec.pop();
+    vec
 }

@@ -32,6 +32,10 @@ pub mod proto_index;
 pub mod query;
 pub mod value;
 
+include!(concat!(env!("OUT_DIR"), "/build_info.rs"));
+
+pub const GIT_VERSION: &'static str = rq_git_version!();
+
 pub fn run_query<I, O>(query: &query::Query, source: I, mut sink: O) -> error::Result<()>
     where I: value::Source,
           O: value::Sink
