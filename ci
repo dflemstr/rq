@@ -21,6 +21,7 @@ function run-docker {
          -v "$PWD:/host" \
          -e "TARGET=$TARGET" \
          -e "GITHUB_TOKEN=$GITHUB_TOKEN" \
+         -e "SKIP_TESTS=$SKIP_TESTS" \
          -e "USE_DOCKER=false" \
          -e "IN_DOCKER=true" \
          "dflemstr/buildenv:$TARGET" \
@@ -86,6 +87,10 @@ function install-kcov {
 }
 
 function ci-test {
+    if [ "${SKIP_TESTS:-false}" = true ]
+    then exit 0
+    fi
+
     install-rust
     install-v8
 
