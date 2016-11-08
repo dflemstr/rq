@@ -87,17 +87,19 @@ function install-kcov {
 }
 
 function ci-test {
+    local extra_args
     if [ "${SKIP_TESTS:-false}" = true ]
-    then exit 0
+    then extra_args=(--no-run)
+    else extra_args=()
     fi
 
     install-rust
     install-v8
 
     serde-protobuf/gen-test
-    cargo test --manifest-path serde-protobuf/Cargo.toml --target "$TARGET"
-    cargo test --manifest-path serde-avro/Cargo.toml --target "$TARGET"
-    cargo test --target="$TARGET"
+    cargo test --manifest-path serde-protobuf/Cargo.toml --target "$TARGET" "${extra_args[@]}"
+    cargo test --manifest-path serde-avro/Cargo.toml --target "$TARGET" "${extra_args[@]}"
+    cargo test --target="$TARGET" "${extra_args[@]}"
 }
 
 function ci-coverage {
