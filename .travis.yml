@@ -2,33 +2,45 @@ language: generic
 sudo: required
 dist: trusty
 
+services:
+  - docker
+
 matrix:
   include:
     - os: linux
-      env: TOOLCHAIN=stable TARGET=x86_64-unknown-linux-gnu
+      env: >
+        TARGET=x86_64-unknown-linux-gnu
+        USE_DOCKER=true
+    - os: linux
+      env: >
+        TARGET=x86_64-unknown-linux-musl
+        USE_DOCKER=true
+    - os: linux
+      env: >
+        TARGET=i686-unknown-linux-gnu
+        USE_DOCKER=true
+    - os: linux
+      env: >
+        TARGET=i686-unknown-linux-musl
+        USE_DOCKER=true
+    - os: linux
+      env: >
+        TARGET=armv7-unknown-linux-gnueabihf
+        USE_DOCKER=true
+        SKIP_TESTS=true
+    - os: linux
+      env: >
+        TARGET=armv7-unknown-linux-musleabihf
+        USE_DOCKER=true
+        SKIP_TESTS=true
     - os: osx
       osx_image: xcode8
-      env: TOOLCHAIN=stable TARGET=x86_64-apple-darwin
-
-env:
-  global:
-    - V8_LIBS=$TRAVIS_BUILD_DIR/v8-build/lib/libv8uber.a
-    - V8_SOURCE=$TRAVIS_BUILD_DIR/v8-build
-
-addons:
-  apt:
-    sources:
-      - sourceline: 'ppa:pinepain/libv8-5.4'
-    packages:
-      # Coverage deps
-      - libcurl4-openssl-dev
-      - libelf-dev
-      - libdw-dev
-      - binutils-dev
-
-before_install:
-  - export PATH="$HOME/.cargo/bin:$HOME/musl/bin:$PATH"
-  - ./ci install
+      env: >
+        TARGET=x86_64-apple-darwin
+    - os: osx
+      osx_image: xcode8
+      env: >
+        TARGET=i686-apple-darwin
 
 script: ./ci test
 

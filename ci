@@ -1,6 +1,5 @@
 #!/bin/bash -e
 
-# TODO: Replace with https://sh.rustup.rs when it supports -y and such
 rustup_init_url='https://static.rust-lang.org/rustup.sh'
 
 function for-target {
@@ -13,24 +12,83 @@ function for-target {
     fi
 }
 
-function install-musl {
-    curl 'http://www.musl-libc.org/releases/musl-1.1.15.tar.gz' | tar xzf -
-    cd musl-1.1.15
-    mkdir "$HOME/musl"
-    ./configure --prefix="$HOME/musl"
-    make -sj
-    make -sj install
+function run-docker {
+    docker pull "dflemstr/buildenv:$TARGET"
+    exec docker run \
+         --rm -ti \
+         --entrypoint /bin/bash \
+         -u root \
+         -v "$PWD:/host" \
+         -e "TARGET=$TARGET" \
+         -e "GITHUB_TOKEN=$GITHUB_TOKEN" \
+         -e "USE_DOCKER=false" \
+         -e "IN_DOCKER=true" \
+         "dflemstr/buildenv:$TARGET" \
+         -c "if ! getent group $(id -gn)
+             then groupadd -g $(id -g) $(id -gn)
+             fi &&
+             if ! getent passwd $(id -un)
+             then useradd -u $(id -u) -g $(id -g) -m $(id -un)
+             fi &&
+             adduser $(id -un) sudo &&
+             cd /host &&
+             sudo -HEu $(id -un) ./ci $*"
+
 }
 
-function ci-install {
-    for-target x86_64-unknown-linux-musl install-musl
-    curl "$rustup_init_url" -sSLf | sh -s -- -y --spec="$TOOLCHAIN" --with-target="$TARGET"
+function apt-install {
+    sudo apt-get update
+    export DEBIAN_FRONTEND=noninteractive
+    sudo apt-get install -y --no-install-recommends "$@"
+    sudo rm -rf /var/lib/apt/lists/*
+}
 
-    wget "https://s3-eu-west-1.amazonaws.com/record-query/v8/$TARGET/5.6.0-438c5eb28bb9a20782c03cd70dcdf3fa04f09e28/v8-build.tar.gz"
-    tar -xvf v8-build.tar.gz
+function install-rust {
+    if ! which cargo &>/dev/null
+    then curl "$rustup_init_url" -sSLf | sh -s -- -y --spec=stable --with-target="$TARGET"
+    fi
+}
+
+function install-v8 {
+    if [ ! -d v8-build ]
+    then
+        wget "https://s3-eu-west-1.amazonaws.com/record-query/v8/$TARGET/5.6.222/v8-build.tar.gz"
+        tar -xvf v8-build.tar.gz
+    fi
+
+    export V8_LIBS=$PWD/v8-build/lib/libv8uber.a
+    export V8_SOURCE=$PWD/v8-build
+}
+
+function install-kcov {
+    if ! which kcov &>/dev/null
+    then
+        local packages=(
+            libcurl4-openssl-dev
+            libelf-dev
+            libdw-dev
+            binutils-dev
+        )
+
+        apt-install "${packages[@]}"
+
+        wget https://github.com/SimonKagstrom/kcov/archive/master.tar.gz
+        tar xzf master.tar.gz
+        cd kcov-master
+        mkdir build
+        cd build
+        cmake ..
+        make
+        sudo make install
+        cd ../..
+        rm -rf kcov-master
+    fi
 }
 
 function ci-test {
+    install-rust
+    install-v8
+
     serde-protobuf/gen-test
     cargo test --manifest-path serde-protobuf/Cargo.toml --target "$TARGET"
     cargo test --manifest-path serde-avro/Cargo.toml --target "$TARGET"
@@ -38,16 +96,9 @@ function ci-test {
 }
 
 function ci-coverage {
-    wget https://github.com/SimonKagstrom/kcov/archive/master.tar.gz
-    tar xzf master.tar.gz
-    cd kcov-master
-    mkdir build
-    cd build
-    cmake ..
-    make
-    sudo make install
-    cd ../..
-    rm -rf kcov-master
+    install-rust
+    install-v8
+    install-kcov
 
     for file in target/$TARGET/debug/rq-* target/$TARGET/debug/record_query-* target/$TARGET/debug/lib-*
     do
@@ -59,6 +110,9 @@ function ci-coverage {
 }
 
 function ci-deploy {
+    install-rust
+    install-v8
+
     cargo build --release --target="$TARGET"
     mkdir -p "target/deploy/$TARGET"
     strip "target/$TARGET/release/rq"
@@ -69,7 +123,7 @@ function ci-deploy {
 
 function ci-deploy-gh-pages {
     curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-    sudo apt-get install -y nodejs
+    apt-install nodejs
     sudo npm install -g jsdoc
     jsdoc -c jsdoc/conf.json -d target/doc/js src/api.js src/prelude.js
 
@@ -81,6 +135,10 @@ function ci-deploy-gh-pages {
     git commit -m "Generate rustdoc for $TRAVIS_COMMIT"
     git push --force "https://${GITHUB_TOKEN}@github.com/dflemstr/rq.git" master:gh-pages
 }
+
+if [ "${USE_DOCKER:-false}" = true ] && [ "${IN_DOCKER:-false}" = false ]
+then run-docker "$@"
+fi
 
 case "$1" in
     install )
