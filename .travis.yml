@@ -25,6 +25,26 @@ matrix:
         USE_DOCKER=true
     - os: linux
       env: >
+        TARGET=arm-unknown-linux-gnueabi
+        USE_DOCKER=true
+        SKIP_TESTS=true
+    - os: linux
+      env: >
+        TARGET=arm-unknown-linux-musleabi
+        USE_DOCKER=true
+        SKIP_TESTS=true
+    - os: linux
+      env: >
+        TARGET=armv7-unknown-linux-gnueabihf
+        USE_DOCKER=true
+        SKIP_TESTS=true
+    - os: linux
+      env: >
+        TARGET=armv7-unknown-linux-musleabihf
+        USE_DOCKER=true
+        SKIP_TESTS=true
+    - os: linux
+      env: >
         TARGET=armv7-unknown-linux-gnueabihf
         USE_DOCKER=true
         SKIP_TESTS=true
