@@ -61,6 +61,10 @@ function install-v8 {
     export V8_SOURCE=$PWD/v8-build
 }
 
+function install-deps {
+    apt-install libclang-dev
+}
+
 function install-kcov {
     if ! which kcov &>/dev/null
     then
@@ -95,6 +99,7 @@ function ci-test {
 
     install-rust
     install-v8
+    install-deps
 
     serde-protobuf/gen-test
     cargo test --manifest-path serde-protobuf/Cargo.toml --target "$TARGET" "${extra_args[@]}"
@@ -105,6 +110,7 @@ function ci-test {
 function ci-coverage {
     install-rust
     install-v8
+    install-deps
     install-kcov
 
     for file in target/$TARGET/debug/rq-* target/$TARGET/debug/record_query-* target/$TARGET/debug/lib-*
@@ -119,6 +125,7 @@ function ci-coverage {
 function ci-deploy {
     install-rust
     install-v8
+    install-deps
 
     cargo build --release --target="$TARGET"
     mkdir -p "target/deploy/$TARGET"
