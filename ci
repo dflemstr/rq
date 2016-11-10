@@ -131,10 +131,6 @@ function ci-test {
     install-v8
     install-deps
 
-    serde-protobuf/gen-test
-    cargo test -p serde-protobuf "${extra_args[@]}"
-    cargo test -p serde-avro "${extra_args[@]}"
-    cargo test -p v8 "${extra_args[@]}"
     cargo test "${extra_args[@]}"
 
     for-target x86_64-unknown-linux-gnu ci-coverage "$@"
