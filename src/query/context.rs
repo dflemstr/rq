@@ -13,7 +13,7 @@ const API_JS: &'static str = include_str!("../api.js");
 const PRELUDE_JS: &'static str = include_str!("../prelude.js");
 
 const MODULES: &'static [(&'static str, &'static str)] =
-    &[("jsonpath", include_str!("../js/jsonpath.js")), ("lodash", include_str!("../js/lodash.js"))];
+    &[("lodash", include_str!("../js/lodash.js"))];
 
 #[derive(Debug)]
 pub struct Context {

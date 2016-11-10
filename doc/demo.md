@@ -31,32 +31,54 @@ prefer to use, feel free :)
 
 Let's see what we can do with this data.  `rq` works with the concept
 of "processes" that send data to each other via "pipes", similar to a
-UNIX shell.  A very basic process is the `select` process.  It takes a
-path argument that can be a [JSONPath][jsonpath] for example.  In the
-JSON object, we want to select the `tracks` key, then for each element
-in the `items` array select the `name` key:
+UNIX shell.  A very basic process is the `at` process.  It takes a
+path argument that selects a certain field within an object.  In the
+JSON object, we want to select the `tracks` key:
 
-    $ rq 'select "$.tracks.items[*].name"' < data.json
+    $ rq 'at "tracks.items"' < data.json
+    [...]
+
+## Collecting and spreading values
+
+`rq` prefers to work with streams of data instead of arrays as much as
+possible, so that you don't have to keep all of the records in memory.
+
+To convert from a stream to an array, you use `collect`, and to convert
+from an array to a stream, you use `spread`.
+
+In this case, we want to stream each individual track, so we append `spread`
+to the pipeline:
+
+    $ rq 'at "tracks.items"|spread' < data.json
+    {...}
+    {...}
+    ...
+
+## Maps
+
+You can transform each element in a stream with the `map` process. It
+takes a function as an argument that is applied to each element.  As a
+convenience, if you specify a string instead of a function, it is equivalent
+to mapping using the path described by the string (with the same syntax as
+for `at`).  As another type of syntactic sugar, you don't have to quote
+single word strings.
+
+Let's get the name of all tracks:
+
+    $ rq 'at "tracks.items"|spread|map name' < data.json
     "Consideration"
     "Umbrella"
     ...
 
-## Filters and maps
+## Filters
 
 These are way too tame for us.  We want only the explicit tracks!  We
 can use the `filter` process for that.  It takes a predicate argument
 that can be a [lodash iteratee][lodash-iteratee] for example.
 
-We can also use the `map` process, which also takes a lodash iteratee
-as its argument; a more light-weight version of `select`.
+Let's insert the process before the `map` process:
 
-By the way, process string arguments that don't contain special
-characters don't need to be quoted.
-
-Let's use three processes: first selecting the tracks, then filtering
-only the explicit ones, and then mapping them to their names:
-
-    $ rq 'select "$.tracks.items[*]"|filter explicit|map name' < data.json
+    $ rq 'at "tracks.items"|spread|filter explicit|map name' < data.json
     "Needed Me"
     "Too Good"
     "Work"
@@ -64,21 +86,21 @@ only the explicit ones, and then mapping them to their names:
 
 Looks better!
 
-## Higher-order functions
+## Other functions
 
 When we're done with all of these explicit tracks, we want to take a
 step back and know the artists that have worked on all of the tracks.
 
-    $ rq 'select "$.tracks.items[*]"|map artists' < data.json
+    $ rq 'at "tracks.items"|spread|map artists' < data.json
     [...]
     [...]
     ...
 
 It turns out that a track can have multiple artists, so that we get a
-bunch of arrays!  We can solve this by using `map ...|flatten` or the
+bunch of arrays!  We can solve this by using `map ...|spread` or the
 more idiomatic `flatMap ...`.
 
-    $ rq 'select "$.tracks.items[*]"|flatMap artists|map name' < data.json
+    $ rq 'at "tracks.items"|spread|flatMap artists|map name' < data.json
     "Rockabye Baby!"
     "J:Kenzo"
     "Rhianna Kenny"
@@ -89,7 +111,7 @@ more idiomatic `flatMap ...`.
 How many times has each artist starred on these tracks?  Let's count
 (by name for simplicity):
 
-    $ rq 'select "$.tracks.items[*]"|flatMap artists|countBy name' < data.json
+    $ rq 'at "tracks.items"|spread|flatMap artists|countBy name' < data.json
     {"Calvin Harris":2.0,"Drake":7.0,"Eminem":3.0,...}
 
 ## Lambdas, sorting and slicing
@@ -98,7 +120,7 @@ The results are alphabetical, which is not very useful... Let's first
 map them to pairs by using a lambda expression and the lodash
 `toPairs` function:
 
-    $ rq 'select "$.tracks.items[*]"|flatMap artists|countBy name|flatMap (o)=>{_.toPairs(o)}' < data.json
+    $ rq 'at "tracks.items"|spread|flatMap artists|countBy name|flatMap (o)=>{_.toPairs(o)}' < data.json
     ["Calvin Harris",2.0]
     ["Drake",7.0]
     ["Eminem",3.0]
@@ -106,7 +128,7 @@ map them to pairs by using a lambda expression and the lodash
 
 Now we can sort the results descending by the second column:
 
-    $ rq 'select "$.tracks.items[*]"|flatMap artists|countBy name|flatMap (o)=>{_.toPairs(o)}|orderBy 1 desc' < data.json
+    $ rq 'at "tracks.items"|spread|flatMap artists|countBy name|flatMap (o)=>{_.toPairs(o)}|orderBy 1 desc' < data.json
     ["Rihanna",50.0]
     ["Drake",7.0]
     ["Eminem",3.0]
@@ -115,7 +137,7 @@ Now we can sort the results descending by the second column:
 If we want to save the result in a single JSON array, we can use
 `collect`:
 
-    $ rq 'select "$.tracks.items[*]"|flatMap artists|countBy name|flatMap (o)=>{_.toPairs(o)}|orderBy 1 desc|collect' < data.json
+    $ rq 'at "tracks.items"|spread|flatMap artists|countBy name|flatMap (o)=>{_.toPairs(o)}|orderBy 1 desc|collect' < data.json
     [["Rihanna",50.0],["Drake",7.0],["Eminem",3.0],...]
 
 Looks good!  We are ready to put this data in our web-scale static

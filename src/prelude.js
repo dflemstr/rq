@@ -2221,7 +2221,7 @@ function* assign(...sources) {
 
 function* at(...paths) {
   while (yield* this.pull()) {
-    yield* this.push(_.at(this.value, ...paths));
+    yield* this.spread(_.at(this.value, ...paths));
   }
 }
 

@@ -218,18 +218,6 @@ rq.util.path = function path(obj, path) {
       } else {
         return [];
       }
-    } else if (path.charAt(0) == '$') {
-      // Assume it's a JSON path
-
-      var jp = require('jsonpath');
-
-      return jp.paths(obj, path).map(function(innerPath) {
-        return new rq.util.Lens(function get() {
-          return jp.value(obj, innerPath);
-        }, function set(v) {
-          jp.value(obj, innerPath, v);
-        });
-      });
     } else {
       throw new Error(`Unrecognized path syntax: ${JSON.stringify(path)}`);
     }

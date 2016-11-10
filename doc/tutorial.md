@@ -111,15 +111,6 @@ commonly used processes are:
     Like `id`, but logs each passed through value.  The arguments can
     be used to give the log lines a tag.
 
-**Path traversal**
-
-  - [`select`](http://dflemstr.github.io/rq/js/global.html#select)
-    Selects values at a given path ([JSONPath][jsonpath] or
-    [JSON Pointer][jsonpointer])
-  - [`modify`](http://dflemstr.github.io/rq/js/global.html#modify)
-    Takes a path and a function, and modifies each path target by the
-    function.
-
 **Compaction**
 
   - [`collect`](http://dflemstr.github.io/rq/js/global.html#collect)
