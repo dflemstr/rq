@@ -83,43 +83,6 @@ function install-deps {
     apt-install clang libclang-dev qemu-user-static binfmt-support
 }
 
-function install-kcov {
-    if ! which kcov &>/dev/null
-    then
-        local packages=(
-            libcurl4-openssl-dev
-            libelf-dev
-            libdw-dev
-            binutils-dev
-        )
-
-        apt-install "${packages[@]}"
-
-        wget https://github.com/SimonKagstrom/kcov/archive/master.tar.gz
-        tar xzf master.tar.gz
-        cd kcov-master
-        mkdir build
-        cd build
-        cmake ..
-        make
-        sudo make install
-        cd ../..
-        rm -rf kcov-master
-    fi
-}
-
-function ci-coverage {
-    install-kcov
-
-    for file in target/$TARGET/debug/rq-* target/$TARGET/debug/record_query-* target/$TARGET/debug/lib-*
-    do
-        kcov --exclude-pattern=/.cargo,/usr/lib --verify "target/cov" "$file"
-    done
-
-    bash <(curl -s https://codecov.io/bash)
-    echo "Uploaded code coverage"
-}
-
 function ci-test {
     local extra_args
     if [ "${SKIP_TESTS:-false}" = true ]
@@ -132,8 +95,6 @@ function ci-test {
     install-deps
 
     cargo test "${extra_args[@]}"
-
-    for-target x86_64-unknown-linux-gnu ci-coverage "$@"
 }
 
 function ci-deploy {
