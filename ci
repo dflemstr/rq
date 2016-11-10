@@ -108,6 +108,18 @@ function install-kcov {
     fi
 }
 
+function ci-coverage {
+    install-kcov
+
+    for file in target/$TARGET/debug/rq-* target/$TARGET/debug/record_query-* target/$TARGET/debug/lib-*
+    do
+        kcov --exclude-pattern=/.cargo,/usr/lib --verify "target/cov" "$file"
+    done
+
+    bash <(curl -s https://codecov.io/bash)
+    echo "Uploaded code coverage"
+}
+
 function ci-test {
     local extra_args
     if [ "${SKIP_TESTS:-false}" = true ]
@@ -124,21 +136,8 @@ function ci-test {
     cargo test -p serde-avro "${extra_args[@]}"
     cargo test -p v8 "${extra_args[@]}"
     cargo test "${extra_args[@]}"
-}
 
-function ci-coverage {
-    install-rust
-    install-v8
-    install-deps
-    install-kcov
-
-    for file in target/$TARGET/debug/rq-* target/$TARGET/debug/record_query-* target/$TARGET/debug/lib-*
-    do
-        kcov --exclude-pattern=/.cargo,/usr/lib --verify "target/cov" "$file"
-    done
-
-    bash <(curl -s https://codecov.io/bash)
-    echo "Uploaded code coverage"
+    for-target x86_64-unknown-linux-gnu ci-coverage "$@"
 }
 
 function ci-deploy {
@@ -185,8 +184,6 @@ case "$1" in
         shift; ci-install "$@" ;;
     test )
         shift; ci-test "$@" ;;
-    coverage )
-        shift; for-target x86_64-unknown-linux-gnu ci-coverage "$@" ;;
     deploy )
         shift; ci-deploy "$@" ;;
     deploy-gh-pages )

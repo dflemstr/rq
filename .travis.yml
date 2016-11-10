@@ -73,8 +73,6 @@ matrix:
 
 script: ./ci test
 
-after_success: ./ci coverage
-
 before_deploy: ./ci deploy
 
 deploy:
