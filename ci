@@ -136,9 +136,11 @@ then echo -e "[target.$TARGET]\nlinker = \"$TARGET-g++\"" > .cargo/config
 else echo -e "[target.$TARGET]\nlinker = \"g++\"" > .cargo/config
 fi
 
+if [[ "$TARGET" == *musl* ]]
+then echo 'rustflags = ["-C", "link-args=-static-libstdc++ -static-libgcc"]' >> .cargo/config
+fi
+
 case "$1" in
-    install )
-        shift; ci-install "$@" ;;
     test )
         shift; ci-test "$@" ;;
     deploy )
