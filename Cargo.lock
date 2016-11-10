@@ -655,7 +655,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "v8"
 version = "0.7.0"
-source = "git+https://github.com/dflemstr/v8-rs.git#6aacaa9b224a9c9af3a7e0168ba865b609e97a27"
+source = "git+https://github.com/dflemstr/v8-rs.git#0147c03b6bd5699ed0ba507f2f6663b422e5246f"
 dependencies = [
  "error-chain 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "lazy_static 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -666,7 +666,7 @@ dependencies = [
 [[package]]
 name = "v8-api"
 version = "0.6.0"
-source = "git+https://github.com/dflemstr/v8-rs.git#6aacaa9b224a9c9af3a7e0168ba865b609e97a27"
+source = "git+https://github.com/dflemstr/v8-rs.git#0147c03b6bd5699ed0ba507f2f6663b422e5246f"
 dependencies = [
  "clang 0.13.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "env_logger 0.3.5 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -676,7 +676,7 @@ dependencies = [
 [[package]]
 name = "v8-sys"
 version = "0.13.0"
-source = "git+https://github.com/dflemstr/v8-rs.git#6aacaa9b224a9c9af3a7e0168ba865b609e97a27"
+source = "git+https://github.com/dflemstr/v8-rs.git#0147c03b6bd5699ed0ba507f2f6663b422e5246f"
 dependencies = [
  "bindgen 0.19.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "clang 0.13.0 (registry+https://github.com/rust-lang/crates.io-index)",
