@@ -23,7 +23,7 @@ function retry {
     until [ "$n" -ge "$times" ]
     do
         "$@" && break
-        n=$(("$n" + 1))
+        n=$(($n + 1))
     done
 }
 
