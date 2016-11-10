@@ -25,12 +25,12 @@ protobuf = "*"
 rmp = "*"
 rustc-serialize = "*"
 serde = "*"
-serde-avro = "0.3.0"
+serde-avro = { version = "*", path = "serde-avro" }
 serde-hjson = "*"
-serde-protobuf = "0.3.0"
+serde-protobuf = { version = "*", path = "serde-protobuf" }
 serde_cbor = "*"
 serde_yaml = "*"
-toml = { version = "0.2.1", features = ["serde"] }
+toml = { version = "*", features = ["serde"] }
 xdg-basedir = "*"
 yaml-rust = "*"
 
