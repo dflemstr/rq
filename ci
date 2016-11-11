@@ -137,18 +137,20 @@ export CROSS_COMPILE="$TARGET-"
 mkdir -p .cargo
 echo -e "[target.$TARGET]\nlinker = \"$TARGET-g++\"" > .cargo/config
 
-lib_search_args=$(print-gcc-search-args "$TARGET-g++" && print-gcc-search-args "g++")
+target_search_args=$(print-gcc-search-args "$TARGET-g++")
+host_search_args=$(print-gcc-search-args "g++")
+
 if [[ "$TARGET" == *musl* ]]
 then
   echo -e "rustflags = [
-    $lib_search_args
+    $target_search_args
     \"-C\", \"link-args=-static-libstdc++ -static-libgcc\"
   ]" >> .cargo/config
 else
-  echo -e "rustflags = [
-    ${lib_search_args%,}
-  ]" >> .cargo/config
+  echo -e "rustflags = [${target_search_args%,}]" >> .cargo/config
 fi
+
+echo -e "[build]\nrustflags = [${host_search_args%,}]" >> .cargo/config
 
 case "$1" in
     test )
