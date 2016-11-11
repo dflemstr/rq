@@ -125,6 +125,10 @@ function ci-deploy-gh-pages {
     git push --force "https://${GITHUB_TOKEN}@github.com/dflemstr/rq.git" master:gh-pages
 }
 
+function print-gcc-search-args {
+    "$@" -print-search-dirs | grep libraries | cut -d= -f2 | tr : '\n' | xargs readlink -f | xargs -I'{}' echo '"-L", "native={}",'
+}
+
 if [ "${USE_DOCKER:-false}" = true ] && [ "${IN_DOCKER:-false}" = false ]
 then run-docker "$@"
 fi
@@ -133,7 +137,7 @@ export CROSS_COMPILE="$TARGET-"
 mkdir -p .cargo
 echo -e "[target.$TARGET]\nlinker = \"$TARGET-g++\"" > .cargo/config
 
-lib_search_args=$(find /x-tools -name 'lib*' -type d -exec echo -e '"-L", "native={}",' \;)
+lib_search_args=$(print-gcc-search-args "$TARGET-g++" && print-gcc-search-args "g++")
 if [[ "$TARGET" == *musl* ]]
 then
   echo -e "rustflags = [
