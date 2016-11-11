@@ -139,22 +139,30 @@ fi
 
 export CROSS_COMPILE="$TARGET-"
 mkdir -p .cargo
-echo -e "[target.$TARGET]\nlinker = \"$TARGET-g++\"" > .cargo/config
 
-target_search_args=$(print-gcc-search-args "$TARGET-g++")
-host_search_args=$(print-gcc-search-args "g++")
-
-if [[ "$TARGET" == *musl* ]]
+if [ "$TARGET" = "x86_64-unknown-linux-gnu" ]
 then
-  echo -e "rustflags = [
-    $target_search_args
-    \"-C\", \"link-args=-static-libstdc++ -static-libgcc\"
-  ]" >> .cargo/config
-else
-  echo -e "rustflags = [${target_search_args%,}]" >> .cargo/config
-fi
+  lib_search_args=$(print-gcc-search-args "g++" && print-gcc-search-args "$TARGET-g++")
 
-echo -e "[build]\nrustflags = [${host_search_args%,}]" >> .cargo/config
+  cat > .cargo/config <<EOF
+[build]
+linker = "g++"
+rustflags = [${lib_search_args%,}]
+EOF
+else
+  target_search_args=$(print-gcc-search-args "$TARGET-g++")
+  host_search_args=$(print-gcc-search-args "$TARGET-g++")
+
+  cat > .cargo/config <<EOF
+[target.$TARGET]
+linker = "$TARGET-g++"
+rustflags = [${target_search_args%,}]
+
+[build]
+linker = "g++"
+rustflags = [${host_search_args%,}]
+EOF
+fi
 
 case "$1" in
     test )
