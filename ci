@@ -154,17 +154,22 @@ rustflags = [${lib_search_args%,}]
 EOF
 elif [[ "$TARGET" != *darwin* ]]
 then
+  if [[ "$TARGET" == *musl* ]]
+  then extra_args='"-l", "static=stdc++"'
+  else extra_args='"-l", "stdc++"'
+  fi
+
   target_search_args=$(print-gcc-search-args "$TARGET-g++")
   host_search_args=$(print-gcc-search-args "$TARGET-g++")
 
   cat > .cargo/config <<EOF
 [target.$TARGET]
 linker = "$TARGET-g++"
-rustflags = [${target_search_args%,}]
+rustflags = [$extra_args, ${target_search_args%,}]
 
 [build]
 linker = "g++"
-rustflags = [${host_search_args%,}]
+rustflags = [$extra_args, ${host_search_args%,}]
 EOF
 fi
 
