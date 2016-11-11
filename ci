@@ -152,7 +152,7 @@ then
 linker = "g++"
 rustflags = [${lib_search_args%,}]
 EOF
-else
+elif [[ "$TARGET" != *darwin* ]]
   target_search_args=$(print-gcc-search-args "$TARGET-g++")
   host_search_args=$(print-gcc-search-args "$TARGET-g++")
 
