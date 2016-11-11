@@ -35,8 +35,9 @@ function run-docker {
          --rm -ti \
          --entrypoint /bin/bash \
          -u root \
-         -v "$HOME/.cargo:/home/$(id -un)/.cargo" \
+         -v "$HOME/.cargo:$HOME/.cargo" \
          -v "$PWD:/host" \
+         -e "HOME=$HOME" \
          -e "TARGET=$TARGET" \
          -e "GITHUB_TOKEN=$GITHUB_TOKEN" \
          -e "SKIP_TESTS=$SKIP_TESTS" \
@@ -49,6 +50,7 @@ function run-docker {
              if ! getent passwd $(id -un)
              then useradd -u $(id -u) -g $(id -g) -m $(id -un)
              fi &&
+             chown $(id -un):$(id -gn) -R $HOME &&
              adduser $(id -un) sudo &&
              cd /host &&
              sudo -HEu $(id -un) ./ci $*"
