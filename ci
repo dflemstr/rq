@@ -29,11 +29,13 @@ function retry {
 
 function run-docker {
     docker pull "dflemstr/buildenv:$TARGET"
+    mkdir -p "$HOME/.cargo"
     exec docker run \
          --privileged \
          --rm -ti \
          --entrypoint /bin/bash \
          -u root \
+         -v "$HOME/.cargo:/home/$(id -un)/.cargo"
          -v "$PWD:/host" \
          -e "TARGET=$TARGET" \
          -e "GITHUB_TOKEN=$GITHUB_TOKEN" \
