@@ -1,9 +1,11 @@
-language: generic
+language: rust
 sudo: required
 dist: trusty
 
 services:
   - docker
+
+cache: cargo
 
 matrix:
   include:
