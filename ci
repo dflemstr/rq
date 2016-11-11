@@ -153,6 +153,7 @@ linker = "g++"
 rustflags = [${lib_search_args%,}]
 EOF
 elif [[ "$TARGET" != *darwin* ]]
+then
   target_search_args=$(print-gcc-search-args "$TARGET-g++")
   host_search_args=$(print-gcc-search-args "$TARGET-g++")
 
@@ -165,7 +166,6 @@ rustflags = [${target_search_args%,}]
 linker = "g++"
 rustflags = [${host_search_args%,}]
 EOF
-else :
 fi
 
 case "$1" in
