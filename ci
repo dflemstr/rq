@@ -131,10 +131,7 @@ fi
 
 export CROSS_COMPILE="$TARGET-"
 mkdir -p .cargo
-if [ "$TARGET" != "x86_64-unknown-linux-gnu" ]
-then echo -e "[target.$TARGET]\nlinker = \"$TARGET-g++\"" > .cargo/config
-else echo -e "[target.$TARGET]\nlinker = \"g++\"" > .cargo/config
-fi
+echo -e "[target.$TARGET]\nlinker = \"$TARGET-g++\"" > .cargo/config
 
 lib_search_args=$(find /x-tools -name 'lib*' -type d -exec echo -e '"-L", "native={}",' \;)
 if [[ "$TARGET" == *musl* ]]
