@@ -58,10 +58,13 @@ function run-docker {
 }
 
 function apt-install {
-    sudo apt-get update
-    export DEBIAN_FRONTEND=noninteractive
-    sudo apt-get install -y --no-install-recommends "$@"
-    sudo rm -rf /var/lib/apt/lists/*
+    if [[ "$TARGET" == *linux* ]]
+    then
+        sudo apt-get update
+        export DEBIAN_FRONTEND=noninteractive
+        sudo apt-get install -y --no-install-recommends "$@"
+        sudo rm -rf /var/lib/apt/lists/*
+    fi
 }
 
 function install-rust {
