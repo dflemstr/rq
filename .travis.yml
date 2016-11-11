@@ -73,6 +73,8 @@ matrix:
     - env: TARGET=armv7-unknown-linux-gnueabihf
     - env: TARGET=armv7-unknown-linux-musleabihf
 
+install: true # i.e. do nothing
+
 script: ./ci test
 
 before_deploy: ./ci deploy
