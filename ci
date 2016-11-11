@@ -136,8 +136,17 @@ then echo -e "[target.$TARGET]\nlinker = \"$TARGET-g++\"" > .cargo/config
 else echo -e "[target.$TARGET]\nlinker = \"g++\"" > .cargo/config
 fi
 
+lib_search_args=$(find /x-tools -name 'lib*' -type d -exec echo -e '"-L", "native={}",' \;)
 if [[ "$TARGET" == *musl* ]]
-then echo 'rustflags = ["-C", "link-args=-static-libstdc++ -static-libgcc"]' >> .cargo/config
+then
+  echo -e "rustflags = [
+    $lib_search_args
+    \"-C\", \"link-args=-static-libstdc++ -static-libgcc\"
+  ]" >> .cargo/config
+else
+  echo -e "rustflags = [
+    ${lib_search_args%,}
+  ]" >> .cargo/config
 fi
 
 case "$1" in
