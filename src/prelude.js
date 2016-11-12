@@ -234,7 +234,11 @@ function* chunk(size) {
  * 0 1 false 2 "" 3 → compact → 1 2 3
  */
 function* compact() {
-  yield* this.spread(_.compact((yield* this.collect())));
+  while (yield* this.pull()) {
+    if (this.value) {
+      yield* this.push(this.value);
+    }
+  }
 }
 
 /**
