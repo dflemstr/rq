@@ -64,6 +64,12 @@ matrix:
       env: >
         TARGET=i686-apple-darwin
   allow_failures:
+    # Due to: https://github.com/rust-lang/rust/issues/35599
+    - os: linux
+      env: >
+        TARGET=i686-unknown-linux-gnu
+        USE_DOCKER=true
+    # Currently not yet supported:
     - os: linux
       env: >
         TARGET=arm-unknown-linux-gnueabi
