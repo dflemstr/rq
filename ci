@@ -87,28 +87,30 @@ function install-v8 {
 }
 
 function configure-linker {
-  mkdir -p .cargo
+    export CROSS_COMPILE="$TARGET-"
 
-  if [ "$TARGET" = "x86_64-unknown-linux-gnu" ]
-  then
-    lib_search_args=$(print-gcc-search-args "g++" && print-gcc-search-args "$TARGET-g++")
+    mkdir -p .cargo
 
-    cat > .cargo/config <<EOF
+    if [ "$TARGET" = "x86_64-unknown-linux-gnu" ]
+    then
+        lib_search_args=$(print-gcc-search-args "g++" && print-gcc-search-args "$TARGET-g++")
+
+        cat > .cargo/config <<EOF
 [build]
 linker = "g++"
 rustflags = [${lib_search_args%,}]
 EOF
-  elif [[ "$TARGET" != *darwin* ]]
-  then
-    if [[ "$TARGET" == *musl* ]]
-    then extra_args='"-l", "static=stdc++"'
-    else extra_args='"-l", "stdc++"'
-    fi
+    elif [[ "$TARGET" != *darwin* ]]
+    then
+        if [[ "$TARGET" == *musl* ]]
+        then extra_args='"-l", "static=stdc++"'
+        else extra_args='"-l", "stdc++"'
+        fi
 
-    target_search_args=$(print-gcc-search-args "$TARGET-g++")
-    host_search_args=$(print-gcc-search-args "g++")
+        target_search_args=$(print-gcc-search-args "$TARGET-g++")
+        host_search_args=$(print-gcc-search-args "g++")
 
-    sudo tee /usr/bin/custom-linker <<EOF
+        sudo tee /usr/bin/custom-linker >/dev/null <<EOF
 #!/usr/bin/env python2
 import os
 import subprocess
@@ -118,14 +120,15 @@ target = os.environ['TARGET']
 
 real_args = []
 for arg in sys.argv[1:]:
+  # TODO: don't hard-code the .o paths here, they might change
   if arg.endswith('/crt1.o'):
-    real_args.append('/x-tools/{0}/lib/gcc/{0}/6.1.0/crt1.o'.format(target))
+    real_args.append('/x-tools/{0}/{0}/sysroot/usr/lib/crt1.o'.format(target))
   elif arg.endswith('/crti.o'):
-    real_args.append('/x-tools/{0}/lib/gcc/{0}/6.1.0/crti.o'.format(target))
-    real_args.append('/x-tools/{0}/lib/gcc/{0}/6.1.0/crtbegin.o'.format(target))
+    real_args.append('/x-tools/{0}/{0}/sysroot/usr/lib/crti.o'.format(target))
+    real_args.append('/x-tools/{0}/lib/gcc/{0}/6.2.0/crtbegin.o'.format(target))
   elif arg.endswith('/crtn.o'):
-    real_args.append('/x-tools/{0}/lib/gcc/{0}/6.1.0/crtend.o'.format(target))
-    real_args.append('/x-tools/{0}/lib/gcc/{0}/6.1.0/crtn.o'.format(target))
+    real_args.append('/x-tools/{0}/lib/gcc/{0}/6.2.0/crtend.o'.format(target))
+    real_args.append('/x-tools/{0}/{0}/sysroot/usr/lib/crtn.o'.format(target))
   else:
     real_args.append(arg)
 
@@ -133,9 +136,9 @@ cmd = [target + "-g++"] + real_args
 print cmd
 sys.exit(subprocess.call(cmd))
 EOF
-    sudo chmod +x /usr/bin/custom-linker
+        sudo chmod +x /usr/bin/custom-linker
 
-    cat > .cargo/config <<EOF
+        cat > .cargo/config <<EOF
 [target.$TARGET]
 linker = "custom-linker"
 rustflags = [$extra_args, ${target_search_args%,}]
@@ -144,27 +147,25 @@ rustflags = [$extra_args, ${target_search_args%,}]
 linker = "g++"
 rustflags = [${host_search_args%,}]
 EOF
-  fi
+    fi
 }
 
 function ci-test {
     local extra_args
     if [ "${SKIP_TESTS:-false}" = true ]
-    then extra_args=(--target "$TARGET" --no-run)
-    else extra_args=(--target "$TARGET")
+    then extra_args=(--no-run)
+    else extra_args=()
     fi
 
     install-rust
     install-v8
-    configure-linker
 
-    cargo test "${extra_args[@]}"
+    cargo test --target "$TARGET" "${extra_args[@]}"
 }
 
 function ci-deploy {
     install-rust
     install-v8
-    configure-linker
 
     cargo build --release --target="$TARGET"
     mkdir -p "target/deploy/$TARGET"
@@ -197,7 +198,7 @@ if [ "${USE_DOCKER:-false}" = true ] && [ "${IN_DOCKER:-false}" = false ]
 then run-docker "$@"
 fi
 
-export CROSS_COMPILE="$TARGET-"
+configure-linker
 
 case "$1" in
     test )
