@@ -4,6 +4,7 @@ use error;
 
 use serde;
 use std::io;
+use std::panic;
 use toml;
 use value;
 
@@ -56,9 +57,29 @@ impl<W> value::Sink for TomlSink<W>
     #[inline]
     fn write(&mut self, value: value::Value) -> error::Result<()> {
         let mut e = toml::Encoder::new();
-        try!(serde::Serialize::serialize(&value, &mut e));
-        try!(write!(self.0, "{}", toml::Value::Table(e.toml).to_string()));
-        try!(self.0.write(b"\n"));
+        match serde::Serialize::serialize(&value, &mut e) {
+            Ok(()) => (),
+            Err(toml::Error::NeedsKey) =>
+                return Err("TOML document needs to have a table at the root".into()),
+            Err(e) =>
+                return Err(e.into()),
+        }
+
+        match panic::catch_unwind(move || toml::Value::Table(e.toml).to_string()) {
+            Ok(s) => try!(self.0.write_all(s.as_bytes())),
+            Err(cause) => {
+                if let Some(s) = cause.downcast_ref::<&str>() {
+                    if *s == "non-heterogeneous toml array" {
+                        return Err("All elements in a TOML array need to be the same type".into());
+                    }
+                }
+
+                // rethrow otherwise
+                panic::resume_unwind(cause);
+            }
+        }
+
+        try!(self.0.write_all(b"\n"));
         Ok(())
     }
 }
