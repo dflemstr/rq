@@ -19,6 +19,7 @@ var _ = require('lodash');
  * Passes through all of the values it sees untouched.
  *
  * @static
+ * @this rq.Context
  * @example
  * {"a": 2, "b": 3} → id → {"a": 2, "b": 3}
  * true             → id → true
@@ -33,6 +34,7 @@ function* id() {
  * Selects the field(s) at the specified path for each value in the stream.
  *
  * @static
+ * @this rq.Context
  * @example
  * {"a": {"b": {"c": 3}}} → select "/a/b" → {"c": 3}
  * {"a": {"b": {"c": 3}}} → select "/a/x" → (empty)
@@ -56,6 +58,7 @@ function* select(path) {
  * function.
  *
  * @static
+ * @this rq.Context
  * @example
  * {"a": {"b": 2, "c": true}} → modify "/a/b" (n)=>{n + 2} → {"a": {"b": 4, "c": true}}
  * {"a": {"b": 2, "c": true}} → modify "/a/x" (n)=>{n + 2} → {"a": {"b": 2, "c": true}}
@@ -78,6 +81,7 @@ function* modify(path, f) {
  * Logs each value that passes through to the info log.
  *
  * @static
+ * @this rq.Context
  */
 function* tee() {
   while (yield* this.pull()) {
@@ -90,6 +94,7 @@ function* tee() {
  * Collects all of the values from the input stream into an array.
  *
  * @static
+ * @this rq.Context
  * @example
  * true [] 1 → collect → [true, [], 1]
  */
@@ -101,6 +106,7 @@ function* collect() {
  * Spreads each array in the input stream into separate output values.
  *
  * @static
+ * @this rq.Context
  * @example
  * [1, 2] [3, 4] 5 → spread → 1 2 3 4 5
  */
@@ -115,11 +121,11 @@ function* spread() {
 }
 
 /**
- * Counts the number of input elements
+ * Counts the number of input elements.
  *
  * @static
+ * @this rq.Context
  * @example
- *
  * 6.1 4.2 6.3         → count → 3
  * "one" "two" "three" → count → 3
  */
@@ -131,6 +137,7 @@ var count = size;
  * invoked with two arguments: (value, index).
  *
  * @static
+ * @this rq.Context
  * @param {Function} [predicate=_.identity]
  *  The function invoked per iteration.
  * @example
@@ -152,6 +159,7 @@ var all = every;
  * invoked with two arguments: (value, index).
  *
  * @static
+ * @this rq.Context
  * @param {Function} [predicate=_.identity] The function invoked per iteration.
  * @example
  * null 0 "yes" false → any (x)=>{Boolean(x)} → true
@@ -172,6 +180,7 @@ var any = some;
  * of equal elements.
  *
  * @static
+ * @this rq.Context
  * @example
  * 3 1 2 → sort → 1 2 3
  */
@@ -191,6 +200,7 @@ function* sort() {
  * elements.
  *
  * @static
+ * @this rq.Context
  * @param {number} [size=1] The length of each chunk
  * @example
  * "a" "b" "c" "d" → chunk    → ["a"] ["b"] ["c"] ["d"]
@@ -230,6 +240,7 @@ function* chunk(size) {
  * `0`, `""`, `undefined`, and `NaN` are falsey.
  *
  * @static
+ * @this rq.Context
  * @example
  * 0 1 false 2 "" 3 → compact → 1 2 3
  */
@@ -245,6 +256,7 @@ function* compact() {
  * Creates a new stream concatenating all input arrays.
  *
  * @static
+ * @this rq.Context
  * @example
  * [1] 2 [3] [[4]] → concat → [1, 2, 3, [4]]
  */
@@ -259,6 +271,7 @@ function* concat() {
  * the input.
  *
  * @static
+ * @this rq.Context
  * @param {Array} [values] The values to exclude.
  * @see without, xor
  * @example
@@ -275,6 +288,7 @@ function* difference(values) {
  * The iteratee is invoked with one argument: (value).
  *
  * @static
+ * @this rq.Context
  * @param {Array} [values] The values to exclude.
  * @param {Function} [iteratee=_.identity] The iteratee invoked per element.
  * @example
@@ -292,6 +306,7 @@ function* differenceBy(values, iteratee) {
  * two arguments: (inputVal, othVal).
  *
  * @static
+ * @this rq.Context
  * @param {Array} [values] The values to exclude.
  * @param {Function} [comparator] The comparator invoked per element.
  * @example
@@ -305,6 +320,7 @@ function* differenceWith(values, comparator) {
  * Creates a slice of the input stream with `n` elements dropped from the beginning.
  *
  * @static
+ * @this rq.Context
  * @param {number} [n=1] The number of elements to drop.
  * @example
  * 1 2 3 → drop   → 2 3
@@ -320,6 +336,7 @@ function* drop(n) {
  * Creates a slice of the input stream with `n` elements dropped from the end.
  *
  * @static
+ * @this rq.Context
  * @param {number} [n=1] The number of elements to drop.
  * @example
  * 1 2 3 → dropRight   → 1 2
@@ -337,6 +354,7 @@ function* dropRight(n) {
  * invoked with three arguments: (value, index, array).
  *
  * @static
+ * @this rq.Context
  * @param {Function} [predicate=_.identity] The function invoked per iteration.
  * @example
  * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → dropRightWhile (o)=>{!o.a} → {"u": "b", "a": true}
@@ -357,6 +375,7 @@ function* dropRightWhile(predicate) {
  * invoked with three arguments: (value, index, array).
  *
  * @static
+ * @this rq.Context
  * @param {Function} [predicate=_.identity]
  *  The function invoked per iteration.
  * @example
@@ -377,6 +396,7 @@ function* dropWhile(predicate) {
  * including, `end`.
  *
  * @static
+ * @this rq.Context
  * @param {*} value The value to fill the input stream with.
  * @param {number} [start=0] The start position.
  * @param {number} [end=array.length] The end position.
@@ -392,6 +412,7 @@ function* fill(value, start, end) {
  * element `predicate` returns truthy for instead of the element itself.
  *
  * @static
+ * @this rq.Context
  * @param {Function} [predicate=_.identity]
  *  The function invoked per iteration.
  * @param {number} [fromIndex=0] The index to search from.
@@ -413,6 +434,7 @@ function* findIndex(predicate, fromIndex) {
  * of `collection` from right to left.
  *
  * @static
+ * @this rq.Context
  * @param {Function} [predicate=_.identity]
  *  The function invoked per iteration.
  * @param {number} [fromIndex=array.length-1] The index to search from.
@@ -433,6 +455,7 @@ function* findLastIndex(predicate, fromIndex) {
  * Flattens the input stream a single level deep.
  *
  * @static
+ * @this rq.Context
  * @example
  * 1  [2, [3, [4]], 5] → flatten → 1 2 [3, [4]] 5
  */
@@ -444,6 +467,7 @@ function* flatten() {
  * Recursively flattens the input stream.
  *
  * @static
+ * @this rq.Context
  * @example
  * 1 [2, [3, [4]], 5] → flattenDeep → 1 2 3 4 5
  */
@@ -455,6 +479,7 @@ function* flattenDeep() {
  * Recursively flatten the input stream up to `depth` times.
  *
  * @static
+ * @this rq.Context
  * @param {number} [depth=1] The maximum recursion depth.
  * @example
  * 1 [2, [3, [4]], 5] → flattenDepth 1 → 1 2 [3, [4]] 5
@@ -469,6 +494,7 @@ function* flattenDepth(depth) {
  * from key-value `pairs`.
  *
  * @static
+ * @this rq.Context
  * @example
  * ["a", 1] ["b", 2] → fromPairs → {"a": 1, "b": 2}
  */
@@ -480,7 +506,7 @@ function* fromPairs() {
  * Gets the first element of the input stream.
  *
  * @static
- * @alias first
+ * @this rq.Context
  * @example
  * 1 2 3   → head → 1
  * (empty) → head → null
@@ -496,6 +522,7 @@ function* head() {
  * offset from the end of the input stream.
  *
  * @static
+ * @this rq.Context
  * @param {*} value The value to search for.
  * @param {number} [fromIndex=0] The index to search from.
  * @example
@@ -511,6 +538,7 @@ function* indexOf(value, fromIndex) {
  * Gets all but the last element of the input stream.
  *
  * @static
+ * @this rq.Context
  * @example
  * 1 2 3 → initial → 1 2
  */
@@ -525,6 +553,7 @@ function* initial() {
  * order they occur in the input stream.
  *
  * @static
+ * @this rq.Context
  * @param {Array} [values] The values to inspect.
  * @example
  * 2 1 → intersection [2, 3] → 2
@@ -540,6 +569,7 @@ function* intersection(values) {
  * The iteratee is invoked with one argument: (value).
  *
  * @static
+ * @this rq.Context
  * @param {Array} [values] The values to inspect.
  * @param {Function} [iteratee=_.identity] The iteratee invoked per element.
  * @example
@@ -558,6 +588,7 @@ function* intersectionBy(values, iteratee) {
  * (arrVal, othVal).
  *
  * @static
+ * @this rq.Context
  * @param {Array} [values] The values to inspect.
  * @param {Function} [comparator] The comparator invoked per element.
  * @example
@@ -571,6 +602,7 @@ function* intersectionWith(values, comparator) {
  * Converts all elements in the input stream into a string separated by `separator`.
  *
  * @static
+ * @this rq.Context
  * @param {string} [separator=','] The element separator.
  * @example
  * "a" "b" "c" → join     → "a,b,c"
@@ -584,6 +616,7 @@ function* join(separator) {
  * Gets the last element of the input stream.
  *
  * @static
+ * @this rq.Context
  * @example
  * 1 2 3 → last → 3
  */
@@ -596,6 +629,7 @@ function* last() {
  * the input stream from right to left.
  *
  * @static
+ * @this rq.Context
  * @param {*} value The value to search for.
  * @param {number} [fromIndex=array.length-1] The index to search from.
  * @example
@@ -611,6 +645,7 @@ function* lastIndexOf(value, fromIndex) {
  * element from the end is returned.
  *
  * @static
+ * @this rq.Context
  * @param {number} [n=0] The index of the element to return.
  * @example
  * "a" "b" "c" "d" → nth  1 → "b"
@@ -627,6 +662,7 @@ function* nth(n) {
  * element becomes the second to last, and so on.
  *
  * @static
+ * @this rq.Context
  * @example
  * 1 2 3 → reverse → 3 2 1
  */
@@ -638,6 +674,7 @@ function* reverse() {
  * Creates a slice of the input stream from `start` up to, but not including, `end`.
  *
  * @static
+ * @this rq.Context
  * @param {number} [start=0] The start position.
  * @param {number} [end=array.length] The end position.
  * @example
@@ -652,6 +689,7 @@ function* slice(start, end) {
  * should be inserted into the input stream in order to maintain its sort order.
  *
  * @static
+ * @this rq.Context
  * @param {*} value The value to evaluate.
  *  into the input stream.
  * @example
@@ -667,6 +705,7 @@ function* sortedIndex(value) {
  * sort ranking. The iteratee is invoked with one argument: (value).
  *
  * @static
+ * @this rq.Context
  * @param {*} value The value to evaluate.
  * @param {Function} [iteratee=_.identity]
  *  The iteratee invoked per element.
@@ -685,6 +724,7 @@ function* sortedIndexBy(value, iteratee) {
  * search on a sorted the input stream.
  *
  * @static
+ * @this rq.Context
  * @param {*} value The value to search for.
  * @example
  * 4 5 5 5 6 → sortedIndexOf 5 → 1
@@ -699,6 +739,7 @@ function* sortedIndexOf(value) {
  * maintain its sort order.
  *
  * @static
+ * @this rq.Context
  * @param {*} value The value to evaluate.
  *  into the input stream.
  * @example
@@ -714,6 +755,7 @@ function* sortedLastIndex(value) {
  * sort ranking. The iteratee is invoked with one argument: (value).
  *
  * @static
+ * @this rq.Context
  * @param {*} value The value to evaluate.
  * @param {Function} [iteratee=_.identity]
  *  The iteratee invoked per element.
@@ -732,6 +774,7 @@ function* sortedLastIndexBy(value, iteratee) {
  * search on a sorted the input stream.
  *
  * @static
+ * @this rq.Context
  * @param {*} value The value to search for.
  * @example
  * 4 5 5 5 6 → sortedLastIndexOf 5 → 3
@@ -745,6 +788,7 @@ function* sortedLastIndexOf(value) {
  * for sorted arrays.
  *
  * @static
+ * @this rq.Context
  * @example
  * 1 1 2 → sortedUniq → 1 2
  */
@@ -757,6 +801,7 @@ function* sortedUniq() {
  * for sorted arrays.
  *
  * @static
+ * @this rq.Context
  * @param {Function} [iteratee] The iteratee invoked per element.
  * @example
  * 1.1 1.2 2.3 2.4 → sortedUniqBy (x)=>{Math.floor(x)} → 1.1 2.3
@@ -769,6 +814,7 @@ function* sortedUniqBy(iteratee) {
  * Gets all but the first element of the input stream.
  *
  * @static
+ * @this rq.Context
  * @example
  * 1 2 3 → tail → 2 3
  */
@@ -780,8 +826,8 @@ function* tail() {
  * Creates a slice of the input stream with `n` elements taken from the beginning.
  *
  * @static
+ * @this rq.Context
  * @param {number} [n=1] The number of elements to take.
- * @param- {Object} [guard] Enables use as an iteratee for methods like `map`.
  * @example
  * 1 2 3 → take   → 1
  * 1 2 3 → take 2 → 1 2
@@ -796,8 +842,8 @@ function* take(n) {
  * Creates a slice of the input stream with `n` elements taken from the end.
  *
  * @static
+ * @this rq.Context
  * @param {number} [n=1] The number of elements to take.
- * @param- {Object} [guard] Enables use as an iteratee for methods like `map`.
  * @example
  * 1 2 3 → takeRight   → 3
  * 1 2 3 → takeRight 2 → 2 3
@@ -814,6 +860,7 @@ function* takeRight(n) {
  * three arguments: (value, index, array).
  *
  * @static
+ * @this rq.Context
  * @param {Function} [predicate=_.identity]
  *  The function invoked per iteration.
  * @example
@@ -835,6 +882,7 @@ function* takeRightWhile(predicate) {
  * three arguments: (value, index, array).
  *
  * @static
+ * @this rq.Context
  * @param {Function} [predicate=_.identity]
  *  The function invoked per iteration.
  * @example
@@ -856,6 +904,7 @@ function* takeWhile(predicate) {
  * for equality comparisons.
  *
  * @static
+ * @this rq.Context
  * @param {Array} [values] The values to inspect.
  * @example
  * 2 → union [1, 2] → 2 1
@@ -871,6 +920,7 @@ function* union(values) {
  * The iteratee is invoked with one argument: (value).
  *
  * @static
+ * @this rq.Context
  * @param {Array} [values] The values to inspect.
  * @param {Function} [iteratee=_.identity]
  *  The iteratee invoked per element.
@@ -889,6 +939,7 @@ function* unionBy(values, iteratee) {
  * the input stream. The comparator is invoked with two arguments: (arrVal, othVal).
  *
  * @static
+ * @this rq.Context
  * @param {Array} [values] The values to inspect.
  * @param {Function} [comparator] The comparator invoked per element.
  * @example
@@ -905,6 +956,7 @@ function* unionWith(values, comparator) {
  * element is kept.
  *
  * @static
+ * @this rq.Context
  * @example
  * 2 1 2 → uniq → 2 1
  */
@@ -918,6 +970,7 @@ function* uniq() {
  * uniqueness is computed. The iteratee is invoked with one argument: (value).
  *
  * @static
+ * @this rq.Context
  * @param {Function} [iteratee=_.identity]
  *  The iteratee invoked per element.
  * @example
@@ -935,6 +988,7 @@ function* uniqBy(iteratee) {
  * two arguments: (arrVal, othVal).
  *
  * @static
+ * @this rq.Context
  * @param {Function} [comparator] The comparator invoked per element.
  * @example
  * {"x": 1, "y": 2} {"x": 2, "y": 1} {"x": 1, "y": 2} → uniqWith (a, b)=>{_.isEqual(a, b)} → {"x": 1, "y": 2} {"x": 2, "y": 1}
@@ -949,6 +1003,7 @@ function* uniqWith(comparator) {
  * configuration.
  *
  * @static
+ * @this rq.Context
  * @example
  * ["a", 1, true] ["b", 2, false] → unzip → ["a", "b"] [1, 2] [true, false]
  */
@@ -962,6 +1017,7 @@ function* unzip() {
  * elements of each group: (...group).
  *
  * @static
+ * @this rq.Context
  * @param {Function} [iteratee=_.identity] The function to combine
  *  regrouped values.
  * @example
@@ -977,6 +1033,7 @@ function* unzipWith(iteratee) {
  * for equality comparisons.
  *
  * @static
+ * @this rq.Context
  * @param {...*} [values] The values to exclude.
  * @see _.difference, _.xor
  * @example
@@ -995,6 +1052,7 @@ function* without(values) {
  * they occur in the input stream.
  *
  * @static
+ * @this rq.Context
  * @param {Array} [values] The values to inspect.
  * @see _.difference, _.without
  * @example
@@ -1011,6 +1069,7 @@ function* xor(values) {
  * (value).
  *
  * @static
+ * @this rq.Context
  * @param {Array} [values] The arrays to inspect.
  * @param {Function} [iteratee=_.identity]
  *  The iteratee invoked per element.
@@ -1029,6 +1088,7 @@ function* xorBy(values, iteratee) {
  * two arguments: (arrVal, othVal).
  *
  * @static
+ * @this rq.Context
  * @param {Array} [values] The values to inspect.
  * @param {Function} [comparator] The comparator invoked per element.
  * @example
@@ -1044,6 +1104,7 @@ function* xorWith(values, comparator) {
  * second elements of the given arrays, and so on.
  *
  * @static
+ * @this rq.Context
  * @example
  * ["a", "b"] [1, 2] [true, false] → zip → ["a", 1, true] ["b", 2, false]
  */
@@ -1059,6 +1120,7 @@ function* zip() {
  * elements of each group: (...group).
  *
  * @static
+ * @this rq.Context
  * @param {Function} [iteratee=_.identity] The function to combine grouped values.
  * @example
  *
@@ -1085,6 +1147,7 @@ function* zipWith(iteratee) {
  * invoked with two arguments: (value, index).
  *
  * @static
+ * @this rq.Context
  * @param {Function} [predicate=_.identity]
  *  The function invoked per iteration.
  * @example
@@ -1120,6 +1183,7 @@ function* every(predicate) {
  * iteratee is invoked with one argument: (value).
  *
  * @static
+ * @this rq.Context
  * @param {Function} [iteratee=_.identity]
  *  The iteratee to transform keys.
  * @example
@@ -1139,6 +1203,7 @@ function* countBy(iteratee) {
  * **Note:** Unlike `remove`, this method returns a new array.
  *
  * @static
+ * @this rq.Context
  * @param {Function} [predicate=_.identity]
  *  The function invoked per iteration.
  * @see _.reject
@@ -1172,6 +1237,7 @@ function* filter(predicate) {
  * arguments: (value, index).
  *
  * @static
+ * @this rq.Context
  * @param {Function} [predicate=_.identity]
  *  The function invoked per iteration.
  * @example
@@ -1201,6 +1267,7 @@ function* find(predicate) {
  * the input stream from right to left.
  *
  * @static
+ * @this rq.Context
  * @param {Function} [predicate=_.identity]
  *  The function invoked per iteration.
  * @param {number} [fromIndex=collection.length-1] The index to search from.
@@ -1216,6 +1283,7 @@ function* findLast(predicate, fromIndex) {
  * with three arguments: (value, index|key, collection).
  *
  * @static
+ * @this rq.Context
  * @param {Function} [iteratee=_.identity]
  *  The function invoked per iteration.
  * @example
@@ -1230,6 +1298,7 @@ function* flatMap(iteratee) {
  * mapped results.
  *
  * @static
+ * @this rq.Context
  * @param {Function} [iteratee=_.identity]
  *  The function invoked per iteration.
  * @example
@@ -1244,6 +1313,7 @@ function* flatMapDeep(iteratee) {
  * mapped results up to `depth` times.
  *
  * @static
+ * @this rq.Context
  * @param {Function} [iteratee=_.identity]
  *  The function invoked per iteration.
  * @param {number} [depth=1] The maximum recursion depth.
@@ -1264,6 +1334,7 @@ function* flatMapDepth(iteratee, depth) {
  * key. The iteratee is invoked with one argument: (value).
  *
  * @static
+ * @this rq.Context
  * @param {Function} [iteratee=_.identity]
  *  The iteratee to transform keys.
  * @example
@@ -1284,9 +1355,9 @@ function* groupBy(iteratee) {
  * the offset from the end of the input stream.
  *
  * @static
+ * @this rq.Context
  * @param {*} value The value to search for.
  * @param {number} [fromIndex=0] The index to search from.
- * @param- {Object} [guard] Enables use as an iteratee for methods like `reduce`.
  * @example
  *
  * 1 2 3 → includes 1   → true
@@ -1303,6 +1374,7 @@ function* includes(value, fromIndex) {
  * for, and `this` bound to, each element in the input stream.
  *
  * @static
+ * @this rq.Context
  * @param {Array|Function|string} path The path of the method to invoke or
  *  the function invoked per iteration.
  * @param {...*} [args] The arguments to invoke each method with.
@@ -1323,6 +1395,7 @@ function* invokeMap(path, args) {
  * iteratee is invoked with one argument: (value).
  *
  * @static
+ * @this rq.Context
  * @param {Function} [iteratee=_.identity]
  *  The iteratee to transform keys.
  * @example
@@ -1348,6 +1421,7 @@ function* keyBy(iteratee) {
  * `template`, `trim`, `trimEnd`, `trimStart`, and `words`
  *
  * @static
+ * @this rq.Context
  * @param {Function} [iteratee=_.identity] The function invoked per iteration.
  * @example
  * 4 8 → map (x)=>{x*x} → 16 64
@@ -1373,10 +1447,10 @@ function* map(iteratee) {
  * descending or "asc" for ascending sort order of corresponding values.
  *
  * @static
+ * @this rq.Context
  * @param {Array[]|Function[]|Object[]|string[]} [iteratees=[_.identity]]
  *  The iteratees to sort by.
  * @param {string[]} [orders] The sort orders of `iteratees`.
- * @param- {Object} [guard] Enables use as an iteratee for methods like `reduce`.
  * @example
  * {"u": "f", "g": 48} {"u": "b", "g": 34} {"u": "f", "g": 40} {"u": "b", "g": 36} → orderBy ["u", "g"] ["asc", "desc"] → {"u": "b", "g": 36} {"u": "b", "g": 34} {"u": "f", "g": 48} {"u": "f", "g": 40}
  */
@@ -1391,6 +1465,7 @@ function* orderBy(iteratees, orders) {
  * invoked with one argument: (value).
  *
  * @static
+ * @this rq.Context
  * @param {Function} [predicate=_.identity] The function invoked per iteration.
  * @example
  * {"u": "b", "g": 36, "a": false} {"u": "f", "g": 40, "a": true} {"u": "p", "g": 1, "a": false} → partition (o)=>{o.a} → [{"u": "f", "g": 40, "a": true}] [{"u": "b", "g": 36, "a": false}, {"u": "p", "g": 1, "a": false}]
@@ -1421,6 +1496,7 @@ function* partition(predicate) {
  * and `sortBy`
  *
  * @static
+ * @this rq.Context
  * @param {Function} [iteratee=_.identity] The function invoked per iteration.
  * @param {*} [accumulator] The initial value.
  * @see _.reduceRight
@@ -1436,6 +1512,7 @@ function* reduce(iteratee, accumulator) {
  * the input stream from right to left.
  *
  * @static
+ * @this rq.Context
  * @param {Function} [iteratee=_.identity] The function invoked per iteration.
  * @param {*} [accumulator] The initial value.
  * @see _.reduce
@@ -1451,6 +1528,7 @@ function* reduceRight(iteratee, accumulator) {
  * that `predicate` does **not** return truthy for.
  *
  * @static
+ * @this rq.Context
  * @param {Function} [predicate=_.identity] The function invoked per iteration.
  * @see _.filter
  * @example
@@ -1478,6 +1556,7 @@ function* reject(predicate) {
  * Gets a random element from the input stream.
  *
  * @static
+ * @this rq.Context
  * @example
  * 1 2 3 4 → sample → 2 (not tested)
  */
@@ -1490,8 +1569,8 @@ function* sample() {
  * size of the input stream.
  *
  * @static
+ * @this rq.Context
  * @param {number} [n=1] The number of elements to sample.
- * @param- {Object} [guard] Enables use as an iteratee for methods like `map`.
  * @example
  * 1 2 3 → sampleSize 2 → 3 1 (not tested)
  * 1 2 3 → sampleSize 4 → 2 3 1 (not tested)
@@ -1505,6 +1584,7 @@ function* sampleSize(n) {
  * [Fisher-Yates shuffle](https://en.wikipedia.org/wiki/Fisher-Yates_shuffle).
  *
  * @static
+ * @this rq.Context
  * @example
  * 1 2 3 4 → shuffle → 4 1 3 2 (not tested)
  */
@@ -1516,6 +1596,7 @@ function* shuffle() {
  * Gets the size of the input stream by returning its length.
  *
  * @static
+ * @this rq.Context
  * @example
  * 1 2 3 → size → 3
  */
@@ -1529,6 +1610,7 @@ function* size() {
  * invoked with two arguments: (value, index).
  *
  * @static
+ * @this rq.Context
  * @param {Function} [predicate=_.identity] The function invoked per iteration.
  * @example
  * null 0 "yes" false → some (x)=>{Boolean(x)} → true
@@ -1563,6 +1645,7 @@ function* some(predicate) {
  * equal elements. The iteratees are invoked with one argument: (value).
  *
  * @static
+ * @this rq.Context
  * @param {...(Function|Function[])} [iteratees=[_.identity]]
  *  The iteratees to sort by.
  * @example
@@ -1585,6 +1668,7 @@ function* sortBy(iteratees) {
  * the Unix epoch (1 January 1970 00:00:00 UTC).
  *
  * @static
+ * @this rq.Context
  * @example
  * (empty) → now → 1470104632000 (not tested)
  */
@@ -1610,6 +1694,8 @@ function* now() {
  * **Note:** This method is equivalent to `conforms` when `source` is
  * partially applied.
  *
+ * @static
+ * @this rq.Context
  * @param {Object} source The object of property predicates to conform to.
  * @example
  * {"a": 1, "b": 2 } → conformsTo {"b": (n)=>{ n > 1 } } → true (not tested)
@@ -1626,6 +1712,8 @@ function* conformsTo(source) {
  * [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
  * comparison between two values to determine if they are equivalent.
  *
+ * @static
+ * @this rq.Context
  * @param {*} other The other value to compare.
  * @example
  * 2 3     → eq 2   → true false
@@ -1641,6 +1729,8 @@ function* eq(other) {
 /**
  * Checks if each input value is greater than `other`.
  *
+ * @static
+ * @this rq.Context
  * @param {*} other The other value to compare.
  * @example
  * 1 2 3 → gt 2 → false false true
@@ -1654,6 +1744,8 @@ function* gt(other) {
 /**
  * Checks if each input value is greater than or equal to `other`.
  *
+ * @static
+ * @this rq.Context
  * @param {*} other The other value to compare.
  * @example
  * 1 2 3 → gte 2 → false true true
@@ -1669,6 +1761,8 @@ function* gte(other) {
 /**
  * Checks if each input value is classified as an `Array` object.
  *
+ * @static
+ * @this rq.Context
  * @example
  * [1, 2, 3] "abc" true {"length": 2} → isArray → true false false false
  */
@@ -1680,6 +1774,9 @@ function* isArray() {
 
 /**
  * Checks if each input value is classified as an `ArrayBuffer` object.
+ *
+ * @static
+ * @this rq.Context
  */
 function* isArrayBuffer() {
   while (yield* this.pull()) {
@@ -1692,6 +1789,8 @@ function* isArrayBuffer() {
  * not a function and has a `value.length` that's an integer greater than or
  * equal to `0` and less than or equal to `Number.MAX_SAFE_INTEGER`.
  *
+ * @static
+ * @this rq.Context
  * @example
  * [1, 2, 3] "abc" true {"length": 2} → isArrayLike → true true false true
  */
@@ -1705,6 +1804,8 @@ function* isArrayLike() {
  * This method is like `isArrayLike` except that it also checks if `value`
  * is an object.
  *
+ * @static
+ * @this rq.Context
  * @example
  * [1, 2, 3] "abc" true {"length": 2} → isArrayLikeObject → true false false true
  */
@@ -1717,6 +1818,8 @@ function* isArrayLikeObject() {
 /**
  * Checks if each input value is classified as a boolean primitive or object.
  *
+ * @static
+ * @this rq.Context
  * @example
  * false null → isBoolean → true false
  */
@@ -1728,6 +1831,9 @@ function* isBoolean() {
 
 /**
  * Checks if each input value is a buffer.
+ *
+ * @static
+ * @this rq.Context
  */
 function* isBuffer() {
   while (yield* this.pull()) {
@@ -1737,6 +1843,9 @@ function* isBuffer() {
 
 /**
  * Checks if each input value is classified as a `Date` object.
+ *
+ * @static
+ * @this rq.Context
  */
 function* isDate() {
   while (yield* this.pull()) {
@@ -1756,6 +1865,8 @@ function* isDate() {
  * jQuery-like collections are considered empty if they have a `length` of `0`.
  * Similarly, maps and sets are considered empty if they have a `size` of `0`.
  *
+ * @static
+ * @this rq.Context
  * @example
  * null true 1 [1, 2, 3] {"a": 1} → isEmpty → true true true false false
  */
@@ -1775,6 +1886,8 @@ function* isEmpty() {
  * by their own, not inherited, enumerable properties. Functions and DOM
  * nodes are **not** supported.
  *
+ * @static
+ * @this rq.Context
  * @param {*} other The other value to compare.
  * @example
  * {"a": 1} 2 {"a": 2} → isEqual {"a": 1} → true false false
@@ -1791,6 +1904,8 @@ function* isEqual(other) {
  * are handled by the method instead. The `customizer` is invoked with up to
  * six arguments: (objValue, othValue [, index|key, object, other, stack]).
  *
+ * @static
+ * @this rq.Context
  * @param {*} other The other value to compare.
  * @param {Function} [customizer] The function to customize comparisons.
  * @example
@@ -2039,6 +2154,7 @@ function* floor() {
  * `undefined` is returned.
  *
  * @static
+ * @this rq.Context
  * @example
  * 4 2 8 6 → max → 8
  * (empty) → max → null
@@ -2053,6 +2169,7 @@ function* max() {
  * the value is ranked. The iteratee is invoked with one argument: (value).
  *
  * @static
+ * @this rq.Context
  * @param {Function} [iteratee=_.identity] The iteratee invoked per element.
  * @example
  * {"n": 1} {"n": 2} → maxBy (o)=>{o.n} → {"n": 2}
@@ -2067,6 +2184,7 @@ function* maxBy(iteratee) {
  * Computes the mean of the values in the input stream.
  *
  * @static
+ * @this rq.Context
  * @example
  * 4 2 8 6 → mean → 5
  * (empty) → mean → null
@@ -2081,6 +2199,7 @@ function* mean() {
  * The iteratee is invoked with one argument: (value).
  *
  * @static
+ * @this rq.Context
  * @param {Function} [iteratee=_.identity] The iteratee invoked per element.
  * @example
  * {"n": 4} {"n": 2} {"n": 8} {"n": 6} → meanBy (o)=>{o.n} → 5
@@ -2096,6 +2215,7 @@ function* meanBy(iteratee) {
  * `undefined` is returned.
  *
  * @static
+ * @this rq.Context
  * @example
  * 4 2 8 6 → min → 2
  * (empty) → min → null
@@ -2110,6 +2230,7 @@ function* min() {
  * the value is ranked. The iteratee is invoked with one argument: (value).
  *
  * @static
+ * @this rq.Context
  * @param {Function} [iteratee=_.identity] The iteratee invoked per element.
  * @example
  * {"n": 1} {"n": 2} → minBy (o)=>{o.n} → {"n": 1}
@@ -2142,6 +2263,7 @@ function* subtract(other) {
  * Computes the sum of the values in the input stream.
  *
  * @static
+ * @this rq.Context
  * @example
  * 4 2 8 6 → sum → 20
  * (empty) → sum → 0
@@ -2156,6 +2278,7 @@ function* sum() {
  * The iteratee is invoked with one argument: (value).
  *
  * @static
+ * @this rq.Context
  * @param {Function} [iteratee=_.identity] The iteratee invoked per element.
  * @example
  * {"n": 4} {"n": 2} {"n": 8} {"n": 6} → sumBy (o)=>{o.n} → 20
@@ -2194,6 +2317,7 @@ function* inRange(start, end) {
  * floating-point values which can produce unexpected results.
  *
  * @static
+ * @this rq.Context
  * @param {number} [lower=0] The lower bound.
  * @param {number} [upper=1] The upper bound.
  * @param {boolean} [floating] Specify returning a floating-point number.
