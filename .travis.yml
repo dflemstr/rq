@@ -67,7 +67,7 @@ matrix:
     # Due to: https://github.com/rust-lang/rust/issues/35599
     - os: linux
       env: >
-        TARGET=i686-unknown-linux-gnu
+        TARGET=i686-unknown-linux-musl
         USE_DOCKER=true
     # Currently not yet supported:
     - os: linux
