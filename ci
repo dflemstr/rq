@@ -87,7 +87,9 @@ function install-v8 {
 }
 
 function configure-linker {
-    export CROSS_COMPILE="$TARGET-"
+    if [[ "$TARGET" != *darwin* ]]
+    then export CROSS_COMPILE="$TARGET-"
+    fi
 
     mkdir -p .cargo
 
