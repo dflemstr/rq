@@ -86,8 +86,65 @@ function install-v8 {
     export V8_SOURCE=$PWD/v8-build
 }
 
-function install-deps {
-    apt-install clang libclang-dev qemu-user-static binfmt-support
+function configure-linker {
+  mkdir -p .cargo
+
+  if [ "$TARGET" = "x86_64-unknown-linux-gnu" ]
+  then
+    lib_search_args=$(print-gcc-search-args "g++" && print-gcc-search-args "$TARGET-g++")
+
+    cat > .cargo/config <<EOF
+[build]
+linker = "g++"
+rustflags = [${lib_search_args%,}]
+EOF
+  elif [[ "$TARGET" != *darwin* ]]
+  then
+    if [[ "$TARGET" == *musl* ]]
+    then extra_args='"-l", "static=stdc++"'
+    else extra_args='"-l", "stdc++"'
+    fi
+
+    target_search_args=$(print-gcc-search-args "$TARGET-g++")
+    host_search_args=$(print-gcc-search-args "g++")
+
+    sudo tee /usr/bin/custom-linker <<EOF
+#!/usr/bin/env python2
+import os
+import subprocess
+import sys
+
+target = os.environ['TARGET']
+
+real_args = []
+for arg in sys.argv[1:]:
+  if arg.endswith('/crt1.o'):
+    real_args.append('/x-tools/{0}/lib/gcc/{0}/6.1.0/crt1.o'.format(target))
+  elif arg.endswith('/crti.o'):
+    real_args.append('/x-tools/{0}/lib/gcc/{0}/6.1.0/crti.o'.format(target))
+    real_args.append('/x-tools/{0}/lib/gcc/{0}/6.1.0/crtbegin.o'.format(target))
+  elif arg.endswith('/crtn.o'):
+    real_args.append('/x-tools/{0}/lib/gcc/{0}/6.1.0/crtend.o'.format(target))
+    real_args.append('/x-tools/{0}/lib/gcc/{0}/6.1.0/crtn.o'.format(target))
+  else:
+    real_args.append(arg)
+
+cmd = [target + "-g++"] + real_args
+print cmd
+sys.exit(subprocess.call(cmd))
+EOF
+    sudo chmod +x /usr/bin/custom-linker
+
+    cat > .cargo/config <<EOF
+[target.$TARGET]
+linker = "custom-linker"
+rustflags = [$extra_args, ${target_search_args%,}]
+
+[build]
+linker = "g++"
+rustflags = [${host_search_args%,}]
+EOF
+  fi
 }
 
 function ci-test {
@@ -99,7 +156,7 @@ function ci-test {
 
     install-rust
     install-v8
-    install-deps
+    configure-linker
 
     cargo test "${extra_args[@]}"
 }
@@ -107,7 +164,7 @@ function ci-test {
 function ci-deploy {
     install-rust
     install-v8
-    install-deps
+    configure-linker
 
     cargo build --release --target="$TARGET"
     mkdir -p "target/deploy/$TARGET"
@@ -141,37 +198,6 @@ then run-docker "$@"
 fi
 
 export CROSS_COMPILE="$TARGET-"
-mkdir -p .cargo
-
-if [ "$TARGET" = "x86_64-unknown-linux-gnu" ]
-then
-  lib_search_args=$(print-gcc-search-args "g++" && print-gcc-search-args "$TARGET-g++")
-
-  cat > .cargo/config <<EOF
-[build]
-linker = "g++"
-rustflags = [${lib_search_args%,}]
-EOF
-elif [[ "$TARGET" != *darwin* ]]
-then
-  if [[ "$TARGET" == *musl* ]]
-  then extra_args='"-l", "static=stdc++"'
-  else extra_args='"-l", "stdc++"'
-  fi
-
-  target_search_args=$(print-gcc-search-args "$TARGET-g++")
-  host_search_args=$(print-gcc-search-args "$TARGET-g++")
-
-  cat > .cargo/config <<EOF
-[target.$TARGET]
-linker = "$TARGET-g++"
-rustflags = [$extra_args, ${target_search_args%,}]
-
-[build]
-linker = "g++"
-rustflags = [$extra_args, ${host_search_args%,}]
-EOF
-fi
 
 case "$1" in
     test )
