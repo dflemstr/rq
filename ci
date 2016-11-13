@@ -173,7 +173,14 @@ function ci-deploy {
     revision=$(git describe --tags)
     mkdir -p "target/deploy/$TARGET"
     mkdir -p "target/deploy/$TARGET/$revision"
-    "$TARGET-strip" "target/$TARGET/release/rq"
+
+    if [[ "$TARGET" == *darwin* ]]
+    then
+        strip "target/$TARGET/release/rq"
+    else
+        "$TARGET-strip" "target/$TARGET/release/rq"
+    fi
+
     cp "target/$TARGET/release/rq" "target/deploy/$TARGET/rq"
     cp "target/$TARGET/release/rq" "target/deploy/$TARGET/$revision/rq"
     curl "https://img.shields.io/badge/${TARGET//-/--}-${revision//-/--}-yellowgreen.png" > "target/deploy/$TARGET/badge.png"
