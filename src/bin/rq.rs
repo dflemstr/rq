@@ -548,6 +548,7 @@ mod test {
     }
 
     #[test]
+    #[cfg_attr(all(target_arch = "i686", target_env = "musl"), ignore)]
     #[should_panic(expected = "NoMatch")]
     fn test_docopt_output_conflict() {
         parse_args(&["rq", "-JC"]);
