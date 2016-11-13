@@ -185,6 +185,8 @@ function ci-deploy {
     cp "target/$TARGET/release/rq" "target/deploy/$TARGET/$revision/rq"
     curl "https://img.shields.io/badge/${TARGET//-/--}-${revision//-/--}-yellowgreen.png" > "target/deploy/$TARGET/badge.png"
     curl "https://img.shields.io/badge/${TARGET//-/--}-${revision//-/--}-yellowgreen.svg" > "target/deploy/$TARGET/badge.svg"
+    curl "https://img.shields.io/badge/version-${revision//-/--}-yellowgreen.png" > "target/deploy/$TARGET/badge-small.png"
+    curl "https://img.shields.io/badge/version-${revision//-/--}-yellowgreen.svg" > "target/deploy/$TARGET/badge-small.svg"
     mkdir -p "target/deploy-release"
     cp "target/$TARGET/release/rq" "target/deploy-release/rq-$TARGET"
 }
