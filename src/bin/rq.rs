@@ -19,117 +19,83 @@ use std::path;
 
 const VERSION: &'static str = rq_git_version!();
 
-pub const DOCOPT: &'static str =
-    concat!("
-rq - record query ", rq_git_version!(),
-            "
+#[cfg_attr(rustfmt, rustfmt_skip)]
+pub const DOCOPT: &'static str = concat!("
+rq - record query ", rq_git_version!(), "
 
 A tool for manipulating data records.
 
-Records are read from stdin, processed, \
-             and written to stdout.  The tool accepts
-a query in the custom rq query language as \
-             its main command-line arguments.
+Records are read from stdin, processed, and written to stdout.  The tool accepts
+a query in the custom rq query language as its main command-line arguments.
 
-See https://github.com/dflemstr/rq for in-depth \
-             documentation.
+See https://github.com/dflemstr/rq for in-depth documentation.
 
 Usage:
   rq (--help|--version)
-  rq [-j|-a|-c|-h|-m|-p \
-             <type>|-t|-y] [-J|-A <type>|-C|-H|-M|-P <type>|-T|-Y] [--format <format>] [-l \
-             <spec>|-q] [--trace] [--] [<query>]
-  rq [-l <spec>|-q] [--trace] protobuf add \
-             <schema> [--base <path>]
+  rq [-j|-a|-c|-h|-m|-p <type>|-t|-y] [-J|-A <type>|-C|-H|-M|-P <type>|-T|-Y] [--format <format>] [-l <spec>|-q] [--trace] [--] [<query>]
+  rq [-l <spec>|-q] [--trace] protobuf add <schema> [--base <path>]
 
 Options:
   --help
       Show this screen.
   --version
-      \
-             Show the program name and version.
+      Show the program name and version.
 
   -j, --input-json
-      Input is white-space \
-             separated JSON values (default).
+      Input is white-space separated JSON values (default).
   -J, --output-json
-      Output should be \
-             formatted as JSON values (default).
+      Output should be formatted as JSON values (default).
   -a, --input-avro
-      Input is an Apache \
-             Avro container file.
+      Input is an Apache Avro container file.
   -A <type>, --output-avro <type>
-      Output should be \
-             formatted as Apache Avro messages.
+      Output should be formatted as Apache Avro messages.
   -c, --input-cbor
-      Input is a series of \
-             CBOR values.
+      Input is a series of CBOR values.
   -C, --output-cbor
       Output is a series of CBOR values.
-  -h, \
-             --input-hjson
+  -h, --input-hjson
       Input is a HJSON document.
   -H, --output-hjson
-      Output \
-             should be formatted as HJSON values.
+      Output should be formatted as HJSON values.
   -m, --input-message-pack
-      Input is \
-             formatted as MessagePack.
+      Input is formatted as MessagePack.
   -M, --output-message-pack
-      Output should be \
-             formatted as MessagePack values.
+      Output should be formatted as MessagePack values.
   -p <type>, --input-protobuf <type>
-      Input \
-             is a single protocol buffer object.  The argument refers to the
-      fully \
-             qualified name of the message type (including the leading '.').
-  -P <type>, \
-             --output-protobuf <type>
-      Output should be formatted as protocol buffer \
-             objects.  The argument
-      refers to the fully qualified name of the message type \
-             (including the
+      Input is a single protocol buffer object.  The argument refers to the
+      fully qualified name of the message type (including the leading '.').
+  -P <type>, --output-protobuf <type>
+      Output should be formatted as protocol buffer objects.  The argument
+      refers to the fully qualified name of the message type (including the
       leading '.').
   -t, --input-toml
-      Input is formatted as \
-             TOML document.
+      Input is formatted as TOML document.
   -T, --output-toml
-      Output should be formatted as TOML \
-             document.
+      Output should be formatted as TOML document.
   -y, --input-yaml
       Input is a series of YAML documents.
-  -Y, \
-             --output-yaml
+  -Y, --output-yaml
       Output should be formatted as YAML documents.
 
-  --format \
-             <format>
+  --format <format>
       Force stylistic output formatting.  Can be one of 'compact' or
-      \
-             'readable' and the default is inferred from the terminal
+      'readable' and the default is inferred from the terminal
       environment.
 
-  \
-             <query>
+  <query>
       A query indicating how to transform each record.
 
   --base <path>
-      \
-             Directories are significant when dealing with protocol buffer
-      schemas.  This \
-             specifies the base directory used to normalize schema
+      Directories are significant when dealing with protocol buffer
+      schemas.  This specifies the base directory used to normalize schema
       file paths [default: .]
 
-  \
-             -l <spec>, --log <spec>
-      Configure logging using the supplied specification, \
-             in the format of
-      `env_logger`, for example `rq=info,duk=trace/[0-9]+ objects \
-             kept`.
+  -l <spec>, --log <spec>
+      Configure logging using the supplied specification, in the format of
+      `env_logger`, for example `rq=info,v8=trace`.
       See: https://doc.rust-lang.org/log/env_logger
   --trace
-      Enable \
-             (back)trace output on error.
+      Enable (back)trace output on error.
   -q, --quiet
       Log nothing.
 ");
