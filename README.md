@@ -23,6 +23,108 @@ operating systems and architectures.
   - [Protobuf](doc/protobuf.md) — Configure Protobuf specifics.
   - [Development](CONTRIBUTING.md) — Contribute to `rq`.
 
+## Platform support status
+
+<table>
+  <thead>
+    <tr>
+      <th rowspan="2">OS</th>
+      <th colspan="2">Intel x86</th>
+      <th colspan="3">ARM</th>
+    </tr>
+    <tr>
+      <th>i686</th>
+      <th>x86_64</th>
+      <th>v6</th>
+      <th>v6 HF</th>
+      <th>v7</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Linux glibc</th>
+      <td>
+        <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-gnu/rq">
+          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-gnu/badge.png"
+               alt="i686-unknown-linux-gnu">
+        </a>
+      </td>
+      <td>
+        <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-unknown-linux-gnu/rq">
+          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-unknown-linux-gnu/badge.png"
+               alt="x86_64-unknown-linux-gnu">
+        </a>
+      </td>
+      <td>
+        <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-gnueabi/rq">
+          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-gnueabi/badge.png"
+               alt="arm-unknown-linux-gnueabi">
+        </a>
+      </td>
+      <td>
+        <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-gnueabihf/rq">
+          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-gnueabihf/badge.png"
+               alt="arm-unknown-linux-gnueabihf">
+        </a>
+      </td>
+      <td>
+        <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/armv7-unknown-linux-gnueabihf/rq">
+          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/armv7-unknown-linux-gnueabihf/badge.png"
+               alt="armv7-unknown-linux-gnueabihf">
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <th>Linux musl</th>
+      <td>
+        <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-musl/rq">
+          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-musl/badge.png"
+               alt="i686-unknown-linux-musl">
+        </a>
+      </td>
+      <td>
+        <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-unknown-linux-musl/rq">
+          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-unknown-linux-musl/badge.png"
+               alt="x86_64-unknown-linux-musl">
+        </a>
+      </td>
+      <td>
+        &nbsp;
+      </td>
+      <td>
+        &nbsp;
+      </td>
+      <td>
+        &nbsp;
+      </td>
+    </tr>
+    <tr>
+      <th>Mac OS X</th>
+      <td>
+        <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-apple-darwin/rq">
+          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-apple-darwin/badge.png"
+               alt="i686-apple-darwin">
+        </a>
+      </td>
+      <td>
+        <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-apple-darwin/rq">
+          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-apple-darwin/badge.png"
+               alt="i686-apple-darwin">
+        </a>
+      </td>
+      <td>
+        &nbsp;
+      </td>
+      <td>
+        &nbsp;
+      </td>
+      <td>
+        &nbsp;
+      </td>
+    </tr>
+  </tbody>
+</table>
+
 ## Format support status
 
 | Format                  | Read | Write |
