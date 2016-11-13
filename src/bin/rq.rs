@@ -490,6 +490,7 @@ mod test {
     }
 
     #[test]
+    #[cfg_attr(all(target_arch = "i686", target_env = "musl"), ignore)]
     #[should_panic(expected = "Help")]
     fn test_docopt_help() {
         parse_args(&["rq", "--help"]);
@@ -574,6 +575,7 @@ mod test {
     }
 
     #[test]
+    #[cfg_attr(all(target_arch = "i686", target_env = "musl"), ignore)]
     #[should_panic(expected = "NoMatch")]
     fn test_docopt_input_conflict() {
         parse_args(&["rq", "-jc"]);
