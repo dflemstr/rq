@@ -170,9 +170,14 @@ function ci-deploy {
     install-v8
 
     cargo build --release --target="$TARGET"
+    revision=$(git describe --tags)
     mkdir -p "target/deploy/$TARGET"
+    mkdir -p "target/deploy/$TARGET/$revision"
     "$TARGET-strip" "target/$TARGET/release/rq"
     cp "target/$TARGET/release/rq" "target/deploy/$TARGET/rq"
+    cp "target/$TARGET/release/rq" "target/deploy/$TARGET/$revision/rq"
+    curl "https://img.shields.io/badge/${TARGET//-/--}-${revision//-/--}-yellowgreen.png" > "target/deploy/$TARGET/badge.png"
+    curl "https://img.shields.io/badge/${TARGET//-/--}-${revision//-/--}-yellowgreen.svg" > "target/deploy/$TARGET/badge.svg"
     mkdir -p "target/deploy-release"
     cp "target/$TARGET/release/rq" "target/deploy-release/rq-$TARGET"
 }
