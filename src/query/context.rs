@@ -415,7 +415,11 @@ fn value_to_v8(isolate: &v8::Isolate, context: &v8::Context, value: &value::Valu
 
         Char(v) => v8::value::String::from_str(isolate, &format!("{}", v)).into(),
         String(ref v) => v8::value::String::from_str(isolate, v.as_str()).into(),
-        Bytes(ref v) => unimplemented!(),
+        Bytes(ref v) => {
+            // TODO: this is a stop gap until there is a stable API for byte buffers in V8...
+            let hex = v.iter().map(|b| format!("{:02x}", b)).collect::<Vec<_>>().join("");
+            v8::value::String::from_str(isolate, &hex).into()
+        },
 
         Sequence(ref v) => {
             let a = v8::value::Array::new(isolate, context, v.len() as u32);
