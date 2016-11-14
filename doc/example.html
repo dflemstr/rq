@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <style type="text/css">
+      pre {
+        font: 4em 'Fantasque Sans Mono'
+      }
+      .pipe {
+        color: #07093D
+      }
+      .process {
+        color: #0C0F66
+      }
+      .ident {
+        color: #0C0F66
+      }
+      .quote {
+        color: #0E4EAD
+      }
+      .string {
+        color: #0B108C
+      }
+      .operator {
+        color: #107FC9
+      }
+      .number {
+        color: #CC333F
+      }
+    </style>
+  </head>
+  <body>
+<pre>
+$ rq -a < data.avro '
+  <span class="process">at</span> <span class="quote">"</span><span class="string">tracks.items</span><span class="quote">"</span> <span class="pipe">|</span> <span class="process">spread</span> <span class="pipe">|</span>
+  <span class="process">flatMap</span> <span class="string">artists</span> <span class="pipe">|</span>
+  <span class="process">filter</span> <span class="operator">(</span><span class="ident">a</span> <span class="operator">=></span> <span class="operator">!</span><span class="ident">_</span><span class="operator">.</span><span class="ident">startsWith</span><span class="operator">(</span><span class="ident">a</span><span class="operator">.</span><span class="ident">name</span><span class="operator">,</span> <span class="quote">"</span><span class="string">P</span><span class="quote">"</span><span class="operator">)</span><span class="operator">)</span> <span class="pipe">|</span>
+  <span class="process">countBy</span> <span class="string">name</span> <span class="pipe">|</span> <span class="process">flatMap</span> <span class="operator">(</span><span class="ident">_</span><span class="operator">.</span><span class="ident">toPairs</span><span class="operator">)</span> <span class="pipe">|</span>
+  <span class="process">orderBy</span> <span class="number">1</span> <span class="string">desc</span> <span class="pipe">|</span> <span class="process">collect</span>'
+</pre>
+  </body>
+</html>
