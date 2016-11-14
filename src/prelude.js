@@ -337,7 +337,12 @@ function* differenceWith(values, comparator) {
  * 1 2 3 → drop 0 → 1 2 3
  */
 function* drop(n) {
-  yield* this.spread(_.drop((yield* this.collect()), n));
+  n = n === undefined ? 1 : _.toInteger(n);
+  while (n > 0 && (yield* this.pull())) {
+    n -= 1;
+  }
+
+  yield* id.call(this);
 }
 
 /**
