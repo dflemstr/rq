@@ -383,6 +383,12 @@ fn expr_to_v8(isolate: &v8::Isolate,
             let function = try!(function_ctor.call_as_constructor(context, &arg_refs));
             Ok(function)
         },
+        query::Expression::Javascript(ref v) => {
+            let source = v8::value::String::from_str(isolate, v);
+            let script = try!(v8::Script::compile(isolate, context, &source));
+            let result = try!(script.run(context));
+            Ok(result)
+        },
     }
 }
 

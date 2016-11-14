@@ -1,5 +1,3 @@
-
-
 use error;
 
 use pest::prelude::*;
@@ -16,15 +14,19 @@ impl_rdp! {
         query   = { process ~ (["|"] ~ process)* ~ eoi }
         process = { ident ~ expression* }
 
-        expression = { value | lambda }
+        expression = { value | lambda | js }
 
         ident = @{
             (['a'..'z'] | ['A'..'Z'] | ["_"] | ["-"]) ~ (['a'..'z'] | ['A'..'Z'] | ["_"] | ["-"] | ['0'..'9'])*
         }
 
+        js = { ["("] ~ (inner_js | ![")"] ~ any)* ~ [")"] }
+        inner_js = _{ ["("] ~ (inner_js | ![")"] ~ any)* ~ [")"] }
+
         lambda = { args ~ ["=>"] ~ body }
         args = { ["("] ~ ident ~ ([","] ~ ident)* ~ [")"] }
-        body = { ["{"] ~ (body | !["}"] ~ any)* ~ ["}"] }
+        body = { ["{"] ~ (inner_body | !["}"] ~ any)* ~ ["}"] }
+        inner_body = _{ ["{"] ~ (inner_body | !["}"] ~ any)* ~ ["}"] }
 
         object = { ["{"] ~ pair ~ ([","] ~ pair)* ~ ["}"] | ["{"] ~ ["}"] }
         pair   = { (string | ident) ~ [":"] ~ value }
@@ -89,6 +91,11 @@ impl_rdp! {
             (_: value, value: build_value()) => {
                 trace!("build_expression value={:?}", value);
                 query::Expression::Value(value)
+            },
+            (&js: js) => {
+                let js = js[1..js.len() - 1].to_owned();
+                trace!("build_expression js={:?}", js);
+                query::Expression::Javascript(js)
             },
             (_: lambda, _: args, args: build_args(), &body: body) => {
                 let args = args.into_iter().collect();
@@ -187,6 +194,7 @@ impl fmt::Display for Rule {
             Rule::process => "process",
             Rule::expression => "expression",
             Rule::ident => "identifier",
+            Rule::js => "Javascript expression",
             Rule::lambda => "lambda",
             Rule::args => "lambda argument list",
             Rule::body => "lambda body",

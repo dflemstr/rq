@@ -60,8 +60,8 @@ function* select(path) {
  * @static
  * @this rq.Context
  * @example
- * {"a": {"b": 2, "c": true}} → modify "/a/b" (n)=>{n + 2} → {"a": {"b": 4, "c": true}}
- * {"a": {"b": 2, "c": true}} → modify "/a/x" (n)=>{n + 2} → {"a": {"b": 2, "c": true}}
+ * {"a": {"b": 2, "c": true}} → modify "/a/b" (n => n + 2) → {"a": {"b": 4, "c": true}}
+ * {"a": {"b": 2, "c": true}} → modify "/a/x" (n => n + 2) → {"a": {"b": 2, "c": true}}
  *
  * @param {string} path the field path to follow
  * @param {function(*): *} f the function to apply
@@ -141,7 +141,7 @@ var count = size;
  * @param {Function} [predicate=_.identity]
  *  The function invoked per iteration.
  * @example
- * true 1 null "yes" → all (x)=>{Boolean(x)} → false
+ * true 1 null "yes" → all (Boolean) → false
  * // With index
  * 1 2 3 → all (x, i) => { i + 1 == x } → true
  * // The `matches` iteratee shorthand.
@@ -162,7 +162,7 @@ var all = every;
  * @this rq.Context
  * @param {Function} [predicate=_.identity] The function invoked per iteration.
  * @example
- * null 0 "yes" false → any (x)=>{Boolean(x)} → true
+ * null 0 "yes" false → any (Boolean) → true
  * // With index
  * 5 1 8 → any (x, i) => { i == x } → true
  * // The `matches` iteratee shorthand.
@@ -300,7 +300,7 @@ function* difference(values) {
  * @param {Array} [values] The values to exclude.
  * @param {Function} [iteratee=_.identity] The iteratee invoked per element.
  * @example
- * 2.1 1.2 → differenceBy [2.3, 3.4] (x)=>{Math.floor(x)} → 1.2
+ * 2.1 1.2 → differenceBy [2.3, 3.4] (Math.floor) → 1.2
  * // The `property` iteratee shorthand.
  * {"x": 2} {"x": 1} → differenceBy [{"x": 1}] "x" → {"x": 2}
  */
@@ -318,7 +318,7 @@ function* differenceBy(values, iteratee) {
  * @param {Array} [values] The values to exclude.
  * @param {Function} [comparator] The comparator invoked per element.
  * @example
- * {"x": 1, "y": 2} {"x": 2, "y": 1} → differenceWith [{"x": 1, "y": 2}] (a, b)=>{_.isEqual(a, b)} → {"x": 2, "y": 1}
+ * {"x": 1, "y": 2} {"x": 2, "y": 1} → differenceWith [{"x": 1, "y": 2}] (_.isEqual) → {"x": 2, "y": 1}
  */
 function* differenceWith(values, comparator) {
   yield* this.spread(_.differenceWith((yield* this.collect()), values, comparator));
@@ -370,7 +370,7 @@ function* dropRight(n) {
  * @this rq.Context
  * @param {Function} [predicate=_.identity] The function invoked per iteration.
  * @example
- * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → dropRightWhile (o)=>{!o.a} → {"u": "b", "a": true}
+ * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → dropRightWhile (o => !o.a) → {"u": "b", "a": true}
  * // The `matches` iteratee shorthand.
  * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → dropRightWhile {"u": "p", "a": false} → {"u": "b", "a": true} {"u": "f", "a": false}
  * // The `matchesProperty` iteratee shorthand.
@@ -392,7 +392,7 @@ function* dropRightWhile(predicate) {
  * @param {Function} [predicate=_.identity]
  *  The function invoked per iteration.
  * @example
- * {"u": "b", "a": false} {"u": "f", "a": false} {"u": "p", "a": true} → dropWhile (o)=>{!o.a} → {"u": "p", "a": true}
+ * {"u": "b", "a": false} {"u": "f", "a": false} {"u": "p", "a": true} → dropWhile (o => !o.a) → {"u": "p", "a": true}
  * // The `matches` iteratee shorthand.
  * {"u": "b", "a": false} {"u": "f", "a": false} {"u": "p", "a": true} → dropWhile {"u": "b", "a": false} → {"u": "f", "a": false} {"u": "p", "a": true}
  * // The `matchesProperty` iteratee shorthand.
@@ -430,7 +430,7 @@ function* fill(value, start, end) {
  *  The function invoked per iteration.
  * @param {number} [fromIndex=0] The index to search from.
  * @example
- * {"u": "b", "a": false} {"u": "f", "a": false} {"u": "p", "a": true} → findIndex (o)=>{o.u == 'b'} → 0
+ * {"u": "b", "a": false} {"u": "f", "a": false} {"u": "p", "a": true} → findIndex (o => o.u == 'b') → 0
  * // The `matches` iteratee shorthand.
  * {"u": "b", "a": false} {"u": "f", "a": false} {"u": "p", "a": true} → findIndex {"u": "f", "a": false} → 1
  * // The `matchesProperty` iteratee shorthand.
@@ -452,7 +452,7 @@ function* findIndex(predicate, fromIndex) {
  *  The function invoked per iteration.
  * @param {number} [fromIndex=array.length-1] The index to search from.
  * @example
- * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → findLastIndex (o)=>{o.u == 'p'} → 2
+ * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → findLastIndex (o => o.u == 'p') → 2
  * // The `matches` iteratee shorthand.
  * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → findLastIndex {"u": "b", "a": true} → 0
  * // The `matchesProperty` iteratee shorthand.
@@ -586,7 +586,7 @@ function* intersection(values) {
  * @param {Array} [values] The values to inspect.
  * @param {Function} [iteratee=_.identity] The iteratee invoked per element.
  * @example
- * 2.1 1.2 → intersectionBy [2.3, 3.4] (x)=>{Math.floor(x)} → 2.1
+ * 2.1 1.2 → intersectionBy [2.3, 3.4] (Math.floor) → 2.1
  * // The `property` iteratee shorthand.
  * {"x": 1} → intersectionBy [{"x": 2}, {"x": 1}] "x" → {"x": 1}
  */
@@ -605,7 +605,7 @@ function* intersectionBy(values, iteratee) {
  * @param {Array} [values] The values to inspect.
  * @param {Function} [comparator] The comparator invoked per element.
  * @example
- * {"x": 1, "y": 2} {"x": 2, "y": 1} → intersectionWith [{"x": 1, "y": 1}, {"x": 1, "y": 2}] (a, b)=>{_.isEqual(a, b)} → {"x": 1, "y": 2}
+ * {"x": 1, "y": 2} {"x": 2, "y": 1} → intersectionWith [{"x": 1, "y": 1}, {"x": 1, "y": 2}] (_.isEqual) → {"x": 1, "y": 2}
  */
 function* intersectionWith(values, comparator) {
   yield* this.spread(_.intersectionWith((yield* this.collect()), values, comparator));
@@ -724,7 +724,7 @@ function* sortedIndex(value) {
  *  The iteratee invoked per element.
  *  into the input stream.
  * @example
- * {"x": 4} {"x": 5} → sortedIndexBy {"x": 4} (o)=>{o.x} → 0
+ * {"x": 4} {"x": 5} → sortedIndexBy {"x": 4} (o => o.x) → 0
  * // The `property` iteratee shorthand.
  * {"x": 4} {"x": 5} → sortedIndexBy {"x": 4} "x" → 0
  */
@@ -774,7 +774,7 @@ function* sortedLastIndex(value) {
  *  The iteratee invoked per element.
  *  into the input stream.
  * @example
- * {"x": 4} {"x": 5} → sortedLastIndexBy {"x": 4} (o)=>{o.x} → 1
+ * {"x": 4} {"x": 5} → sortedLastIndexBy {"x": 4} (o => o.x) → 1
  * // The `property` iteratee shorthand.
  * {"x": 4} {"x": 5} → sortedLastIndexBy {"x": 4} "x" → 1
  */
@@ -817,7 +817,7 @@ function* sortedUniq() {
  * @this rq.Context
  * @param {Function} [iteratee] The iteratee invoked per element.
  * @example
- * 1.1 1.2 2.3 2.4 → sortedUniqBy (x)=>{Math.floor(x)} → 1.1 2.3
+ * 1.1 1.2 2.3 2.4 → sortedUniqBy (Math.floor) → 1.1 2.3
  */
 function* sortedUniqBy(iteratee) {
   yield* this.spread(_.sortedUniqBy((yield* this.collect()), iteratee));
@@ -877,7 +877,7 @@ function* takeRight(n) {
  * @param {Function} [predicate=_.identity]
  *  The function invoked per iteration.
  * @example
- * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → takeRightWhile (o)=>{!o.a} → {"u": "f", "a": false} {"u": "p", "a": false}
+ * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → takeRightWhile (o => !o.a) → {"u": "f", "a": false} {"u": "p", "a": false}
  * // The `matches` iteratee shorthand.
  * {"u": "b", "a": true} {"u": "f", "a": false} {"u": "p", "a": false} → takeRightWhile {"u": "p", "a": false} → {"u": "p", "a": false}
  * // The `matchesProperty` iteratee shorthand.
@@ -899,7 +899,7 @@ function* takeRightWhile(predicate) {
  * @param {Function} [predicate=_.identity]
  *  The function invoked per iteration.
  * @example
- * {"u": "b", "a": false} {"u": "f", "a": false} {"u": "p", "a": true} → takeWhile (o)=>{!o.a} → {"u": "b", "a": false} {"u": "f", "a": false}
+ * {"u": "b", "a": false} {"u": "f", "a": false} {"u": "p", "a": true} → takeWhile (o => !o.a) → {"u": "b", "a": false} {"u": "f", "a": false}
  * // The `matches` iteratee shorthand.
  * {"u": "b", "a": false} {"u": "f", "a": false} {"u": "p", "a": true} → takeWhile {"u": "b", "a": false} → {"u": "b", "a": false}
  * // The `matchesProperty` iteratee shorthand.
@@ -938,7 +938,7 @@ function* union(values) {
  * @param {Function} [iteratee=_.identity]
  *  The iteratee invoked per element.
  * @example
- * 2.1 → unionBy [1.2, 2.3] (x)=>{Math.floor(x)} → 2.1 1.2
+ * 2.1 → unionBy [1.2, 2.3] (Math.floor) → 2.1 1.2
  * // The `property` iteratee shorthand.
  * {"x": 1} → unionBy [{"x": 2}, {"x": 1}] "x" → {"x": 1} {"x": 2}
  */
@@ -956,7 +956,7 @@ function* unionBy(values, iteratee) {
  * @param {Array} [values] The values to inspect.
  * @param {Function} [comparator] The comparator invoked per element.
  * @example
- * {"x": 1, "y": 2} {"x": 2, "y": 1} → unionWith [{"x": 1, "y": 1}, {"x": 1, "y": 2}] (a, b)=>{_.isEqual(a, b)} → {"x": 1, "y": 2} {"x": 2, "y": 1} {"x": 1, "y": 1}
+ * {"x": 1, "y": 2} {"x": 2, "y": 1} → unionWith [{"x": 1, "y": 1}, {"x": 1, "y": 2}] (_.isEqual) → {"x": 1, "y": 2} {"x": 2, "y": 1} {"x": 1, "y": 1}
  */
 function* unionWith(values, comparator) {
   yield* this.spread(_.unionWith((yield* this.collect()), values, comparator));
@@ -987,7 +987,7 @@ function* uniq() {
  * @param {Function} [iteratee=_.identity]
  *  The iteratee invoked per element.
  * @example
- * 2.1 1.2 2.3 → uniqBy (x)=>{Math.floor(x)} → 2.1 1.2
+ * 2.1 1.2 2.3 → uniqBy (Math.floor) → 2.1 1.2
  * // The `property` iteratee shorthand.
  * {"x": 1} {"x": 2} {"x": 1} → uniqBy "x" → {"x": 1} {"x": 2}
  */
@@ -1004,7 +1004,7 @@ function* uniqBy(iteratee) {
  * @this rq.Context
  * @param {Function} [comparator] The comparator invoked per element.
  * @example
- * {"x": 1, "y": 2} {"x": 2, "y": 1} {"x": 1, "y": 2} → uniqWith (a, b)=>{_.isEqual(a, b)} → {"x": 1, "y": 2} {"x": 2, "y": 1}
+ * {"x": 1, "y": 2} {"x": 2, "y": 1} {"x": 1, "y": 2} → uniqWith (_.isEqual) → {"x": 1, "y": 2} {"x": 2, "y": 1}
  */
 function* uniqWith(comparator) {
   yield* this.spread(_.uniqWith((yield* this.collect()), comparator));
@@ -1034,7 +1034,7 @@ function* unzip() {
  * @param {Function} [iteratee=_.identity] The function to combine
  *  regrouped values.
  * @example
- * [1, 10, 100] [2, 20, 200] → unzipWith (a, b)=>{_.add(a, b)} → 3 30 300
+ * [1, 10, 100] [2, 20, 200] → unzipWith (_.add) → 3 30 300
  */
 function* unzipWith(iteratee) {
   yield* this.spread(_.unzipWith((yield* this.collect()), iteratee));
@@ -1087,7 +1087,7 @@ function* xor(values) {
  * @param {Function} [iteratee=_.identity]
  *  The iteratee invoked per element.
  * @example
- * 2.1 1.2 → xorBy [2.3, 3.4] (x)=>{Math.floor(x)} → 1.2 3.4
+ * 2.1 1.2 → xorBy [2.3, 3.4] (Math.floor) → 1.2 3.4
  * // The `property` iteratee shorthand.
  * {"x": 1} → xorBy [{"x": 2}, {"x": 1}] "x" → {"x": 2}
  */
@@ -1105,7 +1105,7 @@ function* xorBy(values, iteratee) {
  * @param {Array} [values] The values to inspect.
  * @param {Function} [comparator] The comparator invoked per element.
  * @example
- * {"x": 1, "y": 2} {"x": 2, "y": 1} → xorWith [{"x": 1, "y": 1}, {"x": 1, "y": 2}] (a, b)=>{_.isEqual(a, b)} → {"x": 2, "y": 1} {"x": 1, "y": 1}
+ * {"x": 1, "y": 2} {"x": 2, "y": 1} → xorWith [{"x": 1, "y": 1}, {"x": 1, "y": 2}] (_.isEqual) → {"x": 2, "y": 1} {"x": 1, "y": 1}
  */
 function* xorWith(values, comparator) {
   yield* this.spread(_.xorWith((yield* this.collect()), values, comparator));
@@ -1164,7 +1164,7 @@ function* zipWith(iteratee) {
  * @param {Function} [predicate=_.identity]
  *  The function invoked per iteration.
  * @example
- * true 1 null "yes" → every (x)=>{Boolean(x)} → false
+ * true 1 null "yes" → every (Boolean) → false
  * // With index
  * 1 2 3 → every (x, i) => { i + 1 == x } → true
  * // The `matches` iteratee shorthand.
@@ -1201,8 +1201,8 @@ function* every(predicate) {
  *  The iteratee to transform keys.
  * @example
  *
- * 6.1 4.2 6.3         → countBy (x)=>{Math.floor(x)} → {"4": 1, "6": 2}
- * "one" "two" "three" → countBy "length"             → {"3": 2, "5": 1}
+ * 6.1 4.2 6.3         → countBy (Math.floor) → {"4": 1, "6": 2}
+ * "one" "two" "three" → countBy "length"     → {"3": 2, "5": 1}
  */
 function* countBy(iteratee) {
   yield* this.push(_.countBy((yield* this.collect()), iteratee));
@@ -1352,7 +1352,7 @@ function* flatMapDepth(iteratee, depth) {
  *  The iteratee to transform keys.
  * @example
  *
- * 6.1 4.2 6.3 → groupBy (x)=>{Math.floor(x)} → {"4": [4.2], "6": [6.1, 6.3]}
+ * 6.1 4.2 6.3 → groupBy (Math.floor) → {"4": [4.2], "6": [6.1, 6.3]}
  * // The `property` iteratee shorthand.
  * "one" "two" "three" → groupBy "length" → {"3": ["one", "two"], "5": ["three"]}
  */

@@ -27,6 +27,7 @@ pub struct Output<'a, S>
 pub enum Expression {
     Value(value::Value),
     Function(Vec<String>, String),
+    Javascript(String),
 }
 
 impl Query {
@@ -260,6 +261,35 @@ mod test {
                                                                          "b".to_owned()],
                                                                     "a + b".to_owned())])]);
         let actual = Query::parse("map (a, b) => {a + b}").unwrap();
+
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn parse_process_function_arg_nested_curlies() {
+        let expected = Query(vec![Process("map".to_owned(),
+                                          vec![Expression::Function(vec!["a".to_owned(),
+                                                                         "b".to_owned()],
+                                                                    "{a: a + b}".to_owned())])]);
+        let actual = Query::parse("map (a, b) => {{a: a + b}}").unwrap();
+
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn parse_process_js_arg() {
+        let expected = Query(vec![Process("map".to_owned(),
+                                          vec![Expression::Javascript("Math.floor".to_owned())])]);
+        let actual = Query::parse("map (Math.floor)").unwrap();
+
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn parse_process_js_arg_nested_parens() {
+        let expected = Query(vec![Process("map".to_owned(),
+                                          vec![Expression::Javascript("x => Math.floor(x)".to_owned())])]);
+        let actual = Query::parse("map (x => Math.floor(x))").unwrap();
 
         assert_eq!(expected, actual);
     }

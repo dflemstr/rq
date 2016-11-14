@@ -64,8 +64,19 @@ almost directly from for example [`lodash`][lodash].  If you can use
 `_.foo(<array/collection>, <args>)` in `lodash`, it's pretty likely
 that you can say `rq 'foo <args>'` in `rq`.
 
-Process arguments can either be JSON values or lambdas.  Here are some
-example arguments:
+Process arguments can either be JSON values or lambdas.
+
+Here are some example process usages:
+
+```
+map (Math.floor)
+filter (x, i) => { x != i }
+filter (a => _.reverse(a) != a)
+countBy name
+orderBy age desc
+```
+
+Here are some example arguments:
 
   - `"foo"` - The JSON string `"foo"`
   - `42` - The number 42
@@ -79,6 +90,9 @@ example arguments:
     them together.
   - `(x, y) => {_.isEqual(x, y)}` - A lambda that takes two arguments
     and calls the lodash `_.isEqual` function.
+  - `(2 + 3)` - A simple Javascript expression.
+  - `(_.isEqual)` - A function reference captured as a Javascript
+    expression.
 
 Arguments are dynamically typed, and processes that claim to take a
 `function` argument usually support some short-hands:

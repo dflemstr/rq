@@ -25,18 +25,27 @@ protobuf = "*"
 rmp = "*"
 rustc-serialize = "*"
 serde = "*"
-serde-avro = { version = "*", path = "serde-avro" }
 serde-hjson = "*"
-serde-protobuf = { version = "*", path = "serde-protobuf" }
 serde_cbor = "*"
 serde_yaml = "*"
-toml = { version = "*", features = ["serde"] }
 xdg-basedir = "*"
 yaml-rust = "*"
+
+[dependencies.serde-avro]
+path = "serde-avro"
+version = "*"
+
+[dependencies.serde-protobuf]
+path = "serde-protobuf"
+version = "*"
 
 [dependencies.serde_json]
 branch = "v0.9.0"
 git = "https://github.com/serde-rs/json.git"
+
+[dependencies.toml]
+features = ["serde"]
+version = "*"
 
 [dependencies.v8]
 git = "https://github.com/dflemstr/v8-rs.git"
