@@ -35,14 +35,14 @@ operating systems and architectures.
     <tr>
       <th>i686</th>
       <th>x86_64</th>
-      <th>v6</th>
-      <th>v6 HF</th>
-      <th>v7</th>
+      <th>v6<a href="#foot1"><sup>1</sup></a></th>
+      <th>v6 HF<a href="#foot2"><sup>2</sup></a></th>
+      <th>v7<a href="#foot3"><sup>3</sup></a></th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>Linux glibc</th>
+      <th>Linux <code>glibc</code><a href="#foot4"><sup>4</sup></a></th>
       <td>
         <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-gnu/rq">
           <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-gnu/badge-small.png"
@@ -75,7 +75,7 @@ operating systems and architectures.
       </td>
     </tr>
     <tr>
-      <th>Linux musl</th>
+      <th>Linux <code>musl</code><a href="#foot5"><sup>5</sup></a></th>
       <td>
         <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-musl/rq">
           <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-musl/badge-small.png"
@@ -124,6 +124,12 @@ operating systems and architectures.
     </tr>
   </tbody>
 </table>
+
+<a name="foot1"><sup>1</sup></a> For example Raspberry Pi 1 (A and B) running Raspbian.  
+<a name="foot2"><sup>2</sup></a> For example Raspberry Pi 1 (A and B) running Arch Linux.  
+<a name="foot3"><sup>3</sup></a> For example Raspberry Pi 2+.  
+<a name="foot4"><sup>4</sup></a> Requires a recent version of `glibc`/`libstdc++`, so use musl if possible.  
+<a name="foot5"><sup>5</sup></a> Completely statically linked; only depends on a recent kernel version.
 
 ## Format support status
 
