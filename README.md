@@ -107,9 +107,9 @@ operating systems and architectures.
         </a>
       </td>
       <td>
-        <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-apple-darwin/rq">
-          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-apple-darwin/badge.png"
-               alt="i686-apple-darwin">
+        <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-apple-darwin/rq">
+          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-apple-darwin/badge.png"
+               alt="x86_64-apple-darwin">
         </a>
       </td>
       <td>
