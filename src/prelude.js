@@ -261,7 +261,15 @@ function* compact() {
  * [1] 2 [3] [[4]] → concat → [1, 2, 3, [4]]
  */
 function* concat() {
-  yield* this.push(_.concat.apply(null, (yield* this.collect())));
+  var result = [];
+  while (yield* this.pull()) {
+    if (_.isArray(this.value)) {
+      result.push.apply(result, this.value);
+    } else {
+      result.push(this.value);
+    }
+  }
+  yield* this.push(result);
 }
 
 /**
