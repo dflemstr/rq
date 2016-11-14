@@ -77,12 +77,16 @@ then
     fi
 fi
 
-# if [ "$os" = unknown-linux-gnu ] && [ "$cpu" = x86_64 ]
-# then
-#     os=unknown-linux-musl
-# fi
-
 arch="$cpu-$os"
+
+# musl mappings
+case "$arch" in
+    x86_64-unknown-linux-gnu)
+        arch=x86_64-unknown-linux-musl ;;
+    i686-unknown-linux-gnu)
+        arch=i686-unknown-linux-musl ;;
+esac
+
 url="$base/$arch/rq"
 path="/usr/local/bin/rq"
 
