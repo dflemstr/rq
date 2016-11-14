@@ -170,6 +170,7 @@ function ci-deploy {
     install-v8
 
     cargo build --release --target="$TARGET"
+    git fetch origin
     revision=$(git describe --tags)
     mkdir -p "target/deploy/$TARGET"
     mkdir -p "target/deploy/$TARGET/$revision"
