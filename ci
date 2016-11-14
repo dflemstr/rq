@@ -1,7 +1,5 @@
 #!/bin/bash -e
 
-rustup_init_url='https://static.rust-lang.org/rustup.sh'
-
 function for-target {
     local wanted_target
     wanted_target=$1
@@ -70,8 +68,10 @@ function apt-install {
 function install-rust {
     if ! which cargo &>/dev/null
     then
-        curl "$rustup_init_url" -sSLfo rust-installer.sh
-        retry 3 sh rust-installer.sh -y --spec=stable --with-target="$TARGET"
+        curl "https://sh.rustup.rs" -sSLfo rustup.sh
+        sh rustup.sh -y
+        source ~/.cargo/env
+        rustup target add "$TARGET" || true
     fi
 }
 
