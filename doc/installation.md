@@ -23,11 +23,52 @@ If you don't trust the above script (all it does is to detect your
 architecture and run `curl`), you can also manually download `rq` for
 your architecture.
 
-  * [x86_64-unknown-linux-gnu](https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-unknown-linux-gnu/rq)
-  * [x86_64-unknown-linux-musl](https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-unknown-linux-musl/rq)
-  * [i686-unknown-linux-gnu](https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-gnu/rq)
-  * [x86_64-apple-darwin](https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-apple-darwin/rq)
-  * [i686-apple-darwin](https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-apple-darwin/rq)
+
+  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-unknown-linux-gnu/rq">
+      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-unknown-linux-gnu/badge-small.svg?v=2"
+           alt="x86_64-unknown-linux-gnu">
+      x86_64-unknown-linux-gnu
+    </a>
+  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-unknown-linux-musl/rq">
+      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-unknown-linux-musl/badge-small.svg?v=2"
+           alt="x86_64-unknown-linux-musl">
+      x86_64-unknown-linux-musl
+    </a>
+  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-apple-darwin/rq">
+      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-apple-darwin/badge-small.svg?v=2"
+           alt="x86_64-apple-darwin">
+      x86_64-apple-darwin
+    </a>
+  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-apple-darwin/rq">
+      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-apple-darwin/badge-small.svg?v=2"
+           alt="i686-apple-darwin">
+      i686-apple-darwin
+    </a>
+  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-gnu/rq">
+      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-gnu/badge-small.svg?v=2"
+           alt="i686-unknown-linux-gnu">
+      i686-unknown-linux-gnu
+    </a>
+  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-musl/rq">
+      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-musl/badge-small.svg?v=2"
+           alt="i686-unknown-linux-musl">
+      i686-unknown-linux-musl
+    </a>
+  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-gnueabi/rq">
+      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-gnueabi/badge-small.svg?v=2"
+           alt="arm-unknown-linux-gnueabi">
+      arm-unknown-linux-gnueabi
+    </a>
+  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-gnueabihf/rq">
+      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-gnueabihf/badge-small.svg?v=2"
+           alt="arm-unknown-linux-gnueabihf">
+      arm-unknown-linux-gnueabihf
+    </a>
+  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/armv7-unknown-linux-gnueabihf/rq">
+      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/armv7-unknown-linux-gnueabihf/badge-small.svg?v=2"
+           alt="armv7-unknown-linux-gnueabihf">
+      armv7-unknown-linux-gnueabihf
+    </a>
 
 You need to manually put the downloaded file in e.g. `/usr/local/bin`
 and run `chmod +x` on it.
