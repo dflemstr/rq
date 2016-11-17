@@ -3,7 +3,12 @@
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="560" height="200" viewBox="0 0 560 200">
     <defs>
         <style>
-            @import "https://fontlibrary.org/face/fantasque-sans-mono";
+            @font-face {
+                font-family: 'FantasqueSansMonoRegular';
+                src: url('https://fontlibrary.org/assets/fonts/fantasque-sans-mono/b0cbb25e73a9f8354e96d89524f613e7/f3fdc4f0f26e4431f54e8b552d55480c/FantasqueSansMonoRegular.ttf') format('truetype');
+                font-weight: normal;
+                font-style: normal;
+            }
             .pipe {
                 fill: #07093D;
             }
