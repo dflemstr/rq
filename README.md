@@ -1,4 +1,4 @@
-<p align="center"><img src="doc/image/example.svg" alt="example"></p>
+<p align="center"><img src="doc/image/example-480.png" alt="example"></p>
 
 # `rq` [![Build Status](https://travis-ci.org/dflemstr/rq.svg?branch=master)](https://travis-ci.org/dflemstr/rq) [![codecov](https://codecov.io/gh/dflemstr/rq/branch/master/graph/badge.svg)](https://codecov.io/gh/dflemstr/rq) [![Language (Rust)](https://img.shields.io/badge/powered_by-Rust-blue.svg)](http://www.rust-lang.org/)
 
