@@ -71,6 +71,7 @@ function install-rust {
         curl "https://sh.rustup.rs" -sSLfo rustup.sh
         sh rustup.sh -y
         source ~/.cargo/env
+        rustup override set nightly
         rustup target add "$TARGET" || true
     fi
 }
