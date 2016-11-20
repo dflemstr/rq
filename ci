@@ -37,6 +37,7 @@ function run-docker {
          -v "$PWD:/host" \
          -e "HOME=$HOME" \
          -e "TARGET=$TARGET" \
+         -e "TRAVIS_COMMIT=$TRAVIS_COMMIT" \
          -e "GITHUB_TOKEN=$GITHUB_TOKEN" \
          -e "SKIP_TESTS=$SKIP_TESTS" \
          -e "USE_DOCKER=false" \
@@ -202,7 +203,7 @@ function ci-deploy-gh-pages {
 
     cd target/doc
     git init
-    git config user.email 'nobody@nobody.org'
+    git config user.email 'nobody@dflemstr.name'
     git config user.name 'Travis CI'
     git add .
     git commit -m "Generate rustdoc for $TRAVIS_COMMIT"
