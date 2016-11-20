@@ -91,13 +91,22 @@ operating systems and architectures.
         </a>
       </td>
       <td>
-        &nbsp;
+        <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-musleabi/rq">
+          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-musleabi/badge-small.svg?v=2"
+               alt="arm-unknown-linux-musleabi">
+        </a>
       </td>
       <td>
-        &nbsp;
+        <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-musleabihf/rq">
+          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-musleabihf/badge-small.svg?v=2"
+               alt="arm-unknown-linux-musleabihf">
+        </a>
       </td>
       <td>
-        &nbsp;
+        <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/armv7-unknown-linux-musleabihf/rq">
+          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/armv7-unknown-linux-musleabihf/badge-small.svg?v=2"
+               alt="armv7-unknown-linux-musleabihf">
+        </a>
       </td>
     </tr>
     <tr>
