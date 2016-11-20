@@ -1,11 +1,16 @@
-/*
- * This file contains the rq Javascript API implementation.  It's used by for example `prelude.js`.
+"use strict";
+/**
+ * This file contains the rq Javascript API implementation.  It's used
+ * by for example the `prelude` module.
+ * @module api
+ * @private
  */
 
 /**
  * The `rq` namespace, containing the `rq` API.
  *
  * @namespace
+ * @private
  */
 var rq = rq || {};
 
@@ -15,18 +20,21 @@ var rq = rq || {};
  *
  * @param {rq.Logger} log The logger to use in this context.
  * @constructor
+ * @private
  */
 rq.Context = function Context(log) {
   /**
    * A logger object that can be used to send log messages to the user.
    *
    * @type {rq.Logger}
+   * @private
    */
   this.log = log; // Writable because Process overwrites it.
 
   /**
    * The current value from the input value stream.  Will be `undefined` until {@link
-    * rq.Context#pull} has been called and returned `true`.
+   * rq.Context#pull} has been called and returned `true`.
+   * @private
    */
   this.value = undefined;
 
@@ -34,6 +42,7 @@ rq.Context = function Context(log) {
    * Pulls the next value in the input value stream, storing it into `this.value`.
    *
    * @return {boolean} Whether there was another value in the stream.
+   * @private
    */
   this.pull = function* pull() {
     var result = yield {type: 'await'};
@@ -50,6 +59,7 @@ rq.Context = function Context(log) {
    * Pushes a value into the output value stream.
    *
    * @param {*} value The value to push.
+   * @private
    */
   this.push = function* push(value) {
     yield {type: 'emit', value: value};
@@ -59,6 +69,7 @@ rq.Context = function Context(log) {
    * Collects all values from the input stream, consuming it fully.
    *
    * @returns {Array} The values that were in the input stream.
+   * @private
    */
   this.collect = function* collect() {
     var result = [];
@@ -72,6 +83,7 @@ rq.Context = function Context(log) {
    * Spreads the specified values into the output stream, pushing each of them in order.
    *
    * @param {Array} values The values to push to the output stream.
+   * @private
    */
   this.spread = function* spread(values) {
     for (var i = 0; i < values.length; i++) {
@@ -87,6 +99,7 @@ rq.Context = function Context(log) {
  *
  * @param {string} name The name of the logger.
  * @constructor
+ * @private
  */
 rq.Logger = function Logger(name) {
   /**
@@ -102,6 +115,7 @@ rq.Logger = function Logger(name) {
    * Logs something at the debug level.
    *
    * @param {...*} args Arbitrary values to log.
+   * @private
    */
   this.debug = function debug(args) {
     rq.native.log(1, name, ...arguments);
@@ -111,6 +125,7 @@ rq.Logger = function Logger(name) {
    * Logs something at the info level.
    *
    * @param {...*} args Arbitrary values to log.
+   * @private
    */
   this.info = function info(args) {
     rq.native.log(2, name, ...arguments);
@@ -120,6 +135,7 @@ rq.Logger = function Logger(name) {
    * Logs something at the warning level.
    *
    * @param {...*} args Arbitrary values to log.
+   * @private
    */
   this.warn = function warn(args) {
     rq.native.log(3, name, ...arguments);
@@ -129,6 +145,7 @@ rq.Logger = function Logger(name) {
    * Logs something at the error level.
    *
    * @param {...*} args Arbitrary values to log.
+   * @private
    */
   this.error = function error(args) {
     rq.native.log(4, name, ...arguments);
@@ -141,6 +158,7 @@ rq.Logger = function Logger(name) {
  * Utility functions used by many rq processes.
  *
  * @namespace
+ * @private
  */
 rq.util = {};
 
@@ -148,6 +166,7 @@ rq.util = {};
  * The log object used by this module.
  *
  * @type {rq.Logger}
+ * @private
  */
 Object.defineProperty(rq.util, 'log', {value: new rq.Logger('rq.util')});
 
@@ -157,17 +176,20 @@ Object.defineProperty(rq.util, 'log', {value: new rq.Logger('rq.util')});
  * @param {function(): *} get The getter for the value.
  * @param {function(*)} set The setter for the value.
  * @constructor
+ * @private
  */
 rq.util.Lens = function Lens(get, set) {
   /**
    * Gets the encapsulated value.
    * @return {*} The current value.
+   * @private
    */
   this.get = get;
 
   /**
    * Sets the encapsulated value.
    * @param {*} value The new value to set.
+   * @private
    */
   this.set = set;
 
@@ -185,6 +207,7 @@ rq.util.Lens = function Lens(get, set) {
  * @param {(Object|Array)} obj The object to traverse.
  * @param {string} path The path into the object.
  * @return {Array<rq.util.Lens>} A lens that can be used to manipulate the targeted values.
+ * @private
  */
 rq.util.path = function path(obj, path) {
   if (typeof path === 'string' && path.length > 0) {
@@ -233,6 +256,7 @@ Object.freeze(rq.util);
  * instance of this manually.
  *
  * @constructor
+ * @private
  */
 rq.Process = function Process(fn) {
   var ctx = new rq.Context(new rq.Logger(fn.name));

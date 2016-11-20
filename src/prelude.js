@@ -1,5 +1,5 @@
 "use strict";
-/*
+/**
  * This is the rq standard library as implemented in Javascript.
  *
  * Note that the examples in this file are doctests.  Any line with the format:
@@ -7,6 +7,7 @@
  *     <input> → <process> <args>* → <output>
  *
  * ...will be verified as part of the build.
+ * @module prelude
  */
 
 // Regex for converting (most) lodash Array JSDoc:
@@ -125,6 +126,7 @@ function* spread() {
  *
  * @static
  * @this rq.Context
+ * @method
  * @example
  * 6.1 4.2 6.3         → count → 3
  * "one" "two" "three" → count → 3
@@ -138,6 +140,7 @@ var count = size;
  *
  * @static
  * @this rq.Context
+ * @method
  * @param {Function} [predicate=_.identity]
  *  The function invoked per iteration.
  * @example
@@ -160,6 +163,7 @@ var all = every;
  *
  * @static
  * @this rq.Context
+ * @method
  * @param {Function} [predicate=_.identity] The function invoked per iteration.
  * @example
  * null 0 "yes" false → any (Boolean) → true
@@ -2138,27 +2142,70 @@ function* toString() {
 /// NOTE: These are not streaming!                                                               ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Adds something to each element of the input stream.
+ *
+ * @static
+ * @this rq.Context
+ * @param {*} other The addend.
+ * @example
+ * 1 2 3 → add 4 → 5 6 7
+ * "a" "b" "c" → add "d" → "ad" "bd" "cd"
+ */
 function* add(other) {
   while (yield* this.pull()) {
     yield* this.push(_.add(this.value, other));
   }
 }
 
-function* ceil(other) {
+/**
+ * Computes the ceiling of each element of the input stream rounded up
+ * to `precision`.
+ *
+ * @static
+ * @this rq.Context
+ * @param {number} [precision=0] The precision to round up to.
+ * @example
+ * 4.006 → ceil    → 5
+ * 6.004 → ceil  2 → 6.01
+ * 6040  → ceil -2 → 6100
+ */
+function* ceil(precision) {
   while (yield* this.pull()) {
-    yield* this.push(_.ceil(this.value, other));
+    yield* this.push(_.ceil(this.value, precision));
   }
 }
 
+/**
+ * Divides each element of the input stream by something.
+ *
+ * @static
+ * @this rq.Context
+ * @param {*} other The divisor.
+ * @example
+ * 1 2 3 → divide 2 → 0.5 1 1.5
+ */
 function* divide(other) {
   while (yield* this.pull()) {
     yield* this.push(_.divide(this.value, other));
   }
 }
 
-function* floor() {
+/**
+ * Computes the floor of each element of the input stream rounded down
+ * to `precision`.
+ *
+ * @static
+ * @this rq.Context
+ * @param {number} [precision=0] The precision to round down to.
+ * @example
+ * 4.006 → floor    → 4
+ * 0.046 → floor  2 → 0.04
+ * 4060  → floor -2 → 4000
+ */
+function* floor(precision) {
   while (yield* this.pull()) {
-    yield* this.push(_.floor(this.value));
+    yield* this.push(_.floor(this.value, precision));
   }
 }
 
@@ -2254,18 +2301,47 @@ function* minBy(iteratee) {
   yield* this.push(_.minBy((yield* this.collect()), iteratee));
 }
 
+/**
+ * Multiplies each element of the input stream by something.
+ *
+ * @static
+ * @this rq.Context
+ * @param {*} other The factor.
+ * @example
+ * 1 2 3 → multiply 2 → 2 4 6
+ */
 function* multiply(other) {
   while (yield* this.pull()) {
     yield* this.push(_.multiply(this.value, other));
   }
 }
 
+/**
+ * Rounds each element of the input stream to `precision`.
+ *
+ * @static
+ * @this rq.Context
+ * @param {number} [precision=0] The precision to round to.
+ * @example
+ * 4.006 → round    → 4
+ * 4.006 → round  2 → 4.01
+ * 4060  → round -2 → 4100
+ */
 function* round(other) {
   while (yield* this.pull()) {
     yield* this.push(_.round(this.value, other));
   }
 }
 
+/**
+ * Subtracts something from each element of the input stream.
+ *
+ * @static
+ * @this rq.Context
+ * @param {*} other The subtrahend.
+ * @example
+ * 1 2 3 → subtract 1 → 0 1 2
+ */
 function* subtract(other) {
   while (yield* this.pull()) {
     yield* this.push(_.subtract(this.value, other));
@@ -2352,6 +2428,20 @@ function* random(lower, upper, floating) {
 /// NOTE: These are not streaming!                                                               ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Assigns own enumerable string keyed properties of source objects to the
+ * destination object. Source objects are applied from left to right.
+ * Subsequent sources overwrite property assignments of previous sources.
+ *
+ * **Note:** This method mutates `object` and is loosely based on
+ * [`Object.assign`](https://mdn.io/Object/assign).
+ *
+ * @static
+ * @this rq.Context
+ * @param {...Object} [sources] The source objects..
+ * @example
+ * {"a": 0, "b": 2} → assign {"a": 1, "c": 3} → {"a": 1, "b": 2, "c": 3}
+ */
 function* assign(...sources) {
   while (yield* this.pull()) {
     yield* this.push(_.assign(this.value, ...sources));
@@ -2360,30 +2450,107 @@ function* assign(...sources) {
 
 // assignIn, assignInWith, assignWith don't make sense
 
+/**
+ * Creates an array of values corresponding to `paths` of `object`.
+ *
+ * @static
+ * @this rq.Context
+ * @param {Object} object The object to iterate over.
+ * @param {...(string|string[])} [paths] The property paths of elements to pick.
+ * @example
+ * { "a": [{ "b": { "c": 3 } }, 4] } → at "a[0].b.c" → 3
+ * { "a": [{ "b": { "c": 3 } }, 4] } → at "a[0].b.c" "a[1]" → [3, 4]
+ */
 function* at(...paths) {
   while (yield* this.pull()) {
-    yield* this.spread(_.at(this.value, ...paths));
+    if (paths.length === 1) {
+      yield* this.spread(_.at(this.value, ...paths));
+    } else {
+      yield* this.push(_.at(this.value, ...paths));
+    }
   }
 }
 
+/**
+ * Assigns own and inherited enumerable string keyed properties of
+ * source objects to the destination object for all destination
+ * properties that resolve to `undefined`. Source objects are applied
+ * from left to right.  Once a property is set, additional values of
+ * the same property are ignored.
+ *
+ * **Note:** This method mutates `object`.
+ *
+ * @static
+ * @this rq.Context
+ * @param {...Object} [sources] The source objects..
+ * @example
+ * {"a": 0, "b": 2} → defaults {"a": 1, "c": 3} → {"a": 0, "b": 2, "c": 3}
+ */
 function* defaults(...sources) {
   while (yield* this.pull()) {
     yield* this.push(_.defaults(this.value, ...sources));
   }
 }
 
+/**
+ * This method is like `defaults` except that it recursively assigns
+ * default properties.
+ *
+ * **Note:** This method mutates `object`.
+ *
+ * @static
+ * @this rq.Context
+ * @param {...Object} [sources] The source objects..
+ * @example
+ * { "a": { "b": 2 } } → defaultsDeep { "a": { "b": 1, "c": 3 } } → { "a": { "b": 2, "c": 3 } }
+ */
 function* defaultsDeep(...sources) {
   while (yield* this.pull()) {
     yield* this.push(_.defaultsDeep(this.value, ...sources));
   }
 }
 
+/**
+ * This method is like `find` except that it returns the key of the
+ * first element `predicate` returns truthy for instead of the element
+ * itself.
+ *
+ * @static
+ * @this rq.Context
+ * @param {Function} [predicate=_.identity] The function invoked per
+ * iteration.
+ * @example
+ * {"a": {"u": "b", "g": 36, "a": true}, "b": {"u": "f", "g": 40, "a": false}, "c": {"u": "p", "g": 1, "a": true}} → findKey (o)=>{o.g < 40} → "a"
+ * // The `matches` iteratee shorthand.
+ * {"a": {"u": "b", "g": 36, "a": true}, "b": {"u": "f", "g": 40, "a": false}, "c": {"u": "p", "g": 1, "a": true}} → findKey {"g": 1, "a": true} → "c"
+ * // The `matchesProperty` iteratee shorthand.
+ * {"a": {"u": "b", "g": 36, "a": true}, "b": {"u": "f", "g": 40, "a": false}, "c": {"u": "p", "g": 1, "a": true}} → findKey ["a", false] → "b"
+ * // The `property` iteratee shorthand.
+ * {"a": {"u": "b", "g": 36, "a": true}, "b": {"u": "f", "g": 40, "a": false}, "c": {"u": "p", "g": 1, "a": true}} → findKey "a" → "a"
+ */
 function* findKey(predicate) {
   while (yield* this.pull()) {
     yield* this.push(_.findKey(this.value, predicate));
   }
 }
 
+/**
+ * This method is like `findKey` except that it iterates over elements
+ * of a collection in the opposite order.
+ *
+ * @static
+ * @this rq.Context
+ * @param {Function} [predicate=_.identity] The function invoked per
+ * iteration.
+ * @example
+ * {"a": {"u": "b", "g": 36, "a": true}, "b": {"u": "f", "g": 40, "a": false}, "c": {"u": "p", "g": 1, "a": true}} → findLastKey (o)=>{o.g < 40} → "c"
+ * // The `matches` iteratee shorthand.
+ * {"a": {"u": "b", "g": 36, "a": true}, "b": {"u": "f", "g": 40, "a": false}, "c": {"u": "p", "g": 1, "a": true}} → findLastKey {"g": 1, "a": true} → "c"
+ * // The `matchesProperty` iteratee shorthand.
+ * {"a": {"u": "b", "g": 36, "a": true}, "b": {"u": "f", "g": 40, "a": false}, "c": {"u": "p", "g": 1, "a": true}} → findLastKey ["a", false] → "b"
+ * // The `property` iteratee shorthand.
+ * {"a": {"u": "b", "g": 36, "a": true}, "b": {"u": "f", "g": 40, "a": false}, "c": {"u": "p", "g": 1, "a": true}} → findLastKey "a" → "c"
+ */
 function* findLastKey(predicate) {
   while (yield* this.pull()) {
     yield* this.push(_.findLastKey(this.value, predicate));
@@ -2392,12 +2559,36 @@ function* findLastKey(predicate) {
 
 // forIn, forInRight, forOwn don't make sense
 
+/**
+ * Gets the value at `path` of `object`. If the resolved value is
+ * `undefined`, the `defaultValue` is returned in its place.
+ *
+ * @static
+ * @this rq.Context
+ * @param {Array|string} path The path of the property to get.
+ * @param {*} [defaultValue] The value returned for `undefined` resolved values.
+ * @example
+ * { "a": [{ "b": { "c": 3 } }] } → get "a[0].b.c" → 3
+ * { "a": [{ "b": { "c": 3 } }] } → get ["a", "0", "b", "c"] → 3
+ * { "a": [{ "b": { "c": 3 } }] } → get "a.b.c" "default" → "default"
+ */
 function* get(path, defaultValue) {
   while (yield* this.pull()) {
     yield* this.push(_.get(this.value, path, defaultValue));
   }
 }
 
+/**
+ * Checks if `path` is a direct property of `object`.
+ *
+ * @static
+ * @this rq.Context
+ * @param {Array|string} path The path to check.
+ * @example
+ * { "a": { "b": 2 } } → has "a" → true
+ * { "a": { "b": 2 } } → has "a.b" → true
+ * { "x": 3 }          → has "a" → false
+ */
 function* has(path) {
   while (yield* this.pull()) {
     yield* this.push(_.has(this.value, path));
@@ -2406,36 +2597,105 @@ function* has(path) {
 
 // hasIn doesn't make sense
 
+/**
+ * Creates an object composed of the inverted keys and values of `object`.
+ * If `object` contains duplicate values, subsequent values overwrite
+ * property assignments of previous values.
+ *
+ * @static
+ * @this rq.Context
+ * @example
+ * { "a": 1, "b": 2, "c": 1 } → invert → { "1": "c", "2": "b" }
+ */
 function* invert() {
   while (yield* this.pull()) {
     yield* this.push(_.invert(this.value));
   }
 }
 
-function* invertBy() {
+/**
+ * This method is like `invert` except that the inverted object is generated
+ * from the results of running each element of `object` thru `iteratee`. The
+ * corresponding inverted value of each inverted key is an array of keys
+ * responsible for generating the inverted value. The iteratee is invoked
+ * with one argument: (value).
+ *
+ * @static
+ * @this rq.Context
+ * @param {Function} [iteratee=_.identity] The iteratee invoked per element.
+ * @example
+ * { "a": 1, "b": 2, "c": 1 } → invertBy (v => "group" + v) → { "group1": ["a", "c"], "group2": ["b"] }
+ */
+function* invertBy(iteratee) {
   while (yield* this.pull()) {
-    yield* this.push(_.invertBy(this.value));
+    yield* this.push(_.invertBy(this.value, iteratee));
   }
 }
 
+/**
+ * Invokes the method at `path` of `object`.
+ *
+ * @static
+ * @this rq.Context
+ * @param {Array|string} path The path of the method to invoke.
+ * @param {...*} [args] The arguments to invoke the method with.
+ * @example
+ * { "a": [{ "b": { "c": [1, 2, 3, 4] } }] } → invoke "a[0].b.c.slice" 1 3 → [2, 3]
+ */
 function* invoke(path, ...args) {
   while (yield* this.pull()) {
     yield* this.push(_.invoke(this.value, path, ...args));
   }
 }
 
+/**
+ * Creates an array of the own enumerable property names of `object`.
+ *
+ * **Note:** Non-object values are coerced to objects. See the
+ * [ES spec](http://ecma-international.org/ecma-262/7.0/#sec-object.keys)
+ * for more details.
+ *
+ * @static
+ * @this rq.Context
+ * @example
+ * {"a": 2, "b": 3} → keys → ["a", "b"]
+ */
 function* keys() {
   while (yield* this.pull()) {
     yield* this.push(_.keys(this.value));
   }
 }
 
+/**
+ * The opposite of `mapValues`; this method creates an object with the
+ * same values as `object` and keys generated by running each own enumerable
+ * string keyed property of `object` thru `iteratee`. The iteratee is invoked
+ * with three arguments: (value, key, object).
+ *
+ * @static
+ * @this rq.Context
+ * @param {Function} [iteratee=_.identity] The function invoked per iteration.
+ * @example
+ * {"a": 1, "b": 2} → mapKeys (v, k) => {k + v} → {"a1": 1, "b2": 2}
+ */
 function* mapKeys(iteratee) {
   while (yield* this.pull()) {
     yield* this.push(_.mapKeys(this.value, iteratee));
   }
 }
 
+/**
+ * Creates an object with the same keys as `object` and values generated
+ * by running each own enumerable string keyed property of `object` thru
+ * `iteratee`. The iteratee is invoked with three arguments:
+ * (value, key, object).
+ *
+ * @static
+ * @this rq.Context
+ * @param {Function} [iteratee=_.identity] The function invoked per iteration.
+ * @example
+ * {"a": 1, "b": 2} → mapValues (v, k) => {k + v} → {"a": "a1", "b": "b2"}
+ */
 function* mapValues(iteratee) {
   while (yield* this.pull()) {
     yield* this.push(_.mapValues(this.value, iteratee));
@@ -2520,120 +2780,414 @@ function* values() {
 /// NOTE: These are not streaming!                                                               ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Converts each input `string` to [camel
+ * case](https://en.wikipedia.org/wiki/CamelCase).
+ *
+ * @static
+ * @this rq.Context
+ * @example
+ * "Foo Bar"     → camelCase → "fooBar"
+ * "--foo-bar--" → camelCase → "fooBar"
+ * "__FOO_BAR__" → camelCase → "fooBar"
+ */
 function* camelCase() {
   while (yield* this.pull()) {
     yield* this.push(_.camelCase(this.value));
   }
 }
 
+/**
+ * Converts each input `string`s first letter to upper case and the
+ * remaining to lower case.
+ *
+ * @static
+ * @this rq.Context
+ * @example
+ * "FRED" → capitalize → "Fred"
+ */
 function* capitalize() {
   while (yield* this.pull()) {
     yield* this.push(_.capitalize(this.value));
   }
 }
 
+/**
+ * Deburrs each input `string` by converting [Latin-1
+ * Supplement](https://en.wikipedia.org/wiki/Latin-1_Supplement_(Unicode_block)#Character_table)
+ * and [Latin
+ * Extended-A](https://en.wikipedia.org/wiki/Latin_Extended-A) letters
+ * to basic Latin letters and removing [combining diacritical
+ * marks](https://en.wikipedia.org/wiki/Combining_Diacritical_Marks).
+ *
+ * @static
+ * @this rq.Context
+ * @example
+ * "déjà vu" → deburr → "deja vu"
+ */
 function* deburr() {
   while (yield* this.pull()) {
     yield* this.push(_.deburr(this.value));
   }
 }
 
+/**
+ * Checks if each input `string` ends with the given target string.
+ *
+ * @static
+ * @this rq.Context
+ * @param {string} [target] The string to search for.
+ * @param {number} [position=string.length] The position to search up
+ * to.
+ * @example
+ * "abc" → endsWith "c"   → true
+ * "abc" → endsWith "b"   → false
+ * "abc" → endsWith "b" 2 → true
+ */
 function* endsWith(target, position) {
   while (yield* this.pull()) {
     yield* this.push(_.endsWith(this.value, target, position));
   }
 }
 
+/**
+ * Converts the characters "&", "<", ">", '"', and "'" in each input
+ * `string` to their corresponding HTML entities.
+ *
+ * **Note:** No other characters are escaped. To escape additional
+ * characters use a third-party library like
+ * [_he_](https://mths.be/he).
+ *
+ * Though the ">" character is escaped for symmetry, characters like
+ * ">" and "/" don't need escaping in HTML and have no special meaning
+ * unless they're part of a tag or unquoted attribute value. See
+ * [Mathias Bynens's
+ * article](https://mathiasbynens.be/notes/ambiguous-ampersands)
+ * (under "semi-related fun fact") for more details.
+ *
+ * When working with HTML you should always [quote attribute
+ * values](http://wonko.com/post/html-escaping) to reduce XSS vectors.
+ *
+ * @static
+ * @this rq.Context
+ * @example
+ * "fred, barney, &amp; pebbles" → escape → "fred, barney, &amp;amp; pebbles"
+ */
 function* escape() {
   while (yield* this.pull()) {
     yield* this.push(_.escape(this.value));
   }
 }
 
+/**
+ * Escapes the `RegExp` special characters "^", "$", "\", ".", "*",
+ * "+", "?", "(", ")", "[", "]", "{", "}", and "|" in each input
+ * `string`.
+ *
+ * @static
+ * @this rq.Context
+ * @example
+ * "[lodash](https://lodash.com/)" → escapeRegExp → "\\[lodash\\]\\(https://lodash\\.com/\\)"
+ */
 function* escapeRegExp() {
   while (yield* this.pull()) {
     yield* this.push(_.escapeRegExp(this.value));
   }
 }
 
+/**
+ * Converts each input `string` to
+ * [kebab case](https://en.wikipedia.org/wiki/Letter_case#Special_case_styles).
+ *
+ * @static
+ * @this rq.Context
+ * @example
+ * "Foo Bar"     → kebabCase → "foo-bar"
+ * "fooBar"      → kebabCase → "foo-bar"
+ * "__FOO_BAR__" → kebabCase → "foo-bar"
+ */
 function* kebabCase() {
   while (yield* this.pull()) {
     yield* this.push(_.kebabCase(this.value));
   }
 }
 
+/**
+ * Converts each input `string`, as space separated words, to lower
+ * case.
+ *
+ * @static
+ * @this rq.Context
+ * @example
+ * "--Foo-Bar--" → lowerCase → "foo bar"
+ * "fooBar"      → lowerCase → "foo bar"
+ * "__FOO_BAR__" → lowerCase → "foo bar"
+ */
 function* lowerCase() {
   while (yield* this.pull()) {
     yield* this.push(_.lowerCase(this.value));
   }
 }
 
+/**
+ * Converts each input `string`'s first character to lower case.
+ *
+ * @static
+ * @this rq.Context
+ * @example
+ * "Fred" → lowerFirst → "fred"
+ * "FRED" → lowerFirst → "fRED"
+ */
 function* lowerFirst() {
   while (yield* this.pull()) {
     yield* this.push(_.lowerFirst(this.value));
   }
 }
 
+/**
+ * Pads each input `string` on the left and right sides if it's
+ * shorter than `length`.  Padding characters are truncated if they
+ * can't be evenly divided by `length`.
+ *
+ * @static
+ * @this rq.Context
+ * @param {number} [length=0] The padding length.
+ * @param {string} [chars=' '] The string used as padding.
+ * @example
+ * "abc" → pad 8      → "  abc   "
+ * "abc" → pad 8 "_-" → "_-abc_-_"
+ * "abc" → pad 3      → "abc"
+ */
 function* pad(length, chars) {
   while (yield* this.pull()) {
     yield* this.push(_.pad(this.value, length, chars));
   }
 }
 
+/**
+ * Pads each input `string` on the right side if it's shorter than
+ * `length`.  Padding characters are truncated if they can't be evenly
+ * divided by `length`.
+ *
+ * @static
+ * @this rq.Context
+ * @param {number} [length=0] The padding length.
+ * @param {string} [chars=' '] The string used as padding.
+ * @example
+ * "abc" → padEnd 6      → "abc   "
+ * "abc" → padEnd 6 "_-" → "abc_-_"
+ * "abc" → padEnd 3      → "abc"
+ */
 function* padEnd(length, chars) {
   while (yield* this.pull()) {
     yield* this.push(_.padEnd(this.value, length, chars));
   }
 }
 
+/**
+ * Pads each input `string` on the left side if it's shorter than
+ * `length`.  Padding characters are truncated if they can't be evenly
+ * divided by `length`.
+ *
+ * @static
+ * @this rq.Context
+ * @param {number} [length=0] The padding length.
+ * @param {string} [chars=' '] The string used as padding.
+ * @example
+ * "abc" → padStart 6      → "   abc"
+ * "abc" → padStart 6 "_-" → "_-_abc"
+ * "abc" → padStart 3      → "abc"
+ */
 function* padStart(length, chars) {
   while (yield* this.pull()) {
     yield* this.push(_.padStart(this.value, length, chars));
   }
 }
 
-function* parseInt() {
+/**
+ * Converts each input `string` to an integer of the specified
+ * radix. If `radix` is `undefined` or `0`, a `radix` of `10` is used
+ * unless `value` is a hexadecimal, in which case a `radix` of `16` is
+ * used.
+ *
+ * **Note:** This method aligns with the [ES5
+ * implementation](https://es5.github.io/#x15.1.2.2) of `parseInt`.
+ *
+ * @static
+ * @this rq.Context
+ * @param {number} [radix=10] The radix to interpret `value` by.
+ * @example
+ * "08"          → parseInt    → 8 (not tested)
+ * "6" "08" "10" → parseInt    → 6 8 10 (not tested)
+ * "a" "b" "c"   → parseInt 16 → 10 11 12 (not tested)
+ */
+function* parseInt(radix) {
   while (yield* this.pull()) {
-    yield* this.push(_.parseInt(this.value));
+    yield* this.push(_.parseInt(this.value, radix));
   }
 }
 
+/**
+ * Repeats each input string `n` times.
+ *
+ * @static
+ * @this rq.Context
+ * @param {number} [n=1] The number of times to repeat the string.
+ * @example
+ * "*"   → repeat 3 → "***"
+ * "abc" → repeat 2 → "abcabc"
+ * "abc" → repeat 0 → ""
+ */
 function* repeat(n) {
   while (yield* this.pull()) {
     yield* this.push(_.repeat(this.value, n));
   }
 }
 
+/**
+ * Replaces matches for `pattern` in each input `string` with
+ * `replacement`.
+ *
+ * **Note:** This method is based on
+ * [`String#replace`](https://mdn.io/String/replace).  Repeats each
+ * input string `n` times.
+ *
+ * @static
+ * @this rq.Context
+ * @param {RegExp|string} pattern The pattern to replace.
+ * @param {Function|string} replacement The match replacement.
+ * @example
+ * "Hi Fred" → replace "Fred" "Barney" → "Hi Barney"
+ */
 function* replace(pattern, replacement) {
   while (yield* this.pull()) {
     yield* this.push(_.replace(this.value, pattern, replacement));
   }
 }
 
+/**
+ * Converts each input `string` to
+ * [snake case](https://en.wikipedia.org/wiki/Snake_case).
+ *
+ * @static
+ * @this rq.Context
+ * @example
+ * "Foo Bar"     → snakeCase → "foo_bar"
+ * "fooBar"      → snakeCase → "foo_bar"
+ * "--FOO-BAR--" → snakeCase → "foo_bar"
+ */
 function* snakeCase() {
   while (yield* this.pull()) {
     yield* this.push(_.snakeCase(this.value));
   }
 }
 
+/**
+ * Splits each input `string` by `separator`.
+ *
+ * @static
+ * @this rq.Context
+ * @param {RegExp|string} separator The separator pattern to split by.
+ * @param {number} [limit] The length to truncate results to.
+ * @example
+ * "a-b-c" → split "-"   → ["a", "b", "c"]
+ * "a-b-c" → split "-" 2 → ["a", "b"]
+ */
 function* split(separator, limit) {
   while (yield* this.pull()) {
     yield* this.push(_.split(this.value, separator, limit));
   }
 }
 
+/**
+ * Converts each input `string` to
+ * [start case](https://en.wikipedia.org/wiki/Letter_case#Stylistic_or_specialised_usage).
+ *
+ * @static
+ * @this rq.Context
+ * @example
+ * "--foo-bar--" → startCase → "Foo Bar"
+ * "fooBar"      → startCase → "Foo Bar"
+ * "__FOO_BAR__" → startCase → "FOO BAR"
+ */
 function* startCase() {
   while (yield* this.pull()) {
     yield* this.push(_.startCase(this.value));
   }
 }
 
+/**
+ * Checks if each input `string` starts with the given target string.
+ *
+ * @static
+ * @this rq.Context
+ * @param {string} [target] The string to search for.
+ * @param {number} [position=0] The position to search from.
+ * @example
+ * "abc" → startsWith "a"   → true
+ * "abc" → startsWith "b"   → false
+ * "abc" → startsWith "b" 1 → true
+ */
 function* startsWith(target, position) {
   while (yield* this.pull()) {
     yield* this.push(_.startsWith(this.value, target, position));
   }
 }
 
+/**
+ * Creates a compiled template function that can interpolate data
+ * properties in "interpolate" delimiters, HTML-escape interpolated
+ * data properties in "escape" delimiters, and execute JavaScript in
+ * "evaluate" delimiters. Data properties may be accessed as free
+ * variables in the template. If a setting object is given, it takes
+ * precedence over `_.templateSettings` values.
+ *
+ * **Note:** In the development build `_.template` utilizes
+ * [sourceURLs](http://www.html5rocks.com/en/tutorials/developertools/sourcemaps/#toc-sourceurl)
+ * for easier debugging.
+ *
+ * For more information on precompiling templates see
+ * [lodash's custom builds documentation](https://lodash.com/custom-builds).
+ *
+ * For more information on Chrome extension sandboxes see
+ * [Chrome's extensions documentation](https://developer.chrome.com/extensions/sandboxingEval).
+ *
+ * @static
+ * @this rq.Context
+ * @param {string} [string=''] The template string.
+ * @param {Object} [options={}] The options object.
+ * @param {RegExp} [options.escape=_.templateSettings.escape]
+ *  The HTML "escape" delimiter.
+ * @param {RegExp} [options.evaluate=_.templateSettings.evaluate]
+ *  The "evaluate" delimiter.
+ * @param {Object} [options.imports=_.templateSettings.imports]
+ *  An object to import into the template as free variables.
+ * @param {RegExp} [options.interpolate=_.templateSettings.interpolate]
+ *  The "interpolate" delimiter.
+ * @param {string} [options.sourceURL='lodash.templateSources[n]']
+ *  The sourceURL of the compiled template.
+ * @param {string} [options.variable='obj']
+ *  The data object variable name.
+ * @example
+ * // Use the "interpolate" delimiter to create a compiled template.
+ * {"user": "fred"} → template "hello &lt;%= user %&gt;!" → "hello fred!"
+ *
+ * // Use the HTML "escape" delimiter to escape data property values.
+ * {"value": "&lt;script&gt;"} → template "&lt;b&gt;&lt;%- value %&gt;&lt;/b&gt;" → "&lt;b&gt;&amp;lt;script&amp;gt;&lt;/b&gt;"
+ *
+ * // Use the "evaluate" delimiter to execute JavaScript and generate HTML.
+ * {"users": ["fred", "barney"]} → template "&lt;% _.forEach(users, function(user) { %&gt;&lt;li&gt;&lt;%- user %&gt;&lt;/li&gt;&lt;% }); %&gt;" → "&lt;li&gt;fred&lt;/li&gt;&lt;li&gt;barney&lt;/li&gt;"
+ *
+ * // Use the internal `print` function in "evaluate" delimiters.
+ * {"user": "barney"} → template "&lt;% print('hello ' + user); %&gt;!" → "hello barney!"
+ *
+ * // Use backslashes to treat delimiters as plain text.
+ * {"value": "ignored"} → template "&lt;%= '\\&lt;%- value %\\&gt;' %&gt;" → "&lt;%- value %&gt;"
+ *
+ * // Use the `variable` option to ensure a with-statement isn't used
+ * // in the compiled template.
+ * {"user": "barney"} → template "hi &lt;%= data.user %&gt;!" {"variable": "data"} → "hi barney!"
+ */
 function* template(string, options) {
   var template = _.template(string, options);
   while (yield* this.pull()) {
@@ -2641,60 +3195,172 @@ function* template(string, options) {
   }
 }
 
+/**
+ * Converts each input `string`, as a whole, to lower case just
+ * like [String#toLowerCase](https://mdn.io/toLowerCase).
+ *
+ * @static
+ * @this rq.Context
+ * @example
+ * "--Foo-Bar--" → toLower → "--foo-bar--"
+ * "fooBar"      → toLower → "foobar"
+ * "__FOO_BAR__" → toLower → "__foo_bar__"
+ */
 function* toLower() {
   while (yield* this.pull()) {
     yield* this.push(_.toLower(this.value));
   }
 }
 
+/**
+ * Converts each input `string`, as a whole, to upper case just
+ * like [String#toUpperCase](https://mdn.io/toUpperCase).
+ *
+ * @static
+ * @this rq.Context
+ * @example
+ * "--foo-bar--" → toUpper → "--FOO-BAR--"
+ * "fooBar"      → toUpper → "FOOBAR"
+ * "__foo_bar__" → toUpper → "__FOO_BAR__"
+ */
 function* toUpper() {
   while (yield* this.pull()) {
     yield* this.push(_.toUpper(this.value));
   }
 }
 
+/**
+ * Removes leading and trailing whitespace or specified characters
+ * from each input `string`.
+ *
+ * @static
+ * @this rq.Context
+ * @example
+ * "  abc  "   → trim      → "abc"
+ * "-_-abc-_-" → trim "_-" → "abc"
+ */
 function* trim(chars) {
   while (yield* this.pull()) {
     yield* this.push(_.trim(this.value, chars));
   }
 }
 
+/**
+ * Removes trailing whitespace or specified characters from each input
+ * `string`.
+ *
+ * @static
+ * @this rq.Context
+ * @param {string} [chars=whitespace] The characters to trim.
+ * @example
+ * "  abc  "   → trimEnd      → "  abc"
+ * "-_-abc-_-" → trimEnd "_-" → "-_-abc"
+ */
 function* trimEnd(chars) {
   while (yield* this.pull()) {
     yield* this.push(_.trimEnd(this.value, chars));
   }
 }
 
+/**
+ * Removes leading whitespace or specified characters from each input
+ * `string`.
+ *
+ * @static
+ * @this rq.Context
+ * @param {string} [chars=whitespace] The characters to trim.
+ * @example
+ * "  abc  "   → trimStart      → "abc  "
+ * "-_-abc-_-" → trimStart "_-" → "abc-_-"
+ */
 function* trimStart(chars) {
   while (yield* this.pull()) {
     yield* this.push(_.trimStart(this.value, chars));
   }
 }
 
+/**
+ * Truncates each input `string` if it's longer than the given maximum
+ * string length.  The last characters of the truncated string are
+ * replaced with the omission string which defaults to"...".
+ *
+ * @static
+ * @this rq.Context
+ * @param {Object} [options={}] The options object.
+ * @param {number} [options.length=30] The maximum string length.
+ * @param {string} [options.omission='...'] The string to indicate text is omitted.
+ * @param {RegExp|string} [options.separator] The separator pattern to truncate to.
+ * @example
+ * "hi-diddly-ho there, neighborino" → truncate → "hi-diddly-ho there, neighbo..."
+ * "hi-diddly-ho there, neighborino" → truncate {length: 24, separator: " "} → "hi-diddly-ho there,..."
+ * "hi-diddly-ho there, neighborino" → truncate {omission: " [...]"} → "hi-diddly-ho there, neig [...]"
+ */
 function* truncate(options) {
   while (yield* this.pull()) {
     yield* this.push(_.truncate(this.value, options));
   }
 }
 
+/**
+ * The inverse of `_.escape`; this method converts the HTML entities
+ * `&amp;`, `&lt;`, `&gt;`, `&quot;`, and `&#39;` in `string` to their
+ * corresponding characters.
+ *
+ * **Note:** No other HTML entities are unescaped. To unescape additional
+ * HTML entities use a third-party library like [_he_](https://mths.be/he).
+ *
+ * @static
+ * @this rq.Context
+ * @example
+ * "fred, barney, &amp; pebbles" → unescape → "fred, barney, & pebbles"
+ */
 function* unescape() {
   while (yield* this.pull()) {
     yield* this.push(_.unescape(this.value));
   }
 }
 
+/**
+ * Converts each input `string`, as space separated words, to upper
+ * case.
+ *
+ * @static
+ * @this rq.Context
+ * @example
+ * "--foo-bar"   → upperCase → "FOO BAR"
+ * "fooBar"      → upperCase → "FOO BAR"
+ * "__FOO_BAR__" → upperCase → "FOO BAR"
+ */
 function* upperCase() {
   while (yield* this.pull()) {
     yield* this.push(_.upperCase(this.value));
   }
 }
 
+/**
+ * Converts the first character of each input `string` to upper case.
+ *
+ * @static
+ * @this rq.Context
+ * @example
+ * "fred" → upperFirst → "Fred"
+ * "FRED" → upperFirst → "FRED"
+ */
 function* upperFirst() {
   while (yield* this.pull()) {
     yield* this.push(_.upperFirst(this.value));
   }
 }
 
+/**
+ * Splits each input `string` into an array of its words.
+ *
+ * @static
+ * @this rq.Context
+ * @param {RegExp|string} [pattern] The pattern to match words.
+ * @example
+ * "fred, barney, & pebbles" → words          → ["fred", "barney", "pebbles"]
+ */
 function* words() {
   while (yield* this.pull()) {
     yield* this.push(_.words(this.value));

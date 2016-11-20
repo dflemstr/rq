@@ -1,8 +1,27 @@
 {
+  "tags": {
+    "allowUnknownTags": true
+  },
   "plugins": [
     "plugins/markdown"
   ],
   "templates": {
-    "cleverLinks": true
+    "cleverLinks": true,
+    "monospaceLinks": true,
+    "default": {
+      "outputSourceFiles" : true
+    },
+    "applicationName": "Record Query",
+    "meta": {
+      "title": "Record Query",
+      "description": "The Javascript components that power rq"
+    },
+    "linenums": false
+  },
+  "opts": {
+    "encoding": "utf8",
+    "private": false,
+    "recurse": true,
+    "template": "./node_modules/jaguarjs-jsdoc-patched"
   }
 }

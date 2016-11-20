@@ -114,88 +114,88 @@ Arguments are dynamically typed, and processes that claim to take a
 ### Useful processes
 
 A full list of processes is available
-[here](http://dflemstr.github.io/rq/js/global.html).  The most
+[here](http://dflemstr.github.io/rq/js/module-prelude.html).  The most
 commonly used processes are:
 
 **Pass-through**
 
-  - [`id`](http://dflemstr.github.io/rq/js/global.html#id)
+  - [`id`](http://dflemstr.github.io/rq/js/module-prelude.html#id)
     Passes through each input unmodified (this is the default process)
-  - [`tee`](http://dflemstr.github.io/rq/js/global.html#tee)
+  - [`tee`](http://dflemstr.github.io/rq/js/module-prelude.html#tee)
     Like `id`, but logs each passed through value.  The arguments can
     be used to give the log lines a tag.
 
 **Compaction**
 
-  - [`collect`](http://dflemstr.github.io/rq/js/global.html#collect)
+  - [`collect`](http://dflemstr.github.io/rq/js/module-prelude.html#collect)
     Collects all stream elements into an array.
-  - [`spread`](http://dflemstr.github.io/rq/js/global.html#spread)
+  - [`spread`](http://dflemstr.github.io/rq/js/module-prelude.html#spread)
     Spreads each input array into separate stream elements.
 
 **Filters**
 
-  - [`filter`](http://dflemstr.github.io/rq/js/global.html#filter)
+  - [`filter`](http://dflemstr.github.io/rq/js/module-prelude.html#filter)
     Filters out elements that match a predicate.
-  - [`reject`](http://dflemstr.github.io/rq/js/global.html#reject)
+  - [`reject`](http://dflemstr.github.io/rq/js/module-prelude.html#reject)
     Filters out elements that don't match a predicate.
-  - [`every`](http://dflemstr.github.io/rq/js/global.html#every)
+  - [`every`](http://dflemstr.github.io/rq/js/module-prelude.html#every)
     Checks if a predicate holds for all input values.
-  - [`some`](http://dflemstr.github.io/rq/js/global.html#some)
+  - [`some`](http://dflemstr.github.io/rq/js/module-prelude.html#some)
     Checks if a predicate holds for any input value.
-  - [`find`](http://dflemstr.github.io/rq/js/global.html#find)
+  - [`find`](http://dflemstr.github.io/rq/js/module-prelude.html#find)
     Finds an input value that matches a predicate.
 
 **Transformations**
 
-  - [`map`](http://dflemstr.github.io/rq/js/global.html#map)
+  - [`map`](http://dflemstr.github.io/rq/js/module-prelude.html#map)
     Applies a function to each input element.
-  - [`flatMap`](http://dflemstr.github.io/rq/js/global.html#flatMap)
+  - [`flatMap`](http://dflemstr.github.io/rq/js/module-prelude.html#flatMap)
     Applies a function to each input element, and flattens the
     resulting arrays.
-  - [`uniq`](http://dflemstr.github.io/rq/js/global.html#uniq)
+  - [`uniq`](http://dflemstr.github.io/rq/js/module-prelude.html#uniq)
     Removes duplicates from the input stream.
 
 **Aggregations**
 
-  - [`groupBy`](http://dflemstr.github.io/rq/js/global.html#groupBy)
+  - [`groupBy`](http://dflemstr.github.io/rq/js/module-prelude.html#groupBy)
     Groups elements by a certain criterium.
-  - [`countBy`](http://dflemstr.github.io/rq/js/global.html#countBy)
+  - [`countBy`](http://dflemstr.github.io/rq/js/module-prelude.html#countBy)
     Counts elements by a certain criterium.
-  - [`keyBy`](http://dflemstr.github.io/rq/js/global.html#keyBy)
+  - [`keyBy`](http://dflemstr.github.io/rq/js/module-prelude.html#keyBy)
     Extracts a key to be used to group elements.
-  - [`sortBy`](http://dflemstr.github.io/rq/js/global.html#sortBy)
+  - [`sortBy`](http://dflemstr.github.io/rq/js/module-prelude.html#sortBy)
     Sorts elements by the results of a number of functions.
-  - [`orderBy`](http://dflemstr.github.io/rq/js/global.html#orderBy)
+  - [`orderBy`](http://dflemstr.github.io/rq/js/module-prelude.html#orderBy)
     Orders elements by a list of functions and explicit orderings.
 
 **Slices**
 
-  - [`drop`](http://dflemstr.github.io/rq/js/global.html#drop)
+  - [`drop`](http://dflemstr.github.io/rq/js/module-prelude.html#drop)
     Drop the specified number of elements from the input.
-  - [`dropWhile`](http://dflemstr.github.io/rq/js/global.html#dropWhile)
+  - [`dropWhile`](http://dflemstr.github.io/rq/js/module-prelude.html#dropWhile)
     Drop elements while the specified predicate holds.
-  - [`take`](http://dflemstr.github.io/rq/js/global.html#take)
+  - [`take`](http://dflemstr.github.io/rq/js/module-prelude.html#take)
     Take the specified number of elements from the input.
-  - [`takeWhile`](http://dflemstr.github.io/rq/js/global.html#takeWhile)
+  - [`takeWhile`](http://dflemstr.github.io/rq/js/module-prelude.html#takeWhile)
     Take elements while the specified predicate holds.
-  - [`slice`](http://dflemstr.github.io/rq/js/global.html#slice)
+  - [`slice`](http://dflemstr.github.io/rq/js/module-prelude.html#slice)
     Slice the input stream by indices.
-  - [`nth`](http://dflemstr.github.io/rq/js/global.html#nth)
+  - [`nth`](http://dflemstr.github.io/rq/js/module-prelude.html#nth)
     Only keep the nth element.
 
 **Reductions**
 
-  - [`join`](http://dflemstr.github.io/rq/js/global.html#join)
+  - [`join`](http://dflemstr.github.io/rq/js/module-prelude.html#join)
     Join the input by a separator.
-  - [`max` / `maxBy`](http://dflemstr.github.io/rq/js/global.html#max)
+  - [`max` / `maxBy`](http://dflemstr.github.io/rq/js/module-prelude.html#max)
     Find the maximum of the input.
-  - [`mean` / `meanBy`](http://dflemstr.github.io/rq/js/global.html#mean)
+  - [`mean` / `meanBy`](http://dflemstr.github.io/rq/js/module-prelude.html#mean)
     Find the mean of the input.
-  - [`min` / `minBy`](http://dflemstr.github.io/rq/js/global.html#min)
+  - [`min` / `minBy`](http://dflemstr.github.io/rq/js/module-prelude.html#min)
     Find the minimum of the input.
-  - [`sum` / `sumBy`](http://dflemstr.github.io/rq/js/global.html#sum)
+  - [`sum` / `sumBy`](http://dflemstr.github.io/rq/js/module-prelude.html#sum)
     Sum the input.
-  - [`reduce`](http://dflemstr.github.io/rq/js/global.html#reduce)
+  - [`reduce`](http://dflemstr.github.io/rq/js/module-prelude.html#reduce)
     Run a custom reduction.
 
 [lodash]: https://lodash.com/
