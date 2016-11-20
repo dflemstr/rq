@@ -24,8 +24,18 @@ for more info):
 The Rust installer will give you further platform-specific
 instructions (e.g. if you're missing other development tools).
 
-To build `rq`, navigate to the source directory.  Now you can run the
-tests for the project (including JSDoc tests):
+To build `rq`, navigate to the source directory.
+
+You will need a build of the V8 Javascript engine as well.  If
+your operating system package manager doesn't provide a package,
+you can download a build like this:
+
+    wget "https://s3-eu-west-1.amazonaws.com/record-query/v8/$TARGET/5.6.222/v8-build.tar.gz"
+    tar -xvf v8-build.tar.gz
+    export V8_LIBS=$PWD/v8-build/lib/libv8uber.a
+    export V8_SOURCE=$PWD/v8-build
+
+Now you can run the tests for the project (including JSDoc tests):
 
     cargo test
 
@@ -41,17 +51,13 @@ A release build can be created like so (might take a lot longer):
 
 It will be available in `target/release/rq`.
 
-To build a version that doesn't depend on `glibc` (on Linux), first
-add a new compiler target for `musl`:
+# Cross-compiled builds
 
-    rustup target add x86_64-unknown-linux-musl
+The easiest way to create cross-compiled builds is to use the `./ci` script.
 
-Then, install the `musl` standard C library (the package is usually
-called `musl` or `musl-tools`).  This lets you do:
+Look in the Travis build config for available parameters.  For example:
 
-    cargo build --release --target x86_64-unknown-linux-musl
-
-The resulting executable is available in
-`target/x86_64-unknown-linux-musl/release/rq`.
+    TARGET=x86_64-unknown-linux-gnu USE_DOCKER=true ./ci test
+    TARGET=x86_64-unknown-linux-gnu USE_DOCKER=true ./ci deploy
 
 [rust]: https://www.rust-lang.org/
