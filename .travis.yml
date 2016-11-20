@@ -21,10 +21,12 @@ matrix:
       env: >
         TARGET=i686-unknown-linux-gnu
         USE_DOCKER=true
+        SKIP_TESTS=true
     - os: linux
       env: >
         TARGET=i686-unknown-linux-musl
         USE_DOCKER=true
+        SKIP_TESTS=true
     - os: linux
       env: >
         TARGET=arm-unknown-linux-gnueabi
@@ -63,42 +65,6 @@ matrix:
       osx_image: xcode8
       env: >
         TARGET=i686-apple-darwin
-  allow_failures:
-    # Due to: https://github.com/rust-lang/rust/issues/35599
-    - os: linux
-      env: >
-        TARGET=i686-unknown-linux-musl
-        USE_DOCKER=true
-    # Currently not yet supported:
-    - os: linux
-      env: >
-        TARGET=arm-unknown-linux-gnueabi
-        USE_DOCKER=true
-        SKIP_TESTS=true
-    - os: linux
-      env: >
-        TARGET=arm-unknown-linux-musleabi
-        USE_DOCKER=true
-        SKIP_TESTS=true
-    - os: linux
-      env: >
-        TARGET=arm-unknown-linux-gnueabihf
-        USE_DOCKER=true
-        SKIP_TESTS=true
-    - os: linux
-      env: >
-        TARGET=arm-unknown-linux-musleabihf
-        USE_DOCKER=true
-        SKIP_TESTS=true
-    - os: linux
-      env: >
-        TARGET=armv7-unknown-linux-gnueabihf
-        USE_DOCKER=true
-        SKIP_TESTS=true
-    - os: linux
-      env: >
-        TARGET=armv7-unknown-linux-musleabihf
-        USE_DOCKER=true
         SKIP_TESTS=true
 
 install: true # i.e. do nothing
