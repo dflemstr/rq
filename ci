@@ -163,7 +163,7 @@ function ci-test {
     install-rust
     install-v8
 
-    cargo test --target "$TARGET" "${extra_args[@]}"
+    cargo test -j1 --target "$TARGET" "${extra_args[@]}"
 }
 
 function ci-deploy {
