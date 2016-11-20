@@ -1,4 +1,4 @@
-#!/bin/sh -eu
+#!/bin/bash -eu
 # Copyright 2016 David Flemström.
 #
 # Based on https://sh.rustup.rs, which is:
@@ -9,13 +9,35 @@
 base='https://s3-eu-west-1.amazonaws.com/record-query/record-query'
 
 msg() {
-    echo "$@" >&2
+    printf "\33[1mrq:\33[0m %s\n" "$*" >&2
 }
 
 err() {
     msg "$@"
     exit 1
 }
+
+interactive=true
+path=$( (command -v rq | grep -Fv '/usr/bin/') || echo /usr/local/bin/rq)
+
+while [[ $# -gt 1 ]]
+do
+    case "$1" in
+        -y|--yes)
+            interactive=false
+            ;;
+        -o|--output|-p|--path)
+            path=$2
+            shift
+            ;;
+        *)
+            ;;
+    esac
+    shift
+done
+
+msg "Welcome to the rq installer!"
+msg
 
 cpu="$(uname -m)"
 os="$(uname -s)"
@@ -79,19 +101,139 @@ fi
 
 arch="$cpu-$os"
 
+msg "Detected your architecture to be $arch"
+
 # musl mappings
 case "$arch" in
     x86_64-unknown-linux-gnu)
-        arch=x86_64-unknown-linux-musl ;;
+        musl_arch=x86_64-unknown-linux-musl ;;
     i686-unknown-linux-gnu)
-        arch=i686-unknown-linux-musl ;;
+        musl_arch=i686-unknown-linux-musl ;;
+    arm-unknown-linux-gnueabi)
+        musl_arch=arm-unknown-linux-musleabi ;;
+    arm-unknown-linux-gnueabihf)
+        musl_arch=arm-unknown-linux-musleabihf ;;
+    armv7-unknown-linux-gnueabihf)
+        musl_arch=armv7-unknown-linux-musleabihf ;;
 esac
 
-url="$base/$arch/rq"
-path="/usr/local/bin/rq"
+if [ -n "$musl_arch" ]
+then
+    if [ "$interactive" = true ]
+    then
+        msg 'You can install the glibc or musl version of rq:'
+        msg
+        msg '  • The musl version is statically linked and with zero'
+        msg '    dependencies (recommended).'
+        msg '  • The glibc version is slightly smaller but depends on'
+        msg '    recent versions of libstdc++ and glibc that you might'
+        msg '    not have installed.'
+        msg
+        msg 'Which one do you prefer?'
 
-msg "Detected your architecture to be $arch"
-msg "Will now download rq into $path (using sudo)"
-sudo curl "$url" -o "$path"
-sudo chmod +x "$path"
-msg "rq is now installed"
+        options=(musl glibc)
+        PS3='Choice: '
+        select opt in "${options[@]}"
+        do
+            case "$opt" in
+                musl)
+                    arch="$musl_arch"; break ;;
+                glibc)
+                    break ;;
+                *)
+                    msg "Invalid choice" ;;
+            esac
+        done < /dev/tty
+    else
+        msg 'Detected that your platform supports musl!'
+        arch="$musl_arch"
+    fi
+    msg "Using architecture $arch"
+fi
+
+url="$base/$arch/rq"
+
+if [ "$interactive" = true ]
+then
+    msg "Where should rq be installed? (default: $path)"
+    read -rp 'Path: ' new_path < /dev/tty
+    if [ -n "$new_path" ]
+    then
+        path=$(eval echo "$new_path")
+    fi
+fi
+
+if [ -f "$path" ]
+then
+    if command -v md5 > /dev/null
+    then md5tool=md5
+    elif command -v md5sum > /dev/null
+    then md5tool=md5sum
+    fi
+
+    if command -v python2 > /dev/null
+    then pythontool=python2
+    elif command -v python > /dev/null
+    then pythontool=python
+    fi
+
+    if [ -n "$md5tool" ]
+    then
+        checksum=$("$pythontool" - "$path" <<EOF
+import hashlib
+import sys
+
+chunk_size = 5 * 1024 * 1024
+md5s = []
+
+with open(sys.argv[1], 'rb') as f:
+    while True:
+        data = f.read(chunk_size)
+
+        if not data:
+            break
+
+        md5s.append(hashlib.md5(data))
+
+digests = b''.join(m.digest() for m in md5s)
+
+md5 = hashlib.md5(digests)
+print '%s-%s' % (md5.hexdigest(), len(md5s))
+EOF
+                )
+    else
+        checksum='0'
+    fi
+else
+    checksum='0'
+fi
+
+msg "Downloading rq..."
+tmppath=$(mktemp)
+trap "rm -f $(printf '%q' "$tmppath")" EXIT
+status=$(curl -Lf "$url" --write-out "%{http_code}" -H "If-None-Match: \"$checksum\"" --progress-bar -o "$tmppath")
+
+if [ "$status" = 304 ]
+then msg "You already have the latest version of rq in $path"
+elif [[ "$status" == 2* ]]
+then
+    if [ -w "$(dirname "$path")" ]
+    then
+        msg "Installing rq into $path"
+        mv "$tmppath" "$path"
+        chmod +x "$path"
+    else
+        msg "Installing rq into $path (using sudo)"
+        sudo /bin/sh -euc "
+          mv $(printf '%q' "$tmppath") $(printf '%q' "$path")
+          chmod 755 $(printf '%q' "$path")
+          chown root:root $(printf '%q' "$path")
+        "
+    fi
+
+    msg "rq is now installed"
+else
+    msg "Failed to download rq"
+    msg "Status code: $status"
+    msg "$(cat "$tmppath")"
+fi
