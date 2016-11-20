@@ -197,8 +197,8 @@ function ci-deploy-gh-pages {
     curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
     apt-install nodejs
     sudo npm install -g jsdoc
-    (cd jsdoc; npm install)
-    jsdoc -c jsdoc/conf.json -d target/doc/js src/api.js src/prelude.js
+    (cd js-doc; npm install)
+    jsdoc -c js-doc/conf.json -d target/doc/js src/api.js src/prelude.js
 
     cd target/doc
     git init
