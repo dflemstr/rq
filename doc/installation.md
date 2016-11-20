@@ -15,7 +15,7 @@ There is a generic best-effort installer available via the dreaded
 need to compile `rq` from scratch, and you always get the latest
 version.
 
-    curl -sSLf sh.dflemstr.name/rq | sh
+    curl -ksSLf https://sh.dflemstr.name/rq | sh
 
 ## Manual download
 
@@ -34,16 +34,6 @@ your architecture.
            alt="x86_64-unknown-linux-musl">
       x86_64-unknown-linux-musl
     </a>
-  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-apple-darwin/rq">
-      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-apple-darwin/badge-small.svg?v=2"
-           alt="x86_64-apple-darwin">
-      x86_64-apple-darwin
-    </a>
-  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-apple-darwin/rq">
-      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-apple-darwin/badge-small.svg?v=2"
-           alt="i686-apple-darwin">
-      i686-apple-darwin
-    </a>
   * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-gnu/rq">
       <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-gnu/badge-small.svg?v=2"
            alt="i686-unknown-linux-gnu">
@@ -54,20 +44,45 @@ your architecture.
            alt="i686-unknown-linux-musl">
       i686-unknown-linux-musl
     </a>
+  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-apple-darwin/rq">
+      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-apple-darwin/badge-small.svg?v=2"
+           alt="x86_64-apple-darwin">
+      x86_64-apple-darwin
+    </a>
+  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-apple-darwin/rq">
+      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-apple-darwin/badge-small.svg?v=2"
+           alt="i686-apple-darwin">
+      i686-apple-darwin
+    </a>
   * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-gnueabi/rq">
       <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-gnueabi/badge-small.svg?v=2"
            alt="arm-unknown-linux-gnueabi">
       arm-unknown-linux-gnueabi
+    </a>
+  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-musleabi/rq">
+      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-musleabi/badge-small.svg?v=2"
+           alt="arm-unknown-linux-musleabi">
+      arm-unknown-linux-musleabi
     </a>
   * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-gnueabihf/rq">
       <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-gnueabihf/badge-small.svg?v=2"
            alt="arm-unknown-linux-gnueabihf">
       arm-unknown-linux-gnueabihf
     </a>
+  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-musleabihf/rq">
+      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-musleabihf/badge-small.svg?v=2"
+           alt="arm-unknown-linux-musleabihf">
+      arm-unknown-linux-musleabihf
+    </a>
   * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/armv7-unknown-linux-gnueabihf/rq">
       <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/armv7-unknown-linux-gnueabihf/badge-small.svg?v=2"
            alt="armv7-unknown-linux-gnueabihf">
       armv7-unknown-linux-gnueabihf
+    </a>
+  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/armv7-unknown-linux-musleabihf/rq">
+      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/armv7-unknown-linux-musleabihf/badge-small.svg?v=2"
+           alt="armv7-unknown-linux-musleabihf">
+      armv7-unknown-linux-musleabihf
     </a>
 
 You need to manually put the downloaded file in e.g. `/usr/local/bin`
