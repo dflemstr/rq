@@ -136,10 +136,10 @@ operating systems and architectures.
   </tbody>
 </table>
 
-<a name="foot1"><sup>1</sup></a> For example Raspberry Pi 1 (A and B) running Raspbian.
-<a name="foot2"><sup>2</sup></a> For example Raspberry Pi 1 (A and B) running Arch Linux.
-<a name="foot3"><sup>3</sup></a> For example Raspberry Pi 2+.
-<a name="foot4"><sup>4</sup></a> Requires a recent version of `glibc`/`libstdc++`, so use musl if possible.
+<a name="foot1"><sup>1</sup></a> For example Raspberry Pi 1 (A and B) running Raspbian. <br/>
+<a name="foot2"><sup>2</sup></a> For example Raspberry Pi 1 (A and B) running Arch Linux. <br/>
+<a name="foot3"><sup>3</sup></a> For example Raspberry Pi 2+. <br/>
+<a name="foot4"><sup>4</sup></a> Requires a recent version of `glibc`/`libstdc++`, so use musl if possible. <br/>
 <a name="foot5"><sup>5</sup></a> Completely statically linked; only depends on a recent kernel version.
 
 ## Format support status
