@@ -71,6 +71,7 @@ function install-rust {
         curl "https://sh.rustup.rs" -sSLfo rustup.sh
         sh rustup.sh -y
         source ~/.cargo/env
+        rustup override set nightly
         rustup target add "$TARGET" || true
     fi
 }
@@ -104,7 +105,10 @@ rustflags = [${lib_search_args%,}]
 EOF
     elif [[ "$TARGET" != *darwin* ]]
     then
-        extra_args='"-l", "static=stdc++"'
+        if [[ "$TARGET" == *musl* ]]
+        then extra_args='"-l", "static=stdc++", "-l", "static=gcc"'
+        else extra_args='"-l", "static=stdc++"'
+        fi
 
         target_search_args=$(print-gcc-search-args "$TARGET-g++")
         host_search_args=$(print-gcc-search-args "g++")
