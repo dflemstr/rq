@@ -47,31 +47,31 @@ operating systems and architectures.
       <th>Linux <code>glibc</code><a href="#foot4"><sup>4</sup></a></th>
       <td>
         <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-gnu/rq">
-          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-gnu/badge-small.svg?v=2"
+          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-gnu/badge-small.svg?v=3"
                alt="i686-unknown-linux-gnu">
         </a>
       </td>
       <td>
         <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-unknown-linux-gnu/rq">
-          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-unknown-linux-gnu/badge-small.svg?v=2"
+          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-unknown-linux-gnu/badge-small.svg?v=3"
                alt="x86_64-unknown-linux-gnu">
         </a>
       </td>
       <td>
         <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-gnueabi/rq">
-          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-gnueabi/badge-small.svg?v=2"
+          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-gnueabi/badge-small.svg?v=3"
                alt="arm-unknown-linux-gnueabi">
         </a>
       </td>
       <td>
         <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-gnueabihf/rq">
-          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-gnueabihf/badge-small.svg?v=2"
+          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-gnueabihf/badge-small.svg?v=3"
                alt="arm-unknown-linux-gnueabihf">
         </a>
       </td>
       <td>
         <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/armv7-unknown-linux-gnueabihf/rq">
-          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/armv7-unknown-linux-gnueabihf/badge-small.svg?v=2"
+          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/armv7-unknown-linux-gnueabihf/badge-small.svg?v=3"
                alt="armv7-unknown-linux-gnueabihf">
         </a>
       </td>
@@ -80,31 +80,31 @@ operating systems and architectures.
       <th>Linux <code>musl</code><a href="#foot5"><sup>5</sup></a></th>
       <td>
         <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-musl/rq">
-          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-musl/badge-small.svg?v=2"
+          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-musl/badge-small.svg?v=3"
                alt="i686-unknown-linux-musl">
         </a>
       </td>
       <td>
         <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-unknown-linux-musl/rq">
-          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-unknown-linux-musl/badge-small.svg?v=2"
+          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-unknown-linux-musl/badge-small.svg?v=3"
                alt="x86_64-unknown-linux-musl">
         </a>
       </td>
       <td>
         <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-musleabi/rq">
-          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-musleabi/badge-small.svg?v=2"
+          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-musleabi/badge-small.svg?v=3"
                alt="arm-unknown-linux-musleabi">
         </a>
       </td>
       <td>
         <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-musleabihf/rq">
-          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-musleabihf/badge-small.svg?v=2"
+          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-musleabihf/badge-small.svg?v=3"
                alt="arm-unknown-linux-musleabihf">
         </a>
       </td>
       <td>
         <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/armv7-unknown-linux-musleabihf/rq">
-          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/armv7-unknown-linux-musleabihf/badge-small.svg?v=2"
+          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/armv7-unknown-linux-musleabihf/badge-small.svg?v=3"
                alt="armv7-unknown-linux-musleabihf">
         </a>
       </td>
@@ -113,13 +113,13 @@ operating systems and architectures.
       <th>Mac OS X</th>
       <td>
         <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-apple-darwin/rq">
-          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-apple-darwin/badge-small.svg?v=2"
+          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-apple-darwin/badge-small.svg?v=3"
                alt="i686-apple-darwin">
         </a>
       </td>
       <td>
         <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-apple-darwin/rq">
-          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-apple-darwin/badge-small.svg?v=2"
+          <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-apple-darwin/badge-small.svg?v=3"
                alt="x86_64-apple-darwin">
         </a>
       </td>
