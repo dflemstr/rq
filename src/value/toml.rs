@@ -59,10 +59,10 @@ impl<W> value::Sink for TomlSink<W>
         let mut e = toml::Encoder::new();
         match serde::Serialize::serialize(&value, &mut e) {
             Ok(()) => (),
-            Err(toml::Error::NeedsKey) =>
-                return Err("TOML document needs to have a table at the root".into()),
-            Err(e) =>
-                return Err(e.into()),
+            Err(toml::Error::NeedsKey) => {
+                return Err("TOML document needs to have a table at the root".into())
+            },
+            Err(e) => return Err(e.into()),
         }
 
         match panic::catch_unwind(move || toml::Value::Table(e.toml).to_string()) {
@@ -76,7 +76,7 @@ impl<W> value::Sink for TomlSink<W>
 
                 // rethrow otherwise
                 panic::resume_unwind(cause);
-            }
+            },
         }
 
         try!(self.0.write_all(b"\n"));

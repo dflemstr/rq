@@ -12,8 +12,8 @@ use value;
 const API_JS: &'static str = include_str!("../api.js");
 const PRELUDE_JS: &'static str = include_str!("../prelude.js");
 
-const MODULES: &'static [(&'static str, &'static str)] =
-    &[("lodash", include_str!("../js/lodash.js"))];
+const MODULES: &'static [(&'static str, &'static str)] = &[("lodash",
+                                                            include_str!("../js/lodash.js"))];
 
 #[derive(Debug)]
 pub struct Context {
@@ -243,7 +243,10 @@ fn build_log_fun(isolate: &v8::Isolate, outer_context: &v8::Context) -> v8::valu
                              Box::new(move |mut info| {
         let isolate = info.isolate;
         if info.args.len() < 2 {
-            v8::value::undefined(&isolate).into()
+            let message = v8::value::String::from_str(&isolate,
+                                                      "log() called with too few arguments, \
+                                                       requires at least two");
+            Err(v8::value::Exception::error(&isolate, &message).into())
         } else if let (Some(level), Some(name)) = (info.args.remove(0).into_int32(),
                                                    info.args.remove(0).into_string()) {
             let level = match level.value() {
@@ -267,9 +270,14 @@ fn build_log_fun(isolate: &v8::Isolate, outer_context: &v8::Context) -> v8::valu
                 log!(level, "{}: {}", name, args);
             }
 
-            v8::value::undefined(&isolate).into()
+            Ok(v8::value::undefined(&isolate).into())
         } else {
-            v8::value::undefined(&isolate).into()
+            let message = v8::value::String::from_str(&isolate,
+                                                      &format!("log() called with bad \
+                                                                arguments, the first two \
+                                                                arguments should be an int and \
+                                                                a string"));
+            Err(v8::value::Exception::error(&isolate, &message).into())
         }
     }))
 }
@@ -285,19 +293,27 @@ fn build_require(isolate: &v8::Isolate, outer_context: &v8::Context) -> v8::valu
                              Box::new(move |mut info| {
         let isolate = info.isolate;
         if info.args.len() < 1 {
-            v8::value::undefined(&isolate).into()
+            let message = v8::value::String::from_str(&isolate,
+                                                      "require() called without any arguments");
+            Err(v8::value::Exception::error(&isolate, &message).into())
         } else if let Some(required_name) = info.args.remove(0).into_string() {
             let required_name = required_name.value();
 
             for &(name, source) in MODULES.iter() {
                 if name == required_name {
-                    return load_module(&isolate, &context, &module_cache, name, source);
+                    return Ok(load_module(&isolate, &context, &module_cache, name, source));
                 }
             }
 
-            v8::value::undefined(&isolate).into()
+            let message = v8::value::String::from_str(&isolate,
+                                                      &format!("module not found: {:?}",
+                                                               required_name));
+            Err(v8::value::Exception::error(&isolate, &message).into())
         } else {
-            v8::value::undefined(&isolate).into()
+            let message = v8::value::String::from_str(&isolate,
+                                                      "require() called with a non-string \
+                                                       argument");
+            Err(v8::value::Exception::error(&isolate, &message).into())
         }
     }))
 }

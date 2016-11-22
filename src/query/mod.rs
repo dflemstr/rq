@@ -288,7 +288,8 @@ mod test {
     #[test]
     fn parse_process_js_arg_nested_parens() {
         let expected = Query(vec![Process("map".to_owned(),
-                                          vec![Expression::Javascript("x => Math.floor(x)".to_owned())])]);
+                                          vec![Expression::Javascript("x => Math.floor(x)"
+                                                   .to_owned())])]);
         let actual = Query::parse("map (x => Math.floor(x))").unwrap();
 
         assert_eq!(expected, actual);
