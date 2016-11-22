@@ -50,6 +50,9 @@ version = "*"
 [dependencies.v8]
 git = "https://github.com/dflemstr/v8-rs.git"
 
+[features]
+shared = "v8/shared"
+
 [profile]
 
 [profile.release]
