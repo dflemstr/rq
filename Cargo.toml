@@ -51,7 +51,7 @@ version = "*"
 git = "https://github.com/dflemstr/v8-rs.git"
 
 [features]
-shared = "v8/shared"
+shared = ["v8/shared"]
 
 [profile]
 
