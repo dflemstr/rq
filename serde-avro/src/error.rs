@@ -5,7 +5,7 @@ use std::string;
 
 error_chain! {
     types {
-        Error, ErrorKind, ChainErr, Result;
+        Error, ErrorKind, Result;
     }
 
     links {

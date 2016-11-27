@@ -144,7 +144,9 @@ impl<R> Blocks<R>
                 let actual_crc = crc::crc32::checksum_ieee(&buffer);
 
                 if expected_crc != actual_crc {
-                    let m = format!("bad CRC32; expected {:x} but got {:x}", expected_crc, actual_crc);
+                    let m = format!("bad CRC32; expected {:x} but got {:x}",
+                                    expected_crc,
+                                    actual_crc);
                     return Err(io::Error::new(io::ErrorKind::InvalidInput, m));
                 }
             },

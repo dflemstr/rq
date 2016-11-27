@@ -1,4 +1,5 @@
-use error::{Error, ErrorKind, ChainErr, Result};
+use error::{Error, ErrorKind, Result};
+use error_chain::ResultExt;
 
 use linked_hash_map;
 use serde_json;
@@ -153,7 +154,7 @@ impl SchemaRegistry {
                 }
                 Ok(None)
             },
-            _ => self.create_schema_ref(None, json).map(Some)
+            _ => self.create_schema_ref(None, json).map(Some),
         }
     }
 
@@ -167,7 +168,6 @@ impl SchemaRegistry {
                          -> Result<SchemaRef> {
         use serde_json::Value;
         use serde_json::Value::*;
-        use error::ChainErr;
 
         match *json {
             String(ref name) => {
@@ -181,7 +181,7 @@ impl SchemaRegistry {
                 let name = try!(obj.get("type")
                     .and_then(Value::as_str)
                     .ok_or(Error::from(ErrorKind::InvalidSchema))
-                    .chain_err(|| ErrorKind::FieldTypeMismatch("type", "string")));
+                    .chain_err(|| ErrorKind::FieldTypeMismatch("type", "string")) as Result<&str>);
                 if let Some(primitive) = primitive_schema(name) {
                     Ok(primitive)
                 } else {
@@ -236,7 +236,7 @@ impl SchemaRegistry {
                     .map(ToOwned::to_owned)
                     .map(Some)
                     .ok_or(Error::from(ErrorKind::InvalidSchema))
-                    .chain_err(|| ErrorKind::FieldTypeMismatch("doc", "string"))
+                    .chain_err(|| ErrorKind::FieldTypeMismatch("doc", "string"))  as Result<Option<String>>
             })
             .unwrap_or(Ok(None)));
 
@@ -262,17 +262,17 @@ impl SchemaRegistry {
                     .map(ToOwned::to_owned)
                     .map(Some)
                     .ok_or(Error::from(ErrorKind::InvalidSchema))
-                    .chain_err(|| ErrorKind::FieldTypeMismatch("doc", "string"))
+                    .chain_err(|| ErrorKind::FieldTypeMismatch("doc", "string"))  as Result<Option<String>>
             })
             .unwrap_or(Ok(None)));
 
         let symbols_array = try!(obj.get("symbols")
             .ok_or(Error::from(ErrorKind::InvalidSchema))
-            .chain_err(|| ErrorKind::RequiredFieldMissing("symbols")));
+            .chain_err(|| ErrorKind::RequiredFieldMissing("symbols"))  as Result<&serde_json::Value>);
         let symbols = try!(symbols_array.as_array()
             .and_then(|vs| vs.iter().map(|v| v.as_str().map(|s| s.to_owned())).collect())
             .ok_or(Error::from(ErrorKind::InvalidSchema))
-            .chain_err(|| ErrorKind::FieldTypeMismatch("symbols", "array of strings")));
+            .chain_err(|| ErrorKind::FieldTypeMismatch("symbols", "array of strings"))  as Result<Vec<String>>);
 
         self.schemata.push(Schema::Enum(EnumSchema {
             name: schema_name,
@@ -289,7 +289,7 @@ impl SchemaRegistry {
                     -> Result<SchemaRef> {
         let items = try!(obj.get("items")
             .ok_or(Error::from(ErrorKind::InvalidSchema))
-            .chain_err(|| ErrorKind::RequiredFieldMissing("items")));
+            .chain_err(|| ErrorKind::RequiredFieldMissing("items"))  as Result<&serde_json::Value>);
         let items_schema = try!(self.create_schema_ref(namespace, items));
 
         Ok(SchemaRef::Direct(Schema::Array(Box::new(items_schema))))
@@ -301,7 +301,7 @@ impl SchemaRegistry {
                   -> Result<SchemaRef> {
         let values = try!(obj.get("values")
             .ok_or(Error::from(ErrorKind::InvalidSchema))
-            .chain_err(|| ErrorKind::RequiredFieldMissing("values")));
+            .chain_err(|| ErrorKind::RequiredFieldMissing("values"))  as Result<&serde_json::Value>);
         let values_schema = try!(self.create_schema_ref(namespace, values));
 
         Ok(SchemaRef::Direct(Schema::Map(Box::new(values_schema))))
@@ -322,12 +322,12 @@ impl SchemaRegistry {
                     .ok_or(Error::from(ErrorKind::InvalidSchema))
                     .chain_err(|| ErrorKind::FieldTypeMismatch("doc", "string"))
             })
-            .unwrap_or(Ok(None)));
+            .unwrap_or(Ok(None)) as Result<Option<String>>);
 
         let size = try!(obj.get("size")
             .and_then(serde_json::Value::as_i64)
             .ok_or(Error::from(ErrorKind::InvalidSchema))
-            .chain_err(|| ErrorKind::RequiredFieldMissing("size")));
+            .chain_err(|| ErrorKind::RequiredFieldMissing("size")) as Result<i64>);
 
         self.schemata.push(Schema::Fixed(FixedSchema {
             name: schema_name,
@@ -361,7 +361,7 @@ impl SchemaRegistry {
         let name = try!(json.find("name")
             .and_then(serde_json::Value::as_str)
             .ok_or(Error::from(ErrorKind::InvalidSchema))
-            .chain_err(|| ErrorKind::RequiredFieldMissing("name")));
+            .chain_err(|| ErrorKind::RequiredFieldMissing("name")) as Result<&str>);
         let doc = try!(json.find("doc")
             .map(|v| {
                 v.as_str()
@@ -370,11 +370,11 @@ impl SchemaRegistry {
                     .ok_or(Error::from(ErrorKind::InvalidSchema))
                     .chain_err(|| ErrorKind::FieldTypeMismatch("doc", "string"))
             })
-            .unwrap_or(Ok(None)));
+            .unwrap_or(Ok(None)) as Result<Option<String>>);
         let field_type = try!(json.find("type")
             .ok_or(Error::from(ErrorKind::InvalidSchema))
             .chain_err(|| ErrorKind::RequiredFieldMissing("name"))
-            .and_then(|t| self.create_schema_ref(namespace, t)));
+            .and_then(|t| self.create_schema_ref(namespace, t)) as Result<SchemaRef>);
 
         let schema = FieldSchema {
             name: name.to_owned(),
@@ -495,12 +495,12 @@ fn full_name<'a>(namespace: Option<&'a str>,
                 .ok_or(Error::from(ErrorKind::InvalidSchema))
                 .chain_err(|| ErrorKind::FieldTypeMismatch("namespace", "string"))
         })
-        .unwrap_or(Ok(namespace)));
+        .unwrap_or(Ok(namespace)) as Result<Option<&str>>);
 
     let name = try!(obj.get("name")
         .and_then(serde_json::Value::as_str)
         .ok_or(Error::from(ErrorKind::InvalidSchema))
-        .chain_err(|| ErrorKind::RequiredFieldMissing("name")));
+        .chain_err(|| ErrorKind::RequiredFieldMissing("name")) as Result<&str>);
 
     if let Some(ns) = namespace {
         Ok((Some(ns), format!("{}.{}", ns, name)))
