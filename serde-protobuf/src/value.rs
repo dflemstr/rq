@@ -134,8 +134,8 @@ impl Field {
             Enum(_) => self.merge_enum(input, wire_type),
             Message(ref m) => self.merge_message(input, descriptors, m, wire_type),
             Group => unimplemented!(),
-            UnresolvedEnum(e) => Err(error::Error::UnknownEnum(e.to_owned())),
-            UnresolvedMessage(m) => Err(error::Error::UnknownMessage(m.to_owned())),
+            UnresolvedEnum(e) => Err(error::ErrorKind::UnknownEnum(e.to_owned()).into()),
+            UnresolvedMessage(m) => Err(error::ErrorKind::UnknownMessage(m.to_owned()).into()),
         }
     }
 
@@ -154,7 +154,7 @@ impl Field {
             self.put(value_ctor(try!(reader(input))));
             Ok(())
         } else {
-            Err(error::Error::BadWireType(actual_wire_type))
+            Err(error::ErrorKind::BadWireType(actual_wire_type).into())
         }
     }
 
@@ -198,7 +198,7 @@ impl Field {
             self.put(Value::Enum(v));
             Ok(())
         } else {
-            Err(error::Error::BadWireType(actual_wire_type))
+            Err(error::ErrorKind::BadWireType(actual_wire_type).into())
         }
     }
 
@@ -225,7 +225,7 @@ impl Field {
             self.put(Value::Message(msg));
             Ok(())
         } else {
-            Err(error::Error::BadWireType(actual_wire_type))
+            Err(error::ErrorKind::BadWireType(actual_wire_type).into())
         }
     }
 

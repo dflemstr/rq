@@ -132,7 +132,7 @@ impl<'a> Deserializer<'a> {
         if let Some(message) = descriptors.message_by_name(message_name) {
             Ok(Deserializer::new(descriptors, message, input))
         } else {
-            Err(error::Error::UnknownMessage(message_name.to_owned()))
+            Err(error::ErrorKind::UnknownMessage(message_name.to_owned()).into())
         }
     }
 }

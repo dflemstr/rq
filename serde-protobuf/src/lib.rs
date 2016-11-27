@@ -12,6 +12,8 @@
 //! Serialization is not yet implemented in this version.
 //!
 //! [1]: https://developers.google.com/protocol-buffers/
+#[macro_use]
+extern crate error_chain;
 extern crate linked_hash_map;
 #[macro_use]
 extern crate log;

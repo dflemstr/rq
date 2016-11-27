@@ -11,6 +11,7 @@ repository = "https://github.com/dflemstr/rq/tree/master/serde-protobuf"
 version = "0.3.0"
 
 [dependencies]
+error-chain = "0.6.2"
 linked-hash-map = "0.3.0"
 log = "0.3.6"
 protobuf = "1.0.24"
