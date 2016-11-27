@@ -4,13 +4,6 @@ use std::io;
 use std::string;
 
 error_chain! {
-    types {
-        Error, ErrorKind, Result;
-    }
-
-    links {
-    }
-
     foreign_links {
         io::Error, IO;
         string::FromUtf8Error, Utf8;
