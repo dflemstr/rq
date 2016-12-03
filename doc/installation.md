@@ -11,11 +11,11 @@ There are many different ways to install `rq`.
 ## Generic
 
 There is a generic best-effort installer available via the dreaded
-`curl | sh` method.  This is the preferred method, because you don't
+`curl | bash` method.  This is the preferred method, because you don't
 need to compile `rq` from scratch, and you always get the latest
 version.
 
-    curl -sSLf https://sh.dflemstr.name/rq | sh
+    curl -sSLf https://sh.dflemstr.name/rq | bash
 
 ## Manual download
 
