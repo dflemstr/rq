@@ -4,7 +4,7 @@ use serde;
 
 error_chain! {
     foreign_links {
-        protobuf::ProtobufError, Protobuf;
+        Protobuf(protobuf::ProtobufError);
     }
 
     errors {
