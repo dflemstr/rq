@@ -1,5 +1,3 @@
-
-
 use error;
 use protobuf;
 use serde;
@@ -23,11 +21,12 @@ pub fn source<'a>(descriptors: &'a descriptor::Descriptors,
 impl<'a> value::Source for ProtobufSource<'a> {
     #[inline]
     fn read(&mut self) -> error::Result<Option<value::Value>> {
+        use serde_protobuf::error as e;
         if self.1 {
             self.1 = false;
             match serde::Deserialize::deserialize(&mut self.0) {
                 Ok(v) => Ok(Some(v)),
-                Err(serde_protobuf::error::Error::EndOfStream) => Ok(None),
+                Err(e::Error(e::ErrorKind::EndOfStream, _)) => Ok(None),
                 Err(e) => Err(error::Error::from(e)),
             }
         } else {

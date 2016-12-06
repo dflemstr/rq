@@ -1,5 +1,3 @@
-
-
 use glob;
 use protobuf;
 use rmp;
@@ -17,33 +15,29 @@ use xdg_basedir;
 use yaml_rust;
 
 error_chain! {
-    types {
-        Error, ErrorKind, ChainErr, Result;
-    }
-
     links {
-        serde_avro::error::Error, serde_avro::error::ErrorKind, Avro;
-        v8::error::Error, v8::error::ErrorKind, V8;
+        Avro(serde_avro::error::Error, serde_avro::error::ErrorKind);
+        Protobuf(serde_protobuf::error::Error, serde_protobuf::error::ErrorKind);
+        V8(v8::error::Error, v8::error::ErrorKind);
     }
 
     foreign_links {
-        io::Error, IO;
-        string::FromUtf8Error, Utf8;
-        protobuf::ProtobufError, NativeProtobuf;
-        rmp::decode::value::Error, MessagePackDecode;
-        rmp::encode::value::Error, MessagePackEncode;
-        serde_cbor::Error, Cbor;
-        serde_hjson::Error, Hjson;
-        serde_json::Error, Json;
-        serde_protobuf::Error, Protobuf;
-        serde_yaml::Error, Yaml;
-        yaml_rust::ScanError, YamlDecode;
-        toml::ParserError, TomlParse;
-        toml::DecodeError, TomlDecode;
-        toml::Error, TomlEncode;
-        xdg_basedir::Error, XdgBasedir;
-        glob::GlobError, Glob;
-        glob::PatternError, GlobPattern;
+        IO(io::Error);
+        Utf8(string::FromUtf8Error);
+        NativeProtobuf(protobuf::ProtobufError);
+        MessagePackDecode(rmp::decode::value::Error);
+        MessagePackEncode(rmp::encode::value::Error);
+        Cbor(serde_cbor::Error);
+        Hjson(serde_hjson::Error);
+        Json(serde_json::Error);
+        Yaml(serde_yaml::Error);
+        YamlDecode(yaml_rust::ScanError);
+        TomlParse(toml::ParserError);
+        TomlDecode(toml::DecodeError);
+        TomlEncode(toml::Error);
+        XdgBasedir(xdg_basedir::Error);
+        Glob(glob::GlobError);
+        GlobPattern(glob::PatternError);
     }
 
     errors {
