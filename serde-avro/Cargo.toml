@@ -20,7 +20,7 @@ version = "0.8.4"
 [dependencies]
 byteorder = "0.5.3"
 crc = "1.3.0"
-error-chain = "0.6.0"
+error-chain = "0.7.1"
 flate2 = "0.2.14"
 lazy_static = "0.2.1"
 linked-hash-map = "0.3.0"

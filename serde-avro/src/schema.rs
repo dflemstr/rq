@@ -1,5 +1,4 @@
-use error::{Error, ErrorKind, Result};
-use error_chain::ResultExt;
+use error::{Error, ErrorKind, Result, ResultExt};
 
 use linked_hash_map;
 use serde_json;

@@ -5,9 +5,9 @@ use std::string;
 
 error_chain! {
     foreign_links {
-        io::Error, IO;
-        string::FromUtf8Error, Utf8;
-        serde_json::Error, JsonDecode;
+        IO(io::Error);
+        Utf8(string::FromUtf8Error);
+        JsonDecode(serde_json::Error);
     }
 
     errors {
