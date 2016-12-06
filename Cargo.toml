@@ -6,31 +6,31 @@ name = "record-query"
 version = "0.9.2"
 
 [build-dependencies]
-env_logger = "*"
-regex = "*"
+env_logger = "0.3.5"
+regex = "0.1.80"
 
 [dependencies]
-ansi_term = "*"
-docopt = "*"
-dtoa = "*"
-env_logger = "*"
+ansi_term = "0.9.0"
+docopt = "0.6.86"
+dtoa = "0.2.2"
+env_logger = "0.3.5"
 error-chain = "0.7.1"
-glob = "*"
-itoa = "*"
-log = "*"
-nix = "*"
-ordered-float = "*"
-pest = "*"
-protobuf = "*"
-rmp = "*"
-rustc-serialize = "*"
-serde = "*"
-serde-hjson = "*"
-serde_cbor = "*"
-serde_yaml = "*"
+glob = "0.2.11"
+itoa = "0.1.1"
+log = "0.3.6"
+nix = "0.7.0"
+ordered-float = "0.3.0"
+pest = "0.4.0"
+protobuf = "1.0.24"
+rmp = "0.7.5"
+rustc-serialize = "0.3.21"
+serde = "0.8.19"
+serde-hjson = "0.8.1"
+serde_cbor = "0.4.0"
+serde_yaml = "0.5.0"
 v8 = "0.9.1"
-xdg-basedir = "*"
-yaml-rust = "*"
+xdg-basedir = "1.0.0"
+yaml-rust = "0.3.5"
 
 [dependencies.serde-avro]
 path = "serde-avro"
@@ -46,7 +46,7 @@ git = "https://github.com/serde-rs/json.git"
 
 [dependencies.toml]
 features = ["serde"]
-version = "*"
+version = "0.2.1"
 
 [features]
 shared = ["v8/shared"]
