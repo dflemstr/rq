@@ -67,15 +67,15 @@ function apt-install {
 }
 
 function install-rust {
-    if ! which cargo &>/dev/null
+    if [ ! -d ~/.cargo ]
     then
         curl "https://sh.rustup.rs" -sSLfo rustup.sh
         sh rustup.sh -y
-        source ~/.cargo/env
-        # Set back to nightly when this is resolved: https://github.com/rust-lang/cargo/issues/3340
-        rustup override set nightly-2016-11-25
-        rustup target add "$TARGET" || true
     fi
+    source ~/.cargo/env
+    # Set back to nightly when this is resolved: https://github.com/rust-lang/cargo/issues/3340
+    rustup override set nightly-2016-11-25
+    rustup target add "$TARGET" || true
 }
 
 function install-v8 {
