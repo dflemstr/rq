@@ -73,8 +73,7 @@ function install-rust {
         sh rustup.sh -y
     fi
     source ~/.cargo/env
-    # Set back to nightly when this is resolved: https://github.com/rust-lang/cargo/issues/3340
-    rustup override set nightly-2016-11-25
+    rustup override set nightly
     rustup target add "$TARGET" || true
 }
 
