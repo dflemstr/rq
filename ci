@@ -67,7 +67,7 @@ function apt-install {
 }
 
 function install-rust {
-    if [ ! -d ~/.cargo ]
+    if [ ! -f ~/.cargo/env ]
     then
         curl "https://sh.rustup.rs" -sSLfo rustup.sh
         sh rustup.sh -y
