@@ -1,4 +1,3 @@
-#![feature(trace_macros)]
 // For pest parser generation
 #![recursion_limit = "1024"]
 
