@@ -37,14 +37,14 @@ operating systems and architectures.
     <tr>
       <th>i686</th>
       <th>x86_64</th>
-      <th>v6<a href="#foot1"><sup>1</sup></a></th>
-      <th>v6 HF<a href="#foot2"><sup>2</sup></a></th>
-      <th>v7<a href="#foot3"><sup>3</sup></a></th>
+      <th>v6<a href="#user-content-foot1"><sup>1</sup></a></th>
+      <th>v6 HF<a href="#user-content-foot2"><sup>2</sup></a></th>
+      <th>v7<a href="#user-content-foot3"><sup>3</sup></a></th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>Linux <code>glibc</code><a href="#foot4"><sup>4</sup></a></th>
+      <th>Linux <code>glibc</code><a href="#user-content-foot4"><sup>4</sup></a></th>
       <td>
         <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-gnu/rq">
           <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-gnu/badge-small.svg?v=3"
@@ -77,7 +77,7 @@ operating systems and architectures.
       </td>
     </tr>
     <tr>
-      <th>Linux <code>musl</code><a href="#foot5"><sup>5</sup></a></th>
+      <th>Linux <code>musl</code><a href="#user-content-foot5"><sup>5</sup></a></th>
       <td>
         <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-musl/rq">
           <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-musl/badge-small.svg?v=3"
