@@ -22,11 +22,11 @@ matrix:
         TARGET=i686-unknown-linux-gnu
         USE_DOCKER=true
         SKIP_TESTS=true
-    - os: linux
-      env: >
-        TARGET=i686-unknown-linux-musl
-        USE_DOCKER=true
-        SKIP_TESTS=true
+    #- os: linux
+    #  env: >
+    #    TARGET=i686-unknown-linux-musl
+    #    USE_DOCKER=true
+    #    SKIP_TESTS=true
     - os: linux
       env: >
         TARGET=arm-unknown-linux-gnueabi
