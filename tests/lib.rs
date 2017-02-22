@@ -15,10 +15,8 @@ mod js_doctest {
     use record_query::value;
 
     fn parse_json_stream(stream: &[u8]) -> Vec<serde_json::Value> {
-        use std::io::Read;
-
         let cursor = io::Cursor::new(stream);
-        let deserializer = serde_json::StreamDeserializer::new(cursor.bytes());
+        let deserializer = serde_json::Deserializer::from_reader(cursor).into_iter();
         deserializer.map(Result::unwrap).collect()
     }
 
@@ -32,7 +30,12 @@ mod js_doctest {
             let sink = value::json::sink_compact(&mut actual_output_bytes);
 
             let query = query::Query::parse(&query_str).unwrap();
-            record_query::run_query(&query, source, sink).map_err(|e| {println!("{}", e); e}).unwrap();
+            record_query::run_query(&query, source, sink)
+                .map_err(|e| {
+                    println!("{}", e);
+                    e
+                })
+                .unwrap();
         }
 
         let expected_output = parse_json_stream(expected_output_str.as_bytes());

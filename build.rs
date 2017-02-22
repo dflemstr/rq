@@ -41,15 +41,15 @@ fn gen_js_doctests() -> io::Result<()> {
 
     let re = regex::RegexBuilder::new(r"^[\s*]*(.*?)\s*→\s*(\w+)\s*(.*?)\s*→\s*(.*?)\s*$")
         .multi_line(true)
-        .compile()
+        .build()
         .unwrap();
     let mut ordinals = collections::HashMap::new();
 
     for cap in re.captures_iter(&source) {
-        let input = cap.at(1).unwrap().replace("(empty)", "").replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&").trim().to_owned();
-        let process = cap.at(2).unwrap().trim();
-        let args = cap.at(3).unwrap().replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&").trim().to_owned();
-        let output = cap.at(4).unwrap().replace("(empty)", "").replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&").trim().to_owned();
+        let input = cap.get(1).unwrap().as_str().replace("(empty)", "").replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&").trim().to_owned();
+        let process = cap.get(2).unwrap().as_str().trim();
+        let args = cap.get(3).unwrap().as_str().replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&").trim().to_owned();
+        let output = cap.get(4).unwrap().as_str().replace("(empty)", "").replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&").trim().to_owned();
 
         if output.contains("(not tested)") {
             continue;

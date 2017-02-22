@@ -14,6 +14,7 @@ extern crate ordered_float;
 extern crate pest;
 extern crate protobuf;
 extern crate rmp;
+extern crate rmpv;
 extern crate serde;
 extern crate serde_avro;
 extern crate serde_cbor;

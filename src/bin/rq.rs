@@ -190,19 +190,14 @@ fn run(args: &Args, paths: &rq::config::Paths) -> rq::error::Result<()> {
         let source = rq::value::messagepack::source(&mut input);
         run_source(args, paths, source)
     } else if args.flag_input_hjson {
-        if !try!(has_ran_help(paths)) {
-            warn!("You started rq in HJSON input mode (-h|--input-hjson).");
-            warn!("Maybe you meant to use --help?");
-            warn!("(Run rq --help once to suppress this warning)");
-        }
-
-        let source = try!(rq::value::hjson::source(&mut input));
-        run_source(args, paths, source)
+        Err(rq::error::Error::unimplemented("hjson deserialization (waiting for serde 0.9.0 \
+                                             support)"
+            .to_owned()))
     } else if args.flag_input_toml {
         let source = try!(rq::value::toml::source(&mut input));
         run_source(args, paths, source)
     } else if args.flag_input_yaml {
-        let source = try!(rq::value::yaml::source(&mut input));
+        let source = rq::value::yaml::source(&mut input);
         run_source(args, paths, source)
     } else {
         if !args.flag_input_json && !try!(has_ran_help(paths)) {
@@ -250,8 +245,9 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
         let sink = rq::value::messagepack::sink(&mut output);
         run_source_sink(args, paths, source, sink)
     } else if args.flag_output_hjson {
-        // TODO: add HJSON ugly printing eventually; now it's always "readable"
-        dispatch_format!(rq::value::hjson::sink, rq::value::hjson::sink)
+        Err(rq::error::Error::unimplemented("hjson serialization (waiting for serde 0.9.0 \
+                                             support)"
+                                            .to_owned()))
     } else if args.flag_output_toml {
         // TODO: add TOML ugly printing eventually; now it's always "readable"
         dispatch_format!(rq::value::toml::sink, rq::value::toml::sink)

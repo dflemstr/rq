@@ -1,6 +1,6 @@
 use glob;
 use protobuf;
-use rmp;
+use rmpv;
 use serde_avro;
 use serde_cbor;
 use serde_hjson;
@@ -25,22 +25,25 @@ error_chain! {
         IO(io::Error);
         Utf8(string::FromUtf8Error);
         NativeProtobuf(protobuf::ProtobufError);
-        MessagePackDecode(rmp::decode::value::Error);
-        MessagePackEncode(rmp::encode::value::Error);
+        MessagePackEncode(rmpv::encode::Error);
         Cbor(serde_cbor::Error);
         Hjson(serde_hjson::Error);
         Json(serde_json::Error);
         Yaml(serde_yaml::Error);
-        YamlDecode(yaml_rust::ScanError);
-        TomlParse(toml::ParserError);
-        TomlDecode(toml::DecodeError);
-        TomlEncode(toml::Error);
+        YamlScan(yaml_rust::ScanError);
+        TomlDeserialize(toml::de::Error);
+        TomlSerialize(toml::ser::Error);
         XdgBasedir(xdg_basedir::Error);
         Glob(glob::GlobError);
         GlobPattern(glob::PatternError);
     }
 
     errors {
+        // TODO: this should be a foreign_link but the type does not implement Display or Error
+        MessagePackDecode(cause: rmpv::decode::value::Error) {
+            description("message pack decode error")
+            display("message pack decode error: {}", format_rmpv_decode_cause(cause))
+        }
         Unimplemented(msg: String) {
             description("unimplemented")
             display("unimplemented: {}", msg)
@@ -67,5 +70,23 @@ impl Error {
 
     pub fn illegal_state(msg: String) -> Error {
         ErrorKind::IllegalState(msg).into()
+    }
+}
+
+fn format_rmpv_decode_cause(cause: &rmpv::decode::value::Error) -> String {
+    match *cause {
+        rmpv::decode::value::Error::InvalidMarkerRead(ref e) => {
+            format!("error while reading marker byte: {}", e)
+        },
+        rmpv::decode::value::Error::InvalidDataRead(ref e) => {
+            format!("error while reading data: {}", e)
+        },
+        rmpv::decode::value::Error::TypeMismatch(ref m) => {
+            format!("decoded value type isn't equal with the expected one: {:?}",
+                    m)
+        },
+        rmpv::decode::value::Error::FromUtf8Error(ref e) => {
+            format!("failed to properly decode UTF-8: {}", e)
+        },
     }
 }

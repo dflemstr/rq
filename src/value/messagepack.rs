@@ -1,10 +1,9 @@
-
-
-use error;
+use std::io;
 
 use ordered_float;
-use rmp;
-use std::io;
+use rmpv;
+
+use error;
 use value;
 
 pub struct MessagePackSource<R>(R) where R: io::Read;
@@ -30,13 +29,14 @@ impl<R> value::Source for MessagePackSource<R>
 {
     #[inline]
     fn read(&mut self) -> error::Result<Option<value::Value>> {
-        use rmp::decode::value::Error;
-        use rmp::decode::ReadError;
+        use rmpv::decode::value::Error;
 
-        match rmp::decode::value::read_value(&mut self.0) {
+        match rmpv::decode::value::read_value(&mut self.0) {
             Ok(v) => Ok(Some(value_from_message_pack(v))),
-            Err(Error::InvalidMarkerRead(ReadError::UnexpectedEOF)) => Ok(None),
-            Err(e) => Err(error::Error::from(e)),
+            Err(Error::InvalidMarkerRead(ref e)) if e.kind() == io::ErrorKind::UnexpectedEof => {
+                Ok(None)
+            },
+            Err(e) => Err(error::ErrorKind::MessagePackDecode(e).into()),
         }
     }
 }
@@ -46,21 +46,19 @@ impl<W> value::Sink for MessagePackSink<W>
 {
     #[inline]
     fn write(&mut self, v: value::Value) -> error::Result<()> {
-        rmp::encode::value::write_value(&mut self.0, &value_to_message_pack(v)).map_err(From::from)
+        rmpv::encode::write_value(&mut self.0, &value_to_message_pack(v)).map_err(From::from)
     }
 }
 
-fn value_from_message_pack(value: rmp::Value) -> value::Value {
-    use rmp::value::Value;
-    use rmp::value::Integer;
-    use rmp::value::Float;
+fn value_from_message_pack(value: rmpv::Value) -> value::Value {
+    use rmpv::Value;
     match value {
         Value::Nil => value::Value::Unit,
         Value::Boolean(v) => value::Value::Bool(v),
-        Value::Integer(Integer::U64(v)) => value::Value::U64(v),
-        Value::Integer(Integer::I64(v)) => value::Value::I64(v),
-        Value::Float(Float::F32(v)) => value::Value::from_f32(v),
-        Value::Float(Float::F64(v)) => value::Value::from_f64(v),
+        Value::U64(v) => value::Value::U64(v),
+        Value::I64(v) => value::Value::I64(v),
+        Value::F32(v) => value::Value::from_f32(v),
+        Value::F64(v) => value::Value::from_f64(v),
         Value::String(v) => value::Value::String(v),
         Value::Binary(v) => value::Value::Bytes(v),
         Value::Array(v) => {
@@ -75,28 +73,24 @@ fn value_from_message_pack(value: rmp::Value) -> value::Value {
     }
 }
 
-fn value_to_message_pack(value: value::Value) -> rmp::Value {
-    use rmp::value::Value;
-    use rmp::value::Integer;
-    use rmp::value::Float;
+fn value_to_message_pack(value: value::Value) -> rmpv::Value {
+    use rmpv::Value;
     match value {
         value::Value::Unit => Value::Nil,
         value::Value::Bool(v) => Value::Boolean(v),
 
-        value::Value::ISize(v) => Value::Integer(Integer::I64(v as i64)),
-        value::Value::I8(v) => Value::Integer(Integer::I64(v as i64)),
-        value::Value::I16(v) => Value::Integer(Integer::I64(v as i64)),
-        value::Value::I32(v) => Value::Integer(Integer::I64(v as i64)),
-        value::Value::I64(v) => Value::Integer(Integer::I64(v)),
+        value::Value::I8(v) => Value::I64(v as i64),
+        value::Value::I16(v) => Value::I64(v as i64),
+        value::Value::I32(v) => Value::I64(v as i64),
+        value::Value::I64(v) => Value::I64(v),
 
-        value::Value::USize(v) => Value::Integer(Integer::U64(v as u64)),
-        value::Value::U8(v) => Value::Integer(Integer::U64(v as u64)),
-        value::Value::U16(v) => Value::Integer(Integer::U64(v as u64)),
-        value::Value::U32(v) => Value::Integer(Integer::U64(v as u64)),
-        value::Value::U64(v) => Value::Integer(Integer::U64(v)),
+        value::Value::U8(v) => Value::U64(v as u64),
+        value::Value::U16(v) => Value::U64(v as u64),
+        value::Value::U32(v) => Value::U64(v as u64),
+        value::Value::U64(v) => Value::U64(v),
 
-        value::Value::F32(ordered_float::OrderedFloat(v)) => Value::Float(Float::F32(v)),
-        value::Value::F64(ordered_float::OrderedFloat(v)) => Value::Float(Float::F64(v)),
+        value::Value::F32(ordered_float::OrderedFloat(v)) => Value::F32(v),
+        value::Value::F64(ordered_float::OrderedFloat(v)) => Value::F64(v),
 
         value::Value::Char(v) => Value::String(format!("{}", v)),
         value::Value::String(v) => Value::String(v),
