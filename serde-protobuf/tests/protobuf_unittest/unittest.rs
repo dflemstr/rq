@@ -7,16 +7,21 @@
 
 #![cfg_attr(rustfmt, rustfmt_skip)]
 
+#![allow(box_pointers)]
 #![allow(dead_code)]
+#![allow(missing_docs)]
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 #![allow(non_upper_case_globals)]
+#![allow(trivial_casts)]
+#![allow(unsafe_code)]
 #![allow(unused_imports)]
+#![allow(unused_results)]
 
 use protobuf::Message as Message_imported_for_functions;
 use protobuf::ProtobufEnum as ProtobufEnum_imported_for_functions;
 
-#[derive(Clone,Default)]
+#[derive(PartialEq,Clone,Default)]
 pub struct TestAllTypes {
     // message fields
     optional_int32: ::std::option::Option<i32>,
@@ -92,7 +97,7 @@ pub struct TestAllTypes {
     oneof_field: ::std::option::Option<TestAllTypes_oneof_oneof_field>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -117,82 +122,7 @@ impl TestAllTypes {
             ptr: 0 as *const TestAllTypes,
         };
         unsafe {
-            instance.get(|| {
-                TestAllTypes {
-                    optional_int32: ::std::option::Option::None,
-                    optional_int64: ::std::option::Option::None,
-                    optional_uint32: ::std::option::Option::None,
-                    optional_uint64: ::std::option::Option::None,
-                    optional_sint32: ::std::option::Option::None,
-                    optional_sint64: ::std::option::Option::None,
-                    optional_fixed32: ::std::option::Option::None,
-                    optional_fixed64: ::std::option::Option::None,
-                    optional_sfixed32: ::std::option::Option::None,
-                    optional_sfixed64: ::std::option::Option::None,
-                    optional_float: ::std::option::Option::None,
-                    optional_double: ::std::option::Option::None,
-                    optional_bool: ::std::option::Option::None,
-                    optional_string: ::protobuf::SingularField::none(),
-                    optional_bytes: ::protobuf::SingularField::none(),
-                    optional_nested_message: ::protobuf::SingularPtrField::none(),
-                    optional_foreign_message: ::protobuf::SingularPtrField::none(),
-                    optional_import_message: ::protobuf::SingularPtrField::none(),
-                    optional_nested_enum: ::std::option::Option::None,
-                    optional_foreign_enum: ::std::option::Option::None,
-                    optional_import_enum: ::std::option::Option::None,
-                    optional_string_piece: ::protobuf::SingularField::none(),
-                    optional_cord: ::protobuf::SingularField::none(),
-                    optional_public_import_message: ::protobuf::SingularPtrField::none(),
-                    optional_lazy_message: ::protobuf::SingularPtrField::none(),
-                    repeated_int32: ::std::vec::Vec::new(),
-                    repeated_int64: ::std::vec::Vec::new(),
-                    repeated_uint32: ::std::vec::Vec::new(),
-                    repeated_uint64: ::std::vec::Vec::new(),
-                    repeated_sint32: ::std::vec::Vec::new(),
-                    repeated_sint64: ::std::vec::Vec::new(),
-                    repeated_fixed32: ::std::vec::Vec::new(),
-                    repeated_fixed64: ::std::vec::Vec::new(),
-                    repeated_sfixed32: ::std::vec::Vec::new(),
-                    repeated_sfixed64: ::std::vec::Vec::new(),
-                    repeated_float: ::std::vec::Vec::new(),
-                    repeated_double: ::std::vec::Vec::new(),
-                    repeated_bool: ::std::vec::Vec::new(),
-                    repeated_string: ::protobuf::RepeatedField::new(),
-                    repeated_bytes: ::protobuf::RepeatedField::new(),
-                    repeated_nested_message: ::protobuf::RepeatedField::new(),
-                    repeated_foreign_message: ::protobuf::RepeatedField::new(),
-                    repeated_import_message: ::protobuf::RepeatedField::new(),
-                    repeated_nested_enum: ::std::vec::Vec::new(),
-                    repeated_foreign_enum: ::std::vec::Vec::new(),
-                    repeated_import_enum: ::std::vec::Vec::new(),
-                    repeated_string_piece: ::protobuf::RepeatedField::new(),
-                    repeated_cord: ::protobuf::RepeatedField::new(),
-                    repeated_lazy_message: ::protobuf::RepeatedField::new(),
-                    default_int32: ::std::option::Option::None,
-                    default_int64: ::std::option::Option::None,
-                    default_uint32: ::std::option::Option::None,
-                    default_uint64: ::std::option::Option::None,
-                    default_sint32: ::std::option::Option::None,
-                    default_sint64: ::std::option::Option::None,
-                    default_fixed32: ::std::option::Option::None,
-                    default_fixed64: ::std::option::Option::None,
-                    default_sfixed32: ::std::option::Option::None,
-                    default_sfixed64: ::std::option::Option::None,
-                    default_float: ::std::option::Option::None,
-                    default_double: ::std::option::Option::None,
-                    default_bool: ::std::option::Option::None,
-                    default_string: ::protobuf::SingularField::none(),
-                    default_bytes: ::protobuf::SingularField::none(),
-                    default_nested_enum: ::std::option::Option::None,
-                    default_foreign_enum: ::std::option::Option::None,
-                    default_import_enum: ::std::option::Option::None,
-                    default_string_piece: ::protobuf::SingularField::none(),
-                    default_cord: ::protobuf::SingularField::none(),
-                    oneof_field: ::std::option::Option::None,
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestAllTypes::new)
         }
     }
 
@@ -215,6 +145,14 @@ impl TestAllTypes {
         self.optional_int32.unwrap_or(0)
     }
 
+    fn get_optional_int32_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.optional_int32
+    }
+
+    fn mut_optional_int32_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.optional_int32
+    }
+
     // optional int64 optional_int64 = 2;
 
     pub fn clear_optional_int64(&mut self) {
@@ -232,6 +170,14 @@ impl TestAllTypes {
 
     pub fn get_optional_int64(&self) -> i64 {
         self.optional_int64.unwrap_or(0)
+    }
+
+    fn get_optional_int64_for_reflect(&self) -> &::std::option::Option<i64> {
+        &self.optional_int64
+    }
+
+    fn mut_optional_int64_for_reflect(&mut self) -> &mut ::std::option::Option<i64> {
+        &mut self.optional_int64
     }
 
     // optional uint32 optional_uint32 = 3;
@@ -253,6 +199,14 @@ impl TestAllTypes {
         self.optional_uint32.unwrap_or(0)
     }
 
+    fn get_optional_uint32_for_reflect(&self) -> &::std::option::Option<u32> {
+        &self.optional_uint32
+    }
+
+    fn mut_optional_uint32_for_reflect(&mut self) -> &mut ::std::option::Option<u32> {
+        &mut self.optional_uint32
+    }
+
     // optional uint64 optional_uint64 = 4;
 
     pub fn clear_optional_uint64(&mut self) {
@@ -270,6 +224,14 @@ impl TestAllTypes {
 
     pub fn get_optional_uint64(&self) -> u64 {
         self.optional_uint64.unwrap_or(0)
+    }
+
+    fn get_optional_uint64_for_reflect(&self) -> &::std::option::Option<u64> {
+        &self.optional_uint64
+    }
+
+    fn mut_optional_uint64_for_reflect(&mut self) -> &mut ::std::option::Option<u64> {
+        &mut self.optional_uint64
     }
 
     // optional sint32 optional_sint32 = 5;
@@ -291,6 +253,14 @@ impl TestAllTypes {
         self.optional_sint32.unwrap_or(0)
     }
 
+    fn get_optional_sint32_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.optional_sint32
+    }
+
+    fn mut_optional_sint32_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.optional_sint32
+    }
+
     // optional sint64 optional_sint64 = 6;
 
     pub fn clear_optional_sint64(&mut self) {
@@ -308,6 +278,14 @@ impl TestAllTypes {
 
     pub fn get_optional_sint64(&self) -> i64 {
         self.optional_sint64.unwrap_or(0)
+    }
+
+    fn get_optional_sint64_for_reflect(&self) -> &::std::option::Option<i64> {
+        &self.optional_sint64
+    }
+
+    fn mut_optional_sint64_for_reflect(&mut self) -> &mut ::std::option::Option<i64> {
+        &mut self.optional_sint64
     }
 
     // optional fixed32 optional_fixed32 = 7;
@@ -329,6 +307,14 @@ impl TestAllTypes {
         self.optional_fixed32.unwrap_or(0)
     }
 
+    fn get_optional_fixed32_for_reflect(&self) -> &::std::option::Option<u32> {
+        &self.optional_fixed32
+    }
+
+    fn mut_optional_fixed32_for_reflect(&mut self) -> &mut ::std::option::Option<u32> {
+        &mut self.optional_fixed32
+    }
+
     // optional fixed64 optional_fixed64 = 8;
 
     pub fn clear_optional_fixed64(&mut self) {
@@ -346,6 +332,14 @@ impl TestAllTypes {
 
     pub fn get_optional_fixed64(&self) -> u64 {
         self.optional_fixed64.unwrap_or(0)
+    }
+
+    fn get_optional_fixed64_for_reflect(&self) -> &::std::option::Option<u64> {
+        &self.optional_fixed64
+    }
+
+    fn mut_optional_fixed64_for_reflect(&mut self) -> &mut ::std::option::Option<u64> {
+        &mut self.optional_fixed64
     }
 
     // optional sfixed32 optional_sfixed32 = 9;
@@ -367,6 +361,14 @@ impl TestAllTypes {
         self.optional_sfixed32.unwrap_or(0)
     }
 
+    fn get_optional_sfixed32_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.optional_sfixed32
+    }
+
+    fn mut_optional_sfixed32_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.optional_sfixed32
+    }
+
     // optional sfixed64 optional_sfixed64 = 10;
 
     pub fn clear_optional_sfixed64(&mut self) {
@@ -384,6 +386,14 @@ impl TestAllTypes {
 
     pub fn get_optional_sfixed64(&self) -> i64 {
         self.optional_sfixed64.unwrap_or(0)
+    }
+
+    fn get_optional_sfixed64_for_reflect(&self) -> &::std::option::Option<i64> {
+        &self.optional_sfixed64
+    }
+
+    fn mut_optional_sfixed64_for_reflect(&mut self) -> &mut ::std::option::Option<i64> {
+        &mut self.optional_sfixed64
     }
 
     // optional float optional_float = 11;
@@ -405,6 +415,14 @@ impl TestAllTypes {
         self.optional_float.unwrap_or(0.)
     }
 
+    fn get_optional_float_for_reflect(&self) -> &::std::option::Option<f32> {
+        &self.optional_float
+    }
+
+    fn mut_optional_float_for_reflect(&mut self) -> &mut ::std::option::Option<f32> {
+        &mut self.optional_float
+    }
+
     // optional double optional_double = 12;
 
     pub fn clear_optional_double(&mut self) {
@@ -424,6 +442,14 @@ impl TestAllTypes {
         self.optional_double.unwrap_or(0.)
     }
 
+    fn get_optional_double_for_reflect(&self) -> &::std::option::Option<f64> {
+        &self.optional_double
+    }
+
+    fn mut_optional_double_for_reflect(&mut self) -> &mut ::std::option::Option<f64> {
+        &mut self.optional_double
+    }
+
     // optional bool optional_bool = 13;
 
     pub fn clear_optional_bool(&mut self) {
@@ -441,6 +467,14 @@ impl TestAllTypes {
 
     pub fn get_optional_bool(&self) -> bool {
         self.optional_bool.unwrap_or(false)
+    }
+
+    fn get_optional_bool_for_reflect(&self) -> &::std::option::Option<bool> {
+        &self.optional_bool
+    }
+
+    fn mut_optional_bool_for_reflect(&mut self) -> &mut ::std::option::Option<bool> {
+        &mut self.optional_bool
     }
 
     // optional string optional_string = 14;
@@ -479,6 +513,14 @@ impl TestAllTypes {
         }
     }
 
+    fn get_optional_string_for_reflect(&self) -> &::protobuf::SingularField<::std::string::String> {
+        &self.optional_string
+    }
+
+    fn mut_optional_string_for_reflect(&mut self) -> &mut ::protobuf::SingularField<::std::string::String> {
+        &mut self.optional_string
+    }
+
     // optional bytes optional_bytes = 15;
 
     pub fn clear_optional_bytes(&mut self) {
@@ -515,6 +557,14 @@ impl TestAllTypes {
         }
     }
 
+    fn get_optional_bytes_for_reflect(&self) -> &::protobuf::SingularField<::std::vec::Vec<u8>> {
+        &self.optional_bytes
+    }
+
+    fn mut_optional_bytes_for_reflect(&mut self) -> &mut ::protobuf::SingularField<::std::vec::Vec<u8>> {
+        &mut self.optional_bytes
+    }
+
     // optional .protobuf_unittest.TestAllTypes.NestedMessage optional_nested_message = 18;
 
     pub fn clear_optional_nested_message(&mut self) {
@@ -546,6 +596,14 @@ impl TestAllTypes {
 
     pub fn get_optional_nested_message(&self) -> &TestAllTypes_NestedMessage {
         self.optional_nested_message.as_ref().unwrap_or_else(|| TestAllTypes_NestedMessage::default_instance())
+    }
+
+    fn get_optional_nested_message_for_reflect(&self) -> &::protobuf::SingularPtrField<TestAllTypes_NestedMessage> {
+        &self.optional_nested_message
+    }
+
+    fn mut_optional_nested_message_for_reflect(&mut self) -> &mut ::protobuf::SingularPtrField<TestAllTypes_NestedMessage> {
+        &mut self.optional_nested_message
     }
 
     // optional .protobuf_unittest.ForeignMessage optional_foreign_message = 19;
@@ -581,6 +639,14 @@ impl TestAllTypes {
         self.optional_foreign_message.as_ref().unwrap_or_else(|| ForeignMessage::default_instance())
     }
 
+    fn get_optional_foreign_message_for_reflect(&self) -> &::protobuf::SingularPtrField<ForeignMessage> {
+        &self.optional_foreign_message
+    }
+
+    fn mut_optional_foreign_message_for_reflect(&mut self) -> &mut ::protobuf::SingularPtrField<ForeignMessage> {
+        &mut self.optional_foreign_message
+    }
+
     // optional .protobuf_unittest_import.ImportMessage optional_import_message = 20;
 
     pub fn clear_optional_import_message(&mut self) {
@@ -614,6 +680,14 @@ impl TestAllTypes {
         self.optional_import_message.as_ref().unwrap_or_else(|| super::unittest_import::ImportMessage::default_instance())
     }
 
+    fn get_optional_import_message_for_reflect(&self) -> &::protobuf::SingularPtrField<super::unittest_import::ImportMessage> {
+        &self.optional_import_message
+    }
+
+    fn mut_optional_import_message_for_reflect(&mut self) -> &mut ::protobuf::SingularPtrField<super::unittest_import::ImportMessage> {
+        &mut self.optional_import_message
+    }
+
     // optional .protobuf_unittest.TestAllTypes.NestedEnum optional_nested_enum = 21;
 
     pub fn clear_optional_nested_enum(&mut self) {
@@ -631,6 +705,14 @@ impl TestAllTypes {
 
     pub fn get_optional_nested_enum(&self) -> TestAllTypes_NestedEnum {
         self.optional_nested_enum.unwrap_or(TestAllTypes_NestedEnum::FOO)
+    }
+
+    fn get_optional_nested_enum_for_reflect(&self) -> &::std::option::Option<TestAllTypes_NestedEnum> {
+        &self.optional_nested_enum
+    }
+
+    fn mut_optional_nested_enum_for_reflect(&mut self) -> &mut ::std::option::Option<TestAllTypes_NestedEnum> {
+        &mut self.optional_nested_enum
     }
 
     // optional .protobuf_unittest.ForeignEnum optional_foreign_enum = 22;
@@ -652,6 +734,14 @@ impl TestAllTypes {
         self.optional_foreign_enum.unwrap_or(ForeignEnum::FOREIGN_FOO)
     }
 
+    fn get_optional_foreign_enum_for_reflect(&self) -> &::std::option::Option<ForeignEnum> {
+        &self.optional_foreign_enum
+    }
+
+    fn mut_optional_foreign_enum_for_reflect(&mut self) -> &mut ::std::option::Option<ForeignEnum> {
+        &mut self.optional_foreign_enum
+    }
+
     // optional .protobuf_unittest_import.ImportEnum optional_import_enum = 23;
 
     pub fn clear_optional_import_enum(&mut self) {
@@ -669,6 +759,14 @@ impl TestAllTypes {
 
     pub fn get_optional_import_enum(&self) -> super::unittest_import::ImportEnum {
         self.optional_import_enum.unwrap_or(super::unittest_import::ImportEnum::IMPORT_FOO)
+    }
+
+    fn get_optional_import_enum_for_reflect(&self) -> &::std::option::Option<super::unittest_import::ImportEnum> {
+        &self.optional_import_enum
+    }
+
+    fn mut_optional_import_enum_for_reflect(&mut self) -> &mut ::std::option::Option<super::unittest_import::ImportEnum> {
+        &mut self.optional_import_enum
     }
 
     // optional string optional_string_piece = 24;
@@ -707,6 +805,14 @@ impl TestAllTypes {
         }
     }
 
+    fn get_optional_string_piece_for_reflect(&self) -> &::protobuf::SingularField<::std::string::String> {
+        &self.optional_string_piece
+    }
+
+    fn mut_optional_string_piece_for_reflect(&mut self) -> &mut ::protobuf::SingularField<::std::string::String> {
+        &mut self.optional_string_piece
+    }
+
     // optional string optional_cord = 25;
 
     pub fn clear_optional_cord(&mut self) {
@@ -743,6 +849,14 @@ impl TestAllTypes {
         }
     }
 
+    fn get_optional_cord_for_reflect(&self) -> &::protobuf::SingularField<::std::string::String> {
+        &self.optional_cord
+    }
+
+    fn mut_optional_cord_for_reflect(&mut self) -> &mut ::protobuf::SingularField<::std::string::String> {
+        &mut self.optional_cord
+    }
+
     // optional .protobuf_unittest_import.PublicImportMessage optional_public_import_message = 26;
 
     pub fn clear_optional_public_import_message(&mut self) {
@@ -774,6 +888,14 @@ impl TestAllTypes {
 
     pub fn get_optional_public_import_message(&self) -> &super::unittest_import_public::PublicImportMessage {
         self.optional_public_import_message.as_ref().unwrap_or_else(|| super::unittest_import_public::PublicImportMessage::default_instance())
+    }
+
+    fn get_optional_public_import_message_for_reflect(&self) -> &::protobuf::SingularPtrField<super::unittest_import_public::PublicImportMessage> {
+        &self.optional_public_import_message
+    }
+
+    fn mut_optional_public_import_message_for_reflect(&mut self) -> &mut ::protobuf::SingularPtrField<super::unittest_import_public::PublicImportMessage> {
+        &mut self.optional_public_import_message
     }
 
     // optional .protobuf_unittest.TestAllTypes.NestedMessage optional_lazy_message = 27;
@@ -809,6 +931,14 @@ impl TestAllTypes {
         self.optional_lazy_message.as_ref().unwrap_or_else(|| TestAllTypes_NestedMessage::default_instance())
     }
 
+    fn get_optional_lazy_message_for_reflect(&self) -> &::protobuf::SingularPtrField<TestAllTypes_NestedMessage> {
+        &self.optional_lazy_message
+    }
+
+    fn mut_optional_lazy_message_for_reflect(&mut self) -> &mut ::protobuf::SingularPtrField<TestAllTypes_NestedMessage> {
+        &mut self.optional_lazy_message
+    }
+
     // repeated int32 repeated_int32 = 31;
 
     pub fn clear_repeated_int32(&mut self) {
@@ -832,6 +962,14 @@ impl TestAllTypes {
 
     pub fn get_repeated_int32(&self) -> &[i32] {
         &self.repeated_int32
+    }
+
+    fn get_repeated_int32_for_reflect(&self) -> &::std::vec::Vec<i32> {
+        &self.repeated_int32
+    }
+
+    fn mut_repeated_int32_for_reflect(&mut self) -> &mut ::std::vec::Vec<i32> {
+        &mut self.repeated_int32
     }
 
     // repeated int64 repeated_int64 = 32;
@@ -859,6 +997,14 @@ impl TestAllTypes {
         &self.repeated_int64
     }
 
+    fn get_repeated_int64_for_reflect(&self) -> &::std::vec::Vec<i64> {
+        &self.repeated_int64
+    }
+
+    fn mut_repeated_int64_for_reflect(&mut self) -> &mut ::std::vec::Vec<i64> {
+        &mut self.repeated_int64
+    }
+
     // repeated uint32 repeated_uint32 = 33;
 
     pub fn clear_repeated_uint32(&mut self) {
@@ -882,6 +1028,14 @@ impl TestAllTypes {
 
     pub fn get_repeated_uint32(&self) -> &[u32] {
         &self.repeated_uint32
+    }
+
+    fn get_repeated_uint32_for_reflect(&self) -> &::std::vec::Vec<u32> {
+        &self.repeated_uint32
+    }
+
+    fn mut_repeated_uint32_for_reflect(&mut self) -> &mut ::std::vec::Vec<u32> {
+        &mut self.repeated_uint32
     }
 
     // repeated uint64 repeated_uint64 = 34;
@@ -909,6 +1063,14 @@ impl TestAllTypes {
         &self.repeated_uint64
     }
 
+    fn get_repeated_uint64_for_reflect(&self) -> &::std::vec::Vec<u64> {
+        &self.repeated_uint64
+    }
+
+    fn mut_repeated_uint64_for_reflect(&mut self) -> &mut ::std::vec::Vec<u64> {
+        &mut self.repeated_uint64
+    }
+
     // repeated sint32 repeated_sint32 = 35;
 
     pub fn clear_repeated_sint32(&mut self) {
@@ -932,6 +1094,14 @@ impl TestAllTypes {
 
     pub fn get_repeated_sint32(&self) -> &[i32] {
         &self.repeated_sint32
+    }
+
+    fn get_repeated_sint32_for_reflect(&self) -> &::std::vec::Vec<i32> {
+        &self.repeated_sint32
+    }
+
+    fn mut_repeated_sint32_for_reflect(&mut self) -> &mut ::std::vec::Vec<i32> {
+        &mut self.repeated_sint32
     }
 
     // repeated sint64 repeated_sint64 = 36;
@@ -959,6 +1129,14 @@ impl TestAllTypes {
         &self.repeated_sint64
     }
 
+    fn get_repeated_sint64_for_reflect(&self) -> &::std::vec::Vec<i64> {
+        &self.repeated_sint64
+    }
+
+    fn mut_repeated_sint64_for_reflect(&mut self) -> &mut ::std::vec::Vec<i64> {
+        &mut self.repeated_sint64
+    }
+
     // repeated fixed32 repeated_fixed32 = 37;
 
     pub fn clear_repeated_fixed32(&mut self) {
@@ -982,6 +1160,14 @@ impl TestAllTypes {
 
     pub fn get_repeated_fixed32(&self) -> &[u32] {
         &self.repeated_fixed32
+    }
+
+    fn get_repeated_fixed32_for_reflect(&self) -> &::std::vec::Vec<u32> {
+        &self.repeated_fixed32
+    }
+
+    fn mut_repeated_fixed32_for_reflect(&mut self) -> &mut ::std::vec::Vec<u32> {
+        &mut self.repeated_fixed32
     }
 
     // repeated fixed64 repeated_fixed64 = 38;
@@ -1009,6 +1195,14 @@ impl TestAllTypes {
         &self.repeated_fixed64
     }
 
+    fn get_repeated_fixed64_for_reflect(&self) -> &::std::vec::Vec<u64> {
+        &self.repeated_fixed64
+    }
+
+    fn mut_repeated_fixed64_for_reflect(&mut self) -> &mut ::std::vec::Vec<u64> {
+        &mut self.repeated_fixed64
+    }
+
     // repeated sfixed32 repeated_sfixed32 = 39;
 
     pub fn clear_repeated_sfixed32(&mut self) {
@@ -1032,6 +1226,14 @@ impl TestAllTypes {
 
     pub fn get_repeated_sfixed32(&self) -> &[i32] {
         &self.repeated_sfixed32
+    }
+
+    fn get_repeated_sfixed32_for_reflect(&self) -> &::std::vec::Vec<i32> {
+        &self.repeated_sfixed32
+    }
+
+    fn mut_repeated_sfixed32_for_reflect(&mut self) -> &mut ::std::vec::Vec<i32> {
+        &mut self.repeated_sfixed32
     }
 
     // repeated sfixed64 repeated_sfixed64 = 40;
@@ -1059,6 +1261,14 @@ impl TestAllTypes {
         &self.repeated_sfixed64
     }
 
+    fn get_repeated_sfixed64_for_reflect(&self) -> &::std::vec::Vec<i64> {
+        &self.repeated_sfixed64
+    }
+
+    fn mut_repeated_sfixed64_for_reflect(&mut self) -> &mut ::std::vec::Vec<i64> {
+        &mut self.repeated_sfixed64
+    }
+
     // repeated float repeated_float = 41;
 
     pub fn clear_repeated_float(&mut self) {
@@ -1082,6 +1292,14 @@ impl TestAllTypes {
 
     pub fn get_repeated_float(&self) -> &[f32] {
         &self.repeated_float
+    }
+
+    fn get_repeated_float_for_reflect(&self) -> &::std::vec::Vec<f32> {
+        &self.repeated_float
+    }
+
+    fn mut_repeated_float_for_reflect(&mut self) -> &mut ::std::vec::Vec<f32> {
+        &mut self.repeated_float
     }
 
     // repeated double repeated_double = 42;
@@ -1109,6 +1327,14 @@ impl TestAllTypes {
         &self.repeated_double
     }
 
+    fn get_repeated_double_for_reflect(&self) -> &::std::vec::Vec<f64> {
+        &self.repeated_double
+    }
+
+    fn mut_repeated_double_for_reflect(&mut self) -> &mut ::std::vec::Vec<f64> {
+        &mut self.repeated_double
+    }
+
     // repeated bool repeated_bool = 43;
 
     pub fn clear_repeated_bool(&mut self) {
@@ -1132,6 +1358,14 @@ impl TestAllTypes {
 
     pub fn get_repeated_bool(&self) -> &[bool] {
         &self.repeated_bool
+    }
+
+    fn get_repeated_bool_for_reflect(&self) -> &::std::vec::Vec<bool> {
+        &self.repeated_bool
+    }
+
+    fn mut_repeated_bool_for_reflect(&mut self) -> &mut ::std::vec::Vec<bool> {
+        &mut self.repeated_bool
     }
 
     // repeated string repeated_string = 44;
@@ -1159,6 +1393,14 @@ impl TestAllTypes {
         &self.repeated_string
     }
 
+    fn get_repeated_string_for_reflect(&self) -> &::protobuf::RepeatedField<::std::string::String> {
+        &self.repeated_string
+    }
+
+    fn mut_repeated_string_for_reflect(&mut self) -> &mut ::protobuf::RepeatedField<::std::string::String> {
+        &mut self.repeated_string
+    }
+
     // repeated bytes repeated_bytes = 45;
 
     pub fn clear_repeated_bytes(&mut self) {
@@ -1182,6 +1424,14 @@ impl TestAllTypes {
 
     pub fn get_repeated_bytes(&self) -> &[::std::vec::Vec<u8>] {
         &self.repeated_bytes
+    }
+
+    fn get_repeated_bytes_for_reflect(&self) -> &::protobuf::RepeatedField<::std::vec::Vec<u8>> {
+        &self.repeated_bytes
+    }
+
+    fn mut_repeated_bytes_for_reflect(&mut self) -> &mut ::protobuf::RepeatedField<::std::vec::Vec<u8>> {
+        &mut self.repeated_bytes
     }
 
     // repeated .protobuf_unittest.TestAllTypes.NestedMessage repeated_nested_message = 48;
@@ -1209,6 +1459,14 @@ impl TestAllTypes {
         &self.repeated_nested_message
     }
 
+    fn get_repeated_nested_message_for_reflect(&self) -> &::protobuf::RepeatedField<TestAllTypes_NestedMessage> {
+        &self.repeated_nested_message
+    }
+
+    fn mut_repeated_nested_message_for_reflect(&mut self) -> &mut ::protobuf::RepeatedField<TestAllTypes_NestedMessage> {
+        &mut self.repeated_nested_message
+    }
+
     // repeated .protobuf_unittest.ForeignMessage repeated_foreign_message = 49;
 
     pub fn clear_repeated_foreign_message(&mut self) {
@@ -1232,6 +1490,14 @@ impl TestAllTypes {
 
     pub fn get_repeated_foreign_message(&self) -> &[ForeignMessage] {
         &self.repeated_foreign_message
+    }
+
+    fn get_repeated_foreign_message_for_reflect(&self) -> &::protobuf::RepeatedField<ForeignMessage> {
+        &self.repeated_foreign_message
+    }
+
+    fn mut_repeated_foreign_message_for_reflect(&mut self) -> &mut ::protobuf::RepeatedField<ForeignMessage> {
+        &mut self.repeated_foreign_message
     }
 
     // repeated .protobuf_unittest_import.ImportMessage repeated_import_message = 50;
@@ -1259,6 +1525,14 @@ impl TestAllTypes {
         &self.repeated_import_message
     }
 
+    fn get_repeated_import_message_for_reflect(&self) -> &::protobuf::RepeatedField<super::unittest_import::ImportMessage> {
+        &self.repeated_import_message
+    }
+
+    fn mut_repeated_import_message_for_reflect(&mut self) -> &mut ::protobuf::RepeatedField<super::unittest_import::ImportMessage> {
+        &mut self.repeated_import_message
+    }
+
     // repeated .protobuf_unittest.TestAllTypes.NestedEnum repeated_nested_enum = 51;
 
     pub fn clear_repeated_nested_enum(&mut self) {
@@ -1282,6 +1556,14 @@ impl TestAllTypes {
 
     pub fn get_repeated_nested_enum(&self) -> &[TestAllTypes_NestedEnum] {
         &self.repeated_nested_enum
+    }
+
+    fn get_repeated_nested_enum_for_reflect(&self) -> &::std::vec::Vec<TestAllTypes_NestedEnum> {
+        &self.repeated_nested_enum
+    }
+
+    fn mut_repeated_nested_enum_for_reflect(&mut self) -> &mut ::std::vec::Vec<TestAllTypes_NestedEnum> {
+        &mut self.repeated_nested_enum
     }
 
     // repeated .protobuf_unittest.ForeignEnum repeated_foreign_enum = 52;
@@ -1309,6 +1591,14 @@ impl TestAllTypes {
         &self.repeated_foreign_enum
     }
 
+    fn get_repeated_foreign_enum_for_reflect(&self) -> &::std::vec::Vec<ForeignEnum> {
+        &self.repeated_foreign_enum
+    }
+
+    fn mut_repeated_foreign_enum_for_reflect(&mut self) -> &mut ::std::vec::Vec<ForeignEnum> {
+        &mut self.repeated_foreign_enum
+    }
+
     // repeated .protobuf_unittest_import.ImportEnum repeated_import_enum = 53;
 
     pub fn clear_repeated_import_enum(&mut self) {
@@ -1332,6 +1622,14 @@ impl TestAllTypes {
 
     pub fn get_repeated_import_enum(&self) -> &[super::unittest_import::ImportEnum] {
         &self.repeated_import_enum
+    }
+
+    fn get_repeated_import_enum_for_reflect(&self) -> &::std::vec::Vec<super::unittest_import::ImportEnum> {
+        &self.repeated_import_enum
+    }
+
+    fn mut_repeated_import_enum_for_reflect(&mut self) -> &mut ::std::vec::Vec<super::unittest_import::ImportEnum> {
+        &mut self.repeated_import_enum
     }
 
     // repeated string repeated_string_piece = 54;
@@ -1359,6 +1657,14 @@ impl TestAllTypes {
         &self.repeated_string_piece
     }
 
+    fn get_repeated_string_piece_for_reflect(&self) -> &::protobuf::RepeatedField<::std::string::String> {
+        &self.repeated_string_piece
+    }
+
+    fn mut_repeated_string_piece_for_reflect(&mut self) -> &mut ::protobuf::RepeatedField<::std::string::String> {
+        &mut self.repeated_string_piece
+    }
+
     // repeated string repeated_cord = 55;
 
     pub fn clear_repeated_cord(&mut self) {
@@ -1382,6 +1688,14 @@ impl TestAllTypes {
 
     pub fn get_repeated_cord(&self) -> &[::std::string::String] {
         &self.repeated_cord
+    }
+
+    fn get_repeated_cord_for_reflect(&self) -> &::protobuf::RepeatedField<::std::string::String> {
+        &self.repeated_cord
+    }
+
+    fn mut_repeated_cord_for_reflect(&mut self) -> &mut ::protobuf::RepeatedField<::std::string::String> {
+        &mut self.repeated_cord
     }
 
     // repeated .protobuf_unittest.TestAllTypes.NestedMessage repeated_lazy_message = 57;
@@ -1409,6 +1723,14 @@ impl TestAllTypes {
         &self.repeated_lazy_message
     }
 
+    fn get_repeated_lazy_message_for_reflect(&self) -> &::protobuf::RepeatedField<TestAllTypes_NestedMessage> {
+        &self.repeated_lazy_message
+    }
+
+    fn mut_repeated_lazy_message_for_reflect(&mut self) -> &mut ::protobuf::RepeatedField<TestAllTypes_NestedMessage> {
+        &mut self.repeated_lazy_message
+    }
+
     // optional int32 default_int32 = 61;
 
     pub fn clear_default_int32(&mut self) {
@@ -1426,6 +1748,14 @@ impl TestAllTypes {
 
     pub fn get_default_int32(&self) -> i32 {
         self.default_int32.unwrap_or(41i32)
+    }
+
+    fn get_default_int32_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.default_int32
+    }
+
+    fn mut_default_int32_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.default_int32
     }
 
     // optional int64 default_int64 = 62;
@@ -1447,6 +1777,14 @@ impl TestAllTypes {
         self.default_int64.unwrap_or(42i64)
     }
 
+    fn get_default_int64_for_reflect(&self) -> &::std::option::Option<i64> {
+        &self.default_int64
+    }
+
+    fn mut_default_int64_for_reflect(&mut self) -> &mut ::std::option::Option<i64> {
+        &mut self.default_int64
+    }
+
     // optional uint32 default_uint32 = 63;
 
     pub fn clear_default_uint32(&mut self) {
@@ -1464,6 +1802,14 @@ impl TestAllTypes {
 
     pub fn get_default_uint32(&self) -> u32 {
         self.default_uint32.unwrap_or(43u32)
+    }
+
+    fn get_default_uint32_for_reflect(&self) -> &::std::option::Option<u32> {
+        &self.default_uint32
+    }
+
+    fn mut_default_uint32_for_reflect(&mut self) -> &mut ::std::option::Option<u32> {
+        &mut self.default_uint32
     }
 
     // optional uint64 default_uint64 = 64;
@@ -1485,6 +1831,14 @@ impl TestAllTypes {
         self.default_uint64.unwrap_or(44u64)
     }
 
+    fn get_default_uint64_for_reflect(&self) -> &::std::option::Option<u64> {
+        &self.default_uint64
+    }
+
+    fn mut_default_uint64_for_reflect(&mut self) -> &mut ::std::option::Option<u64> {
+        &mut self.default_uint64
+    }
+
     // optional sint32 default_sint32 = 65;
 
     pub fn clear_default_sint32(&mut self) {
@@ -1502,6 +1856,14 @@ impl TestAllTypes {
 
     pub fn get_default_sint32(&self) -> i32 {
         self.default_sint32.unwrap_or(-45i32)
+    }
+
+    fn get_default_sint32_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.default_sint32
+    }
+
+    fn mut_default_sint32_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.default_sint32
     }
 
     // optional sint64 default_sint64 = 66;
@@ -1523,6 +1885,14 @@ impl TestAllTypes {
         self.default_sint64.unwrap_or(46i64)
     }
 
+    fn get_default_sint64_for_reflect(&self) -> &::std::option::Option<i64> {
+        &self.default_sint64
+    }
+
+    fn mut_default_sint64_for_reflect(&mut self) -> &mut ::std::option::Option<i64> {
+        &mut self.default_sint64
+    }
+
     // optional fixed32 default_fixed32 = 67;
 
     pub fn clear_default_fixed32(&mut self) {
@@ -1540,6 +1910,14 @@ impl TestAllTypes {
 
     pub fn get_default_fixed32(&self) -> u32 {
         self.default_fixed32.unwrap_or(47u32)
+    }
+
+    fn get_default_fixed32_for_reflect(&self) -> &::std::option::Option<u32> {
+        &self.default_fixed32
+    }
+
+    fn mut_default_fixed32_for_reflect(&mut self) -> &mut ::std::option::Option<u32> {
+        &mut self.default_fixed32
     }
 
     // optional fixed64 default_fixed64 = 68;
@@ -1561,6 +1939,14 @@ impl TestAllTypes {
         self.default_fixed64.unwrap_or(48u64)
     }
 
+    fn get_default_fixed64_for_reflect(&self) -> &::std::option::Option<u64> {
+        &self.default_fixed64
+    }
+
+    fn mut_default_fixed64_for_reflect(&mut self) -> &mut ::std::option::Option<u64> {
+        &mut self.default_fixed64
+    }
+
     // optional sfixed32 default_sfixed32 = 69;
 
     pub fn clear_default_sfixed32(&mut self) {
@@ -1578,6 +1964,14 @@ impl TestAllTypes {
 
     pub fn get_default_sfixed32(&self) -> i32 {
         self.default_sfixed32.unwrap_or(49i32)
+    }
+
+    fn get_default_sfixed32_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.default_sfixed32
+    }
+
+    fn mut_default_sfixed32_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.default_sfixed32
     }
 
     // optional sfixed64 default_sfixed64 = 70;
@@ -1599,6 +1993,14 @@ impl TestAllTypes {
         self.default_sfixed64.unwrap_or(-50i64)
     }
 
+    fn get_default_sfixed64_for_reflect(&self) -> &::std::option::Option<i64> {
+        &self.default_sfixed64
+    }
+
+    fn mut_default_sfixed64_for_reflect(&mut self) -> &mut ::std::option::Option<i64> {
+        &mut self.default_sfixed64
+    }
+
     // optional float default_float = 71;
 
     pub fn clear_default_float(&mut self) {
@@ -1616,6 +2018,14 @@ impl TestAllTypes {
 
     pub fn get_default_float(&self) -> f32 {
         self.default_float.unwrap_or(51.5f32)
+    }
+
+    fn get_default_float_for_reflect(&self) -> &::std::option::Option<f32> {
+        &self.default_float
+    }
+
+    fn mut_default_float_for_reflect(&mut self) -> &mut ::std::option::Option<f32> {
+        &mut self.default_float
     }
 
     // optional double default_double = 72;
@@ -1637,6 +2047,14 @@ impl TestAllTypes {
         self.default_double.unwrap_or(52000f64)
     }
 
+    fn get_default_double_for_reflect(&self) -> &::std::option::Option<f64> {
+        &self.default_double
+    }
+
+    fn mut_default_double_for_reflect(&mut self) -> &mut ::std::option::Option<f64> {
+        &mut self.default_double
+    }
+
     // optional bool default_bool = 73;
 
     pub fn clear_default_bool(&mut self) {
@@ -1654,6 +2072,14 @@ impl TestAllTypes {
 
     pub fn get_default_bool(&self) -> bool {
         self.default_bool.unwrap_or(true)
+    }
+
+    fn get_default_bool_for_reflect(&self) -> &::std::option::Option<bool> {
+        &self.default_bool
+    }
+
+    fn mut_default_bool_for_reflect(&mut self) -> &mut ::std::option::Option<bool> {
+        &mut self.default_bool
     }
 
     // optional string default_string = 74;
@@ -1692,6 +2118,14 @@ impl TestAllTypes {
         }
     }
 
+    fn get_default_string_for_reflect(&self) -> &::protobuf::SingularField<::std::string::String> {
+        &self.default_string
+    }
+
+    fn mut_default_string_for_reflect(&mut self) -> &mut ::protobuf::SingularField<::std::string::String> {
+        &mut self.default_string
+    }
+
     // optional bytes default_bytes = 75;
 
     pub fn clear_default_bytes(&mut self) {
@@ -1728,6 +2162,14 @@ impl TestAllTypes {
         }
     }
 
+    fn get_default_bytes_for_reflect(&self) -> &::protobuf::SingularField<::std::vec::Vec<u8>> {
+        &self.default_bytes
+    }
+
+    fn mut_default_bytes_for_reflect(&mut self) -> &mut ::protobuf::SingularField<::std::vec::Vec<u8>> {
+        &mut self.default_bytes
+    }
+
     // optional .protobuf_unittest.TestAllTypes.NestedEnum default_nested_enum = 81;
 
     pub fn clear_default_nested_enum(&mut self) {
@@ -1745,6 +2187,14 @@ impl TestAllTypes {
 
     pub fn get_default_nested_enum(&self) -> TestAllTypes_NestedEnum {
         self.default_nested_enum.unwrap_or(TestAllTypes_NestedEnum::BAR)
+    }
+
+    fn get_default_nested_enum_for_reflect(&self) -> &::std::option::Option<TestAllTypes_NestedEnum> {
+        &self.default_nested_enum
+    }
+
+    fn mut_default_nested_enum_for_reflect(&mut self) -> &mut ::std::option::Option<TestAllTypes_NestedEnum> {
+        &mut self.default_nested_enum
     }
 
     // optional .protobuf_unittest.ForeignEnum default_foreign_enum = 82;
@@ -1766,6 +2216,14 @@ impl TestAllTypes {
         self.default_foreign_enum.unwrap_or(ForeignEnum::FOREIGN_BAR)
     }
 
+    fn get_default_foreign_enum_for_reflect(&self) -> &::std::option::Option<ForeignEnum> {
+        &self.default_foreign_enum
+    }
+
+    fn mut_default_foreign_enum_for_reflect(&mut self) -> &mut ::std::option::Option<ForeignEnum> {
+        &mut self.default_foreign_enum
+    }
+
     // optional .protobuf_unittest_import.ImportEnum default_import_enum = 83;
 
     pub fn clear_default_import_enum(&mut self) {
@@ -1783,6 +2241,14 @@ impl TestAllTypes {
 
     pub fn get_default_import_enum(&self) -> super::unittest_import::ImportEnum {
         self.default_import_enum.unwrap_or(super::unittest_import::ImportEnum::IMPORT_BAR)
+    }
+
+    fn get_default_import_enum_for_reflect(&self) -> &::std::option::Option<super::unittest_import::ImportEnum> {
+        &self.default_import_enum
+    }
+
+    fn mut_default_import_enum_for_reflect(&mut self) -> &mut ::std::option::Option<super::unittest_import::ImportEnum> {
+        &mut self.default_import_enum
     }
 
     // optional string default_string_piece = 84;
@@ -1821,6 +2287,14 @@ impl TestAllTypes {
         }
     }
 
+    fn get_default_string_piece_for_reflect(&self) -> &::protobuf::SingularField<::std::string::String> {
+        &self.default_string_piece
+    }
+
+    fn mut_default_string_piece_for_reflect(&mut self) -> &mut ::protobuf::SingularField<::std::string::String> {
+        &mut self.default_string_piece
+    }
+
     // optional string default_cord = 85;
 
     pub fn clear_default_cord(&mut self) {
@@ -1855,6 +2329,14 @@ impl TestAllTypes {
             Some(v) => &v,
             None => "123",
         }
+    }
+
+    fn get_default_cord_for_reflect(&self) -> &::protobuf::SingularField<::std::string::String> {
+        &self.default_cord
+    }
+
+    fn mut_default_cord_for_reflect(&mut self) -> &mut ::protobuf::SingularField<::std::string::String> {
+        &mut self.default_cord
     }
 
     // optional uint32 oneof_uint32 = 111;
@@ -1901,7 +2383,6 @@ impl TestAllTypes {
     }
 
     // Mutable pointer to the field.
-    // If field is not initialized, it is initialized with default value first.
     pub fn mut_oneof_nested_message(&mut self) -> &mut TestAllTypes_NestedMessage {
         if let ::std::option::Option::Some(TestAllTypes_oneof_oneof_field::oneof_nested_message(_)) = self.oneof_field {
         } else {
@@ -1951,7 +2432,6 @@ impl TestAllTypes {
     }
 
     // Mutable pointer to the field.
-    // If field is not initialized, it is initialized with default value first.
     pub fn mut_oneof_string(&mut self) -> &mut ::std::string::String {
         if let ::std::option::Option::Some(TestAllTypes_oneof_oneof_field::oneof_string(_)) = self.oneof_field {
         } else {
@@ -2001,7 +2481,6 @@ impl TestAllTypes {
     }
 
     // Mutable pointer to the field.
-    // If field is not initialized, it is initialized with default value first.
     pub fn mut_oneof_bytes(&mut self) -> &mut ::std::vec::Vec<u8> {
         if let ::std::option::Option::Some(TestAllTypes_oneof_oneof_field::oneof_bytes(_)) = self.oneof_field {
         } else {
@@ -2039,370 +2518,370 @@ impl ::protobuf::Message for TestAllTypes {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.optional_int32 = ::std::option::Option::Some(tmp);
                 },
                 2 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int64());
+                    let tmp = is.read_int64()?;
                     self.optional_int64 = ::std::option::Option::Some(tmp);
                 },
                 3 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_uint32());
+                    let tmp = is.read_uint32()?;
                     self.optional_uint32 = ::std::option::Option::Some(tmp);
                 },
                 4 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_uint64());
+                    let tmp = is.read_uint64()?;
                     self.optional_uint64 = ::std::option::Option::Some(tmp);
                 },
                 5 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_sint32());
+                    let tmp = is.read_sint32()?;
                     self.optional_sint32 = ::std::option::Option::Some(tmp);
                 },
                 6 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_sint64());
+                    let tmp = is.read_sint64()?;
                     self.optional_sint64 = ::std::option::Option::Some(tmp);
                 },
                 7 => {
                     if wire_type != ::protobuf::wire_format::WireTypeFixed32 {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_fixed32());
+                    let tmp = is.read_fixed32()?;
                     self.optional_fixed32 = ::std::option::Option::Some(tmp);
                 },
                 8 => {
                     if wire_type != ::protobuf::wire_format::WireTypeFixed64 {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_fixed64());
+                    let tmp = is.read_fixed64()?;
                     self.optional_fixed64 = ::std::option::Option::Some(tmp);
                 },
                 9 => {
                     if wire_type != ::protobuf::wire_format::WireTypeFixed32 {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_sfixed32());
+                    let tmp = is.read_sfixed32()?;
                     self.optional_sfixed32 = ::std::option::Option::Some(tmp);
                 },
                 10 => {
                     if wire_type != ::protobuf::wire_format::WireTypeFixed64 {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_sfixed64());
+                    let tmp = is.read_sfixed64()?;
                     self.optional_sfixed64 = ::std::option::Option::Some(tmp);
                 },
                 11 => {
                     if wire_type != ::protobuf::wire_format::WireTypeFixed32 {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_float());
+                    let tmp = is.read_float()?;
                     self.optional_float = ::std::option::Option::Some(tmp);
                 },
                 12 => {
                     if wire_type != ::protobuf::wire_format::WireTypeFixed64 {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_double());
+                    let tmp = is.read_double()?;
                     self.optional_double = ::std::option::Option::Some(tmp);
                 },
                 13 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_bool());
+                    let tmp = is.read_bool()?;
                     self.optional_bool = ::std::option::Option::Some(tmp);
                 },
                 14 => {
-                    try!(::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.optional_string));
+                    ::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.optional_string)?;
                 },
                 15 => {
-                    try!(::protobuf::rt::read_singular_bytes_into(wire_type, is, &mut self.optional_bytes));
+                    ::protobuf::rt::read_singular_bytes_into(wire_type, is, &mut self.optional_bytes)?;
                 },
                 18 => {
-                    try!(::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.optional_nested_message));
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.optional_nested_message)?;
                 },
                 19 => {
-                    try!(::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.optional_foreign_message));
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.optional_foreign_message)?;
                 },
                 20 => {
-                    try!(::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.optional_import_message));
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.optional_import_message)?;
                 },
                 21 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_enum());
+                    let tmp = is.read_enum()?;
                     self.optional_nested_enum = ::std::option::Option::Some(tmp);
                 },
                 22 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_enum());
+                    let tmp = is.read_enum()?;
                     self.optional_foreign_enum = ::std::option::Option::Some(tmp);
                 },
                 23 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_enum());
+                    let tmp = is.read_enum()?;
                     self.optional_import_enum = ::std::option::Option::Some(tmp);
                 },
                 24 => {
-                    try!(::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.optional_string_piece));
+                    ::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.optional_string_piece)?;
                 },
                 25 => {
-                    try!(::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.optional_cord));
+                    ::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.optional_cord)?;
                 },
                 26 => {
-                    try!(::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.optional_public_import_message));
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.optional_public_import_message)?;
                 },
                 27 => {
-                    try!(::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.optional_lazy_message));
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.optional_lazy_message)?;
                 },
                 31 => {
-                    try!(::protobuf::rt::read_repeated_int32_into(wire_type, is, &mut self.repeated_int32));
+                    ::protobuf::rt::read_repeated_int32_into(wire_type, is, &mut self.repeated_int32)?;
                 },
                 32 => {
-                    try!(::protobuf::rt::read_repeated_int64_into(wire_type, is, &mut self.repeated_int64));
+                    ::protobuf::rt::read_repeated_int64_into(wire_type, is, &mut self.repeated_int64)?;
                 },
                 33 => {
-                    try!(::protobuf::rt::read_repeated_uint32_into(wire_type, is, &mut self.repeated_uint32));
+                    ::protobuf::rt::read_repeated_uint32_into(wire_type, is, &mut self.repeated_uint32)?;
                 },
                 34 => {
-                    try!(::protobuf::rt::read_repeated_uint64_into(wire_type, is, &mut self.repeated_uint64));
+                    ::protobuf::rt::read_repeated_uint64_into(wire_type, is, &mut self.repeated_uint64)?;
                 },
                 35 => {
-                    try!(::protobuf::rt::read_repeated_sint32_into(wire_type, is, &mut self.repeated_sint32));
+                    ::protobuf::rt::read_repeated_sint32_into(wire_type, is, &mut self.repeated_sint32)?;
                 },
                 36 => {
-                    try!(::protobuf::rt::read_repeated_sint64_into(wire_type, is, &mut self.repeated_sint64));
+                    ::protobuf::rt::read_repeated_sint64_into(wire_type, is, &mut self.repeated_sint64)?;
                 },
                 37 => {
-                    try!(::protobuf::rt::read_repeated_fixed32_into(wire_type, is, &mut self.repeated_fixed32));
+                    ::protobuf::rt::read_repeated_fixed32_into(wire_type, is, &mut self.repeated_fixed32)?;
                 },
                 38 => {
-                    try!(::protobuf::rt::read_repeated_fixed64_into(wire_type, is, &mut self.repeated_fixed64));
+                    ::protobuf::rt::read_repeated_fixed64_into(wire_type, is, &mut self.repeated_fixed64)?;
                 },
                 39 => {
-                    try!(::protobuf::rt::read_repeated_sfixed32_into(wire_type, is, &mut self.repeated_sfixed32));
+                    ::protobuf::rt::read_repeated_sfixed32_into(wire_type, is, &mut self.repeated_sfixed32)?;
                 },
                 40 => {
-                    try!(::protobuf::rt::read_repeated_sfixed64_into(wire_type, is, &mut self.repeated_sfixed64));
+                    ::protobuf::rt::read_repeated_sfixed64_into(wire_type, is, &mut self.repeated_sfixed64)?;
                 },
                 41 => {
-                    try!(::protobuf::rt::read_repeated_float_into(wire_type, is, &mut self.repeated_float));
+                    ::protobuf::rt::read_repeated_float_into(wire_type, is, &mut self.repeated_float)?;
                 },
                 42 => {
-                    try!(::protobuf::rt::read_repeated_double_into(wire_type, is, &mut self.repeated_double));
+                    ::protobuf::rt::read_repeated_double_into(wire_type, is, &mut self.repeated_double)?;
                 },
                 43 => {
-                    try!(::protobuf::rt::read_repeated_bool_into(wire_type, is, &mut self.repeated_bool));
+                    ::protobuf::rt::read_repeated_bool_into(wire_type, is, &mut self.repeated_bool)?;
                 },
                 44 => {
-                    try!(::protobuf::rt::read_repeated_string_into(wire_type, is, &mut self.repeated_string));
+                    ::protobuf::rt::read_repeated_string_into(wire_type, is, &mut self.repeated_string)?;
                 },
                 45 => {
-                    try!(::protobuf::rt::read_repeated_bytes_into(wire_type, is, &mut self.repeated_bytes));
+                    ::protobuf::rt::read_repeated_bytes_into(wire_type, is, &mut self.repeated_bytes)?;
                 },
                 48 => {
-                    try!(::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.repeated_nested_message));
+                    ::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.repeated_nested_message)?;
                 },
                 49 => {
-                    try!(::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.repeated_foreign_message));
+                    ::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.repeated_foreign_message)?;
                 },
                 50 => {
-                    try!(::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.repeated_import_message));
+                    ::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.repeated_import_message)?;
                 },
                 51 => {
-                    try!(::protobuf::rt::read_repeated_enum_into(wire_type, is, &mut self.repeated_nested_enum));
+                    ::protobuf::rt::read_repeated_enum_into(wire_type, is, &mut self.repeated_nested_enum)?;
                 },
                 52 => {
-                    try!(::protobuf::rt::read_repeated_enum_into(wire_type, is, &mut self.repeated_foreign_enum));
+                    ::protobuf::rt::read_repeated_enum_into(wire_type, is, &mut self.repeated_foreign_enum)?;
                 },
                 53 => {
-                    try!(::protobuf::rt::read_repeated_enum_into(wire_type, is, &mut self.repeated_import_enum));
+                    ::protobuf::rt::read_repeated_enum_into(wire_type, is, &mut self.repeated_import_enum)?;
                 },
                 54 => {
-                    try!(::protobuf::rt::read_repeated_string_into(wire_type, is, &mut self.repeated_string_piece));
+                    ::protobuf::rt::read_repeated_string_into(wire_type, is, &mut self.repeated_string_piece)?;
                 },
                 55 => {
-                    try!(::protobuf::rt::read_repeated_string_into(wire_type, is, &mut self.repeated_cord));
+                    ::protobuf::rt::read_repeated_string_into(wire_type, is, &mut self.repeated_cord)?;
                 },
                 57 => {
-                    try!(::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.repeated_lazy_message));
+                    ::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.repeated_lazy_message)?;
                 },
                 61 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.default_int32 = ::std::option::Option::Some(tmp);
                 },
                 62 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int64());
+                    let tmp = is.read_int64()?;
                     self.default_int64 = ::std::option::Option::Some(tmp);
                 },
                 63 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_uint32());
+                    let tmp = is.read_uint32()?;
                     self.default_uint32 = ::std::option::Option::Some(tmp);
                 },
                 64 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_uint64());
+                    let tmp = is.read_uint64()?;
                     self.default_uint64 = ::std::option::Option::Some(tmp);
                 },
                 65 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_sint32());
+                    let tmp = is.read_sint32()?;
                     self.default_sint32 = ::std::option::Option::Some(tmp);
                 },
                 66 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_sint64());
+                    let tmp = is.read_sint64()?;
                     self.default_sint64 = ::std::option::Option::Some(tmp);
                 },
                 67 => {
                     if wire_type != ::protobuf::wire_format::WireTypeFixed32 {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_fixed32());
+                    let tmp = is.read_fixed32()?;
                     self.default_fixed32 = ::std::option::Option::Some(tmp);
                 },
                 68 => {
                     if wire_type != ::protobuf::wire_format::WireTypeFixed64 {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_fixed64());
+                    let tmp = is.read_fixed64()?;
                     self.default_fixed64 = ::std::option::Option::Some(tmp);
                 },
                 69 => {
                     if wire_type != ::protobuf::wire_format::WireTypeFixed32 {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_sfixed32());
+                    let tmp = is.read_sfixed32()?;
                     self.default_sfixed32 = ::std::option::Option::Some(tmp);
                 },
                 70 => {
                     if wire_type != ::protobuf::wire_format::WireTypeFixed64 {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_sfixed64());
+                    let tmp = is.read_sfixed64()?;
                     self.default_sfixed64 = ::std::option::Option::Some(tmp);
                 },
                 71 => {
                     if wire_type != ::protobuf::wire_format::WireTypeFixed32 {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_float());
+                    let tmp = is.read_float()?;
                     self.default_float = ::std::option::Option::Some(tmp);
                 },
                 72 => {
                     if wire_type != ::protobuf::wire_format::WireTypeFixed64 {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_double());
+                    let tmp = is.read_double()?;
                     self.default_double = ::std::option::Option::Some(tmp);
                 },
                 73 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_bool());
+                    let tmp = is.read_bool()?;
                     self.default_bool = ::std::option::Option::Some(tmp);
                 },
                 74 => {
-                    try!(::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.default_string));
+                    ::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.default_string)?;
                 },
                 75 => {
-                    try!(::protobuf::rt::read_singular_bytes_into(wire_type, is, &mut self.default_bytes));
+                    ::protobuf::rt::read_singular_bytes_into(wire_type, is, &mut self.default_bytes)?;
                 },
                 81 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_enum());
+                    let tmp = is.read_enum()?;
                     self.default_nested_enum = ::std::option::Option::Some(tmp);
                 },
                 82 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_enum());
+                    let tmp = is.read_enum()?;
                     self.default_foreign_enum = ::std::option::Option::Some(tmp);
                 },
                 83 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_enum());
+                    let tmp = is.read_enum()?;
                     self.default_import_enum = ::std::option::Option::Some(tmp);
                 },
                 84 => {
-                    try!(::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.default_string_piece));
+                    ::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.default_string_piece)?;
                 },
                 85 => {
-                    try!(::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.default_cord));
+                    ::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.default_cord)?;
                 },
                 111 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    self.oneof_field = ::std::option::Option::Some(TestAllTypes_oneof_oneof_field::oneof_uint32(try!(is.read_uint32())));
+                    self.oneof_field = ::std::option::Option::Some(TestAllTypes_oneof_oneof_field::oneof_uint32(is.read_uint32()?));
                 },
                 112 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    self.oneof_field = ::std::option::Option::Some(TestAllTypes_oneof_oneof_field::oneof_nested_message(try!(is.read_message())));
+                    self.oneof_field = ::std::option::Option::Some(TestAllTypes_oneof_oneof_field::oneof_nested_message(is.read_message()?));
                 },
                 113 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    self.oneof_field = ::std::option::Option::Some(TestAllTypes_oneof_oneof_field::oneof_string(try!(is.read_string())));
+                    self.oneof_field = ::std::option::Option::Some(TestAllTypes_oneof_oneof_field::oneof_string(is.read_string()?));
                 },
                 114 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    self.oneof_field = ::std::option::Option::Some(TestAllTypes_oneof_oneof_field::oneof_bytes(try!(is.read_bytes())));
+                    self.oneof_field = ::std::option::Option::Some(TestAllTypes_oneof_oneof_field::oneof_bytes(is.read_bytes()?));
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -2413,103 +2892,103 @@ impl ::protobuf::Message for TestAllTypes {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.optional_int32.iter() {
-            my_size += ::protobuf::rt::value_size(1, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.optional_int32 {
+            my_size += ::protobuf::rt::value_size(1, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.optional_int64.iter() {
-            my_size += ::protobuf::rt::value_size(2, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.optional_int64 {
+            my_size += ::protobuf::rt::value_size(2, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.optional_uint32.iter() {
-            my_size += ::protobuf::rt::value_size(3, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.optional_uint32 {
+            my_size += ::protobuf::rt::value_size(3, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.optional_uint64.iter() {
-            my_size += ::protobuf::rt::value_size(4, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.optional_uint64 {
+            my_size += ::protobuf::rt::value_size(4, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.optional_sint32.iter() {
-            my_size += ::protobuf::rt::value_size(5, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.optional_sint32 {
+            my_size += ::protobuf::rt::value_varint_zigzag_size(5, v);
         };
-        for value in self.optional_sint64.iter() {
-            my_size += ::protobuf::rt::value_size(6, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.optional_sint64 {
+            my_size += ::protobuf::rt::value_varint_zigzag_size(6, v);
         };
-        if self.optional_fixed32.is_some() {
+        if let Some(v) = self.optional_fixed32 {
             my_size += 5;
         };
-        if self.optional_fixed64.is_some() {
+        if let Some(v) = self.optional_fixed64 {
             my_size += 9;
         };
-        if self.optional_sfixed32.is_some() {
+        if let Some(v) = self.optional_sfixed32 {
             my_size += 5;
         };
-        if self.optional_sfixed64.is_some() {
+        if let Some(v) = self.optional_sfixed64 {
             my_size += 9;
         };
-        if self.optional_float.is_some() {
+        if let Some(v) = self.optional_float {
             my_size += 5;
         };
-        if self.optional_double.is_some() {
+        if let Some(v) = self.optional_double {
             my_size += 9;
         };
-        if self.optional_bool.is_some() {
+        if let Some(v) = self.optional_bool {
             my_size += 2;
         };
-        for value in self.optional_string.iter() {
-            my_size += ::protobuf::rt::string_size(14, &value);
+        if let Some(v) = self.optional_string.as_ref() {
+            my_size += ::protobuf::rt::string_size(14, &v);
         };
-        for value in self.optional_bytes.iter() {
-            my_size += ::protobuf::rt::bytes_size(15, &value);
+        if let Some(v) = self.optional_bytes.as_ref() {
+            my_size += ::protobuf::rt::bytes_size(15, &v);
         };
-        for value in self.optional_nested_message.iter() {
-            let len = value.compute_size();
+        if let Some(v) = self.optional_nested_message.as_ref() {
+            let len = v.compute_size();
             my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
-        for value in self.optional_foreign_message.iter() {
-            let len = value.compute_size();
+        if let Some(v) = self.optional_foreign_message.as_ref() {
+            let len = v.compute_size();
             my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
-        for value in self.optional_import_message.iter() {
-            let len = value.compute_size();
+        if let Some(v) = self.optional_import_message.as_ref() {
+            let len = v.compute_size();
             my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
-        for value in self.optional_nested_enum.iter() {
-            my_size += ::protobuf::rt::enum_size(21, *value);
+        if let Some(v) = self.optional_nested_enum {
+            my_size += ::protobuf::rt::enum_size(21, v);
         };
-        for value in self.optional_foreign_enum.iter() {
-            my_size += ::protobuf::rt::enum_size(22, *value);
+        if let Some(v) = self.optional_foreign_enum {
+            my_size += ::protobuf::rt::enum_size(22, v);
         };
-        for value in self.optional_import_enum.iter() {
-            my_size += ::protobuf::rt::enum_size(23, *value);
+        if let Some(v) = self.optional_import_enum {
+            my_size += ::protobuf::rt::enum_size(23, v);
         };
-        for value in self.optional_string_piece.iter() {
-            my_size += ::protobuf::rt::string_size(24, &value);
+        if let Some(v) = self.optional_string_piece.as_ref() {
+            my_size += ::protobuf::rt::string_size(24, &v);
         };
-        for value in self.optional_cord.iter() {
-            my_size += ::protobuf::rt::string_size(25, &value);
+        if let Some(v) = self.optional_cord.as_ref() {
+            my_size += ::protobuf::rt::string_size(25, &v);
         };
-        for value in self.optional_public_import_message.iter() {
-            let len = value.compute_size();
+        if let Some(v) = self.optional_public_import_message.as_ref() {
+            let len = v.compute_size();
             my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
-        for value in self.optional_lazy_message.iter() {
-            let len = value.compute_size();
+        if let Some(v) = self.optional_lazy_message.as_ref() {
+            let len = v.compute_size();
             my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
-        for value in self.repeated_int32.iter() {
+        for value in &self.repeated_int32 {
             my_size += ::protobuf::rt::value_size(31, *value, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.repeated_int64.iter() {
+        for value in &self.repeated_int64 {
             my_size += ::protobuf::rt::value_size(32, *value, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.repeated_uint32.iter() {
+        for value in &self.repeated_uint32 {
             my_size += ::protobuf::rt::value_size(33, *value, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.repeated_uint64.iter() {
+        for value in &self.repeated_uint64 {
             my_size += ::protobuf::rt::value_size(34, *value, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.repeated_sint32.iter() {
-            my_size += ::protobuf::rt::value_size(35, *value, ::protobuf::wire_format::WireTypeVarint);
+        for value in &self.repeated_sint32 {
+            my_size += ::protobuf::rt::value_varint_zigzag_size(35, *value);
         };
-        for value in self.repeated_sint64.iter() {
-            my_size += ::protobuf::rt::value_size(36, *value, ::protobuf::wire_format::WireTypeVarint);
+        for value in &self.repeated_sint64 {
+            my_size += ::protobuf::rt::value_varint_zigzag_size(36, *value);
         };
         my_size += 6 * self.repeated_fixed32.len() as u32;
         my_size += 10 * self.repeated_fixed64.len() as u32;
@@ -2518,102 +2997,102 @@ impl ::protobuf::Message for TestAllTypes {
         my_size += 6 * self.repeated_float.len() as u32;
         my_size += 10 * self.repeated_double.len() as u32;
         my_size += 3 * self.repeated_bool.len() as u32;
-        for value in self.repeated_string.iter() {
+        for value in &self.repeated_string {
             my_size += ::protobuf::rt::string_size(44, &value);
         };
-        for value in self.repeated_bytes.iter() {
+        for value in &self.repeated_bytes {
             my_size += ::protobuf::rt::bytes_size(45, &value);
         };
-        for value in self.repeated_nested_message.iter() {
+        for value in &self.repeated_nested_message {
             let len = value.compute_size();
             my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
-        for value in self.repeated_foreign_message.iter() {
+        for value in &self.repeated_foreign_message {
             let len = value.compute_size();
             my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
-        for value in self.repeated_import_message.iter() {
+        for value in &self.repeated_import_message {
             let len = value.compute_size();
             my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
-        for value in self.repeated_nested_enum.iter() {
+        for value in &self.repeated_nested_enum {
             my_size += ::protobuf::rt::enum_size(51, *value);
         };
-        for value in self.repeated_foreign_enum.iter() {
+        for value in &self.repeated_foreign_enum {
             my_size += ::protobuf::rt::enum_size(52, *value);
         };
-        for value in self.repeated_import_enum.iter() {
+        for value in &self.repeated_import_enum {
             my_size += ::protobuf::rt::enum_size(53, *value);
         };
-        for value in self.repeated_string_piece.iter() {
+        for value in &self.repeated_string_piece {
             my_size += ::protobuf::rt::string_size(54, &value);
         };
-        for value in self.repeated_cord.iter() {
+        for value in &self.repeated_cord {
             my_size += ::protobuf::rt::string_size(55, &value);
         };
-        for value in self.repeated_lazy_message.iter() {
+        for value in &self.repeated_lazy_message {
             let len = value.compute_size();
             my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
-        for value in self.default_int32.iter() {
-            my_size += ::protobuf::rt::value_size(61, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.default_int32 {
+            my_size += ::protobuf::rt::value_size(61, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.default_int64.iter() {
-            my_size += ::protobuf::rt::value_size(62, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.default_int64 {
+            my_size += ::protobuf::rt::value_size(62, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.default_uint32.iter() {
-            my_size += ::protobuf::rt::value_size(63, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.default_uint32 {
+            my_size += ::protobuf::rt::value_size(63, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.default_uint64.iter() {
-            my_size += ::protobuf::rt::value_size(64, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.default_uint64 {
+            my_size += ::protobuf::rt::value_size(64, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.default_sint32.iter() {
-            my_size += ::protobuf::rt::value_size(65, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.default_sint32 {
+            my_size += ::protobuf::rt::value_varint_zigzag_size(65, v);
         };
-        for value in self.default_sint64.iter() {
-            my_size += ::protobuf::rt::value_size(66, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.default_sint64 {
+            my_size += ::protobuf::rt::value_varint_zigzag_size(66, v);
         };
-        if self.default_fixed32.is_some() {
+        if let Some(v) = self.default_fixed32 {
             my_size += 6;
         };
-        if self.default_fixed64.is_some() {
+        if let Some(v) = self.default_fixed64 {
             my_size += 10;
         };
-        if self.default_sfixed32.is_some() {
+        if let Some(v) = self.default_sfixed32 {
             my_size += 6;
         };
-        if self.default_sfixed64.is_some() {
+        if let Some(v) = self.default_sfixed64 {
             my_size += 10;
         };
-        if self.default_float.is_some() {
+        if let Some(v) = self.default_float {
             my_size += 6;
         };
-        if self.default_double.is_some() {
+        if let Some(v) = self.default_double {
             my_size += 10;
         };
-        if self.default_bool.is_some() {
+        if let Some(v) = self.default_bool {
             my_size += 3;
         };
-        for value in self.default_string.iter() {
-            my_size += ::protobuf::rt::string_size(74, &value);
+        if let Some(v) = self.default_string.as_ref() {
+            my_size += ::protobuf::rt::string_size(74, &v);
         };
-        for value in self.default_bytes.iter() {
-            my_size += ::protobuf::rt::bytes_size(75, &value);
+        if let Some(v) = self.default_bytes.as_ref() {
+            my_size += ::protobuf::rt::bytes_size(75, &v);
         };
-        for value in self.default_nested_enum.iter() {
-            my_size += ::protobuf::rt::enum_size(81, *value);
+        if let Some(v) = self.default_nested_enum {
+            my_size += ::protobuf::rt::enum_size(81, v);
         };
-        for value in self.default_foreign_enum.iter() {
-            my_size += ::protobuf::rt::enum_size(82, *value);
+        if let Some(v) = self.default_foreign_enum {
+            my_size += ::protobuf::rt::enum_size(82, v);
         };
-        for value in self.default_import_enum.iter() {
-            my_size += ::protobuf::rt::enum_size(83, *value);
+        if let Some(v) = self.default_import_enum {
+            my_size += ::protobuf::rt::enum_size(83, v);
         };
-        for value in self.default_string_piece.iter() {
-            my_size += ::protobuf::rt::string_size(84, &value);
+        if let Some(v) = self.default_string_piece.as_ref() {
+            my_size += ::protobuf::rt::string_size(84, &v);
         };
-        for value in self.default_cord.iter() {
-            my_size += ::protobuf::rt::string_size(85, &value);
+        if let Some(v) = self.default_cord.as_ref() {
+            my_size += ::protobuf::rt::string_size(85, &v);
         };
         if let ::std::option::Option::Some(ref v) = self.oneof_field {
             match v {
@@ -2639,249 +3118,249 @@ impl ::protobuf::Message for TestAllTypes {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.optional_int32 {
-            try!(os.write_int32(1, v));
+            os.write_int32(1, v)?;
         };
         if let Some(v) = self.optional_int64 {
-            try!(os.write_int64(2, v));
+            os.write_int64(2, v)?;
         };
         if let Some(v) = self.optional_uint32 {
-            try!(os.write_uint32(3, v));
+            os.write_uint32(3, v)?;
         };
         if let Some(v) = self.optional_uint64 {
-            try!(os.write_uint64(4, v));
+            os.write_uint64(4, v)?;
         };
         if let Some(v) = self.optional_sint32 {
-            try!(os.write_sint32(5, v));
+            os.write_sint32(5, v)?;
         };
         if let Some(v) = self.optional_sint64 {
-            try!(os.write_sint64(6, v));
+            os.write_sint64(6, v)?;
         };
         if let Some(v) = self.optional_fixed32 {
-            try!(os.write_fixed32(7, v));
+            os.write_fixed32(7, v)?;
         };
         if let Some(v) = self.optional_fixed64 {
-            try!(os.write_fixed64(8, v));
+            os.write_fixed64(8, v)?;
         };
         if let Some(v) = self.optional_sfixed32 {
-            try!(os.write_sfixed32(9, v));
+            os.write_sfixed32(9, v)?;
         };
         if let Some(v) = self.optional_sfixed64 {
-            try!(os.write_sfixed64(10, v));
+            os.write_sfixed64(10, v)?;
         };
         if let Some(v) = self.optional_float {
-            try!(os.write_float(11, v));
+            os.write_float(11, v)?;
         };
         if let Some(v) = self.optional_double {
-            try!(os.write_double(12, v));
+            os.write_double(12, v)?;
         };
         if let Some(v) = self.optional_bool {
-            try!(os.write_bool(13, v));
+            os.write_bool(13, v)?;
         };
         if let Some(v) = self.optional_string.as_ref() {
-            try!(os.write_string(14, &v));
+            os.write_string(14, &v)?;
         };
         if let Some(v) = self.optional_bytes.as_ref() {
-            try!(os.write_bytes(15, &v));
+            os.write_bytes(15, &v)?;
         };
         if let Some(v) = self.optional_nested_message.as_ref() {
-            try!(os.write_tag(18, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+            os.write_tag(18, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
         if let Some(v) = self.optional_foreign_message.as_ref() {
-            try!(os.write_tag(19, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+            os.write_tag(19, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
         if let Some(v) = self.optional_import_message.as_ref() {
-            try!(os.write_tag(20, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+            os.write_tag(20, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
         if let Some(v) = self.optional_nested_enum {
-            try!(os.write_enum(21, v.value()));
+            os.write_enum(21, v.value())?;
         };
         if let Some(v) = self.optional_foreign_enum {
-            try!(os.write_enum(22, v.value()));
+            os.write_enum(22, v.value())?;
         };
         if let Some(v) = self.optional_import_enum {
-            try!(os.write_enum(23, v.value()));
+            os.write_enum(23, v.value())?;
         };
         if let Some(v) = self.optional_string_piece.as_ref() {
-            try!(os.write_string(24, &v));
+            os.write_string(24, &v)?;
         };
         if let Some(v) = self.optional_cord.as_ref() {
-            try!(os.write_string(25, &v));
+            os.write_string(25, &v)?;
         };
         if let Some(v) = self.optional_public_import_message.as_ref() {
-            try!(os.write_tag(26, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+            os.write_tag(26, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
         if let Some(v) = self.optional_lazy_message.as_ref() {
-            try!(os.write_tag(27, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+            os.write_tag(27, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
-        for v in self.repeated_int32.iter() {
-            try!(os.write_int32(31, *v));
+        for v in &self.repeated_int32 {
+            os.write_int32(31, *v)?;
         };
-        for v in self.repeated_int64.iter() {
-            try!(os.write_int64(32, *v));
+        for v in &self.repeated_int64 {
+            os.write_int64(32, *v)?;
         };
-        for v in self.repeated_uint32.iter() {
-            try!(os.write_uint32(33, *v));
+        for v in &self.repeated_uint32 {
+            os.write_uint32(33, *v)?;
         };
-        for v in self.repeated_uint64.iter() {
-            try!(os.write_uint64(34, *v));
+        for v in &self.repeated_uint64 {
+            os.write_uint64(34, *v)?;
         };
-        for v in self.repeated_sint32.iter() {
-            try!(os.write_sint32(35, *v));
+        for v in &self.repeated_sint32 {
+            os.write_sint32(35, *v)?;
         };
-        for v in self.repeated_sint64.iter() {
-            try!(os.write_sint64(36, *v));
+        for v in &self.repeated_sint64 {
+            os.write_sint64(36, *v)?;
         };
-        for v in self.repeated_fixed32.iter() {
-            try!(os.write_fixed32(37, *v));
+        for v in &self.repeated_fixed32 {
+            os.write_fixed32(37, *v)?;
         };
-        for v in self.repeated_fixed64.iter() {
-            try!(os.write_fixed64(38, *v));
+        for v in &self.repeated_fixed64 {
+            os.write_fixed64(38, *v)?;
         };
-        for v in self.repeated_sfixed32.iter() {
-            try!(os.write_sfixed32(39, *v));
+        for v in &self.repeated_sfixed32 {
+            os.write_sfixed32(39, *v)?;
         };
-        for v in self.repeated_sfixed64.iter() {
-            try!(os.write_sfixed64(40, *v));
+        for v in &self.repeated_sfixed64 {
+            os.write_sfixed64(40, *v)?;
         };
-        for v in self.repeated_float.iter() {
-            try!(os.write_float(41, *v));
+        for v in &self.repeated_float {
+            os.write_float(41, *v)?;
         };
-        for v in self.repeated_double.iter() {
-            try!(os.write_double(42, *v));
+        for v in &self.repeated_double {
+            os.write_double(42, *v)?;
         };
-        for v in self.repeated_bool.iter() {
-            try!(os.write_bool(43, *v));
+        for v in &self.repeated_bool {
+            os.write_bool(43, *v)?;
         };
-        for v in self.repeated_string.iter() {
-            try!(os.write_string(44, &v));
+        for v in &self.repeated_string {
+            os.write_string(44, &v)?;
         };
-        for v in self.repeated_bytes.iter() {
-            try!(os.write_bytes(45, &v));
+        for v in &self.repeated_bytes {
+            os.write_bytes(45, &v)?;
         };
-        for v in self.repeated_nested_message.iter() {
-            try!(os.write_tag(48, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+        for v in &self.repeated_nested_message {
+            os.write_tag(48, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
-        for v in self.repeated_foreign_message.iter() {
-            try!(os.write_tag(49, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+        for v in &self.repeated_foreign_message {
+            os.write_tag(49, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
-        for v in self.repeated_import_message.iter() {
-            try!(os.write_tag(50, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+        for v in &self.repeated_import_message {
+            os.write_tag(50, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
-        for v in self.repeated_nested_enum.iter() {
-            try!(os.write_enum(51, v.value()));
+        for v in &self.repeated_nested_enum {
+            os.write_enum(51, v.value())?;
         };
-        for v in self.repeated_foreign_enum.iter() {
-            try!(os.write_enum(52, v.value()));
+        for v in &self.repeated_foreign_enum {
+            os.write_enum(52, v.value())?;
         };
-        for v in self.repeated_import_enum.iter() {
-            try!(os.write_enum(53, v.value()));
+        for v in &self.repeated_import_enum {
+            os.write_enum(53, v.value())?;
         };
-        for v in self.repeated_string_piece.iter() {
-            try!(os.write_string(54, &v));
+        for v in &self.repeated_string_piece {
+            os.write_string(54, &v)?;
         };
-        for v in self.repeated_cord.iter() {
-            try!(os.write_string(55, &v));
+        for v in &self.repeated_cord {
+            os.write_string(55, &v)?;
         };
-        for v in self.repeated_lazy_message.iter() {
-            try!(os.write_tag(57, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+        for v in &self.repeated_lazy_message {
+            os.write_tag(57, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
         if let Some(v) = self.default_int32 {
-            try!(os.write_int32(61, v));
+            os.write_int32(61, v)?;
         };
         if let Some(v) = self.default_int64 {
-            try!(os.write_int64(62, v));
+            os.write_int64(62, v)?;
         };
         if let Some(v) = self.default_uint32 {
-            try!(os.write_uint32(63, v));
+            os.write_uint32(63, v)?;
         };
         if let Some(v) = self.default_uint64 {
-            try!(os.write_uint64(64, v));
+            os.write_uint64(64, v)?;
         };
         if let Some(v) = self.default_sint32 {
-            try!(os.write_sint32(65, v));
+            os.write_sint32(65, v)?;
         };
         if let Some(v) = self.default_sint64 {
-            try!(os.write_sint64(66, v));
+            os.write_sint64(66, v)?;
         };
         if let Some(v) = self.default_fixed32 {
-            try!(os.write_fixed32(67, v));
+            os.write_fixed32(67, v)?;
         };
         if let Some(v) = self.default_fixed64 {
-            try!(os.write_fixed64(68, v));
+            os.write_fixed64(68, v)?;
         };
         if let Some(v) = self.default_sfixed32 {
-            try!(os.write_sfixed32(69, v));
+            os.write_sfixed32(69, v)?;
         };
         if let Some(v) = self.default_sfixed64 {
-            try!(os.write_sfixed64(70, v));
+            os.write_sfixed64(70, v)?;
         };
         if let Some(v) = self.default_float {
-            try!(os.write_float(71, v));
+            os.write_float(71, v)?;
         };
         if let Some(v) = self.default_double {
-            try!(os.write_double(72, v));
+            os.write_double(72, v)?;
         };
         if let Some(v) = self.default_bool {
-            try!(os.write_bool(73, v));
+            os.write_bool(73, v)?;
         };
         if let Some(v) = self.default_string.as_ref() {
-            try!(os.write_string(74, &v));
+            os.write_string(74, &v)?;
         };
         if let Some(v) = self.default_bytes.as_ref() {
-            try!(os.write_bytes(75, &v));
+            os.write_bytes(75, &v)?;
         };
         if let Some(v) = self.default_nested_enum {
-            try!(os.write_enum(81, v.value()));
+            os.write_enum(81, v.value())?;
         };
         if let Some(v) = self.default_foreign_enum {
-            try!(os.write_enum(82, v.value()));
+            os.write_enum(82, v.value())?;
         };
         if let Some(v) = self.default_import_enum {
-            try!(os.write_enum(83, v.value()));
+            os.write_enum(83, v.value())?;
         };
         if let Some(v) = self.default_string_piece.as_ref() {
-            try!(os.write_string(84, &v));
+            os.write_string(84, &v)?;
         };
         if let Some(v) = self.default_cord.as_ref() {
-            try!(os.write_string(85, &v));
+            os.write_string(85, &v)?;
         };
         if let ::std::option::Option::Some(ref v) = self.oneof_field {
             match v {
                 &TestAllTypes_oneof_oneof_field::oneof_uint32(v) => {
-                    try!(os.write_uint32(111, v));
+                    os.write_uint32(111, v)?;
                 },
                 &TestAllTypes_oneof_oneof_field::oneof_nested_message(ref v) => {
-                    try!(os.write_tag(112, ::protobuf::wire_format::WireTypeLengthDelimited));
-                    try!(os.write_raw_varint32(v.get_cached_size()));
-                    try!(v.write_to_with_cached_sizes(os));
+                    os.write_tag(112, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+                    os.write_raw_varint32(v.get_cached_size())?;
+                    v.write_to_with_cached_sizes(os)?;
                 },
                 &TestAllTypes_oneof_oneof_field::oneof_string(ref v) => {
-                    try!(os.write_string(113, v));
+                    os.write_string(113, v)?;
                 },
                 &TestAllTypes_oneof_oneof_field::oneof_bytes(ref v) => {
-                    try!(os.write_bytes(114, v));
+                    os.write_bytes(114, v)?;
                 },
             };
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -2897,12 +3376,14 @@ impl ::protobuf::Message for TestAllTypes {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestAllTypes>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -2923,343 +3404,367 @@ impl ::protobuf::MessageStatic for TestAllTypes {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "optional_int32",
-                    TestAllTypes::has_optional_int32,
-                    TestAllTypes::get_optional_int32,
+                    TestAllTypes::get_optional_int32_for_reflect,
+                    TestAllTypes::mut_optional_int32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt64>(
                     "optional_int64",
-                    TestAllTypes::has_optional_int64,
-                    TestAllTypes::get_optional_int64,
+                    TestAllTypes::get_optional_int64_for_reflect,
+                    TestAllTypes::mut_optional_int64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_u32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeUint32>(
                     "optional_uint32",
-                    TestAllTypes::has_optional_uint32,
-                    TestAllTypes::get_optional_uint32,
+                    TestAllTypes::get_optional_uint32_for_reflect,
+                    TestAllTypes::mut_optional_uint32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_u64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeUint64>(
                     "optional_uint64",
-                    TestAllTypes::has_optional_uint64,
-                    TestAllTypes::get_optional_uint64,
+                    TestAllTypes::get_optional_uint64_for_reflect,
+                    TestAllTypes::mut_optional_uint64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeSint32>(
                     "optional_sint32",
-                    TestAllTypes::has_optional_sint32,
-                    TestAllTypes::get_optional_sint32,
+                    TestAllTypes::get_optional_sint32_for_reflect,
+                    TestAllTypes::mut_optional_sint32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeSint64>(
                     "optional_sint64",
-                    TestAllTypes::has_optional_sint64,
-                    TestAllTypes::get_optional_sint64,
+                    TestAllTypes::get_optional_sint64_for_reflect,
+                    TestAllTypes::mut_optional_sint64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_u32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeFixed32>(
                     "optional_fixed32",
-                    TestAllTypes::has_optional_fixed32,
-                    TestAllTypes::get_optional_fixed32,
+                    TestAllTypes::get_optional_fixed32_for_reflect,
+                    TestAllTypes::mut_optional_fixed32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_u64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeFixed64>(
                     "optional_fixed64",
-                    TestAllTypes::has_optional_fixed64,
-                    TestAllTypes::get_optional_fixed64,
+                    TestAllTypes::get_optional_fixed64_for_reflect,
+                    TestAllTypes::mut_optional_fixed64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeSfixed32>(
                     "optional_sfixed32",
-                    TestAllTypes::has_optional_sfixed32,
-                    TestAllTypes::get_optional_sfixed32,
+                    TestAllTypes::get_optional_sfixed32_for_reflect,
+                    TestAllTypes::mut_optional_sfixed32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeSfixed64>(
                     "optional_sfixed64",
-                    TestAllTypes::has_optional_sfixed64,
-                    TestAllTypes::get_optional_sfixed64,
+                    TestAllTypes::get_optional_sfixed64_for_reflect,
+                    TestAllTypes::mut_optional_sfixed64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_f32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeFloat>(
                     "optional_float",
-                    TestAllTypes::has_optional_float,
-                    TestAllTypes::get_optional_float,
+                    TestAllTypes::get_optional_float_for_reflect,
+                    TestAllTypes::mut_optional_float_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_f64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeDouble>(
                     "optional_double",
-                    TestAllTypes::has_optional_double,
-                    TestAllTypes::get_optional_double,
+                    TestAllTypes::get_optional_double_for_reflect,
+                    TestAllTypes::mut_optional_double_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_bool_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeBool>(
                     "optional_bool",
-                    TestAllTypes::has_optional_bool,
-                    TestAllTypes::get_optional_bool,
+                    TestAllTypes::get_optional_bool_for_reflect,
+                    TestAllTypes::mut_optional_bool_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "optional_string",
-                    TestAllTypes::has_optional_string,
-                    TestAllTypes::get_optional_string,
+                    TestAllTypes::get_optional_string_for_reflect,
+                    TestAllTypes::mut_optional_string_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_field_accessor::<_, ::protobuf::types::ProtobufTypeBytes>(
                     "optional_bytes",
-                    TestAllTypes::has_optional_bytes,
-                    TestAllTypes::get_optional_bytes,
+                    TestAllTypes::get_optional_bytes_for_reflect,
+                    TestAllTypes::mut_optional_bytes_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<TestAllTypes_NestedMessage>>(
                     "optional_nested_message",
-                    TestAllTypes::has_optional_nested_message,
-                    TestAllTypes::get_optional_nested_message,
+                    TestAllTypes::get_optional_nested_message_for_reflect,
+                    TestAllTypes::mut_optional_nested_message_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<ForeignMessage>>(
                     "optional_foreign_message",
-                    TestAllTypes::has_optional_foreign_message,
-                    TestAllTypes::get_optional_foreign_message,
+                    TestAllTypes::get_optional_foreign_message_for_reflect,
+                    TestAllTypes::mut_optional_foreign_message_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<super::unittest_import::ImportMessage>>(
                     "optional_import_message",
-                    TestAllTypes::has_optional_import_message,
-                    TestAllTypes::get_optional_import_message,
+                    TestAllTypes::get_optional_import_message_for_reflect,
+                    TestAllTypes::mut_optional_import_message_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_enum_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeEnum<TestAllTypes_NestedEnum>>(
                     "optional_nested_enum",
-                    TestAllTypes::has_optional_nested_enum,
-                    TestAllTypes::get_optional_nested_enum,
+                    TestAllTypes::get_optional_nested_enum_for_reflect,
+                    TestAllTypes::mut_optional_nested_enum_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_enum_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeEnum<ForeignEnum>>(
                     "optional_foreign_enum",
-                    TestAllTypes::has_optional_foreign_enum,
-                    TestAllTypes::get_optional_foreign_enum,
+                    TestAllTypes::get_optional_foreign_enum_for_reflect,
+                    TestAllTypes::mut_optional_foreign_enum_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_enum_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeEnum<super::unittest_import::ImportEnum>>(
                     "optional_import_enum",
-                    TestAllTypes::has_optional_import_enum,
-                    TestAllTypes::get_optional_import_enum,
+                    TestAllTypes::get_optional_import_enum_for_reflect,
+                    TestAllTypes::mut_optional_import_enum_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "optional_string_piece",
-                    TestAllTypes::has_optional_string_piece,
-                    TestAllTypes::get_optional_string_piece,
+                    TestAllTypes::get_optional_string_piece_for_reflect,
+                    TestAllTypes::mut_optional_string_piece_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "optional_cord",
-                    TestAllTypes::has_optional_cord,
-                    TestAllTypes::get_optional_cord,
+                    TestAllTypes::get_optional_cord_for_reflect,
+                    TestAllTypes::mut_optional_cord_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<super::unittest_import_public::PublicImportMessage>>(
                     "optional_public_import_message",
-                    TestAllTypes::has_optional_public_import_message,
-                    TestAllTypes::get_optional_public_import_message,
+                    TestAllTypes::get_optional_public_import_message_for_reflect,
+                    TestAllTypes::mut_optional_public_import_message_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<TestAllTypes_NestedMessage>>(
                     "optional_lazy_message",
-                    TestAllTypes::has_optional_lazy_message,
-                    TestAllTypes::get_optional_lazy_message,
+                    TestAllTypes::get_optional_lazy_message_for_reflect,
+                    TestAllTypes::mut_optional_lazy_message_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "repeated_int32",
-                    TestAllTypes::get_repeated_int32,
+                    TestAllTypes::get_repeated_int32_for_reflect,
+                    TestAllTypes::mut_repeated_int32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_i64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeInt64>(
                     "repeated_int64",
-                    TestAllTypes::get_repeated_int64,
+                    TestAllTypes::get_repeated_int64_for_reflect,
+                    TestAllTypes::mut_repeated_int64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_u32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeUint32>(
                     "repeated_uint32",
-                    TestAllTypes::get_repeated_uint32,
+                    TestAllTypes::get_repeated_uint32_for_reflect,
+                    TestAllTypes::mut_repeated_uint32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_u64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeUint64>(
                     "repeated_uint64",
-                    TestAllTypes::get_repeated_uint64,
+                    TestAllTypes::get_repeated_uint64_for_reflect,
+                    TestAllTypes::mut_repeated_uint64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeSint32>(
                     "repeated_sint32",
-                    TestAllTypes::get_repeated_sint32,
+                    TestAllTypes::get_repeated_sint32_for_reflect,
+                    TestAllTypes::mut_repeated_sint32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_i64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeSint64>(
                     "repeated_sint64",
-                    TestAllTypes::get_repeated_sint64,
+                    TestAllTypes::get_repeated_sint64_for_reflect,
+                    TestAllTypes::mut_repeated_sint64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_u32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeFixed32>(
                     "repeated_fixed32",
-                    TestAllTypes::get_repeated_fixed32,
+                    TestAllTypes::get_repeated_fixed32_for_reflect,
+                    TestAllTypes::mut_repeated_fixed32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_u64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeFixed64>(
                     "repeated_fixed64",
-                    TestAllTypes::get_repeated_fixed64,
+                    TestAllTypes::get_repeated_fixed64_for_reflect,
+                    TestAllTypes::mut_repeated_fixed64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeSfixed32>(
                     "repeated_sfixed32",
-                    TestAllTypes::get_repeated_sfixed32,
+                    TestAllTypes::get_repeated_sfixed32_for_reflect,
+                    TestAllTypes::mut_repeated_sfixed32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_i64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeSfixed64>(
                     "repeated_sfixed64",
-                    TestAllTypes::get_repeated_sfixed64,
+                    TestAllTypes::get_repeated_sfixed64_for_reflect,
+                    TestAllTypes::mut_repeated_sfixed64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_f32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeFloat>(
                     "repeated_float",
-                    TestAllTypes::get_repeated_float,
+                    TestAllTypes::get_repeated_float_for_reflect,
+                    TestAllTypes::mut_repeated_float_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_f64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeDouble>(
                     "repeated_double",
-                    TestAllTypes::get_repeated_double,
+                    TestAllTypes::get_repeated_double_for_reflect,
+                    TestAllTypes::mut_repeated_double_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_bool_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeBool>(
                     "repeated_bool",
-                    TestAllTypes::get_repeated_bool,
+                    TestAllTypes::get_repeated_bool_for_reflect,
+                    TestAllTypes::mut_repeated_bool_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "repeated_string",
-                    TestAllTypes::get_repeated_string,
+                    TestAllTypes::get_repeated_string_for_reflect,
+                    TestAllTypes::mut_repeated_string_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_bytes_accessor(
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeBytes>(
                     "repeated_bytes",
-                    TestAllTypes::get_repeated_bytes,
+                    TestAllTypes::get_repeated_bytes_for_reflect,
+                    TestAllTypes::mut_repeated_bytes_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<TestAllTypes_NestedMessage>>(
                     "repeated_nested_message",
-                    TestAllTypes::get_repeated_nested_message,
+                    TestAllTypes::get_repeated_nested_message_for_reflect,
+                    TestAllTypes::mut_repeated_nested_message_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<ForeignMessage>>(
                     "repeated_foreign_message",
-                    TestAllTypes::get_repeated_foreign_message,
+                    TestAllTypes::get_repeated_foreign_message_for_reflect,
+                    TestAllTypes::mut_repeated_foreign_message_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<super::unittest_import::ImportMessage>>(
                     "repeated_import_message",
-                    TestAllTypes::get_repeated_import_message,
+                    TestAllTypes::get_repeated_import_message_for_reflect,
+                    TestAllTypes::mut_repeated_import_message_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_enum_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeEnum<TestAllTypes_NestedEnum>>(
                     "repeated_nested_enum",
-                    TestAllTypes::get_repeated_nested_enum,
+                    TestAllTypes::get_repeated_nested_enum_for_reflect,
+                    TestAllTypes::mut_repeated_nested_enum_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_enum_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeEnum<ForeignEnum>>(
                     "repeated_foreign_enum",
-                    TestAllTypes::get_repeated_foreign_enum,
+                    TestAllTypes::get_repeated_foreign_enum_for_reflect,
+                    TestAllTypes::mut_repeated_foreign_enum_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_enum_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeEnum<super::unittest_import::ImportEnum>>(
                     "repeated_import_enum",
-                    TestAllTypes::get_repeated_import_enum,
+                    TestAllTypes::get_repeated_import_enum_for_reflect,
+                    TestAllTypes::mut_repeated_import_enum_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "repeated_string_piece",
-                    TestAllTypes::get_repeated_string_piece,
+                    TestAllTypes::get_repeated_string_piece_for_reflect,
+                    TestAllTypes::mut_repeated_string_piece_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "repeated_cord",
-                    TestAllTypes::get_repeated_cord,
+                    TestAllTypes::get_repeated_cord_for_reflect,
+                    TestAllTypes::mut_repeated_cord_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<TestAllTypes_NestedMessage>>(
                     "repeated_lazy_message",
-                    TestAllTypes::get_repeated_lazy_message,
+                    TestAllTypes::get_repeated_lazy_message_for_reflect,
+                    TestAllTypes::mut_repeated_lazy_message_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "default_int32",
-                    TestAllTypes::has_default_int32,
-                    TestAllTypes::get_default_int32,
+                    TestAllTypes::get_default_int32_for_reflect,
+                    TestAllTypes::mut_default_int32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt64>(
                     "default_int64",
-                    TestAllTypes::has_default_int64,
-                    TestAllTypes::get_default_int64,
+                    TestAllTypes::get_default_int64_for_reflect,
+                    TestAllTypes::mut_default_int64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_u32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeUint32>(
                     "default_uint32",
-                    TestAllTypes::has_default_uint32,
-                    TestAllTypes::get_default_uint32,
+                    TestAllTypes::get_default_uint32_for_reflect,
+                    TestAllTypes::mut_default_uint32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_u64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeUint64>(
                     "default_uint64",
-                    TestAllTypes::has_default_uint64,
-                    TestAllTypes::get_default_uint64,
+                    TestAllTypes::get_default_uint64_for_reflect,
+                    TestAllTypes::mut_default_uint64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeSint32>(
                     "default_sint32",
-                    TestAllTypes::has_default_sint32,
-                    TestAllTypes::get_default_sint32,
+                    TestAllTypes::get_default_sint32_for_reflect,
+                    TestAllTypes::mut_default_sint32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeSint64>(
                     "default_sint64",
-                    TestAllTypes::has_default_sint64,
-                    TestAllTypes::get_default_sint64,
+                    TestAllTypes::get_default_sint64_for_reflect,
+                    TestAllTypes::mut_default_sint64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_u32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeFixed32>(
                     "default_fixed32",
-                    TestAllTypes::has_default_fixed32,
-                    TestAllTypes::get_default_fixed32,
+                    TestAllTypes::get_default_fixed32_for_reflect,
+                    TestAllTypes::mut_default_fixed32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_u64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeFixed64>(
                     "default_fixed64",
-                    TestAllTypes::has_default_fixed64,
-                    TestAllTypes::get_default_fixed64,
+                    TestAllTypes::get_default_fixed64_for_reflect,
+                    TestAllTypes::mut_default_fixed64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeSfixed32>(
                     "default_sfixed32",
-                    TestAllTypes::has_default_sfixed32,
-                    TestAllTypes::get_default_sfixed32,
+                    TestAllTypes::get_default_sfixed32_for_reflect,
+                    TestAllTypes::mut_default_sfixed32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeSfixed64>(
                     "default_sfixed64",
-                    TestAllTypes::has_default_sfixed64,
-                    TestAllTypes::get_default_sfixed64,
+                    TestAllTypes::get_default_sfixed64_for_reflect,
+                    TestAllTypes::mut_default_sfixed64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_f32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeFloat>(
                     "default_float",
-                    TestAllTypes::has_default_float,
-                    TestAllTypes::get_default_float,
+                    TestAllTypes::get_default_float_for_reflect,
+                    TestAllTypes::mut_default_float_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_f64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeDouble>(
                     "default_double",
-                    TestAllTypes::has_default_double,
-                    TestAllTypes::get_default_double,
+                    TestAllTypes::get_default_double_for_reflect,
+                    TestAllTypes::mut_default_double_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_bool_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeBool>(
                     "default_bool",
-                    TestAllTypes::has_default_bool,
-                    TestAllTypes::get_default_bool,
+                    TestAllTypes::get_default_bool_for_reflect,
+                    TestAllTypes::mut_default_bool_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "default_string",
-                    TestAllTypes::has_default_string,
-                    TestAllTypes::get_default_string,
+                    TestAllTypes::get_default_string_for_reflect,
+                    TestAllTypes::mut_default_string_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_field_accessor::<_, ::protobuf::types::ProtobufTypeBytes>(
                     "default_bytes",
-                    TestAllTypes::has_default_bytes,
-                    TestAllTypes::get_default_bytes,
+                    TestAllTypes::get_default_bytes_for_reflect,
+                    TestAllTypes::mut_default_bytes_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_enum_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeEnum<TestAllTypes_NestedEnum>>(
                     "default_nested_enum",
-                    TestAllTypes::has_default_nested_enum,
-                    TestAllTypes::get_default_nested_enum,
+                    TestAllTypes::get_default_nested_enum_for_reflect,
+                    TestAllTypes::mut_default_nested_enum_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_enum_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeEnum<ForeignEnum>>(
                     "default_foreign_enum",
-                    TestAllTypes::has_default_foreign_enum,
-                    TestAllTypes::get_default_foreign_enum,
+                    TestAllTypes::get_default_foreign_enum_for_reflect,
+                    TestAllTypes::mut_default_foreign_enum_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_enum_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeEnum<super::unittest_import::ImportEnum>>(
                     "default_import_enum",
-                    TestAllTypes::has_default_import_enum,
-                    TestAllTypes::get_default_import_enum,
+                    TestAllTypes::get_default_import_enum_for_reflect,
+                    TestAllTypes::mut_default_import_enum_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "default_string_piece",
-                    TestAllTypes::has_default_string_piece,
-                    TestAllTypes::get_default_string_piece,
+                    TestAllTypes::get_default_string_piece_for_reflect,
+                    TestAllTypes::mut_default_string_piece_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "default_cord",
-                    TestAllTypes::has_default_cord,
-                    TestAllTypes::get_default_cord,
+                    TestAllTypes::get_default_cord_for_reflect,
+                    TestAllTypes::mut_default_cord_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_u32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_u32_accessor::<_>(
                     "oneof_uint32",
                     TestAllTypes::has_oneof_uint32,
                     TestAllTypes::get_oneof_uint32,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, TestAllTypes_NestedMessage>(
                     "oneof_nested_message",
                     TestAllTypes::has_oneof_nested_message,
                     TestAllTypes::get_oneof_nested_message,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor::<_>(
                     "oneof_string",
                     TestAllTypes::has_oneof_string,
                     TestAllTypes::get_oneof_string,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor::<_>(
                     "oneof_bytes",
                     TestAllTypes::has_oneof_bytes,
                     TestAllTypes::get_oneof_bytes,
@@ -3353,95 +3858,25 @@ impl ::protobuf::Clear for TestAllTypes {
     }
 }
 
-impl ::std::cmp::PartialEq for TestAllTypes {
-    fn eq(&self, other: &TestAllTypes) -> bool {
-        self.optional_int32 == other.optional_int32 &&
-        self.optional_int64 == other.optional_int64 &&
-        self.optional_uint32 == other.optional_uint32 &&
-        self.optional_uint64 == other.optional_uint64 &&
-        self.optional_sint32 == other.optional_sint32 &&
-        self.optional_sint64 == other.optional_sint64 &&
-        self.optional_fixed32 == other.optional_fixed32 &&
-        self.optional_fixed64 == other.optional_fixed64 &&
-        self.optional_sfixed32 == other.optional_sfixed32 &&
-        self.optional_sfixed64 == other.optional_sfixed64 &&
-        self.optional_float == other.optional_float &&
-        self.optional_double == other.optional_double &&
-        self.optional_bool == other.optional_bool &&
-        self.optional_string == other.optional_string &&
-        self.optional_bytes == other.optional_bytes &&
-        self.optional_nested_message == other.optional_nested_message &&
-        self.optional_foreign_message == other.optional_foreign_message &&
-        self.optional_import_message == other.optional_import_message &&
-        self.optional_nested_enum == other.optional_nested_enum &&
-        self.optional_foreign_enum == other.optional_foreign_enum &&
-        self.optional_import_enum == other.optional_import_enum &&
-        self.optional_string_piece == other.optional_string_piece &&
-        self.optional_cord == other.optional_cord &&
-        self.optional_public_import_message == other.optional_public_import_message &&
-        self.optional_lazy_message == other.optional_lazy_message &&
-        self.repeated_int32 == other.repeated_int32 &&
-        self.repeated_int64 == other.repeated_int64 &&
-        self.repeated_uint32 == other.repeated_uint32 &&
-        self.repeated_uint64 == other.repeated_uint64 &&
-        self.repeated_sint32 == other.repeated_sint32 &&
-        self.repeated_sint64 == other.repeated_sint64 &&
-        self.repeated_fixed32 == other.repeated_fixed32 &&
-        self.repeated_fixed64 == other.repeated_fixed64 &&
-        self.repeated_sfixed32 == other.repeated_sfixed32 &&
-        self.repeated_sfixed64 == other.repeated_sfixed64 &&
-        self.repeated_float == other.repeated_float &&
-        self.repeated_double == other.repeated_double &&
-        self.repeated_bool == other.repeated_bool &&
-        self.repeated_string == other.repeated_string &&
-        self.repeated_bytes == other.repeated_bytes &&
-        self.repeated_nested_message == other.repeated_nested_message &&
-        self.repeated_foreign_message == other.repeated_foreign_message &&
-        self.repeated_import_message == other.repeated_import_message &&
-        self.repeated_nested_enum == other.repeated_nested_enum &&
-        self.repeated_foreign_enum == other.repeated_foreign_enum &&
-        self.repeated_import_enum == other.repeated_import_enum &&
-        self.repeated_string_piece == other.repeated_string_piece &&
-        self.repeated_cord == other.repeated_cord &&
-        self.repeated_lazy_message == other.repeated_lazy_message &&
-        self.default_int32 == other.default_int32 &&
-        self.default_int64 == other.default_int64 &&
-        self.default_uint32 == other.default_uint32 &&
-        self.default_uint64 == other.default_uint64 &&
-        self.default_sint32 == other.default_sint32 &&
-        self.default_sint64 == other.default_sint64 &&
-        self.default_fixed32 == other.default_fixed32 &&
-        self.default_fixed64 == other.default_fixed64 &&
-        self.default_sfixed32 == other.default_sfixed32 &&
-        self.default_sfixed64 == other.default_sfixed64 &&
-        self.default_float == other.default_float &&
-        self.default_double == other.default_double &&
-        self.default_bool == other.default_bool &&
-        self.default_string == other.default_string &&
-        self.default_bytes == other.default_bytes &&
-        self.default_nested_enum == other.default_nested_enum &&
-        self.default_foreign_enum == other.default_foreign_enum &&
-        self.default_import_enum == other.default_import_enum &&
-        self.default_string_piece == other.default_string_piece &&
-        self.default_cord == other.default_cord &&
-        self.oneof_field == other.oneof_field &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestAllTypes {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestAllTypes {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestAllTypes_NestedMessage {
     // message fields
     bb: ::std::option::Option<i32>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -3458,13 +3893,7 @@ impl TestAllTypes_NestedMessage {
             ptr: 0 as *const TestAllTypes_NestedMessage,
         };
         unsafe {
-            instance.get(|| {
-                TestAllTypes_NestedMessage {
-                    bb: ::std::option::Option::None,
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestAllTypes_NestedMessage::new)
         }
     }
 
@@ -3486,6 +3915,14 @@ impl TestAllTypes_NestedMessage {
     pub fn get_bb(&self) -> i32 {
         self.bb.unwrap_or(0)
     }
+
+    fn get_bb_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.bb
+    }
+
+    fn mut_bb_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.bb
+    }
 }
 
 impl ::protobuf::Message for TestAllTypes_NestedMessage {
@@ -3494,18 +3931,18 @@ impl ::protobuf::Message for TestAllTypes_NestedMessage {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.bb = ::std::option::Option::Some(tmp);
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -3516,8 +3953,8 @@ impl ::protobuf::Message for TestAllTypes_NestedMessage {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.bb.iter() {
-            my_size += ::protobuf::rt::value_size(1, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.bb {
+            my_size += ::protobuf::rt::value_size(1, v, ::protobuf::wire_format::WireTypeVarint);
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
@@ -3526,9 +3963,9 @@ impl ::protobuf::Message for TestAllTypes_NestedMessage {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.bb {
-            try!(os.write_int32(1, v));
+            os.write_int32(1, v)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -3544,12 +3981,14 @@ impl ::protobuf::Message for TestAllTypes_NestedMessage {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestAllTypes_NestedMessage>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -3570,10 +4009,10 @@ impl ::protobuf::MessageStatic for TestAllTypes_NestedMessage {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "bb",
-                    TestAllTypes_NestedMessage::has_bb,
-                    TestAllTypes_NestedMessage::get_bb,
+                    TestAllTypes_NestedMessage::get_bb_for_reflect,
+                    TestAllTypes_NestedMessage::mut_bb_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestAllTypes_NestedMessage>(
                     "TestAllTypes_NestedMessage",
@@ -3592,16 +4031,15 @@ impl ::protobuf::Clear for TestAllTypes_NestedMessage {
     }
 }
 
-impl ::std::cmp::PartialEq for TestAllTypes_NestedMessage {
-    fn eq(&self, other: &TestAllTypes_NestedMessage) -> bool {
-        self.bb == other.bb &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestAllTypes_NestedMessage {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for TestAllTypes_NestedMessage {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
     }
 }
 
@@ -3654,7 +4092,13 @@ impl ::protobuf::ProtobufEnum for TestAllTypes_NestedEnum {
 impl ::std::marker::Copy for TestAllTypes_NestedEnum {
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestAllTypes_NestedEnum {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Enum(self.descriptor())
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct NestedTestAllTypes {
     // message fields
     child: ::protobuf::SingularPtrField<NestedTestAllTypes>,
@@ -3662,7 +4106,7 @@ pub struct NestedTestAllTypes {
     repeated_child: ::protobuf::RepeatedField<NestedTestAllTypes>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -3679,15 +4123,7 @@ impl NestedTestAllTypes {
             ptr: 0 as *const NestedTestAllTypes,
         };
         unsafe {
-            instance.get(|| {
-                NestedTestAllTypes {
-                    child: ::protobuf::SingularPtrField::none(),
-                    payload: ::protobuf::SingularPtrField::none(),
-                    repeated_child: ::protobuf::RepeatedField::new(),
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(NestedTestAllTypes::new)
         }
     }
 
@@ -3724,6 +4160,14 @@ impl NestedTestAllTypes {
         self.child.as_ref().unwrap_or_else(|| NestedTestAllTypes::default_instance())
     }
 
+    fn get_child_for_reflect(&self) -> &::protobuf::SingularPtrField<NestedTestAllTypes> {
+        &self.child
+    }
+
+    fn mut_child_for_reflect(&mut self) -> &mut ::protobuf::SingularPtrField<NestedTestAllTypes> {
+        &mut self.child
+    }
+
     // optional .protobuf_unittest.TestAllTypes payload = 2;
 
     pub fn clear_payload(&mut self) {
@@ -3757,6 +4201,14 @@ impl NestedTestAllTypes {
         self.payload.as_ref().unwrap_or_else(|| TestAllTypes::default_instance())
     }
 
+    fn get_payload_for_reflect(&self) -> &::protobuf::SingularPtrField<TestAllTypes> {
+        &self.payload
+    }
+
+    fn mut_payload_for_reflect(&mut self) -> &mut ::protobuf::SingularPtrField<TestAllTypes> {
+        &mut self.payload
+    }
+
     // repeated .protobuf_unittest.NestedTestAllTypes repeated_child = 3;
 
     pub fn clear_repeated_child(&mut self) {
@@ -3781,6 +4233,14 @@ impl NestedTestAllTypes {
     pub fn get_repeated_child(&self) -> &[NestedTestAllTypes] {
         &self.repeated_child
     }
+
+    fn get_repeated_child_for_reflect(&self) -> &::protobuf::RepeatedField<NestedTestAllTypes> {
+        &self.repeated_child
+    }
+
+    fn mut_repeated_child_for_reflect(&mut self) -> &mut ::protobuf::RepeatedField<NestedTestAllTypes> {
+        &mut self.repeated_child
+    }
 }
 
 impl ::protobuf::Message for NestedTestAllTypes {
@@ -3789,20 +4249,20 @@ impl ::protobuf::Message for NestedTestAllTypes {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
-                    try!(::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.child));
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.child)?;
                 },
                 2 => {
-                    try!(::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.payload));
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.payload)?;
                 },
                 3 => {
-                    try!(::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.repeated_child));
+                    ::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.repeated_child)?;
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -3813,15 +4273,15 @@ impl ::protobuf::Message for NestedTestAllTypes {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.child.iter() {
-            let len = value.compute_size();
+        if let Some(v) = self.child.as_ref() {
+            let len = v.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
-        for value in self.payload.iter() {
-            let len = value.compute_size();
+        if let Some(v) = self.payload.as_ref() {
+            let len = v.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
-        for value in self.repeated_child.iter() {
+        for value in &self.repeated_child {
             let len = value.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
@@ -3832,21 +4292,21 @@ impl ::protobuf::Message for NestedTestAllTypes {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.child.as_ref() {
-            try!(os.write_tag(1, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+            os.write_tag(1, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
         if let Some(v) = self.payload.as_ref() {
-            try!(os.write_tag(2, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+            os.write_tag(2, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
-        for v in self.repeated_child.iter() {
-            try!(os.write_tag(3, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+        for v in &self.repeated_child {
+            os.write_tag(3, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -3862,12 +4322,14 @@ impl ::protobuf::Message for NestedTestAllTypes {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<NestedTestAllTypes>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -3888,19 +4350,20 @@ impl ::protobuf::MessageStatic for NestedTestAllTypes {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<NestedTestAllTypes>>(
                     "child",
-                    NestedTestAllTypes::has_child,
-                    NestedTestAllTypes::get_child,
+                    NestedTestAllTypes::get_child_for_reflect,
+                    NestedTestAllTypes::mut_child_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<TestAllTypes>>(
                     "payload",
-                    NestedTestAllTypes::has_payload,
-                    NestedTestAllTypes::get_payload,
+                    NestedTestAllTypes::get_payload_for_reflect,
+                    NestedTestAllTypes::mut_payload_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<NestedTestAllTypes>>(
                     "repeated_child",
-                    NestedTestAllTypes::get_repeated_child,
+                    NestedTestAllTypes::get_repeated_child_for_reflect,
+                    NestedTestAllTypes::mut_repeated_child_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<NestedTestAllTypes>(
                     "NestedTestAllTypes",
@@ -3921,28 +4384,25 @@ impl ::protobuf::Clear for NestedTestAllTypes {
     }
 }
 
-impl ::std::cmp::PartialEq for NestedTestAllTypes {
-    fn eq(&self, other: &NestedTestAllTypes) -> bool {
-        self.child == other.child &&
-        self.payload == other.payload &&
-        self.repeated_child == other.repeated_child &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for NestedTestAllTypes {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for NestedTestAllTypes {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestDeprecatedFields {
     // message fields
     deprecated_int32: ::std::option::Option<i32>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -3959,13 +4419,7 @@ impl TestDeprecatedFields {
             ptr: 0 as *const TestDeprecatedFields,
         };
         unsafe {
-            instance.get(|| {
-                TestDeprecatedFields {
-                    deprecated_int32: ::std::option::Option::None,
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestDeprecatedFields::new)
         }
     }
 
@@ -3987,6 +4441,14 @@ impl TestDeprecatedFields {
     pub fn get_deprecated_int32(&self) -> i32 {
         self.deprecated_int32.unwrap_or(0)
     }
+
+    fn get_deprecated_int32_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.deprecated_int32
+    }
+
+    fn mut_deprecated_int32_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.deprecated_int32
+    }
 }
 
 impl ::protobuf::Message for TestDeprecatedFields {
@@ -3995,18 +4457,18 @@ impl ::protobuf::Message for TestDeprecatedFields {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.deprecated_int32 = ::std::option::Option::Some(tmp);
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -4017,8 +4479,8 @@ impl ::protobuf::Message for TestDeprecatedFields {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.deprecated_int32.iter() {
-            my_size += ::protobuf::rt::value_size(1, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.deprecated_int32 {
+            my_size += ::protobuf::rt::value_size(1, v, ::protobuf::wire_format::WireTypeVarint);
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
@@ -4027,9 +4489,9 @@ impl ::protobuf::Message for TestDeprecatedFields {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.deprecated_int32 {
-            try!(os.write_int32(1, v));
+            os.write_int32(1, v)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -4045,12 +4507,14 @@ impl ::protobuf::Message for TestDeprecatedFields {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestDeprecatedFields>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -4071,10 +4535,10 @@ impl ::protobuf::MessageStatic for TestDeprecatedFields {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "deprecated_int32",
-                    TestDeprecatedFields::has_deprecated_int32,
-                    TestDeprecatedFields::get_deprecated_int32,
+                    TestDeprecatedFields::get_deprecated_int32_for_reflect,
+                    TestDeprecatedFields::mut_deprecated_int32_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestDeprecatedFields>(
                     "TestDeprecatedFields",
@@ -4093,26 +4557,25 @@ impl ::protobuf::Clear for TestDeprecatedFields {
     }
 }
 
-impl ::std::cmp::PartialEq for TestDeprecatedFields {
-    fn eq(&self, other: &TestDeprecatedFields) -> bool {
-        self.deprecated_int32 == other.deprecated_int32 &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestDeprecatedFields {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestDeprecatedFields {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct ForeignMessage {
     // message fields
     c: ::std::option::Option<i32>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -4129,13 +4592,7 @@ impl ForeignMessage {
             ptr: 0 as *const ForeignMessage,
         };
         unsafe {
-            instance.get(|| {
-                ForeignMessage {
-                    c: ::std::option::Option::None,
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(ForeignMessage::new)
         }
     }
 
@@ -4157,6 +4614,14 @@ impl ForeignMessage {
     pub fn get_c(&self) -> i32 {
         self.c.unwrap_or(0)
     }
+
+    fn get_c_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.c
+    }
+
+    fn mut_c_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.c
+    }
 }
 
 impl ::protobuf::Message for ForeignMessage {
@@ -4165,18 +4630,18 @@ impl ::protobuf::Message for ForeignMessage {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.c = ::std::option::Option::Some(tmp);
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -4187,8 +4652,8 @@ impl ::protobuf::Message for ForeignMessage {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.c.iter() {
-            my_size += ::protobuf::rt::value_size(1, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.c {
+            my_size += ::protobuf::rt::value_size(1, v, ::protobuf::wire_format::WireTypeVarint);
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
@@ -4197,9 +4662,9 @@ impl ::protobuf::Message for ForeignMessage {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.c {
-            try!(os.write_int32(1, v));
+            os.write_int32(1, v)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -4215,12 +4680,14 @@ impl ::protobuf::Message for ForeignMessage {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<ForeignMessage>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -4241,10 +4708,10 @@ impl ::protobuf::MessageStatic for ForeignMessage {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "c",
-                    ForeignMessage::has_c,
-                    ForeignMessage::get_c,
+                    ForeignMessage::get_c_for_reflect,
+                    ForeignMessage::mut_c_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<ForeignMessage>(
                     "ForeignMessage",
@@ -4263,24 +4730,23 @@ impl ::protobuf::Clear for ForeignMessage {
     }
 }
 
-impl ::std::cmp::PartialEq for ForeignMessage {
-    fn eq(&self, other: &ForeignMessage) -> bool {
-        self.c == other.c &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for ForeignMessage {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for ForeignMessage {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestReservedFields {
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -4297,12 +4763,7 @@ impl TestReservedFields {
             ptr: 0 as *const TestReservedFields,
         };
         unsafe {
-            instance.get(|| {
-                TestReservedFields {
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestReservedFields::new)
         }
     }
 }
@@ -4313,11 +4774,11 @@ impl ::protobuf::Message for TestReservedFields {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -4334,7 +4795,7 @@ impl ::protobuf::Message for TestReservedFields {
     }
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -4350,12 +4811,14 @@ impl ::protobuf::Message for TestReservedFields {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestReservedFields>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -4392,23 +4855,23 @@ impl ::protobuf::Clear for TestReservedFields {
     }
 }
 
-impl ::std::cmp::PartialEq for TestReservedFields {
-    fn eq(&self, other: &TestReservedFields) -> bool {
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestReservedFields {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestReservedFields {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestAllExtensions {
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -4425,12 +4888,7 @@ impl TestAllExtensions {
             ptr: 0 as *const TestAllExtensions,
         };
         unsafe {
-            instance.get(|| {
-                TestAllExtensions {
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestAllExtensions::new)
         }
     }
 }
@@ -4441,11 +4899,11 @@ impl ::protobuf::Message for TestAllExtensions {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -4462,7 +4920,7 @@ impl ::protobuf::Message for TestAllExtensions {
     }
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -4478,12 +4936,14 @@ impl ::protobuf::Message for TestAllExtensions {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestAllExtensions>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -4520,23 +4980,23 @@ impl ::protobuf::Clear for TestAllExtensions {
     }
 }
 
-impl ::std::cmp::PartialEq for TestAllExtensions {
-    fn eq(&self, other: &TestAllExtensions) -> bool {
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestAllExtensions {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestAllExtensions {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestNestedExtension {
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -4553,12 +5013,7 @@ impl TestNestedExtension {
             ptr: 0 as *const TestNestedExtension,
         };
         unsafe {
-            instance.get(|| {
-                TestNestedExtension {
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestNestedExtension::new)
         }
     }
 }
@@ -4569,11 +5024,11 @@ impl ::protobuf::Message for TestNestedExtension {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -4590,7 +5045,7 @@ impl ::protobuf::Message for TestNestedExtension {
     }
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -4606,12 +5061,14 @@ impl ::protobuf::Message for TestNestedExtension {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestNestedExtension>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -4648,19 +5105,19 @@ impl ::protobuf::Clear for TestNestedExtension {
     }
 }
 
-impl ::std::cmp::PartialEq for TestNestedExtension {
-    fn eq(&self, other: &TestNestedExtension) -> bool {
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestNestedExtension {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestNestedExtension {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestRequired {
     // message fields
     a: ::std::option::Option<i32>,
@@ -4698,7 +5155,7 @@ pub struct TestRequired {
     c: ::std::option::Option<i32>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -4715,45 +5172,7 @@ impl TestRequired {
             ptr: 0 as *const TestRequired,
         };
         unsafe {
-            instance.get(|| {
-                TestRequired {
-                    a: ::std::option::Option::None,
-                    dummy2: ::std::option::Option::None,
-                    b: ::std::option::Option::None,
-                    dummy4: ::std::option::Option::None,
-                    dummy5: ::std::option::Option::None,
-                    dummy6: ::std::option::Option::None,
-                    dummy7: ::std::option::Option::None,
-                    dummy8: ::std::option::Option::None,
-                    dummy9: ::std::option::Option::None,
-                    dummy10: ::std::option::Option::None,
-                    dummy11: ::std::option::Option::None,
-                    dummy12: ::std::option::Option::None,
-                    dummy13: ::std::option::Option::None,
-                    dummy14: ::std::option::Option::None,
-                    dummy15: ::std::option::Option::None,
-                    dummy16: ::std::option::Option::None,
-                    dummy17: ::std::option::Option::None,
-                    dummy18: ::std::option::Option::None,
-                    dummy19: ::std::option::Option::None,
-                    dummy20: ::std::option::Option::None,
-                    dummy21: ::std::option::Option::None,
-                    dummy22: ::std::option::Option::None,
-                    dummy23: ::std::option::Option::None,
-                    dummy24: ::std::option::Option::None,
-                    dummy25: ::std::option::Option::None,
-                    dummy26: ::std::option::Option::None,
-                    dummy27: ::std::option::Option::None,
-                    dummy28: ::std::option::Option::None,
-                    dummy29: ::std::option::Option::None,
-                    dummy30: ::std::option::Option::None,
-                    dummy31: ::std::option::Option::None,
-                    dummy32: ::std::option::Option::None,
-                    c: ::std::option::Option::None,
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestRequired::new)
         }
     }
 
@@ -4776,6 +5195,14 @@ impl TestRequired {
         self.a.unwrap_or(0)
     }
 
+    fn get_a_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.a
+    }
+
+    fn mut_a_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.a
+    }
+
     // optional int32 dummy2 = 2;
 
     pub fn clear_dummy2(&mut self) {
@@ -4793,6 +5220,14 @@ impl TestRequired {
 
     pub fn get_dummy2(&self) -> i32 {
         self.dummy2.unwrap_or(0)
+    }
+
+    fn get_dummy2_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy2
+    }
+
+    fn mut_dummy2_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy2
     }
 
     // required int32 b = 3;
@@ -4814,6 +5249,14 @@ impl TestRequired {
         self.b.unwrap_or(0)
     }
 
+    fn get_b_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.b
+    }
+
+    fn mut_b_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.b
+    }
+
     // optional int32 dummy4 = 4;
 
     pub fn clear_dummy4(&mut self) {
@@ -4831,6 +5274,14 @@ impl TestRequired {
 
     pub fn get_dummy4(&self) -> i32 {
         self.dummy4.unwrap_or(0)
+    }
+
+    fn get_dummy4_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy4
+    }
+
+    fn mut_dummy4_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy4
     }
 
     // optional int32 dummy5 = 5;
@@ -4852,6 +5303,14 @@ impl TestRequired {
         self.dummy5.unwrap_or(0)
     }
 
+    fn get_dummy5_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy5
+    }
+
+    fn mut_dummy5_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy5
+    }
+
     // optional int32 dummy6 = 6;
 
     pub fn clear_dummy6(&mut self) {
@@ -4869,6 +5328,14 @@ impl TestRequired {
 
     pub fn get_dummy6(&self) -> i32 {
         self.dummy6.unwrap_or(0)
+    }
+
+    fn get_dummy6_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy6
+    }
+
+    fn mut_dummy6_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy6
     }
 
     // optional int32 dummy7 = 7;
@@ -4890,6 +5357,14 @@ impl TestRequired {
         self.dummy7.unwrap_or(0)
     }
 
+    fn get_dummy7_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy7
+    }
+
+    fn mut_dummy7_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy7
+    }
+
     // optional int32 dummy8 = 8;
 
     pub fn clear_dummy8(&mut self) {
@@ -4907,6 +5382,14 @@ impl TestRequired {
 
     pub fn get_dummy8(&self) -> i32 {
         self.dummy8.unwrap_or(0)
+    }
+
+    fn get_dummy8_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy8
+    }
+
+    fn mut_dummy8_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy8
     }
 
     // optional int32 dummy9 = 9;
@@ -4928,6 +5411,14 @@ impl TestRequired {
         self.dummy9.unwrap_or(0)
     }
 
+    fn get_dummy9_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy9
+    }
+
+    fn mut_dummy9_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy9
+    }
+
     // optional int32 dummy10 = 10;
 
     pub fn clear_dummy10(&mut self) {
@@ -4945,6 +5436,14 @@ impl TestRequired {
 
     pub fn get_dummy10(&self) -> i32 {
         self.dummy10.unwrap_or(0)
+    }
+
+    fn get_dummy10_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy10
+    }
+
+    fn mut_dummy10_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy10
     }
 
     // optional int32 dummy11 = 11;
@@ -4966,6 +5465,14 @@ impl TestRequired {
         self.dummy11.unwrap_or(0)
     }
 
+    fn get_dummy11_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy11
+    }
+
+    fn mut_dummy11_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy11
+    }
+
     // optional int32 dummy12 = 12;
 
     pub fn clear_dummy12(&mut self) {
@@ -4983,6 +5490,14 @@ impl TestRequired {
 
     pub fn get_dummy12(&self) -> i32 {
         self.dummy12.unwrap_or(0)
+    }
+
+    fn get_dummy12_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy12
+    }
+
+    fn mut_dummy12_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy12
     }
 
     // optional int32 dummy13 = 13;
@@ -5004,6 +5519,14 @@ impl TestRequired {
         self.dummy13.unwrap_or(0)
     }
 
+    fn get_dummy13_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy13
+    }
+
+    fn mut_dummy13_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy13
+    }
+
     // optional int32 dummy14 = 14;
 
     pub fn clear_dummy14(&mut self) {
@@ -5021,6 +5544,14 @@ impl TestRequired {
 
     pub fn get_dummy14(&self) -> i32 {
         self.dummy14.unwrap_or(0)
+    }
+
+    fn get_dummy14_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy14
+    }
+
+    fn mut_dummy14_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy14
     }
 
     // optional int32 dummy15 = 15;
@@ -5042,6 +5573,14 @@ impl TestRequired {
         self.dummy15.unwrap_or(0)
     }
 
+    fn get_dummy15_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy15
+    }
+
+    fn mut_dummy15_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy15
+    }
+
     // optional int32 dummy16 = 16;
 
     pub fn clear_dummy16(&mut self) {
@@ -5059,6 +5598,14 @@ impl TestRequired {
 
     pub fn get_dummy16(&self) -> i32 {
         self.dummy16.unwrap_or(0)
+    }
+
+    fn get_dummy16_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy16
+    }
+
+    fn mut_dummy16_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy16
     }
 
     // optional int32 dummy17 = 17;
@@ -5080,6 +5627,14 @@ impl TestRequired {
         self.dummy17.unwrap_or(0)
     }
 
+    fn get_dummy17_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy17
+    }
+
+    fn mut_dummy17_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy17
+    }
+
     // optional int32 dummy18 = 18;
 
     pub fn clear_dummy18(&mut self) {
@@ -5097,6 +5652,14 @@ impl TestRequired {
 
     pub fn get_dummy18(&self) -> i32 {
         self.dummy18.unwrap_or(0)
+    }
+
+    fn get_dummy18_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy18
+    }
+
+    fn mut_dummy18_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy18
     }
 
     // optional int32 dummy19 = 19;
@@ -5118,6 +5681,14 @@ impl TestRequired {
         self.dummy19.unwrap_or(0)
     }
 
+    fn get_dummy19_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy19
+    }
+
+    fn mut_dummy19_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy19
+    }
+
     // optional int32 dummy20 = 20;
 
     pub fn clear_dummy20(&mut self) {
@@ -5135,6 +5706,14 @@ impl TestRequired {
 
     pub fn get_dummy20(&self) -> i32 {
         self.dummy20.unwrap_or(0)
+    }
+
+    fn get_dummy20_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy20
+    }
+
+    fn mut_dummy20_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy20
     }
 
     // optional int32 dummy21 = 21;
@@ -5156,6 +5735,14 @@ impl TestRequired {
         self.dummy21.unwrap_or(0)
     }
 
+    fn get_dummy21_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy21
+    }
+
+    fn mut_dummy21_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy21
+    }
+
     // optional int32 dummy22 = 22;
 
     pub fn clear_dummy22(&mut self) {
@@ -5173,6 +5760,14 @@ impl TestRequired {
 
     pub fn get_dummy22(&self) -> i32 {
         self.dummy22.unwrap_or(0)
+    }
+
+    fn get_dummy22_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy22
+    }
+
+    fn mut_dummy22_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy22
     }
 
     // optional int32 dummy23 = 23;
@@ -5194,6 +5789,14 @@ impl TestRequired {
         self.dummy23.unwrap_or(0)
     }
 
+    fn get_dummy23_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy23
+    }
+
+    fn mut_dummy23_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy23
+    }
+
     // optional int32 dummy24 = 24;
 
     pub fn clear_dummy24(&mut self) {
@@ -5211,6 +5814,14 @@ impl TestRequired {
 
     pub fn get_dummy24(&self) -> i32 {
         self.dummy24.unwrap_or(0)
+    }
+
+    fn get_dummy24_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy24
+    }
+
+    fn mut_dummy24_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy24
     }
 
     // optional int32 dummy25 = 25;
@@ -5232,6 +5843,14 @@ impl TestRequired {
         self.dummy25.unwrap_or(0)
     }
 
+    fn get_dummy25_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy25
+    }
+
+    fn mut_dummy25_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy25
+    }
+
     // optional int32 dummy26 = 26;
 
     pub fn clear_dummy26(&mut self) {
@@ -5249,6 +5868,14 @@ impl TestRequired {
 
     pub fn get_dummy26(&self) -> i32 {
         self.dummy26.unwrap_or(0)
+    }
+
+    fn get_dummy26_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy26
+    }
+
+    fn mut_dummy26_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy26
     }
 
     // optional int32 dummy27 = 27;
@@ -5270,6 +5897,14 @@ impl TestRequired {
         self.dummy27.unwrap_or(0)
     }
 
+    fn get_dummy27_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy27
+    }
+
+    fn mut_dummy27_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy27
+    }
+
     // optional int32 dummy28 = 28;
 
     pub fn clear_dummy28(&mut self) {
@@ -5287,6 +5922,14 @@ impl TestRequired {
 
     pub fn get_dummy28(&self) -> i32 {
         self.dummy28.unwrap_or(0)
+    }
+
+    fn get_dummy28_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy28
+    }
+
+    fn mut_dummy28_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy28
     }
 
     // optional int32 dummy29 = 29;
@@ -5308,6 +5951,14 @@ impl TestRequired {
         self.dummy29.unwrap_or(0)
     }
 
+    fn get_dummy29_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy29
+    }
+
+    fn mut_dummy29_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy29
+    }
+
     // optional int32 dummy30 = 30;
 
     pub fn clear_dummy30(&mut self) {
@@ -5325,6 +5976,14 @@ impl TestRequired {
 
     pub fn get_dummy30(&self) -> i32 {
         self.dummy30.unwrap_or(0)
+    }
+
+    fn get_dummy30_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy30
+    }
+
+    fn mut_dummy30_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy30
     }
 
     // optional int32 dummy31 = 31;
@@ -5346,6 +6005,14 @@ impl TestRequired {
         self.dummy31.unwrap_or(0)
     }
 
+    fn get_dummy31_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy31
+    }
+
+    fn mut_dummy31_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy31
+    }
+
     // optional int32 dummy32 = 32;
 
     pub fn clear_dummy32(&mut self) {
@@ -5363,6 +6030,14 @@ impl TestRequired {
 
     pub fn get_dummy32(&self) -> i32 {
         self.dummy32.unwrap_or(0)
+    }
+
+    fn get_dummy32_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy32
+    }
+
+    fn mut_dummy32_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy32
     }
 
     // required int32 c = 33;
@@ -5383,6 +6058,14 @@ impl TestRequired {
     pub fn get_c(&self) -> i32 {
         self.c.unwrap_or(0)
     }
+
+    fn get_c_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.c
+    }
+
+    fn mut_c_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.c
+    }
 }
 
 impl ::protobuf::Message for TestRequired {
@@ -5400,242 +6083,242 @@ impl ::protobuf::Message for TestRequired {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.a = ::std::option::Option::Some(tmp);
                 },
                 2 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy2 = ::std::option::Option::Some(tmp);
                 },
                 3 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.b = ::std::option::Option::Some(tmp);
                 },
                 4 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy4 = ::std::option::Option::Some(tmp);
                 },
                 5 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy5 = ::std::option::Option::Some(tmp);
                 },
                 6 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy6 = ::std::option::Option::Some(tmp);
                 },
                 7 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy7 = ::std::option::Option::Some(tmp);
                 },
                 8 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy8 = ::std::option::Option::Some(tmp);
                 },
                 9 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy9 = ::std::option::Option::Some(tmp);
                 },
                 10 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy10 = ::std::option::Option::Some(tmp);
                 },
                 11 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy11 = ::std::option::Option::Some(tmp);
                 },
                 12 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy12 = ::std::option::Option::Some(tmp);
                 },
                 13 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy13 = ::std::option::Option::Some(tmp);
                 },
                 14 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy14 = ::std::option::Option::Some(tmp);
                 },
                 15 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy15 = ::std::option::Option::Some(tmp);
                 },
                 16 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy16 = ::std::option::Option::Some(tmp);
                 },
                 17 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy17 = ::std::option::Option::Some(tmp);
                 },
                 18 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy18 = ::std::option::Option::Some(tmp);
                 },
                 19 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy19 = ::std::option::Option::Some(tmp);
                 },
                 20 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy20 = ::std::option::Option::Some(tmp);
                 },
                 21 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy21 = ::std::option::Option::Some(tmp);
                 },
                 22 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy22 = ::std::option::Option::Some(tmp);
                 },
                 23 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy23 = ::std::option::Option::Some(tmp);
                 },
                 24 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy24 = ::std::option::Option::Some(tmp);
                 },
                 25 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy25 = ::std::option::Option::Some(tmp);
                 },
                 26 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy26 = ::std::option::Option::Some(tmp);
                 },
                 27 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy27 = ::std::option::Option::Some(tmp);
                 },
                 28 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy28 = ::std::option::Option::Some(tmp);
                 },
                 29 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy29 = ::std::option::Option::Some(tmp);
                 },
                 30 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy30 = ::std::option::Option::Some(tmp);
                 },
                 31 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy31 = ::std::option::Option::Some(tmp);
                 },
                 32 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy32 = ::std::option::Option::Some(tmp);
                 },
                 33 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.c = ::std::option::Option::Some(tmp);
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -5646,104 +6329,104 @@ impl ::protobuf::Message for TestRequired {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.a.iter() {
-            my_size += ::protobuf::rt::value_size(1, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.a {
+            my_size += ::protobuf::rt::value_size(1, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy2.iter() {
-            my_size += ::protobuf::rt::value_size(2, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy2 {
+            my_size += ::protobuf::rt::value_size(2, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.b.iter() {
-            my_size += ::protobuf::rt::value_size(3, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.b {
+            my_size += ::protobuf::rt::value_size(3, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy4.iter() {
-            my_size += ::protobuf::rt::value_size(4, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy4 {
+            my_size += ::protobuf::rt::value_size(4, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy5.iter() {
-            my_size += ::protobuf::rt::value_size(5, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy5 {
+            my_size += ::protobuf::rt::value_size(5, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy6.iter() {
-            my_size += ::protobuf::rt::value_size(6, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy6 {
+            my_size += ::protobuf::rt::value_size(6, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy7.iter() {
-            my_size += ::protobuf::rt::value_size(7, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy7 {
+            my_size += ::protobuf::rt::value_size(7, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy8.iter() {
-            my_size += ::protobuf::rt::value_size(8, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy8 {
+            my_size += ::protobuf::rt::value_size(8, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy9.iter() {
-            my_size += ::protobuf::rt::value_size(9, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy9 {
+            my_size += ::protobuf::rt::value_size(9, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy10.iter() {
-            my_size += ::protobuf::rt::value_size(10, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy10 {
+            my_size += ::protobuf::rt::value_size(10, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy11.iter() {
-            my_size += ::protobuf::rt::value_size(11, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy11 {
+            my_size += ::protobuf::rt::value_size(11, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy12.iter() {
-            my_size += ::protobuf::rt::value_size(12, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy12 {
+            my_size += ::protobuf::rt::value_size(12, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy13.iter() {
-            my_size += ::protobuf::rt::value_size(13, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy13 {
+            my_size += ::protobuf::rt::value_size(13, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy14.iter() {
-            my_size += ::protobuf::rt::value_size(14, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy14 {
+            my_size += ::protobuf::rt::value_size(14, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy15.iter() {
-            my_size += ::protobuf::rt::value_size(15, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy15 {
+            my_size += ::protobuf::rt::value_size(15, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy16.iter() {
-            my_size += ::protobuf::rt::value_size(16, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy16 {
+            my_size += ::protobuf::rt::value_size(16, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy17.iter() {
-            my_size += ::protobuf::rt::value_size(17, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy17 {
+            my_size += ::protobuf::rt::value_size(17, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy18.iter() {
-            my_size += ::protobuf::rt::value_size(18, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy18 {
+            my_size += ::protobuf::rt::value_size(18, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy19.iter() {
-            my_size += ::protobuf::rt::value_size(19, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy19 {
+            my_size += ::protobuf::rt::value_size(19, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy20.iter() {
-            my_size += ::protobuf::rt::value_size(20, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy20 {
+            my_size += ::protobuf::rt::value_size(20, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy21.iter() {
-            my_size += ::protobuf::rt::value_size(21, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy21 {
+            my_size += ::protobuf::rt::value_size(21, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy22.iter() {
-            my_size += ::protobuf::rt::value_size(22, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy22 {
+            my_size += ::protobuf::rt::value_size(22, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy23.iter() {
-            my_size += ::protobuf::rt::value_size(23, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy23 {
+            my_size += ::protobuf::rt::value_size(23, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy24.iter() {
-            my_size += ::protobuf::rt::value_size(24, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy24 {
+            my_size += ::protobuf::rt::value_size(24, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy25.iter() {
-            my_size += ::protobuf::rt::value_size(25, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy25 {
+            my_size += ::protobuf::rt::value_size(25, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy26.iter() {
-            my_size += ::protobuf::rt::value_size(26, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy26 {
+            my_size += ::protobuf::rt::value_size(26, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy27.iter() {
-            my_size += ::protobuf::rt::value_size(27, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy27 {
+            my_size += ::protobuf::rt::value_size(27, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy28.iter() {
-            my_size += ::protobuf::rt::value_size(28, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy28 {
+            my_size += ::protobuf::rt::value_size(28, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy29.iter() {
-            my_size += ::protobuf::rt::value_size(29, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy29 {
+            my_size += ::protobuf::rt::value_size(29, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy30.iter() {
-            my_size += ::protobuf::rt::value_size(30, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy30 {
+            my_size += ::protobuf::rt::value_size(30, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy31.iter() {
-            my_size += ::protobuf::rt::value_size(31, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy31 {
+            my_size += ::protobuf::rt::value_size(31, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.dummy32.iter() {
-            my_size += ::protobuf::rt::value_size(32, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy32 {
+            my_size += ::protobuf::rt::value_size(32, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.c.iter() {
-            my_size += ::protobuf::rt::value_size(33, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.c {
+            my_size += ::protobuf::rt::value_size(33, v, ::protobuf::wire_format::WireTypeVarint);
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
@@ -5752,105 +6435,105 @@ impl ::protobuf::Message for TestRequired {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.a {
-            try!(os.write_int32(1, v));
+            os.write_int32(1, v)?;
         };
         if let Some(v) = self.dummy2 {
-            try!(os.write_int32(2, v));
+            os.write_int32(2, v)?;
         };
         if let Some(v) = self.b {
-            try!(os.write_int32(3, v));
+            os.write_int32(3, v)?;
         };
         if let Some(v) = self.dummy4 {
-            try!(os.write_int32(4, v));
+            os.write_int32(4, v)?;
         };
         if let Some(v) = self.dummy5 {
-            try!(os.write_int32(5, v));
+            os.write_int32(5, v)?;
         };
         if let Some(v) = self.dummy6 {
-            try!(os.write_int32(6, v));
+            os.write_int32(6, v)?;
         };
         if let Some(v) = self.dummy7 {
-            try!(os.write_int32(7, v));
+            os.write_int32(7, v)?;
         };
         if let Some(v) = self.dummy8 {
-            try!(os.write_int32(8, v));
+            os.write_int32(8, v)?;
         };
         if let Some(v) = self.dummy9 {
-            try!(os.write_int32(9, v));
+            os.write_int32(9, v)?;
         };
         if let Some(v) = self.dummy10 {
-            try!(os.write_int32(10, v));
+            os.write_int32(10, v)?;
         };
         if let Some(v) = self.dummy11 {
-            try!(os.write_int32(11, v));
+            os.write_int32(11, v)?;
         };
         if let Some(v) = self.dummy12 {
-            try!(os.write_int32(12, v));
+            os.write_int32(12, v)?;
         };
         if let Some(v) = self.dummy13 {
-            try!(os.write_int32(13, v));
+            os.write_int32(13, v)?;
         };
         if let Some(v) = self.dummy14 {
-            try!(os.write_int32(14, v));
+            os.write_int32(14, v)?;
         };
         if let Some(v) = self.dummy15 {
-            try!(os.write_int32(15, v));
+            os.write_int32(15, v)?;
         };
         if let Some(v) = self.dummy16 {
-            try!(os.write_int32(16, v));
+            os.write_int32(16, v)?;
         };
         if let Some(v) = self.dummy17 {
-            try!(os.write_int32(17, v));
+            os.write_int32(17, v)?;
         };
         if let Some(v) = self.dummy18 {
-            try!(os.write_int32(18, v));
+            os.write_int32(18, v)?;
         };
         if let Some(v) = self.dummy19 {
-            try!(os.write_int32(19, v));
+            os.write_int32(19, v)?;
         };
         if let Some(v) = self.dummy20 {
-            try!(os.write_int32(20, v));
+            os.write_int32(20, v)?;
         };
         if let Some(v) = self.dummy21 {
-            try!(os.write_int32(21, v));
+            os.write_int32(21, v)?;
         };
         if let Some(v) = self.dummy22 {
-            try!(os.write_int32(22, v));
+            os.write_int32(22, v)?;
         };
         if let Some(v) = self.dummy23 {
-            try!(os.write_int32(23, v));
+            os.write_int32(23, v)?;
         };
         if let Some(v) = self.dummy24 {
-            try!(os.write_int32(24, v));
+            os.write_int32(24, v)?;
         };
         if let Some(v) = self.dummy25 {
-            try!(os.write_int32(25, v));
+            os.write_int32(25, v)?;
         };
         if let Some(v) = self.dummy26 {
-            try!(os.write_int32(26, v));
+            os.write_int32(26, v)?;
         };
         if let Some(v) = self.dummy27 {
-            try!(os.write_int32(27, v));
+            os.write_int32(27, v)?;
         };
         if let Some(v) = self.dummy28 {
-            try!(os.write_int32(28, v));
+            os.write_int32(28, v)?;
         };
         if let Some(v) = self.dummy29 {
-            try!(os.write_int32(29, v));
+            os.write_int32(29, v)?;
         };
         if let Some(v) = self.dummy30 {
-            try!(os.write_int32(30, v));
+            os.write_int32(30, v)?;
         };
         if let Some(v) = self.dummy31 {
-            try!(os.write_int32(31, v));
+            os.write_int32(31, v)?;
         };
         if let Some(v) = self.dummy32 {
-            try!(os.write_int32(32, v));
+            os.write_int32(32, v)?;
         };
         if let Some(v) = self.c {
-            try!(os.write_int32(33, v));
+            os.write_int32(33, v)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -5866,12 +6549,14 @@ impl ::protobuf::Message for TestRequired {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestRequired>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -5892,170 +6577,170 @@ impl ::protobuf::MessageStatic for TestRequired {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "a",
-                    TestRequired::has_a,
-                    TestRequired::get_a,
+                    TestRequired::get_a_for_reflect,
+                    TestRequired::mut_a_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy2",
-                    TestRequired::has_dummy2,
-                    TestRequired::get_dummy2,
+                    TestRequired::get_dummy2_for_reflect,
+                    TestRequired::mut_dummy2_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "b",
-                    TestRequired::has_b,
-                    TestRequired::get_b,
+                    TestRequired::get_b_for_reflect,
+                    TestRequired::mut_b_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy4",
-                    TestRequired::has_dummy4,
-                    TestRequired::get_dummy4,
+                    TestRequired::get_dummy4_for_reflect,
+                    TestRequired::mut_dummy4_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy5",
-                    TestRequired::has_dummy5,
-                    TestRequired::get_dummy5,
+                    TestRequired::get_dummy5_for_reflect,
+                    TestRequired::mut_dummy5_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy6",
-                    TestRequired::has_dummy6,
-                    TestRequired::get_dummy6,
+                    TestRequired::get_dummy6_for_reflect,
+                    TestRequired::mut_dummy6_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy7",
-                    TestRequired::has_dummy7,
-                    TestRequired::get_dummy7,
+                    TestRequired::get_dummy7_for_reflect,
+                    TestRequired::mut_dummy7_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy8",
-                    TestRequired::has_dummy8,
-                    TestRequired::get_dummy8,
+                    TestRequired::get_dummy8_for_reflect,
+                    TestRequired::mut_dummy8_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy9",
-                    TestRequired::has_dummy9,
-                    TestRequired::get_dummy9,
+                    TestRequired::get_dummy9_for_reflect,
+                    TestRequired::mut_dummy9_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy10",
-                    TestRequired::has_dummy10,
-                    TestRequired::get_dummy10,
+                    TestRequired::get_dummy10_for_reflect,
+                    TestRequired::mut_dummy10_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy11",
-                    TestRequired::has_dummy11,
-                    TestRequired::get_dummy11,
+                    TestRequired::get_dummy11_for_reflect,
+                    TestRequired::mut_dummy11_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy12",
-                    TestRequired::has_dummy12,
-                    TestRequired::get_dummy12,
+                    TestRequired::get_dummy12_for_reflect,
+                    TestRequired::mut_dummy12_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy13",
-                    TestRequired::has_dummy13,
-                    TestRequired::get_dummy13,
+                    TestRequired::get_dummy13_for_reflect,
+                    TestRequired::mut_dummy13_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy14",
-                    TestRequired::has_dummy14,
-                    TestRequired::get_dummy14,
+                    TestRequired::get_dummy14_for_reflect,
+                    TestRequired::mut_dummy14_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy15",
-                    TestRequired::has_dummy15,
-                    TestRequired::get_dummy15,
+                    TestRequired::get_dummy15_for_reflect,
+                    TestRequired::mut_dummy15_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy16",
-                    TestRequired::has_dummy16,
-                    TestRequired::get_dummy16,
+                    TestRequired::get_dummy16_for_reflect,
+                    TestRequired::mut_dummy16_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy17",
-                    TestRequired::has_dummy17,
-                    TestRequired::get_dummy17,
+                    TestRequired::get_dummy17_for_reflect,
+                    TestRequired::mut_dummy17_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy18",
-                    TestRequired::has_dummy18,
-                    TestRequired::get_dummy18,
+                    TestRequired::get_dummy18_for_reflect,
+                    TestRequired::mut_dummy18_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy19",
-                    TestRequired::has_dummy19,
-                    TestRequired::get_dummy19,
+                    TestRequired::get_dummy19_for_reflect,
+                    TestRequired::mut_dummy19_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy20",
-                    TestRequired::has_dummy20,
-                    TestRequired::get_dummy20,
+                    TestRequired::get_dummy20_for_reflect,
+                    TestRequired::mut_dummy20_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy21",
-                    TestRequired::has_dummy21,
-                    TestRequired::get_dummy21,
+                    TestRequired::get_dummy21_for_reflect,
+                    TestRequired::mut_dummy21_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy22",
-                    TestRequired::has_dummy22,
-                    TestRequired::get_dummy22,
+                    TestRequired::get_dummy22_for_reflect,
+                    TestRequired::mut_dummy22_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy23",
-                    TestRequired::has_dummy23,
-                    TestRequired::get_dummy23,
+                    TestRequired::get_dummy23_for_reflect,
+                    TestRequired::mut_dummy23_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy24",
-                    TestRequired::has_dummy24,
-                    TestRequired::get_dummy24,
+                    TestRequired::get_dummy24_for_reflect,
+                    TestRequired::mut_dummy24_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy25",
-                    TestRequired::has_dummy25,
-                    TestRequired::get_dummy25,
+                    TestRequired::get_dummy25_for_reflect,
+                    TestRequired::mut_dummy25_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy26",
-                    TestRequired::has_dummy26,
-                    TestRequired::get_dummy26,
+                    TestRequired::get_dummy26_for_reflect,
+                    TestRequired::mut_dummy26_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy27",
-                    TestRequired::has_dummy27,
-                    TestRequired::get_dummy27,
+                    TestRequired::get_dummy27_for_reflect,
+                    TestRequired::mut_dummy27_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy28",
-                    TestRequired::has_dummy28,
-                    TestRequired::get_dummy28,
+                    TestRequired::get_dummy28_for_reflect,
+                    TestRequired::mut_dummy28_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy29",
-                    TestRequired::has_dummy29,
-                    TestRequired::get_dummy29,
+                    TestRequired::get_dummy29_for_reflect,
+                    TestRequired::mut_dummy29_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy30",
-                    TestRequired::has_dummy30,
-                    TestRequired::get_dummy30,
+                    TestRequired::get_dummy30_for_reflect,
+                    TestRequired::mut_dummy30_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy31",
-                    TestRequired::has_dummy31,
-                    TestRequired::get_dummy31,
+                    TestRequired::get_dummy31_for_reflect,
+                    TestRequired::mut_dummy31_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy32",
-                    TestRequired::has_dummy32,
-                    TestRequired::get_dummy32,
+                    TestRequired::get_dummy32_for_reflect,
+                    TestRequired::mut_dummy32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "c",
-                    TestRequired::has_c,
-                    TestRequired::get_c,
+                    TestRequired::get_c_for_reflect,
+                    TestRequired::mut_c_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestRequired>(
                     "TestRequired",
@@ -6106,52 +6791,19 @@ impl ::protobuf::Clear for TestRequired {
     }
 }
 
-impl ::std::cmp::PartialEq for TestRequired {
-    fn eq(&self, other: &TestRequired) -> bool {
-        self.a == other.a &&
-        self.dummy2 == other.dummy2 &&
-        self.b == other.b &&
-        self.dummy4 == other.dummy4 &&
-        self.dummy5 == other.dummy5 &&
-        self.dummy6 == other.dummy6 &&
-        self.dummy7 == other.dummy7 &&
-        self.dummy8 == other.dummy8 &&
-        self.dummy9 == other.dummy9 &&
-        self.dummy10 == other.dummy10 &&
-        self.dummy11 == other.dummy11 &&
-        self.dummy12 == other.dummy12 &&
-        self.dummy13 == other.dummy13 &&
-        self.dummy14 == other.dummy14 &&
-        self.dummy15 == other.dummy15 &&
-        self.dummy16 == other.dummy16 &&
-        self.dummy17 == other.dummy17 &&
-        self.dummy18 == other.dummy18 &&
-        self.dummy19 == other.dummy19 &&
-        self.dummy20 == other.dummy20 &&
-        self.dummy21 == other.dummy21 &&
-        self.dummy22 == other.dummy22 &&
-        self.dummy23 == other.dummy23 &&
-        self.dummy24 == other.dummy24 &&
-        self.dummy25 == other.dummy25 &&
-        self.dummy26 == other.dummy26 &&
-        self.dummy27 == other.dummy27 &&
-        self.dummy28 == other.dummy28 &&
-        self.dummy29 == other.dummy29 &&
-        self.dummy30 == other.dummy30 &&
-        self.dummy31 == other.dummy31 &&
-        self.dummy32 == other.dummy32 &&
-        self.c == other.c &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestRequired {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestRequired {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestRequiredForeign {
     // message fields
     optional_message: ::protobuf::SingularPtrField<TestRequired>,
@@ -6159,7 +6811,7 @@ pub struct TestRequiredForeign {
     dummy: ::std::option::Option<i32>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -6176,15 +6828,7 @@ impl TestRequiredForeign {
             ptr: 0 as *const TestRequiredForeign,
         };
         unsafe {
-            instance.get(|| {
-                TestRequiredForeign {
-                    optional_message: ::protobuf::SingularPtrField::none(),
-                    repeated_message: ::protobuf::RepeatedField::new(),
-                    dummy: ::std::option::Option::None,
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestRequiredForeign::new)
         }
     }
 
@@ -6221,6 +6865,14 @@ impl TestRequiredForeign {
         self.optional_message.as_ref().unwrap_or_else(|| TestRequired::default_instance())
     }
 
+    fn get_optional_message_for_reflect(&self) -> &::protobuf::SingularPtrField<TestRequired> {
+        &self.optional_message
+    }
+
+    fn mut_optional_message_for_reflect(&mut self) -> &mut ::protobuf::SingularPtrField<TestRequired> {
+        &mut self.optional_message
+    }
+
     // repeated .protobuf_unittest.TestRequired repeated_message = 2;
 
     pub fn clear_repeated_message(&mut self) {
@@ -6246,6 +6898,14 @@ impl TestRequiredForeign {
         &self.repeated_message
     }
 
+    fn get_repeated_message_for_reflect(&self) -> &::protobuf::RepeatedField<TestRequired> {
+        &self.repeated_message
+    }
+
+    fn mut_repeated_message_for_reflect(&mut self) -> &mut ::protobuf::RepeatedField<TestRequired> {
+        &mut self.repeated_message
+    }
+
     // optional int32 dummy = 3;
 
     pub fn clear_dummy(&mut self) {
@@ -6264,6 +6924,14 @@ impl TestRequiredForeign {
     pub fn get_dummy(&self) -> i32 {
         self.dummy.unwrap_or(0)
     }
+
+    fn get_dummy_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dummy
+    }
+
+    fn mut_dummy_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dummy
+    }
 }
 
 impl ::protobuf::Message for TestRequiredForeign {
@@ -6272,24 +6940,24 @@ impl ::protobuf::Message for TestRequiredForeign {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
-                    try!(::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.optional_message));
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.optional_message)?;
                 },
                 2 => {
-                    try!(::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.repeated_message));
+                    ::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.repeated_message)?;
                 },
                 3 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dummy = ::std::option::Option::Some(tmp);
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -6300,16 +6968,16 @@ impl ::protobuf::Message for TestRequiredForeign {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.optional_message.iter() {
+        if let Some(v) = self.optional_message.as_ref() {
+            let len = v.compute_size();
+            my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
+        };
+        for value in &self.repeated_message {
             let len = value.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
-        for value in self.repeated_message.iter() {
-            let len = value.compute_size();
-            my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
-        };
-        for value in self.dummy.iter() {
-            my_size += ::protobuf::rt::value_size(3, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dummy {
+            my_size += ::protobuf::rt::value_size(3, v, ::protobuf::wire_format::WireTypeVarint);
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
@@ -6318,19 +6986,19 @@ impl ::protobuf::Message for TestRequiredForeign {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.optional_message.as_ref() {
-            try!(os.write_tag(1, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+            os.write_tag(1, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
-        for v in self.repeated_message.iter() {
-            try!(os.write_tag(2, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+        for v in &self.repeated_message {
+            os.write_tag(2, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
         if let Some(v) = self.dummy {
-            try!(os.write_int32(3, v));
+            os.write_int32(3, v)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -6346,12 +7014,14 @@ impl ::protobuf::Message for TestRequiredForeign {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestRequiredForeign>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -6372,19 +7042,20 @@ impl ::protobuf::MessageStatic for TestRequiredForeign {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<TestRequired>>(
                     "optional_message",
-                    TestRequiredForeign::has_optional_message,
-                    TestRequiredForeign::get_optional_message,
+                    TestRequiredForeign::get_optional_message_for_reflect,
+                    TestRequiredForeign::mut_optional_message_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<TestRequired>>(
                     "repeated_message",
-                    TestRequiredForeign::get_repeated_message,
+                    TestRequiredForeign::get_repeated_message_for_reflect,
+                    TestRequiredForeign::mut_repeated_message_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dummy",
-                    TestRequiredForeign::has_dummy,
-                    TestRequiredForeign::get_dummy,
+                    TestRequiredForeign::get_dummy_for_reflect,
+                    TestRequiredForeign::mut_dummy_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestRequiredForeign>(
                     "TestRequiredForeign",
@@ -6405,28 +7076,25 @@ impl ::protobuf::Clear for TestRequiredForeign {
     }
 }
 
-impl ::std::cmp::PartialEq for TestRequiredForeign {
-    fn eq(&self, other: &TestRequiredForeign) -> bool {
-        self.optional_message == other.optional_message &&
-        self.repeated_message == other.repeated_message &&
-        self.dummy == other.dummy &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestRequiredForeign {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestRequiredForeign {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestForeignNested {
     // message fields
     foreign_nested: ::protobuf::SingularPtrField<TestAllTypes_NestedMessage>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -6443,13 +7111,7 @@ impl TestForeignNested {
             ptr: 0 as *const TestForeignNested,
         };
         unsafe {
-            instance.get(|| {
-                TestForeignNested {
-                    foreign_nested: ::protobuf::SingularPtrField::none(),
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestForeignNested::new)
         }
     }
 
@@ -6485,6 +7147,14 @@ impl TestForeignNested {
     pub fn get_foreign_nested(&self) -> &TestAllTypes_NestedMessage {
         self.foreign_nested.as_ref().unwrap_or_else(|| TestAllTypes_NestedMessage::default_instance())
     }
+
+    fn get_foreign_nested_for_reflect(&self) -> &::protobuf::SingularPtrField<TestAllTypes_NestedMessage> {
+        &self.foreign_nested
+    }
+
+    fn mut_foreign_nested_for_reflect(&mut self) -> &mut ::protobuf::SingularPtrField<TestAllTypes_NestedMessage> {
+        &mut self.foreign_nested
+    }
 }
 
 impl ::protobuf::Message for TestForeignNested {
@@ -6493,14 +7163,14 @@ impl ::protobuf::Message for TestForeignNested {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
-                    try!(::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.foreign_nested));
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.foreign_nested)?;
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -6511,8 +7181,8 @@ impl ::protobuf::Message for TestForeignNested {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.foreign_nested.iter() {
-            let len = value.compute_size();
+        if let Some(v) = self.foreign_nested.as_ref() {
+            let len = v.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
@@ -6522,11 +7192,11 @@ impl ::protobuf::Message for TestForeignNested {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.foreign_nested.as_ref() {
-            try!(os.write_tag(1, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+            os.write_tag(1, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -6542,12 +7212,14 @@ impl ::protobuf::Message for TestForeignNested {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestForeignNested>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -6568,10 +7240,10 @@ impl ::protobuf::MessageStatic for TestForeignNested {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<TestAllTypes_NestedMessage>>(
                     "foreign_nested",
-                    TestForeignNested::has_foreign_nested,
-                    TestForeignNested::get_foreign_nested,
+                    TestForeignNested::get_foreign_nested_for_reflect,
+                    TestForeignNested::mut_foreign_nested_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestForeignNested>(
                     "TestForeignNested",
@@ -6590,24 +7262,23 @@ impl ::protobuf::Clear for TestForeignNested {
     }
 }
 
-impl ::std::cmp::PartialEq for TestForeignNested {
-    fn eq(&self, other: &TestForeignNested) -> bool {
-        self.foreign_nested == other.foreign_nested &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestForeignNested {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestForeignNested {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestEmptyMessage {
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -6624,12 +7295,7 @@ impl TestEmptyMessage {
             ptr: 0 as *const TestEmptyMessage,
         };
         unsafe {
-            instance.get(|| {
-                TestEmptyMessage {
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestEmptyMessage::new)
         }
     }
 }
@@ -6640,11 +7306,11 @@ impl ::protobuf::Message for TestEmptyMessage {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -6661,7 +7327,7 @@ impl ::protobuf::Message for TestEmptyMessage {
     }
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -6677,12 +7343,14 @@ impl ::protobuf::Message for TestEmptyMessage {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestEmptyMessage>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -6719,23 +7387,23 @@ impl ::protobuf::Clear for TestEmptyMessage {
     }
 }
 
-impl ::std::cmp::PartialEq for TestEmptyMessage {
-    fn eq(&self, other: &TestEmptyMessage) -> bool {
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestEmptyMessage {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestEmptyMessage {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestEmptyMessageWithExtensions {
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -6752,12 +7420,7 @@ impl TestEmptyMessageWithExtensions {
             ptr: 0 as *const TestEmptyMessageWithExtensions,
         };
         unsafe {
-            instance.get(|| {
-                TestEmptyMessageWithExtensions {
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestEmptyMessageWithExtensions::new)
         }
     }
 }
@@ -6768,11 +7431,11 @@ impl ::protobuf::Message for TestEmptyMessageWithExtensions {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -6789,7 +7452,7 @@ impl ::protobuf::Message for TestEmptyMessageWithExtensions {
     }
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -6805,12 +7468,14 @@ impl ::protobuf::Message for TestEmptyMessageWithExtensions {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestEmptyMessageWithExtensions>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -6847,23 +7512,23 @@ impl ::protobuf::Clear for TestEmptyMessageWithExtensions {
     }
 }
 
-impl ::std::cmp::PartialEq for TestEmptyMessageWithExtensions {
-    fn eq(&self, other: &TestEmptyMessageWithExtensions) -> bool {
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestEmptyMessageWithExtensions {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestEmptyMessageWithExtensions {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestMultipleExtensionRanges {
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -6880,12 +7545,7 @@ impl TestMultipleExtensionRanges {
             ptr: 0 as *const TestMultipleExtensionRanges,
         };
         unsafe {
-            instance.get(|| {
-                TestMultipleExtensionRanges {
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestMultipleExtensionRanges::new)
         }
     }
 }
@@ -6896,11 +7556,11 @@ impl ::protobuf::Message for TestMultipleExtensionRanges {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -6917,7 +7577,7 @@ impl ::protobuf::Message for TestMultipleExtensionRanges {
     }
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -6933,12 +7593,14 @@ impl ::protobuf::Message for TestMultipleExtensionRanges {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestMultipleExtensionRanges>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -6975,26 +7637,26 @@ impl ::protobuf::Clear for TestMultipleExtensionRanges {
     }
 }
 
-impl ::std::cmp::PartialEq for TestMultipleExtensionRanges {
-    fn eq(&self, other: &TestMultipleExtensionRanges) -> bool {
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestMultipleExtensionRanges {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestMultipleExtensionRanges {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestReallyLargeTagNumber {
     // message fields
     a: ::std::option::Option<i32>,
     bb: ::std::option::Option<i32>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -7011,14 +7673,7 @@ impl TestReallyLargeTagNumber {
             ptr: 0 as *const TestReallyLargeTagNumber,
         };
         unsafe {
-            instance.get(|| {
-                TestReallyLargeTagNumber {
-                    a: ::std::option::Option::None,
-                    bb: ::std::option::Option::None,
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestReallyLargeTagNumber::new)
         }
     }
 
@@ -7041,6 +7696,14 @@ impl TestReallyLargeTagNumber {
         self.a.unwrap_or(0)
     }
 
+    fn get_a_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.a
+    }
+
+    fn mut_a_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.a
+    }
+
     // optional int32 bb = 268435455;
 
     pub fn clear_bb(&mut self) {
@@ -7059,6 +7722,14 @@ impl TestReallyLargeTagNumber {
     pub fn get_bb(&self) -> i32 {
         self.bb.unwrap_or(0)
     }
+
+    fn get_bb_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.bb
+    }
+
+    fn mut_bb_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.bb
+    }
 }
 
 impl ::protobuf::Message for TestReallyLargeTagNumber {
@@ -7067,25 +7738,25 @@ impl ::protobuf::Message for TestReallyLargeTagNumber {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.a = ::std::option::Option::Some(tmp);
                 },
                 268435455 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.bb = ::std::option::Option::Some(tmp);
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -7096,11 +7767,11 @@ impl ::protobuf::Message for TestReallyLargeTagNumber {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.a.iter() {
-            my_size += ::protobuf::rt::value_size(1, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.a {
+            my_size += ::protobuf::rt::value_size(1, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.bb.iter() {
-            my_size += ::protobuf::rt::value_size(268435455, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.bb {
+            my_size += ::protobuf::rt::value_size(268435455, v, ::protobuf::wire_format::WireTypeVarint);
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
@@ -7109,12 +7780,12 @@ impl ::protobuf::Message for TestReallyLargeTagNumber {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.a {
-            try!(os.write_int32(1, v));
+            os.write_int32(1, v)?;
         };
         if let Some(v) = self.bb {
-            try!(os.write_int32(268435455, v));
+            os.write_int32(268435455, v)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -7130,12 +7801,14 @@ impl ::protobuf::Message for TestReallyLargeTagNumber {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestReallyLargeTagNumber>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -7156,15 +7829,15 @@ impl ::protobuf::MessageStatic for TestReallyLargeTagNumber {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "a",
-                    TestReallyLargeTagNumber::has_a,
-                    TestReallyLargeTagNumber::get_a,
+                    TestReallyLargeTagNumber::get_a_for_reflect,
+                    TestReallyLargeTagNumber::mut_a_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "bb",
-                    TestReallyLargeTagNumber::has_bb,
-                    TestReallyLargeTagNumber::get_bb,
+                    TestReallyLargeTagNumber::get_bb_for_reflect,
+                    TestReallyLargeTagNumber::mut_bb_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestReallyLargeTagNumber>(
                     "TestReallyLargeTagNumber",
@@ -7184,28 +7857,26 @@ impl ::protobuf::Clear for TestReallyLargeTagNumber {
     }
 }
 
-impl ::std::cmp::PartialEq for TestReallyLargeTagNumber {
-    fn eq(&self, other: &TestReallyLargeTagNumber) -> bool {
-        self.a == other.a &&
-        self.bb == other.bb &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestReallyLargeTagNumber {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestReallyLargeTagNumber {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestRecursiveMessage {
     // message fields
     a: ::protobuf::SingularPtrField<TestRecursiveMessage>,
     i: ::std::option::Option<i32>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -7222,14 +7893,7 @@ impl TestRecursiveMessage {
             ptr: 0 as *const TestRecursiveMessage,
         };
         unsafe {
-            instance.get(|| {
-                TestRecursiveMessage {
-                    a: ::protobuf::SingularPtrField::none(),
-                    i: ::std::option::Option::None,
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestRecursiveMessage::new)
         }
     }
 
@@ -7266,6 +7930,14 @@ impl TestRecursiveMessage {
         self.a.as_ref().unwrap_or_else(|| TestRecursiveMessage::default_instance())
     }
 
+    fn get_a_for_reflect(&self) -> &::protobuf::SingularPtrField<TestRecursiveMessage> {
+        &self.a
+    }
+
+    fn mut_a_for_reflect(&mut self) -> &mut ::protobuf::SingularPtrField<TestRecursiveMessage> {
+        &mut self.a
+    }
+
     // optional int32 i = 2;
 
     pub fn clear_i(&mut self) {
@@ -7284,6 +7956,14 @@ impl TestRecursiveMessage {
     pub fn get_i(&self) -> i32 {
         self.i.unwrap_or(0)
     }
+
+    fn get_i_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.i
+    }
+
+    fn mut_i_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.i
+    }
 }
 
 impl ::protobuf::Message for TestRecursiveMessage {
@@ -7292,21 +7972,21 @@ impl ::protobuf::Message for TestRecursiveMessage {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
-                    try!(::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.a));
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.a)?;
                 },
                 2 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.i = ::std::option::Option::Some(tmp);
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -7317,12 +7997,12 @@ impl ::protobuf::Message for TestRecursiveMessage {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.a.iter() {
-            let len = value.compute_size();
+        if let Some(v) = self.a.as_ref() {
+            let len = v.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
-        for value in self.i.iter() {
-            my_size += ::protobuf::rt::value_size(2, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.i {
+            my_size += ::protobuf::rt::value_size(2, v, ::protobuf::wire_format::WireTypeVarint);
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
@@ -7331,14 +8011,14 @@ impl ::protobuf::Message for TestRecursiveMessage {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.a.as_ref() {
-            try!(os.write_tag(1, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+            os.write_tag(1, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
         if let Some(v) = self.i {
-            try!(os.write_int32(2, v));
+            os.write_int32(2, v)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -7354,12 +8034,14 @@ impl ::protobuf::Message for TestRecursiveMessage {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestRecursiveMessage>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -7380,15 +8062,15 @@ impl ::protobuf::MessageStatic for TestRecursiveMessage {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<TestRecursiveMessage>>(
                     "a",
-                    TestRecursiveMessage::has_a,
-                    TestRecursiveMessage::get_a,
+                    TestRecursiveMessage::get_a_for_reflect,
+                    TestRecursiveMessage::mut_a_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "i",
-                    TestRecursiveMessage::has_i,
-                    TestRecursiveMessage::get_i,
+                    TestRecursiveMessage::get_i_for_reflect,
+                    TestRecursiveMessage::mut_i_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestRecursiveMessage>(
                     "TestRecursiveMessage",
@@ -7408,27 +8090,25 @@ impl ::protobuf::Clear for TestRecursiveMessage {
     }
 }
 
-impl ::std::cmp::PartialEq for TestRecursiveMessage {
-    fn eq(&self, other: &TestRecursiveMessage) -> bool {
-        self.a == other.a &&
-        self.i == other.i &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestRecursiveMessage {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestRecursiveMessage {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestMutualRecursionA {
     // message fields
     bb: ::protobuf::SingularPtrField<TestMutualRecursionB>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -7445,13 +8125,7 @@ impl TestMutualRecursionA {
             ptr: 0 as *const TestMutualRecursionA,
         };
         unsafe {
-            instance.get(|| {
-                TestMutualRecursionA {
-                    bb: ::protobuf::SingularPtrField::none(),
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestMutualRecursionA::new)
         }
     }
 
@@ -7487,6 +8161,14 @@ impl TestMutualRecursionA {
     pub fn get_bb(&self) -> &TestMutualRecursionB {
         self.bb.as_ref().unwrap_or_else(|| TestMutualRecursionB::default_instance())
     }
+
+    fn get_bb_for_reflect(&self) -> &::protobuf::SingularPtrField<TestMutualRecursionB> {
+        &self.bb
+    }
+
+    fn mut_bb_for_reflect(&mut self) -> &mut ::protobuf::SingularPtrField<TestMutualRecursionB> {
+        &mut self.bb
+    }
 }
 
 impl ::protobuf::Message for TestMutualRecursionA {
@@ -7495,14 +8177,14 @@ impl ::protobuf::Message for TestMutualRecursionA {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
-                    try!(::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.bb));
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.bb)?;
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -7513,8 +8195,8 @@ impl ::protobuf::Message for TestMutualRecursionA {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.bb.iter() {
-            let len = value.compute_size();
+        if let Some(v) = self.bb.as_ref() {
+            let len = v.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
@@ -7524,11 +8206,11 @@ impl ::protobuf::Message for TestMutualRecursionA {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.bb.as_ref() {
-            try!(os.write_tag(1, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+            os.write_tag(1, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -7544,12 +8226,14 @@ impl ::protobuf::Message for TestMutualRecursionA {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestMutualRecursionA>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -7570,10 +8254,10 @@ impl ::protobuf::MessageStatic for TestMutualRecursionA {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<TestMutualRecursionB>>(
                     "bb",
-                    TestMutualRecursionA::has_bb,
-                    TestMutualRecursionA::get_bb,
+                    TestMutualRecursionA::get_bb_for_reflect,
+                    TestMutualRecursionA::mut_bb_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestMutualRecursionA>(
                     "TestMutualRecursionA",
@@ -7592,27 +8276,26 @@ impl ::protobuf::Clear for TestMutualRecursionA {
     }
 }
 
-impl ::std::cmp::PartialEq for TestMutualRecursionA {
-    fn eq(&self, other: &TestMutualRecursionA) -> bool {
-        self.bb == other.bb &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestMutualRecursionA {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestMutualRecursionA {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestMutualRecursionB {
     // message fields
     a: ::protobuf::SingularPtrField<TestMutualRecursionA>,
     optional_int32: ::std::option::Option<i32>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -7629,14 +8312,7 @@ impl TestMutualRecursionB {
             ptr: 0 as *const TestMutualRecursionB,
         };
         unsafe {
-            instance.get(|| {
-                TestMutualRecursionB {
-                    a: ::protobuf::SingularPtrField::none(),
-                    optional_int32: ::std::option::Option::None,
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestMutualRecursionB::new)
         }
     }
 
@@ -7673,6 +8349,14 @@ impl TestMutualRecursionB {
         self.a.as_ref().unwrap_or_else(|| TestMutualRecursionA::default_instance())
     }
 
+    fn get_a_for_reflect(&self) -> &::protobuf::SingularPtrField<TestMutualRecursionA> {
+        &self.a
+    }
+
+    fn mut_a_for_reflect(&mut self) -> &mut ::protobuf::SingularPtrField<TestMutualRecursionA> {
+        &mut self.a
+    }
+
     // optional int32 optional_int32 = 2;
 
     pub fn clear_optional_int32(&mut self) {
@@ -7691,6 +8375,14 @@ impl TestMutualRecursionB {
     pub fn get_optional_int32(&self) -> i32 {
         self.optional_int32.unwrap_or(0)
     }
+
+    fn get_optional_int32_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.optional_int32
+    }
+
+    fn mut_optional_int32_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.optional_int32
+    }
 }
 
 impl ::protobuf::Message for TestMutualRecursionB {
@@ -7699,21 +8391,21 @@ impl ::protobuf::Message for TestMutualRecursionB {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
-                    try!(::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.a));
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.a)?;
                 },
                 2 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.optional_int32 = ::std::option::Option::Some(tmp);
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -7724,12 +8416,12 @@ impl ::protobuf::Message for TestMutualRecursionB {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.a.iter() {
-            let len = value.compute_size();
+        if let Some(v) = self.a.as_ref() {
+            let len = v.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
-        for value in self.optional_int32.iter() {
-            my_size += ::protobuf::rt::value_size(2, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.optional_int32 {
+            my_size += ::protobuf::rt::value_size(2, v, ::protobuf::wire_format::WireTypeVarint);
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
@@ -7738,14 +8430,14 @@ impl ::protobuf::Message for TestMutualRecursionB {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.a.as_ref() {
-            try!(os.write_tag(1, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+            os.write_tag(1, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
         if let Some(v) = self.optional_int32 {
-            try!(os.write_int32(2, v));
+            os.write_int32(2, v)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -7761,12 +8453,14 @@ impl ::protobuf::Message for TestMutualRecursionB {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestMutualRecursionB>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -7787,15 +8481,15 @@ impl ::protobuf::MessageStatic for TestMutualRecursionB {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<TestMutualRecursionA>>(
                     "a",
-                    TestMutualRecursionB::has_a,
-                    TestMutualRecursionB::get_a,
+                    TestMutualRecursionB::get_a_for_reflect,
+                    TestMutualRecursionB::mut_a_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "optional_int32",
-                    TestMutualRecursionB::has_optional_int32,
-                    TestMutualRecursionB::get_optional_int32,
+                    TestMutualRecursionB::get_optional_int32_for_reflect,
+                    TestMutualRecursionB::mut_optional_int32_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestMutualRecursionB>(
                     "TestMutualRecursionB",
@@ -7815,27 +8509,25 @@ impl ::protobuf::Clear for TestMutualRecursionB {
     }
 }
 
-impl ::std::cmp::PartialEq for TestMutualRecursionB {
-    fn eq(&self, other: &TestMutualRecursionB) -> bool {
-        self.a == other.a &&
-        self.optional_int32 == other.optional_int32 &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestMutualRecursionB {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestMutualRecursionB {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestDupFieldNumber {
     // message fields
     a: ::std::option::Option<i32>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -7852,13 +8544,7 @@ impl TestDupFieldNumber {
             ptr: 0 as *const TestDupFieldNumber,
         };
         unsafe {
-            instance.get(|| {
-                TestDupFieldNumber {
-                    a: ::std::option::Option::None,
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestDupFieldNumber::new)
         }
     }
 
@@ -7880,6 +8566,14 @@ impl TestDupFieldNumber {
     pub fn get_a(&self) -> i32 {
         self.a.unwrap_or(0)
     }
+
+    fn get_a_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.a
+    }
+
+    fn mut_a_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.a
+    }
 }
 
 impl ::protobuf::Message for TestDupFieldNumber {
@@ -7888,18 +8582,18 @@ impl ::protobuf::Message for TestDupFieldNumber {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.a = ::std::option::Option::Some(tmp);
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -7910,8 +8604,8 @@ impl ::protobuf::Message for TestDupFieldNumber {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.a.iter() {
-            my_size += ::protobuf::rt::value_size(1, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.a {
+            my_size += ::protobuf::rt::value_size(1, v, ::protobuf::wire_format::WireTypeVarint);
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
@@ -7920,9 +8614,9 @@ impl ::protobuf::Message for TestDupFieldNumber {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.a {
-            try!(os.write_int32(1, v));
+            os.write_int32(1, v)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -7938,12 +8632,14 @@ impl ::protobuf::Message for TestDupFieldNumber {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestDupFieldNumber>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -7964,10 +8660,10 @@ impl ::protobuf::MessageStatic for TestDupFieldNumber {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "a",
-                    TestDupFieldNumber::has_a,
-                    TestDupFieldNumber::get_a,
+                    TestDupFieldNumber::get_a_for_reflect,
+                    TestDupFieldNumber::mut_a_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestDupFieldNumber>(
                     "TestDupFieldNumber",
@@ -7986,26 +8682,25 @@ impl ::protobuf::Clear for TestDupFieldNumber {
     }
 }
 
-impl ::std::cmp::PartialEq for TestDupFieldNumber {
-    fn eq(&self, other: &TestDupFieldNumber) -> bool {
-        self.a == other.a &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestDupFieldNumber {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestDupFieldNumber {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestEagerMessage {
     // message fields
     sub_message: ::protobuf::SingularPtrField<TestAllTypes>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -8022,13 +8717,7 @@ impl TestEagerMessage {
             ptr: 0 as *const TestEagerMessage,
         };
         unsafe {
-            instance.get(|| {
-                TestEagerMessage {
-                    sub_message: ::protobuf::SingularPtrField::none(),
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestEagerMessage::new)
         }
     }
 
@@ -8064,6 +8753,14 @@ impl TestEagerMessage {
     pub fn get_sub_message(&self) -> &TestAllTypes {
         self.sub_message.as_ref().unwrap_or_else(|| TestAllTypes::default_instance())
     }
+
+    fn get_sub_message_for_reflect(&self) -> &::protobuf::SingularPtrField<TestAllTypes> {
+        &self.sub_message
+    }
+
+    fn mut_sub_message_for_reflect(&mut self) -> &mut ::protobuf::SingularPtrField<TestAllTypes> {
+        &mut self.sub_message
+    }
 }
 
 impl ::protobuf::Message for TestEagerMessage {
@@ -8072,14 +8769,14 @@ impl ::protobuf::Message for TestEagerMessage {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
-                    try!(::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.sub_message));
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.sub_message)?;
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -8090,8 +8787,8 @@ impl ::protobuf::Message for TestEagerMessage {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.sub_message.iter() {
-            let len = value.compute_size();
+        if let Some(v) = self.sub_message.as_ref() {
+            let len = v.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
@@ -8101,11 +8798,11 @@ impl ::protobuf::Message for TestEagerMessage {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.sub_message.as_ref() {
-            try!(os.write_tag(1, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+            os.write_tag(1, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -8121,12 +8818,14 @@ impl ::protobuf::Message for TestEagerMessage {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestEagerMessage>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -8147,10 +8846,10 @@ impl ::protobuf::MessageStatic for TestEagerMessage {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<TestAllTypes>>(
                     "sub_message",
-                    TestEagerMessage::has_sub_message,
-                    TestEagerMessage::get_sub_message,
+                    TestEagerMessage::get_sub_message_for_reflect,
+                    TestEagerMessage::mut_sub_message_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestEagerMessage>(
                     "TestEagerMessage",
@@ -8169,26 +8868,25 @@ impl ::protobuf::Clear for TestEagerMessage {
     }
 }
 
-impl ::std::cmp::PartialEq for TestEagerMessage {
-    fn eq(&self, other: &TestEagerMessage) -> bool {
-        self.sub_message == other.sub_message &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestEagerMessage {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestEagerMessage {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestLazyMessage {
     // message fields
     sub_message: ::protobuf::SingularPtrField<TestAllTypes>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -8205,13 +8903,7 @@ impl TestLazyMessage {
             ptr: 0 as *const TestLazyMessage,
         };
         unsafe {
-            instance.get(|| {
-                TestLazyMessage {
-                    sub_message: ::protobuf::SingularPtrField::none(),
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestLazyMessage::new)
         }
     }
 
@@ -8247,6 +8939,14 @@ impl TestLazyMessage {
     pub fn get_sub_message(&self) -> &TestAllTypes {
         self.sub_message.as_ref().unwrap_or_else(|| TestAllTypes::default_instance())
     }
+
+    fn get_sub_message_for_reflect(&self) -> &::protobuf::SingularPtrField<TestAllTypes> {
+        &self.sub_message
+    }
+
+    fn mut_sub_message_for_reflect(&mut self) -> &mut ::protobuf::SingularPtrField<TestAllTypes> {
+        &mut self.sub_message
+    }
 }
 
 impl ::protobuf::Message for TestLazyMessage {
@@ -8255,14 +8955,14 @@ impl ::protobuf::Message for TestLazyMessage {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
-                    try!(::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.sub_message));
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.sub_message)?;
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -8273,8 +8973,8 @@ impl ::protobuf::Message for TestLazyMessage {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.sub_message.iter() {
-            let len = value.compute_size();
+        if let Some(v) = self.sub_message.as_ref() {
+            let len = v.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
@@ -8284,11 +8984,11 @@ impl ::protobuf::Message for TestLazyMessage {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.sub_message.as_ref() {
-            try!(os.write_tag(1, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+            os.write_tag(1, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -8304,12 +9004,14 @@ impl ::protobuf::Message for TestLazyMessage {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestLazyMessage>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -8330,10 +9032,10 @@ impl ::protobuf::MessageStatic for TestLazyMessage {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<TestAllTypes>>(
                     "sub_message",
-                    TestLazyMessage::has_sub_message,
-                    TestLazyMessage::get_sub_message,
+                    TestLazyMessage::get_sub_message_for_reflect,
+                    TestLazyMessage::mut_sub_message_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestLazyMessage>(
                     "TestLazyMessage",
@@ -8352,26 +9054,25 @@ impl ::protobuf::Clear for TestLazyMessage {
     }
 }
 
-impl ::std::cmp::PartialEq for TestLazyMessage {
-    fn eq(&self, other: &TestLazyMessage) -> bool {
-        self.sub_message == other.sub_message &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestLazyMessage {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestLazyMessage {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestNestedMessageHasBits {
     // message fields
     optional_nested_message: ::protobuf::SingularPtrField<TestNestedMessageHasBits_NestedMessage>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -8388,13 +9089,7 @@ impl TestNestedMessageHasBits {
             ptr: 0 as *const TestNestedMessageHasBits,
         };
         unsafe {
-            instance.get(|| {
-                TestNestedMessageHasBits {
-                    optional_nested_message: ::protobuf::SingularPtrField::none(),
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestNestedMessageHasBits::new)
         }
     }
 
@@ -8430,6 +9125,14 @@ impl TestNestedMessageHasBits {
     pub fn get_optional_nested_message(&self) -> &TestNestedMessageHasBits_NestedMessage {
         self.optional_nested_message.as_ref().unwrap_or_else(|| TestNestedMessageHasBits_NestedMessage::default_instance())
     }
+
+    fn get_optional_nested_message_for_reflect(&self) -> &::protobuf::SingularPtrField<TestNestedMessageHasBits_NestedMessage> {
+        &self.optional_nested_message
+    }
+
+    fn mut_optional_nested_message_for_reflect(&mut self) -> &mut ::protobuf::SingularPtrField<TestNestedMessageHasBits_NestedMessage> {
+        &mut self.optional_nested_message
+    }
 }
 
 impl ::protobuf::Message for TestNestedMessageHasBits {
@@ -8438,14 +9141,14 @@ impl ::protobuf::Message for TestNestedMessageHasBits {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
-                    try!(::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.optional_nested_message));
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.optional_nested_message)?;
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -8456,8 +9159,8 @@ impl ::protobuf::Message for TestNestedMessageHasBits {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.optional_nested_message.iter() {
-            let len = value.compute_size();
+        if let Some(v) = self.optional_nested_message.as_ref() {
+            let len = v.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
@@ -8467,11 +9170,11 @@ impl ::protobuf::Message for TestNestedMessageHasBits {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.optional_nested_message.as_ref() {
-            try!(os.write_tag(1, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+            os.write_tag(1, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -8487,12 +9190,14 @@ impl ::protobuf::Message for TestNestedMessageHasBits {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestNestedMessageHasBits>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -8513,10 +9218,10 @@ impl ::protobuf::MessageStatic for TestNestedMessageHasBits {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<TestNestedMessageHasBits_NestedMessage>>(
                     "optional_nested_message",
-                    TestNestedMessageHasBits::has_optional_nested_message,
-                    TestNestedMessageHasBits::get_optional_nested_message,
+                    TestNestedMessageHasBits::get_optional_nested_message_for_reflect,
+                    TestNestedMessageHasBits::mut_optional_nested_message_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestNestedMessageHasBits>(
                     "TestNestedMessageHasBits",
@@ -8535,27 +9240,26 @@ impl ::protobuf::Clear for TestNestedMessageHasBits {
     }
 }
 
-impl ::std::cmp::PartialEq for TestNestedMessageHasBits {
-    fn eq(&self, other: &TestNestedMessageHasBits) -> bool {
-        self.optional_nested_message == other.optional_nested_message &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestNestedMessageHasBits {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestNestedMessageHasBits {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestNestedMessageHasBits_NestedMessage {
     // message fields
     nestedmessage_repeated_int32: ::std::vec::Vec<i32>,
     nestedmessage_repeated_foreignmessage: ::protobuf::RepeatedField<ForeignMessage>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -8572,14 +9276,7 @@ impl TestNestedMessageHasBits_NestedMessage {
             ptr: 0 as *const TestNestedMessageHasBits_NestedMessage,
         };
         unsafe {
-            instance.get(|| {
-                TestNestedMessageHasBits_NestedMessage {
-                    nestedmessage_repeated_int32: ::std::vec::Vec::new(),
-                    nestedmessage_repeated_foreignmessage: ::protobuf::RepeatedField::new(),
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestNestedMessageHasBits_NestedMessage::new)
         }
     }
 
@@ -8608,6 +9305,14 @@ impl TestNestedMessageHasBits_NestedMessage {
         &self.nestedmessage_repeated_int32
     }
 
+    fn get_nestedmessage_repeated_int32_for_reflect(&self) -> &::std::vec::Vec<i32> {
+        &self.nestedmessage_repeated_int32
+    }
+
+    fn mut_nestedmessage_repeated_int32_for_reflect(&mut self) -> &mut ::std::vec::Vec<i32> {
+        &mut self.nestedmessage_repeated_int32
+    }
+
     // repeated .protobuf_unittest.ForeignMessage nestedmessage_repeated_foreignmessage = 2;
 
     pub fn clear_nestedmessage_repeated_foreignmessage(&mut self) {
@@ -8632,6 +9337,14 @@ impl TestNestedMessageHasBits_NestedMessage {
     pub fn get_nestedmessage_repeated_foreignmessage(&self) -> &[ForeignMessage] {
         &self.nestedmessage_repeated_foreignmessage
     }
+
+    fn get_nestedmessage_repeated_foreignmessage_for_reflect(&self) -> &::protobuf::RepeatedField<ForeignMessage> {
+        &self.nestedmessage_repeated_foreignmessage
+    }
+
+    fn mut_nestedmessage_repeated_foreignmessage_for_reflect(&mut self) -> &mut ::protobuf::RepeatedField<ForeignMessage> {
+        &mut self.nestedmessage_repeated_foreignmessage
+    }
 }
 
 impl ::protobuf::Message for TestNestedMessageHasBits_NestedMessage {
@@ -8640,17 +9353,17 @@ impl ::protobuf::Message for TestNestedMessageHasBits_NestedMessage {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
-                    try!(::protobuf::rt::read_repeated_int32_into(wire_type, is, &mut self.nestedmessage_repeated_int32));
+                    ::protobuf::rt::read_repeated_int32_into(wire_type, is, &mut self.nestedmessage_repeated_int32)?;
                 },
                 2 => {
-                    try!(::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.nestedmessage_repeated_foreignmessage));
+                    ::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.nestedmessage_repeated_foreignmessage)?;
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -8661,10 +9374,10 @@ impl ::protobuf::Message for TestNestedMessageHasBits_NestedMessage {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.nestedmessage_repeated_int32.iter() {
+        for value in &self.nestedmessage_repeated_int32 {
             my_size += ::protobuf::rt::value_size(1, *value, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.nestedmessage_repeated_foreignmessage.iter() {
+        for value in &self.nestedmessage_repeated_foreignmessage {
             let len = value.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
@@ -8674,15 +9387,15 @@ impl ::protobuf::Message for TestNestedMessageHasBits_NestedMessage {
     }
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        for v in self.nestedmessage_repeated_int32.iter() {
-            try!(os.write_int32(1, *v));
+        for v in &self.nestedmessage_repeated_int32 {
+            os.write_int32(1, *v)?;
         };
-        for v in self.nestedmessage_repeated_foreignmessage.iter() {
-            try!(os.write_tag(2, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+        for v in &self.nestedmessage_repeated_foreignmessage {
+            os.write_tag(2, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -8698,12 +9411,14 @@ impl ::protobuf::Message for TestNestedMessageHasBits_NestedMessage {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestNestedMessageHasBits_NestedMessage>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -8724,13 +9439,15 @@ impl ::protobuf::MessageStatic for TestNestedMessageHasBits_NestedMessage {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_repeated_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "nestedmessage_repeated_int32",
-                    TestNestedMessageHasBits_NestedMessage::get_nestedmessage_repeated_int32,
+                    TestNestedMessageHasBits_NestedMessage::get_nestedmessage_repeated_int32_for_reflect,
+                    TestNestedMessageHasBits_NestedMessage::mut_nestedmessage_repeated_int32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<ForeignMessage>>(
                     "nestedmessage_repeated_foreignmessage",
-                    TestNestedMessageHasBits_NestedMessage::get_nestedmessage_repeated_foreignmessage,
+                    TestNestedMessageHasBits_NestedMessage::get_nestedmessage_repeated_foreignmessage_for_reflect,
+                    TestNestedMessageHasBits_NestedMessage::mut_nestedmessage_repeated_foreignmessage_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestNestedMessageHasBits_NestedMessage>(
                     "TestNestedMessageHasBits_NestedMessage",
@@ -8750,21 +9467,19 @@ impl ::protobuf::Clear for TestNestedMessageHasBits_NestedMessage {
     }
 }
 
-impl ::std::cmp::PartialEq for TestNestedMessageHasBits_NestedMessage {
-    fn eq(&self, other: &TestNestedMessageHasBits_NestedMessage) -> bool {
-        self.nestedmessage_repeated_int32 == other.nestedmessage_repeated_int32 &&
-        self.nestedmessage_repeated_foreignmessage == other.nestedmessage_repeated_foreignmessage &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestNestedMessageHasBits_NestedMessage {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestNestedMessageHasBits_NestedMessage {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestCamelCaseFieldNames {
     // message fields
     PrimitiveField: ::std::option::Option<i32>,
@@ -8781,7 +9496,7 @@ pub struct TestCamelCaseFieldNames {
     RepeatedCordField: ::protobuf::RepeatedField<::std::string::String>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -8798,24 +9513,7 @@ impl TestCamelCaseFieldNames {
             ptr: 0 as *const TestCamelCaseFieldNames,
         };
         unsafe {
-            instance.get(|| {
-                TestCamelCaseFieldNames {
-                    PrimitiveField: ::std::option::Option::None,
-                    StringField: ::protobuf::SingularField::none(),
-                    EnumField: ::std::option::Option::None,
-                    MessageField: ::protobuf::SingularPtrField::none(),
-                    StringPieceField: ::protobuf::SingularField::none(),
-                    CordField: ::protobuf::SingularField::none(),
-                    RepeatedPrimitiveField: ::std::vec::Vec::new(),
-                    RepeatedStringField: ::protobuf::RepeatedField::new(),
-                    RepeatedEnumField: ::std::vec::Vec::new(),
-                    RepeatedMessageField: ::protobuf::RepeatedField::new(),
-                    RepeatedStringPieceField: ::protobuf::RepeatedField::new(),
-                    RepeatedCordField: ::protobuf::RepeatedField::new(),
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestCamelCaseFieldNames::new)
         }
     }
 
@@ -8836,6 +9534,14 @@ impl TestCamelCaseFieldNames {
 
     pub fn get_PrimitiveField(&self) -> i32 {
         self.PrimitiveField.unwrap_or(0)
+    }
+
+    fn get_PrimitiveField_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.PrimitiveField
+    }
+
+    fn mut_PrimitiveField_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.PrimitiveField
     }
 
     // optional string StringField = 2;
@@ -8874,6 +9580,14 @@ impl TestCamelCaseFieldNames {
         }
     }
 
+    fn get_StringField_for_reflect(&self) -> &::protobuf::SingularField<::std::string::String> {
+        &self.StringField
+    }
+
+    fn mut_StringField_for_reflect(&mut self) -> &mut ::protobuf::SingularField<::std::string::String> {
+        &mut self.StringField
+    }
+
     // optional .protobuf_unittest.ForeignEnum EnumField = 3;
 
     pub fn clear_EnumField(&mut self) {
@@ -8891,6 +9605,14 @@ impl TestCamelCaseFieldNames {
 
     pub fn get_EnumField(&self) -> ForeignEnum {
         self.EnumField.unwrap_or(ForeignEnum::FOREIGN_FOO)
+    }
+
+    fn get_EnumField_for_reflect(&self) -> &::std::option::Option<ForeignEnum> {
+        &self.EnumField
+    }
+
+    fn mut_EnumField_for_reflect(&mut self) -> &mut ::std::option::Option<ForeignEnum> {
+        &mut self.EnumField
     }
 
     // optional .protobuf_unittest.ForeignMessage MessageField = 4;
@@ -8924,6 +9646,14 @@ impl TestCamelCaseFieldNames {
 
     pub fn get_MessageField(&self) -> &ForeignMessage {
         self.MessageField.as_ref().unwrap_or_else(|| ForeignMessage::default_instance())
+    }
+
+    fn get_MessageField_for_reflect(&self) -> &::protobuf::SingularPtrField<ForeignMessage> {
+        &self.MessageField
+    }
+
+    fn mut_MessageField_for_reflect(&mut self) -> &mut ::protobuf::SingularPtrField<ForeignMessage> {
+        &mut self.MessageField
     }
 
     // optional string StringPieceField = 5;
@@ -8962,6 +9692,14 @@ impl TestCamelCaseFieldNames {
         }
     }
 
+    fn get_StringPieceField_for_reflect(&self) -> &::protobuf::SingularField<::std::string::String> {
+        &self.StringPieceField
+    }
+
+    fn mut_StringPieceField_for_reflect(&mut self) -> &mut ::protobuf::SingularField<::std::string::String> {
+        &mut self.StringPieceField
+    }
+
     // optional string CordField = 6;
 
     pub fn clear_CordField(&mut self) {
@@ -8998,6 +9736,14 @@ impl TestCamelCaseFieldNames {
         }
     }
 
+    fn get_CordField_for_reflect(&self) -> &::protobuf::SingularField<::std::string::String> {
+        &self.CordField
+    }
+
+    fn mut_CordField_for_reflect(&mut self) -> &mut ::protobuf::SingularField<::std::string::String> {
+        &mut self.CordField
+    }
+
     // repeated int32 RepeatedPrimitiveField = 7;
 
     pub fn clear_RepeatedPrimitiveField(&mut self) {
@@ -9021,6 +9767,14 @@ impl TestCamelCaseFieldNames {
 
     pub fn get_RepeatedPrimitiveField(&self) -> &[i32] {
         &self.RepeatedPrimitiveField
+    }
+
+    fn get_RepeatedPrimitiveField_for_reflect(&self) -> &::std::vec::Vec<i32> {
+        &self.RepeatedPrimitiveField
+    }
+
+    fn mut_RepeatedPrimitiveField_for_reflect(&mut self) -> &mut ::std::vec::Vec<i32> {
+        &mut self.RepeatedPrimitiveField
     }
 
     // repeated string RepeatedStringField = 8;
@@ -9048,6 +9802,14 @@ impl TestCamelCaseFieldNames {
         &self.RepeatedStringField
     }
 
+    fn get_RepeatedStringField_for_reflect(&self) -> &::protobuf::RepeatedField<::std::string::String> {
+        &self.RepeatedStringField
+    }
+
+    fn mut_RepeatedStringField_for_reflect(&mut self) -> &mut ::protobuf::RepeatedField<::std::string::String> {
+        &mut self.RepeatedStringField
+    }
+
     // repeated .protobuf_unittest.ForeignEnum RepeatedEnumField = 9;
 
     pub fn clear_RepeatedEnumField(&mut self) {
@@ -9071,6 +9833,14 @@ impl TestCamelCaseFieldNames {
 
     pub fn get_RepeatedEnumField(&self) -> &[ForeignEnum] {
         &self.RepeatedEnumField
+    }
+
+    fn get_RepeatedEnumField_for_reflect(&self) -> &::std::vec::Vec<ForeignEnum> {
+        &self.RepeatedEnumField
+    }
+
+    fn mut_RepeatedEnumField_for_reflect(&mut self) -> &mut ::std::vec::Vec<ForeignEnum> {
+        &mut self.RepeatedEnumField
     }
 
     // repeated .protobuf_unittest.ForeignMessage RepeatedMessageField = 10;
@@ -9098,6 +9868,14 @@ impl TestCamelCaseFieldNames {
         &self.RepeatedMessageField
     }
 
+    fn get_RepeatedMessageField_for_reflect(&self) -> &::protobuf::RepeatedField<ForeignMessage> {
+        &self.RepeatedMessageField
+    }
+
+    fn mut_RepeatedMessageField_for_reflect(&mut self) -> &mut ::protobuf::RepeatedField<ForeignMessage> {
+        &mut self.RepeatedMessageField
+    }
+
     // repeated string RepeatedStringPieceField = 11;
 
     pub fn clear_RepeatedStringPieceField(&mut self) {
@@ -9121,6 +9899,14 @@ impl TestCamelCaseFieldNames {
 
     pub fn get_RepeatedStringPieceField(&self) -> &[::std::string::String] {
         &self.RepeatedStringPieceField
+    }
+
+    fn get_RepeatedStringPieceField_for_reflect(&self) -> &::protobuf::RepeatedField<::std::string::String> {
+        &self.RepeatedStringPieceField
+    }
+
+    fn mut_RepeatedStringPieceField_for_reflect(&mut self) -> &mut ::protobuf::RepeatedField<::std::string::String> {
+        &mut self.RepeatedStringPieceField
     }
 
     // repeated string RepeatedCordField = 12;
@@ -9147,6 +9933,14 @@ impl TestCamelCaseFieldNames {
     pub fn get_RepeatedCordField(&self) -> &[::std::string::String] {
         &self.RepeatedCordField
     }
+
+    fn get_RepeatedCordField_for_reflect(&self) -> &::protobuf::RepeatedField<::std::string::String> {
+        &self.RepeatedCordField
+    }
+
+    fn mut_RepeatedCordField_for_reflect(&mut self) -> &mut ::protobuf::RepeatedField<::std::string::String> {
+        &mut self.RepeatedCordField
+    }
 }
 
 impl ::protobuf::Message for TestCamelCaseFieldNames {
@@ -9155,55 +9949,55 @@ impl ::protobuf::Message for TestCamelCaseFieldNames {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.PrimitiveField = ::std::option::Option::Some(tmp);
                 },
                 2 => {
-                    try!(::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.StringField));
+                    ::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.StringField)?;
                 },
                 3 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_enum());
+                    let tmp = is.read_enum()?;
                     self.EnumField = ::std::option::Option::Some(tmp);
                 },
                 4 => {
-                    try!(::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.MessageField));
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.MessageField)?;
                 },
                 5 => {
-                    try!(::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.StringPieceField));
+                    ::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.StringPieceField)?;
                 },
                 6 => {
-                    try!(::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.CordField));
+                    ::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.CordField)?;
                 },
                 7 => {
-                    try!(::protobuf::rt::read_repeated_int32_into(wire_type, is, &mut self.RepeatedPrimitiveField));
+                    ::protobuf::rt::read_repeated_int32_into(wire_type, is, &mut self.RepeatedPrimitiveField)?;
                 },
                 8 => {
-                    try!(::protobuf::rt::read_repeated_string_into(wire_type, is, &mut self.RepeatedStringField));
+                    ::protobuf::rt::read_repeated_string_into(wire_type, is, &mut self.RepeatedStringField)?;
                 },
                 9 => {
-                    try!(::protobuf::rt::read_repeated_enum_into(wire_type, is, &mut self.RepeatedEnumField));
+                    ::protobuf::rt::read_repeated_enum_into(wire_type, is, &mut self.RepeatedEnumField)?;
                 },
                 10 => {
-                    try!(::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.RepeatedMessageField));
+                    ::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.RepeatedMessageField)?;
                 },
                 11 => {
-                    try!(::protobuf::rt::read_repeated_string_into(wire_type, is, &mut self.RepeatedStringPieceField));
+                    ::protobuf::rt::read_repeated_string_into(wire_type, is, &mut self.RepeatedStringPieceField)?;
                 },
                 12 => {
-                    try!(::protobuf::rt::read_repeated_string_into(wire_type, is, &mut self.RepeatedCordField));
+                    ::protobuf::rt::read_repeated_string_into(wire_type, is, &mut self.RepeatedCordField)?;
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -9214,42 +10008,42 @@ impl ::protobuf::Message for TestCamelCaseFieldNames {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.PrimitiveField.iter() {
-            my_size += ::protobuf::rt::value_size(1, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.PrimitiveField {
+            my_size += ::protobuf::rt::value_size(1, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.StringField.iter() {
-            my_size += ::protobuf::rt::string_size(2, &value);
+        if let Some(v) = self.StringField.as_ref() {
+            my_size += ::protobuf::rt::string_size(2, &v);
         };
-        for value in self.EnumField.iter() {
-            my_size += ::protobuf::rt::enum_size(3, *value);
+        if let Some(v) = self.EnumField {
+            my_size += ::protobuf::rt::enum_size(3, v);
         };
-        for value in self.MessageField.iter() {
-            let len = value.compute_size();
+        if let Some(v) = self.MessageField.as_ref() {
+            let len = v.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
-        for value in self.StringPieceField.iter() {
-            my_size += ::protobuf::rt::string_size(5, &value);
+        if let Some(v) = self.StringPieceField.as_ref() {
+            my_size += ::protobuf::rt::string_size(5, &v);
         };
-        for value in self.CordField.iter() {
-            my_size += ::protobuf::rt::string_size(6, &value);
+        if let Some(v) = self.CordField.as_ref() {
+            my_size += ::protobuf::rt::string_size(6, &v);
         };
-        for value in self.RepeatedPrimitiveField.iter() {
+        for value in &self.RepeatedPrimitiveField {
             my_size += ::protobuf::rt::value_size(7, *value, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.RepeatedStringField.iter() {
+        for value in &self.RepeatedStringField {
             my_size += ::protobuf::rt::string_size(8, &value);
         };
-        for value in self.RepeatedEnumField.iter() {
+        for value in &self.RepeatedEnumField {
             my_size += ::protobuf::rt::enum_size(9, *value);
         };
-        for value in self.RepeatedMessageField.iter() {
+        for value in &self.RepeatedMessageField {
             let len = value.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
-        for value in self.RepeatedStringPieceField.iter() {
+        for value in &self.RepeatedStringPieceField {
             my_size += ::protobuf::rt::string_size(11, &value);
         };
-        for value in self.RepeatedCordField.iter() {
+        for value in &self.RepeatedCordField {
             my_size += ::protobuf::rt::string_size(12, &value);
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
@@ -9259,46 +10053,46 @@ impl ::protobuf::Message for TestCamelCaseFieldNames {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.PrimitiveField {
-            try!(os.write_int32(1, v));
+            os.write_int32(1, v)?;
         };
         if let Some(v) = self.StringField.as_ref() {
-            try!(os.write_string(2, &v));
+            os.write_string(2, &v)?;
         };
         if let Some(v) = self.EnumField {
-            try!(os.write_enum(3, v.value()));
+            os.write_enum(3, v.value())?;
         };
         if let Some(v) = self.MessageField.as_ref() {
-            try!(os.write_tag(4, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+            os.write_tag(4, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
         if let Some(v) = self.StringPieceField.as_ref() {
-            try!(os.write_string(5, &v));
+            os.write_string(5, &v)?;
         };
         if let Some(v) = self.CordField.as_ref() {
-            try!(os.write_string(6, &v));
+            os.write_string(6, &v)?;
         };
-        for v in self.RepeatedPrimitiveField.iter() {
-            try!(os.write_int32(7, *v));
+        for v in &self.RepeatedPrimitiveField {
+            os.write_int32(7, *v)?;
         };
-        for v in self.RepeatedStringField.iter() {
-            try!(os.write_string(8, &v));
+        for v in &self.RepeatedStringField {
+            os.write_string(8, &v)?;
         };
-        for v in self.RepeatedEnumField.iter() {
-            try!(os.write_enum(9, v.value()));
+        for v in &self.RepeatedEnumField {
+            os.write_enum(9, v.value())?;
         };
-        for v in self.RepeatedMessageField.iter() {
-            try!(os.write_tag(10, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+        for v in &self.RepeatedMessageField {
+            os.write_tag(10, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
-        for v in self.RepeatedStringPieceField.iter() {
-            try!(os.write_string(11, &v));
+        for v in &self.RepeatedStringPieceField {
+            os.write_string(11, &v)?;
         };
-        for v in self.RepeatedCordField.iter() {
-            try!(os.write_string(12, &v));
+        for v in &self.RepeatedCordField {
+            os.write_string(12, &v)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -9314,12 +10108,14 @@ impl ::protobuf::Message for TestCamelCaseFieldNames {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestCamelCaseFieldNames>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -9340,59 +10136,65 @@ impl ::protobuf::MessageStatic for TestCamelCaseFieldNames {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "PrimitiveField",
-                    TestCamelCaseFieldNames::has_PrimitiveField,
-                    TestCamelCaseFieldNames::get_PrimitiveField,
+                    TestCamelCaseFieldNames::get_PrimitiveField_for_reflect,
+                    TestCamelCaseFieldNames::mut_PrimitiveField_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "StringField",
-                    TestCamelCaseFieldNames::has_StringField,
-                    TestCamelCaseFieldNames::get_StringField,
+                    TestCamelCaseFieldNames::get_StringField_for_reflect,
+                    TestCamelCaseFieldNames::mut_StringField_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_enum_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeEnum<ForeignEnum>>(
                     "EnumField",
-                    TestCamelCaseFieldNames::has_EnumField,
-                    TestCamelCaseFieldNames::get_EnumField,
+                    TestCamelCaseFieldNames::get_EnumField_for_reflect,
+                    TestCamelCaseFieldNames::mut_EnumField_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<ForeignMessage>>(
                     "MessageField",
-                    TestCamelCaseFieldNames::has_MessageField,
-                    TestCamelCaseFieldNames::get_MessageField,
+                    TestCamelCaseFieldNames::get_MessageField_for_reflect,
+                    TestCamelCaseFieldNames::mut_MessageField_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "StringPieceField",
-                    TestCamelCaseFieldNames::has_StringPieceField,
-                    TestCamelCaseFieldNames::get_StringPieceField,
+                    TestCamelCaseFieldNames::get_StringPieceField_for_reflect,
+                    TestCamelCaseFieldNames::mut_StringPieceField_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "CordField",
-                    TestCamelCaseFieldNames::has_CordField,
-                    TestCamelCaseFieldNames::get_CordField,
+                    TestCamelCaseFieldNames::get_CordField_for_reflect,
+                    TestCamelCaseFieldNames::mut_CordField_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "RepeatedPrimitiveField",
-                    TestCamelCaseFieldNames::get_RepeatedPrimitiveField,
+                    TestCamelCaseFieldNames::get_RepeatedPrimitiveField_for_reflect,
+                    TestCamelCaseFieldNames::mut_RepeatedPrimitiveField_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "RepeatedStringField",
-                    TestCamelCaseFieldNames::get_RepeatedStringField,
+                    TestCamelCaseFieldNames::get_RepeatedStringField_for_reflect,
+                    TestCamelCaseFieldNames::mut_RepeatedStringField_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_enum_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeEnum<ForeignEnum>>(
                     "RepeatedEnumField",
-                    TestCamelCaseFieldNames::get_RepeatedEnumField,
+                    TestCamelCaseFieldNames::get_RepeatedEnumField_for_reflect,
+                    TestCamelCaseFieldNames::mut_RepeatedEnumField_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<ForeignMessage>>(
                     "RepeatedMessageField",
-                    TestCamelCaseFieldNames::get_RepeatedMessageField,
+                    TestCamelCaseFieldNames::get_RepeatedMessageField_for_reflect,
+                    TestCamelCaseFieldNames::mut_RepeatedMessageField_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "RepeatedStringPieceField",
-                    TestCamelCaseFieldNames::get_RepeatedStringPieceField,
+                    TestCamelCaseFieldNames::get_RepeatedStringPieceField_for_reflect,
+                    TestCamelCaseFieldNames::mut_RepeatedStringPieceField_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "RepeatedCordField",
-                    TestCamelCaseFieldNames::get_RepeatedCordField,
+                    TestCamelCaseFieldNames::get_RepeatedCordField_for_reflect,
+                    TestCamelCaseFieldNames::mut_RepeatedCordField_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestCamelCaseFieldNames>(
                     "TestCamelCaseFieldNames",
@@ -9422,31 +10224,19 @@ impl ::protobuf::Clear for TestCamelCaseFieldNames {
     }
 }
 
-impl ::std::cmp::PartialEq for TestCamelCaseFieldNames {
-    fn eq(&self, other: &TestCamelCaseFieldNames) -> bool {
-        self.PrimitiveField == other.PrimitiveField &&
-        self.StringField == other.StringField &&
-        self.EnumField == other.EnumField &&
-        self.MessageField == other.MessageField &&
-        self.StringPieceField == other.StringPieceField &&
-        self.CordField == other.CordField &&
-        self.RepeatedPrimitiveField == other.RepeatedPrimitiveField &&
-        self.RepeatedStringField == other.RepeatedStringField &&
-        self.RepeatedEnumField == other.RepeatedEnumField &&
-        self.RepeatedMessageField == other.RepeatedMessageField &&
-        self.RepeatedStringPieceField == other.RepeatedStringPieceField &&
-        self.RepeatedCordField == other.RepeatedCordField &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestCamelCaseFieldNames {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestCamelCaseFieldNames {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestFieldOrderings {
     // message fields
     my_string: ::protobuf::SingularField<::std::string::String>,
@@ -9455,7 +10245,7 @@ pub struct TestFieldOrderings {
     optional_nested_message: ::protobuf::SingularPtrField<TestFieldOrderings_NestedMessage>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -9472,16 +10262,7 @@ impl TestFieldOrderings {
             ptr: 0 as *const TestFieldOrderings,
         };
         unsafe {
-            instance.get(|| {
-                TestFieldOrderings {
-                    my_string: ::protobuf::SingularField::none(),
-                    my_int: ::std::option::Option::None,
-                    my_float: ::std::option::Option::None,
-                    optional_nested_message: ::protobuf::SingularPtrField::none(),
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestFieldOrderings::new)
         }
     }
 
@@ -9521,6 +10302,14 @@ impl TestFieldOrderings {
         }
     }
 
+    fn get_my_string_for_reflect(&self) -> &::protobuf::SingularField<::std::string::String> {
+        &self.my_string
+    }
+
+    fn mut_my_string_for_reflect(&mut self) -> &mut ::protobuf::SingularField<::std::string::String> {
+        &mut self.my_string
+    }
+
     // optional int64 my_int = 1;
 
     pub fn clear_my_int(&mut self) {
@@ -9540,6 +10329,14 @@ impl TestFieldOrderings {
         self.my_int.unwrap_or(0)
     }
 
+    fn get_my_int_for_reflect(&self) -> &::std::option::Option<i64> {
+        &self.my_int
+    }
+
+    fn mut_my_int_for_reflect(&mut self) -> &mut ::std::option::Option<i64> {
+        &mut self.my_int
+    }
+
     // optional float my_float = 101;
 
     pub fn clear_my_float(&mut self) {
@@ -9557,6 +10354,14 @@ impl TestFieldOrderings {
 
     pub fn get_my_float(&self) -> f32 {
         self.my_float.unwrap_or(0.)
+    }
+
+    fn get_my_float_for_reflect(&self) -> &::std::option::Option<f32> {
+        &self.my_float
+    }
+
+    fn mut_my_float_for_reflect(&mut self) -> &mut ::std::option::Option<f32> {
+        &mut self.my_float
     }
 
     // optional .protobuf_unittest.TestFieldOrderings.NestedMessage optional_nested_message = 200;
@@ -9591,6 +10396,14 @@ impl TestFieldOrderings {
     pub fn get_optional_nested_message(&self) -> &TestFieldOrderings_NestedMessage {
         self.optional_nested_message.as_ref().unwrap_or_else(|| TestFieldOrderings_NestedMessage::default_instance())
     }
+
+    fn get_optional_nested_message_for_reflect(&self) -> &::protobuf::SingularPtrField<TestFieldOrderings_NestedMessage> {
+        &self.optional_nested_message
+    }
+
+    fn mut_optional_nested_message_for_reflect(&mut self) -> &mut ::protobuf::SingularPtrField<TestFieldOrderings_NestedMessage> {
+        &mut self.optional_nested_message
+    }
 }
 
 impl ::protobuf::Message for TestFieldOrderings {
@@ -9599,31 +10412,31 @@ impl ::protobuf::Message for TestFieldOrderings {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 11 => {
-                    try!(::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.my_string));
+                    ::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.my_string)?;
                 },
                 1 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int64());
+                    let tmp = is.read_int64()?;
                     self.my_int = ::std::option::Option::Some(tmp);
                 },
                 101 => {
                     if wire_type != ::protobuf::wire_format::WireTypeFixed32 {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_float());
+                    let tmp = is.read_float()?;
                     self.my_float = ::std::option::Option::Some(tmp);
                 },
                 200 => {
-                    try!(::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.optional_nested_message));
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.optional_nested_message)?;
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -9634,17 +10447,17 @@ impl ::protobuf::Message for TestFieldOrderings {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.my_string.iter() {
-            my_size += ::protobuf::rt::string_size(11, &value);
+        if let Some(v) = self.my_string.as_ref() {
+            my_size += ::protobuf::rt::string_size(11, &v);
         };
-        for value in self.my_int.iter() {
-            my_size += ::protobuf::rt::value_size(1, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.my_int {
+            my_size += ::protobuf::rt::value_size(1, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        if self.my_float.is_some() {
+        if let Some(v) = self.my_float {
             my_size += 6;
         };
-        for value in self.optional_nested_message.iter() {
-            let len = value.compute_size();
+        if let Some(v) = self.optional_nested_message.as_ref() {
+            let len = v.compute_size();
             my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
@@ -9654,20 +10467,20 @@ impl ::protobuf::Message for TestFieldOrderings {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.my_string.as_ref() {
-            try!(os.write_string(11, &v));
+            os.write_string(11, &v)?;
         };
         if let Some(v) = self.my_int {
-            try!(os.write_int64(1, v));
+            os.write_int64(1, v)?;
         };
         if let Some(v) = self.my_float {
-            try!(os.write_float(101, v));
+            os.write_float(101, v)?;
         };
         if let Some(v) = self.optional_nested_message.as_ref() {
-            try!(os.write_tag(200, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+            os.write_tag(200, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -9683,12 +10496,14 @@ impl ::protobuf::Message for TestFieldOrderings {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestFieldOrderings>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -9709,25 +10524,25 @@ impl ::protobuf::MessageStatic for TestFieldOrderings {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "my_string",
-                    TestFieldOrderings::has_my_string,
-                    TestFieldOrderings::get_my_string,
+                    TestFieldOrderings::get_my_string_for_reflect,
+                    TestFieldOrderings::mut_my_string_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt64>(
                     "my_int",
-                    TestFieldOrderings::has_my_int,
-                    TestFieldOrderings::get_my_int,
+                    TestFieldOrderings::get_my_int_for_reflect,
+                    TestFieldOrderings::mut_my_int_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_f32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeFloat>(
                     "my_float",
-                    TestFieldOrderings::has_my_float,
-                    TestFieldOrderings::get_my_float,
+                    TestFieldOrderings::get_my_float_for_reflect,
+                    TestFieldOrderings::mut_my_float_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<TestFieldOrderings_NestedMessage>>(
                     "optional_nested_message",
-                    TestFieldOrderings::has_optional_nested_message,
-                    TestFieldOrderings::get_optional_nested_message,
+                    TestFieldOrderings::get_optional_nested_message_for_reflect,
+                    TestFieldOrderings::mut_optional_nested_message_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestFieldOrderings>(
                     "TestFieldOrderings",
@@ -9749,30 +10564,26 @@ impl ::protobuf::Clear for TestFieldOrderings {
     }
 }
 
-impl ::std::cmp::PartialEq for TestFieldOrderings {
-    fn eq(&self, other: &TestFieldOrderings) -> bool {
-        self.my_string == other.my_string &&
-        self.my_int == other.my_int &&
-        self.my_float == other.my_float &&
-        self.optional_nested_message == other.optional_nested_message &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestFieldOrderings {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestFieldOrderings {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestFieldOrderings_NestedMessage {
     // message fields
     oo: ::std::option::Option<i64>,
     bb: ::std::option::Option<i32>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -9789,14 +10600,7 @@ impl TestFieldOrderings_NestedMessage {
             ptr: 0 as *const TestFieldOrderings_NestedMessage,
         };
         unsafe {
-            instance.get(|| {
-                TestFieldOrderings_NestedMessage {
-                    oo: ::std::option::Option::None,
-                    bb: ::std::option::Option::None,
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestFieldOrderings_NestedMessage::new)
         }
     }
 
@@ -9819,6 +10623,14 @@ impl TestFieldOrderings_NestedMessage {
         self.oo.unwrap_or(0)
     }
 
+    fn get_oo_for_reflect(&self) -> &::std::option::Option<i64> {
+        &self.oo
+    }
+
+    fn mut_oo_for_reflect(&mut self) -> &mut ::std::option::Option<i64> {
+        &mut self.oo
+    }
+
     // optional int32 bb = 1;
 
     pub fn clear_bb(&mut self) {
@@ -9837,6 +10649,14 @@ impl TestFieldOrderings_NestedMessage {
     pub fn get_bb(&self) -> i32 {
         self.bb.unwrap_or(0)
     }
+
+    fn get_bb_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.bb
+    }
+
+    fn mut_bb_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.bb
+    }
 }
 
 impl ::protobuf::Message for TestFieldOrderings_NestedMessage {
@@ -9845,25 +10665,25 @@ impl ::protobuf::Message for TestFieldOrderings_NestedMessage {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 2 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int64());
+                    let tmp = is.read_int64()?;
                     self.oo = ::std::option::Option::Some(tmp);
                 },
                 1 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.bb = ::std::option::Option::Some(tmp);
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -9874,11 +10694,11 @@ impl ::protobuf::Message for TestFieldOrderings_NestedMessage {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.oo.iter() {
-            my_size += ::protobuf::rt::value_size(2, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.oo {
+            my_size += ::protobuf::rt::value_size(2, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.bb.iter() {
-            my_size += ::protobuf::rt::value_size(1, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.bb {
+            my_size += ::protobuf::rt::value_size(1, v, ::protobuf::wire_format::WireTypeVarint);
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
@@ -9887,12 +10707,12 @@ impl ::protobuf::Message for TestFieldOrderings_NestedMessage {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.oo {
-            try!(os.write_int64(2, v));
+            os.write_int64(2, v)?;
         };
         if let Some(v) = self.bb {
-            try!(os.write_int32(1, v));
+            os.write_int32(1, v)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -9908,12 +10728,14 @@ impl ::protobuf::Message for TestFieldOrderings_NestedMessage {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestFieldOrderings_NestedMessage>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -9934,15 +10756,15 @@ impl ::protobuf::MessageStatic for TestFieldOrderings_NestedMessage {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_i64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt64>(
                     "oo",
-                    TestFieldOrderings_NestedMessage::has_oo,
-                    TestFieldOrderings_NestedMessage::get_oo,
+                    TestFieldOrderings_NestedMessage::get_oo_for_reflect,
+                    TestFieldOrderings_NestedMessage::mut_oo_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "bb",
-                    TestFieldOrderings_NestedMessage::has_bb,
-                    TestFieldOrderings_NestedMessage::get_bb,
+                    TestFieldOrderings_NestedMessage::get_bb_for_reflect,
+                    TestFieldOrderings_NestedMessage::mut_bb_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestFieldOrderings_NestedMessage>(
                     "TestFieldOrderings_NestedMessage",
@@ -9962,21 +10784,19 @@ impl ::protobuf::Clear for TestFieldOrderings_NestedMessage {
     }
 }
 
-impl ::std::cmp::PartialEq for TestFieldOrderings_NestedMessage {
-    fn eq(&self, other: &TestFieldOrderings_NestedMessage) -> bool {
-        self.oo == other.oo &&
-        self.bb == other.bb &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestFieldOrderings_NestedMessage {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestFieldOrderings_NestedMessage {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestExtremeDefaultValues {
     // message fields
     large_uint32: ::std::option::Option<u32>,
@@ -10001,7 +10821,7 @@ pub struct TestExtremeDefaultValues {
     replacement_string: ::protobuf::SingularField<::std::string::String>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -10018,32 +10838,7 @@ impl TestExtremeDefaultValues {
             ptr: 0 as *const TestExtremeDefaultValues,
         };
         unsafe {
-            instance.get(|| {
-                TestExtremeDefaultValues {
-                    large_uint32: ::std::option::Option::None,
-                    large_uint64: ::std::option::Option::None,
-                    small_int32: ::std::option::Option::None,
-                    small_int64: ::std::option::Option::None,
-                    really_small_int32: ::std::option::Option::None,
-                    really_small_int64: ::std::option::Option::None,
-                    utf8_string: ::protobuf::SingularField::none(),
-                    zero_float: ::std::option::Option::None,
-                    one_float: ::std::option::Option::None,
-                    small_float: ::std::option::Option::None,
-                    negative_one_float: ::std::option::Option::None,
-                    negative_float: ::std::option::Option::None,
-                    large_float: ::std::option::Option::None,
-                    small_negative_float: ::std::option::Option::None,
-                    cpp_trigraph: ::protobuf::SingularField::none(),
-                    string_with_zero: ::protobuf::SingularField::none(),
-                    bytes_with_zero: ::protobuf::SingularField::none(),
-                    string_piece_with_zero: ::protobuf::SingularField::none(),
-                    cord_with_zero: ::protobuf::SingularField::none(),
-                    replacement_string: ::protobuf::SingularField::none(),
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestExtremeDefaultValues::new)
         }
     }
 
@@ -10066,6 +10861,14 @@ impl TestExtremeDefaultValues {
         self.large_uint32.unwrap_or(4294967295u32)
     }
 
+    fn get_large_uint32_for_reflect(&self) -> &::std::option::Option<u32> {
+        &self.large_uint32
+    }
+
+    fn mut_large_uint32_for_reflect(&mut self) -> &mut ::std::option::Option<u32> {
+        &mut self.large_uint32
+    }
+
     // optional uint64 large_uint64 = 3;
 
     pub fn clear_large_uint64(&mut self) {
@@ -10083,6 +10886,14 @@ impl TestExtremeDefaultValues {
 
     pub fn get_large_uint64(&self) -> u64 {
         self.large_uint64.unwrap_or(18446744073709551615u64)
+    }
+
+    fn get_large_uint64_for_reflect(&self) -> &::std::option::Option<u64> {
+        &self.large_uint64
+    }
+
+    fn mut_large_uint64_for_reflect(&mut self) -> &mut ::std::option::Option<u64> {
+        &mut self.large_uint64
     }
 
     // optional int32 small_int32 = 4;
@@ -10104,6 +10915,14 @@ impl TestExtremeDefaultValues {
         self.small_int32.unwrap_or(-2147483647i32)
     }
 
+    fn get_small_int32_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.small_int32
+    }
+
+    fn mut_small_int32_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.small_int32
+    }
+
     // optional int64 small_int64 = 5;
 
     pub fn clear_small_int64(&mut self) {
@@ -10121,6 +10940,14 @@ impl TestExtremeDefaultValues {
 
     pub fn get_small_int64(&self) -> i64 {
         self.small_int64.unwrap_or(-9223372036854775807i64)
+    }
+
+    fn get_small_int64_for_reflect(&self) -> &::std::option::Option<i64> {
+        &self.small_int64
+    }
+
+    fn mut_small_int64_for_reflect(&mut self) -> &mut ::std::option::Option<i64> {
+        &mut self.small_int64
     }
 
     // optional int32 really_small_int32 = 21;
@@ -10142,6 +10969,14 @@ impl TestExtremeDefaultValues {
         self.really_small_int32.unwrap_or(-2147483648i32)
     }
 
+    fn get_really_small_int32_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.really_small_int32
+    }
+
+    fn mut_really_small_int32_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.really_small_int32
+    }
+
     // optional int64 really_small_int64 = 22;
 
     pub fn clear_really_small_int64(&mut self) {
@@ -10159,6 +10994,14 @@ impl TestExtremeDefaultValues {
 
     pub fn get_really_small_int64(&self) -> i64 {
         self.really_small_int64.unwrap_or(-9223372036854775808i64)
+    }
+
+    fn get_really_small_int64_for_reflect(&self) -> &::std::option::Option<i64> {
+        &self.really_small_int64
+    }
+
+    fn mut_really_small_int64_for_reflect(&mut self) -> &mut ::std::option::Option<i64> {
+        &mut self.really_small_int64
     }
 
     // optional string utf8_string = 6;
@@ -10197,6 +11040,14 @@ impl TestExtremeDefaultValues {
         }
     }
 
+    fn get_utf8_string_for_reflect(&self) -> &::protobuf::SingularField<::std::string::String> {
+        &self.utf8_string
+    }
+
+    fn mut_utf8_string_for_reflect(&mut self) -> &mut ::protobuf::SingularField<::std::string::String> {
+        &mut self.utf8_string
+    }
+
     // optional float zero_float = 7;
 
     pub fn clear_zero_float(&mut self) {
@@ -10214,6 +11065,14 @@ impl TestExtremeDefaultValues {
 
     pub fn get_zero_float(&self) -> f32 {
         self.zero_float.unwrap_or(0f32)
+    }
+
+    fn get_zero_float_for_reflect(&self) -> &::std::option::Option<f32> {
+        &self.zero_float
+    }
+
+    fn mut_zero_float_for_reflect(&mut self) -> &mut ::std::option::Option<f32> {
+        &mut self.zero_float
     }
 
     // optional float one_float = 8;
@@ -10235,6 +11094,14 @@ impl TestExtremeDefaultValues {
         self.one_float.unwrap_or(1f32)
     }
 
+    fn get_one_float_for_reflect(&self) -> &::std::option::Option<f32> {
+        &self.one_float
+    }
+
+    fn mut_one_float_for_reflect(&mut self) -> &mut ::std::option::Option<f32> {
+        &mut self.one_float
+    }
+
     // optional float small_float = 9;
 
     pub fn clear_small_float(&mut self) {
@@ -10252,6 +11119,14 @@ impl TestExtremeDefaultValues {
 
     pub fn get_small_float(&self) -> f32 {
         self.small_float.unwrap_or(1.5f32)
+    }
+
+    fn get_small_float_for_reflect(&self) -> &::std::option::Option<f32> {
+        &self.small_float
+    }
+
+    fn mut_small_float_for_reflect(&mut self) -> &mut ::std::option::Option<f32> {
+        &mut self.small_float
     }
 
     // optional float negative_one_float = 10;
@@ -10273,6 +11148,14 @@ impl TestExtremeDefaultValues {
         self.negative_one_float.unwrap_or(-1f32)
     }
 
+    fn get_negative_one_float_for_reflect(&self) -> &::std::option::Option<f32> {
+        &self.negative_one_float
+    }
+
+    fn mut_negative_one_float_for_reflect(&mut self) -> &mut ::std::option::Option<f32> {
+        &mut self.negative_one_float
+    }
+
     // optional float negative_float = 11;
 
     pub fn clear_negative_float(&mut self) {
@@ -10290,6 +11173,14 @@ impl TestExtremeDefaultValues {
 
     pub fn get_negative_float(&self) -> f32 {
         self.negative_float.unwrap_or(-1.5f32)
+    }
+
+    fn get_negative_float_for_reflect(&self) -> &::std::option::Option<f32> {
+        &self.negative_float
+    }
+
+    fn mut_negative_float_for_reflect(&mut self) -> &mut ::std::option::Option<f32> {
+        &mut self.negative_float
     }
 
     // optional float large_float = 12;
@@ -10311,6 +11202,14 @@ impl TestExtremeDefaultValues {
         self.large_float.unwrap_or(2e+08f32)
     }
 
+    fn get_large_float_for_reflect(&self) -> &::std::option::Option<f32> {
+        &self.large_float
+    }
+
+    fn mut_large_float_for_reflect(&mut self) -> &mut ::std::option::Option<f32> {
+        &mut self.large_float
+    }
+
     // optional float small_negative_float = 13;
 
     pub fn clear_small_negative_float(&mut self) {
@@ -10328,6 +11227,14 @@ impl TestExtremeDefaultValues {
 
     pub fn get_small_negative_float(&self) -> f32 {
         self.small_negative_float.unwrap_or(-8e-28f32)
+    }
+
+    fn get_small_negative_float_for_reflect(&self) -> &::std::option::Option<f32> {
+        &self.small_negative_float
+    }
+
+    fn mut_small_negative_float_for_reflect(&mut self) -> &mut ::std::option::Option<f32> {
+        &mut self.small_negative_float
     }
 
     // optional string cpp_trigraph = 20;
@@ -10366,6 +11273,14 @@ impl TestExtremeDefaultValues {
         }
     }
 
+    fn get_cpp_trigraph_for_reflect(&self) -> &::protobuf::SingularField<::std::string::String> {
+        &self.cpp_trigraph
+    }
+
+    fn mut_cpp_trigraph_for_reflect(&mut self) -> &mut ::protobuf::SingularField<::std::string::String> {
+        &mut self.cpp_trigraph
+    }
+
     // optional string string_with_zero = 23;
 
     pub fn clear_string_with_zero(&mut self) {
@@ -10400,6 +11315,14 @@ impl TestExtremeDefaultValues {
             Some(v) => &v,
             None => "hel\u{0}lo",
         }
+    }
+
+    fn get_string_with_zero_for_reflect(&self) -> &::protobuf::SingularField<::std::string::String> {
+        &self.string_with_zero
+    }
+
+    fn mut_string_with_zero_for_reflect(&mut self) -> &mut ::protobuf::SingularField<::std::string::String> {
+        &mut self.string_with_zero
     }
 
     // optional bytes bytes_with_zero = 24;
@@ -10438,6 +11361,14 @@ impl TestExtremeDefaultValues {
         }
     }
 
+    fn get_bytes_with_zero_for_reflect(&self) -> &::protobuf::SingularField<::std::vec::Vec<u8>> {
+        &self.bytes_with_zero
+    }
+
+    fn mut_bytes_with_zero_for_reflect(&mut self) -> &mut ::protobuf::SingularField<::std::vec::Vec<u8>> {
+        &mut self.bytes_with_zero
+    }
+
     // optional string string_piece_with_zero = 25;
 
     pub fn clear_string_piece_with_zero(&mut self) {
@@ -10472,6 +11403,14 @@ impl TestExtremeDefaultValues {
             Some(v) => &v,
             None => "ab\u{0}c",
         }
+    }
+
+    fn get_string_piece_with_zero_for_reflect(&self) -> &::protobuf::SingularField<::std::string::String> {
+        &self.string_piece_with_zero
+    }
+
+    fn mut_string_piece_with_zero_for_reflect(&mut self) -> &mut ::protobuf::SingularField<::std::string::String> {
+        &mut self.string_piece_with_zero
     }
 
     // optional string cord_with_zero = 26;
@@ -10510,6 +11449,14 @@ impl TestExtremeDefaultValues {
         }
     }
 
+    fn get_cord_with_zero_for_reflect(&self) -> &::protobuf::SingularField<::std::string::String> {
+        &self.cord_with_zero
+    }
+
+    fn mut_cord_with_zero_for_reflect(&mut self) -> &mut ::protobuf::SingularField<::std::string::String> {
+        &mut self.cord_with_zero
+    }
+
     // optional string replacement_string = 27;
 
     pub fn clear_replacement_string(&mut self) {
@@ -10545,6 +11492,14 @@ impl TestExtremeDefaultValues {
             None => "${unknown}",
         }
     }
+
+    fn get_replacement_string_for_reflect(&self) -> &::protobuf::SingularField<::std::string::String> {
+        &self.replacement_string
+    }
+
+    fn mut_replacement_string_for_reflect(&mut self) -> &mut ::protobuf::SingularField<::std::string::String> {
+        &mut self.replacement_string
+    }
 }
 
 impl ::protobuf::Message for TestExtremeDefaultValues {
@@ -10553,123 +11508,123 @@ impl ::protobuf::Message for TestExtremeDefaultValues {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 2 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_uint32());
+                    let tmp = is.read_uint32()?;
                     self.large_uint32 = ::std::option::Option::Some(tmp);
                 },
                 3 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_uint64());
+                    let tmp = is.read_uint64()?;
                     self.large_uint64 = ::std::option::Option::Some(tmp);
                 },
                 4 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.small_int32 = ::std::option::Option::Some(tmp);
                 },
                 5 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int64());
+                    let tmp = is.read_int64()?;
                     self.small_int64 = ::std::option::Option::Some(tmp);
                 },
                 21 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.really_small_int32 = ::std::option::Option::Some(tmp);
                 },
                 22 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int64());
+                    let tmp = is.read_int64()?;
                     self.really_small_int64 = ::std::option::Option::Some(tmp);
                 },
                 6 => {
-                    try!(::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.utf8_string));
+                    ::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.utf8_string)?;
                 },
                 7 => {
                     if wire_type != ::protobuf::wire_format::WireTypeFixed32 {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_float());
+                    let tmp = is.read_float()?;
                     self.zero_float = ::std::option::Option::Some(tmp);
                 },
                 8 => {
                     if wire_type != ::protobuf::wire_format::WireTypeFixed32 {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_float());
+                    let tmp = is.read_float()?;
                     self.one_float = ::std::option::Option::Some(tmp);
                 },
                 9 => {
                     if wire_type != ::protobuf::wire_format::WireTypeFixed32 {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_float());
+                    let tmp = is.read_float()?;
                     self.small_float = ::std::option::Option::Some(tmp);
                 },
                 10 => {
                     if wire_type != ::protobuf::wire_format::WireTypeFixed32 {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_float());
+                    let tmp = is.read_float()?;
                     self.negative_one_float = ::std::option::Option::Some(tmp);
                 },
                 11 => {
                     if wire_type != ::protobuf::wire_format::WireTypeFixed32 {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_float());
+                    let tmp = is.read_float()?;
                     self.negative_float = ::std::option::Option::Some(tmp);
                 },
                 12 => {
                     if wire_type != ::protobuf::wire_format::WireTypeFixed32 {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_float());
+                    let tmp = is.read_float()?;
                     self.large_float = ::std::option::Option::Some(tmp);
                 },
                 13 => {
                     if wire_type != ::protobuf::wire_format::WireTypeFixed32 {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_float());
+                    let tmp = is.read_float()?;
                     self.small_negative_float = ::std::option::Option::Some(tmp);
                 },
                 20 => {
-                    try!(::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.cpp_trigraph));
+                    ::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.cpp_trigraph)?;
                 },
                 23 => {
-                    try!(::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.string_with_zero));
+                    ::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.string_with_zero)?;
                 },
                 24 => {
-                    try!(::protobuf::rt::read_singular_bytes_into(wire_type, is, &mut self.bytes_with_zero));
+                    ::protobuf::rt::read_singular_bytes_into(wire_type, is, &mut self.bytes_with_zero)?;
                 },
                 25 => {
-                    try!(::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.string_piece_with_zero));
+                    ::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.string_piece_with_zero)?;
                 },
                 26 => {
-                    try!(::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.cord_with_zero));
+                    ::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.cord_with_zero)?;
                 },
                 27 => {
-                    try!(::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.replacement_string));
+                    ::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.replacement_string)?;
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -10680,65 +11635,65 @@ impl ::protobuf::Message for TestExtremeDefaultValues {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.large_uint32.iter() {
-            my_size += ::protobuf::rt::value_size(2, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.large_uint32 {
+            my_size += ::protobuf::rt::value_size(2, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.large_uint64.iter() {
-            my_size += ::protobuf::rt::value_size(3, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.large_uint64 {
+            my_size += ::protobuf::rt::value_size(3, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.small_int32.iter() {
-            my_size += ::protobuf::rt::value_size(4, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.small_int32 {
+            my_size += ::protobuf::rt::value_size(4, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.small_int64.iter() {
-            my_size += ::protobuf::rt::value_size(5, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.small_int64 {
+            my_size += ::protobuf::rt::value_size(5, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.really_small_int32.iter() {
-            my_size += ::protobuf::rt::value_size(21, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.really_small_int32 {
+            my_size += ::protobuf::rt::value_size(21, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.really_small_int64.iter() {
-            my_size += ::protobuf::rt::value_size(22, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.really_small_int64 {
+            my_size += ::protobuf::rt::value_size(22, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.utf8_string.iter() {
-            my_size += ::protobuf::rt::string_size(6, &value);
+        if let Some(v) = self.utf8_string.as_ref() {
+            my_size += ::protobuf::rt::string_size(6, &v);
         };
-        if self.zero_float.is_some() {
+        if let Some(v) = self.zero_float {
             my_size += 5;
         };
-        if self.one_float.is_some() {
+        if let Some(v) = self.one_float {
             my_size += 5;
         };
-        if self.small_float.is_some() {
+        if let Some(v) = self.small_float {
             my_size += 5;
         };
-        if self.negative_one_float.is_some() {
+        if let Some(v) = self.negative_one_float {
             my_size += 5;
         };
-        if self.negative_float.is_some() {
+        if let Some(v) = self.negative_float {
             my_size += 5;
         };
-        if self.large_float.is_some() {
+        if let Some(v) = self.large_float {
             my_size += 5;
         };
-        if self.small_negative_float.is_some() {
+        if let Some(v) = self.small_negative_float {
             my_size += 5;
         };
-        for value in self.cpp_trigraph.iter() {
-            my_size += ::protobuf::rt::string_size(20, &value);
+        if let Some(v) = self.cpp_trigraph.as_ref() {
+            my_size += ::protobuf::rt::string_size(20, &v);
         };
-        for value in self.string_with_zero.iter() {
-            my_size += ::protobuf::rt::string_size(23, &value);
+        if let Some(v) = self.string_with_zero.as_ref() {
+            my_size += ::protobuf::rt::string_size(23, &v);
         };
-        for value in self.bytes_with_zero.iter() {
-            my_size += ::protobuf::rt::bytes_size(24, &value);
+        if let Some(v) = self.bytes_with_zero.as_ref() {
+            my_size += ::protobuf::rt::bytes_size(24, &v);
         };
-        for value in self.string_piece_with_zero.iter() {
-            my_size += ::protobuf::rt::string_size(25, &value);
+        if let Some(v) = self.string_piece_with_zero.as_ref() {
+            my_size += ::protobuf::rt::string_size(25, &v);
         };
-        for value in self.cord_with_zero.iter() {
-            my_size += ::protobuf::rt::string_size(26, &value);
+        if let Some(v) = self.cord_with_zero.as_ref() {
+            my_size += ::protobuf::rt::string_size(26, &v);
         };
-        for value in self.replacement_string.iter() {
-            my_size += ::protobuf::rt::string_size(27, &value);
+        if let Some(v) = self.replacement_string.as_ref() {
+            my_size += ::protobuf::rt::string_size(27, &v);
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
@@ -10747,66 +11702,66 @@ impl ::protobuf::Message for TestExtremeDefaultValues {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.large_uint32 {
-            try!(os.write_uint32(2, v));
+            os.write_uint32(2, v)?;
         };
         if let Some(v) = self.large_uint64 {
-            try!(os.write_uint64(3, v));
+            os.write_uint64(3, v)?;
         };
         if let Some(v) = self.small_int32 {
-            try!(os.write_int32(4, v));
+            os.write_int32(4, v)?;
         };
         if let Some(v) = self.small_int64 {
-            try!(os.write_int64(5, v));
+            os.write_int64(5, v)?;
         };
         if let Some(v) = self.really_small_int32 {
-            try!(os.write_int32(21, v));
+            os.write_int32(21, v)?;
         };
         if let Some(v) = self.really_small_int64 {
-            try!(os.write_int64(22, v));
+            os.write_int64(22, v)?;
         };
         if let Some(v) = self.utf8_string.as_ref() {
-            try!(os.write_string(6, &v));
+            os.write_string(6, &v)?;
         };
         if let Some(v) = self.zero_float {
-            try!(os.write_float(7, v));
+            os.write_float(7, v)?;
         };
         if let Some(v) = self.one_float {
-            try!(os.write_float(8, v));
+            os.write_float(8, v)?;
         };
         if let Some(v) = self.small_float {
-            try!(os.write_float(9, v));
+            os.write_float(9, v)?;
         };
         if let Some(v) = self.negative_one_float {
-            try!(os.write_float(10, v));
+            os.write_float(10, v)?;
         };
         if let Some(v) = self.negative_float {
-            try!(os.write_float(11, v));
+            os.write_float(11, v)?;
         };
         if let Some(v) = self.large_float {
-            try!(os.write_float(12, v));
+            os.write_float(12, v)?;
         };
         if let Some(v) = self.small_negative_float {
-            try!(os.write_float(13, v));
+            os.write_float(13, v)?;
         };
         if let Some(v) = self.cpp_trigraph.as_ref() {
-            try!(os.write_string(20, &v));
+            os.write_string(20, &v)?;
         };
         if let Some(v) = self.string_with_zero.as_ref() {
-            try!(os.write_string(23, &v));
+            os.write_string(23, &v)?;
         };
         if let Some(v) = self.bytes_with_zero.as_ref() {
-            try!(os.write_bytes(24, &v));
+            os.write_bytes(24, &v)?;
         };
         if let Some(v) = self.string_piece_with_zero.as_ref() {
-            try!(os.write_string(25, &v));
+            os.write_string(25, &v)?;
         };
         if let Some(v) = self.cord_with_zero.as_ref() {
-            try!(os.write_string(26, &v));
+            os.write_string(26, &v)?;
         };
         if let Some(v) = self.replacement_string.as_ref() {
-            try!(os.write_string(27, &v));
+            os.write_string(27, &v)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -10822,12 +11777,14 @@ impl ::protobuf::Message for TestExtremeDefaultValues {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestExtremeDefaultValues>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -10848,105 +11805,105 @@ impl ::protobuf::MessageStatic for TestExtremeDefaultValues {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_u32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeUint32>(
                     "large_uint32",
-                    TestExtremeDefaultValues::has_large_uint32,
-                    TestExtremeDefaultValues::get_large_uint32,
+                    TestExtremeDefaultValues::get_large_uint32_for_reflect,
+                    TestExtremeDefaultValues::mut_large_uint32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_u64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeUint64>(
                     "large_uint64",
-                    TestExtremeDefaultValues::has_large_uint64,
-                    TestExtremeDefaultValues::get_large_uint64,
+                    TestExtremeDefaultValues::get_large_uint64_for_reflect,
+                    TestExtremeDefaultValues::mut_large_uint64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "small_int32",
-                    TestExtremeDefaultValues::has_small_int32,
-                    TestExtremeDefaultValues::get_small_int32,
+                    TestExtremeDefaultValues::get_small_int32_for_reflect,
+                    TestExtremeDefaultValues::mut_small_int32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt64>(
                     "small_int64",
-                    TestExtremeDefaultValues::has_small_int64,
-                    TestExtremeDefaultValues::get_small_int64,
+                    TestExtremeDefaultValues::get_small_int64_for_reflect,
+                    TestExtremeDefaultValues::mut_small_int64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "really_small_int32",
-                    TestExtremeDefaultValues::has_really_small_int32,
-                    TestExtremeDefaultValues::get_really_small_int32,
+                    TestExtremeDefaultValues::get_really_small_int32_for_reflect,
+                    TestExtremeDefaultValues::mut_really_small_int32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt64>(
                     "really_small_int64",
-                    TestExtremeDefaultValues::has_really_small_int64,
-                    TestExtremeDefaultValues::get_really_small_int64,
+                    TestExtremeDefaultValues::get_really_small_int64_for_reflect,
+                    TestExtremeDefaultValues::mut_really_small_int64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "utf8_string",
-                    TestExtremeDefaultValues::has_utf8_string,
-                    TestExtremeDefaultValues::get_utf8_string,
+                    TestExtremeDefaultValues::get_utf8_string_for_reflect,
+                    TestExtremeDefaultValues::mut_utf8_string_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_f32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeFloat>(
                     "zero_float",
-                    TestExtremeDefaultValues::has_zero_float,
-                    TestExtremeDefaultValues::get_zero_float,
+                    TestExtremeDefaultValues::get_zero_float_for_reflect,
+                    TestExtremeDefaultValues::mut_zero_float_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_f32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeFloat>(
                     "one_float",
-                    TestExtremeDefaultValues::has_one_float,
-                    TestExtremeDefaultValues::get_one_float,
+                    TestExtremeDefaultValues::get_one_float_for_reflect,
+                    TestExtremeDefaultValues::mut_one_float_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_f32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeFloat>(
                     "small_float",
-                    TestExtremeDefaultValues::has_small_float,
-                    TestExtremeDefaultValues::get_small_float,
+                    TestExtremeDefaultValues::get_small_float_for_reflect,
+                    TestExtremeDefaultValues::mut_small_float_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_f32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeFloat>(
                     "negative_one_float",
-                    TestExtremeDefaultValues::has_negative_one_float,
-                    TestExtremeDefaultValues::get_negative_one_float,
+                    TestExtremeDefaultValues::get_negative_one_float_for_reflect,
+                    TestExtremeDefaultValues::mut_negative_one_float_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_f32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeFloat>(
                     "negative_float",
-                    TestExtremeDefaultValues::has_negative_float,
-                    TestExtremeDefaultValues::get_negative_float,
+                    TestExtremeDefaultValues::get_negative_float_for_reflect,
+                    TestExtremeDefaultValues::mut_negative_float_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_f32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeFloat>(
                     "large_float",
-                    TestExtremeDefaultValues::has_large_float,
-                    TestExtremeDefaultValues::get_large_float,
+                    TestExtremeDefaultValues::get_large_float_for_reflect,
+                    TestExtremeDefaultValues::mut_large_float_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_f32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeFloat>(
                     "small_negative_float",
-                    TestExtremeDefaultValues::has_small_negative_float,
-                    TestExtremeDefaultValues::get_small_negative_float,
+                    TestExtremeDefaultValues::get_small_negative_float_for_reflect,
+                    TestExtremeDefaultValues::mut_small_negative_float_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "cpp_trigraph",
-                    TestExtremeDefaultValues::has_cpp_trigraph,
-                    TestExtremeDefaultValues::get_cpp_trigraph,
+                    TestExtremeDefaultValues::get_cpp_trigraph_for_reflect,
+                    TestExtremeDefaultValues::mut_cpp_trigraph_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "string_with_zero",
-                    TestExtremeDefaultValues::has_string_with_zero,
-                    TestExtremeDefaultValues::get_string_with_zero,
+                    TestExtremeDefaultValues::get_string_with_zero_for_reflect,
+                    TestExtremeDefaultValues::mut_string_with_zero_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_field_accessor::<_, ::protobuf::types::ProtobufTypeBytes>(
                     "bytes_with_zero",
-                    TestExtremeDefaultValues::has_bytes_with_zero,
-                    TestExtremeDefaultValues::get_bytes_with_zero,
+                    TestExtremeDefaultValues::get_bytes_with_zero_for_reflect,
+                    TestExtremeDefaultValues::mut_bytes_with_zero_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "string_piece_with_zero",
-                    TestExtremeDefaultValues::has_string_piece_with_zero,
-                    TestExtremeDefaultValues::get_string_piece_with_zero,
+                    TestExtremeDefaultValues::get_string_piece_with_zero_for_reflect,
+                    TestExtremeDefaultValues::mut_string_piece_with_zero_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "cord_with_zero",
-                    TestExtremeDefaultValues::has_cord_with_zero,
-                    TestExtremeDefaultValues::get_cord_with_zero,
+                    TestExtremeDefaultValues::get_cord_with_zero_for_reflect,
+                    TestExtremeDefaultValues::mut_cord_with_zero_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "replacement_string",
-                    TestExtremeDefaultValues::has_replacement_string,
-                    TestExtremeDefaultValues::get_replacement_string,
+                    TestExtremeDefaultValues::get_replacement_string_for_reflect,
+                    TestExtremeDefaultValues::mut_replacement_string_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestExtremeDefaultValues>(
                     "TestExtremeDefaultValues",
@@ -10984,45 +11941,25 @@ impl ::protobuf::Clear for TestExtremeDefaultValues {
     }
 }
 
-impl ::std::cmp::PartialEq for TestExtremeDefaultValues {
-    fn eq(&self, other: &TestExtremeDefaultValues) -> bool {
-        self.large_uint32 == other.large_uint32 &&
-        self.large_uint64 == other.large_uint64 &&
-        self.small_int32 == other.small_int32 &&
-        self.small_int64 == other.small_int64 &&
-        self.really_small_int32 == other.really_small_int32 &&
-        self.really_small_int64 == other.really_small_int64 &&
-        self.utf8_string == other.utf8_string &&
-        self.zero_float == other.zero_float &&
-        self.one_float == other.one_float &&
-        self.small_float == other.small_float &&
-        self.negative_one_float == other.negative_one_float &&
-        self.negative_float == other.negative_float &&
-        self.large_float == other.large_float &&
-        self.small_negative_float == other.small_negative_float &&
-        self.cpp_trigraph == other.cpp_trigraph &&
-        self.string_with_zero == other.string_with_zero &&
-        self.bytes_with_zero == other.bytes_with_zero &&
-        self.string_piece_with_zero == other.string_piece_with_zero &&
-        self.cord_with_zero == other.cord_with_zero &&
-        self.replacement_string == other.replacement_string &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestExtremeDefaultValues {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestExtremeDefaultValues {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct SparseEnumMessage {
     // message fields
     sparse_enum: ::std::option::Option<TestSparseEnum>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -11039,13 +11976,7 @@ impl SparseEnumMessage {
             ptr: 0 as *const SparseEnumMessage,
         };
         unsafe {
-            instance.get(|| {
-                SparseEnumMessage {
-                    sparse_enum: ::std::option::Option::None,
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(SparseEnumMessage::new)
         }
     }
 
@@ -11067,6 +11998,14 @@ impl SparseEnumMessage {
     pub fn get_sparse_enum(&self) -> TestSparseEnum {
         self.sparse_enum.unwrap_or(TestSparseEnum::SPARSE_A)
     }
+
+    fn get_sparse_enum_for_reflect(&self) -> &::std::option::Option<TestSparseEnum> {
+        &self.sparse_enum
+    }
+
+    fn mut_sparse_enum_for_reflect(&mut self) -> &mut ::std::option::Option<TestSparseEnum> {
+        &mut self.sparse_enum
+    }
 }
 
 impl ::protobuf::Message for SparseEnumMessage {
@@ -11075,18 +12014,18 @@ impl ::protobuf::Message for SparseEnumMessage {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_enum());
+                    let tmp = is.read_enum()?;
                     self.sparse_enum = ::std::option::Option::Some(tmp);
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -11097,8 +12036,8 @@ impl ::protobuf::Message for SparseEnumMessage {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.sparse_enum.iter() {
-            my_size += ::protobuf::rt::enum_size(1, *value);
+        if let Some(v) = self.sparse_enum {
+            my_size += ::protobuf::rt::enum_size(1, v);
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
@@ -11107,9 +12046,9 @@ impl ::protobuf::Message for SparseEnumMessage {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.sparse_enum {
-            try!(os.write_enum(1, v.value()));
+            os.write_enum(1, v.value())?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -11125,12 +12064,14 @@ impl ::protobuf::Message for SparseEnumMessage {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<SparseEnumMessage>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -11151,10 +12092,10 @@ impl ::protobuf::MessageStatic for SparseEnumMessage {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_enum_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeEnum<TestSparseEnum>>(
                     "sparse_enum",
-                    SparseEnumMessage::has_sparse_enum,
-                    SparseEnumMessage::get_sparse_enum,
+                    SparseEnumMessage::get_sparse_enum_for_reflect,
+                    SparseEnumMessage::mut_sparse_enum_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<SparseEnumMessage>(
                     "SparseEnumMessage",
@@ -11173,26 +12114,25 @@ impl ::protobuf::Clear for SparseEnumMessage {
     }
 }
 
-impl ::std::cmp::PartialEq for SparseEnumMessage {
-    fn eq(&self, other: &SparseEnumMessage) -> bool {
-        self.sparse_enum == other.sparse_enum &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for SparseEnumMessage {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for SparseEnumMessage {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct OneString {
     // message fields
     data: ::protobuf::SingularField<::std::string::String>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -11209,13 +12149,7 @@ impl OneString {
             ptr: 0 as *const OneString,
         };
         unsafe {
-            instance.get(|| {
-                OneString {
-                    data: ::protobuf::SingularField::none(),
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(OneString::new)
         }
     }
 
@@ -11254,6 +12188,14 @@ impl OneString {
             None => "",
         }
     }
+
+    fn get_data_for_reflect(&self) -> &::protobuf::SingularField<::std::string::String> {
+        &self.data
+    }
+
+    fn mut_data_for_reflect(&mut self) -> &mut ::protobuf::SingularField<::std::string::String> {
+        &mut self.data
+    }
 }
 
 impl ::protobuf::Message for OneString {
@@ -11262,14 +12204,14 @@ impl ::protobuf::Message for OneString {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
-                    try!(::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.data));
+                    ::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.data)?;
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -11280,8 +12222,8 @@ impl ::protobuf::Message for OneString {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.data.iter() {
-            my_size += ::protobuf::rt::string_size(1, &value);
+        if let Some(v) = self.data.as_ref() {
+            my_size += ::protobuf::rt::string_size(1, &v);
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
@@ -11290,9 +12232,9 @@ impl ::protobuf::Message for OneString {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.data.as_ref() {
-            try!(os.write_string(1, &v));
+            os.write_string(1, &v)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -11308,12 +12250,14 @@ impl ::protobuf::Message for OneString {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<OneString>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -11334,10 +12278,10 @@ impl ::protobuf::MessageStatic for OneString {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "data",
-                    OneString::has_data,
-                    OneString::get_data,
+                    OneString::get_data_for_reflect,
+                    OneString::mut_data_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<OneString>(
                     "OneString",
@@ -11356,26 +12300,25 @@ impl ::protobuf::Clear for OneString {
     }
 }
 
-impl ::std::cmp::PartialEq for OneString {
-    fn eq(&self, other: &OneString) -> bool {
-        self.data == other.data &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for OneString {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for OneString {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct MoreString {
     // message fields
     data: ::protobuf::RepeatedField<::std::string::String>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -11392,13 +12335,7 @@ impl MoreString {
             ptr: 0 as *const MoreString,
         };
         unsafe {
-            instance.get(|| {
-                MoreString {
-                    data: ::protobuf::RepeatedField::new(),
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(MoreString::new)
         }
     }
 
@@ -11426,6 +12363,14 @@ impl MoreString {
     pub fn get_data(&self) -> &[::std::string::String] {
         &self.data
     }
+
+    fn get_data_for_reflect(&self) -> &::protobuf::RepeatedField<::std::string::String> {
+        &self.data
+    }
+
+    fn mut_data_for_reflect(&mut self) -> &mut ::protobuf::RepeatedField<::std::string::String> {
+        &mut self.data
+    }
 }
 
 impl ::protobuf::Message for MoreString {
@@ -11434,14 +12379,14 @@ impl ::protobuf::Message for MoreString {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
-                    try!(::protobuf::rt::read_repeated_string_into(wire_type, is, &mut self.data));
+                    ::protobuf::rt::read_repeated_string_into(wire_type, is, &mut self.data)?;
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -11452,7 +12397,7 @@ impl ::protobuf::Message for MoreString {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.data.iter() {
+        for value in &self.data {
             my_size += ::protobuf::rt::string_size(1, &value);
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
@@ -11461,10 +12406,10 @@ impl ::protobuf::Message for MoreString {
     }
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        for v in self.data.iter() {
-            try!(os.write_string(1, &v));
+        for v in &self.data {
+            os.write_string(1, &v)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -11480,12 +12425,14 @@ impl ::protobuf::Message for MoreString {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<MoreString>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -11506,9 +12453,10 @@ impl ::protobuf::MessageStatic for MoreString {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_repeated_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "data",
-                    MoreString::get_data,
+                    MoreString::get_data_for_reflect,
+                    MoreString::mut_data_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<MoreString>(
                     "MoreString",
@@ -11527,26 +12475,25 @@ impl ::protobuf::Clear for MoreString {
     }
 }
 
-impl ::std::cmp::PartialEq for MoreString {
-    fn eq(&self, other: &MoreString) -> bool {
-        self.data == other.data &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for MoreString {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for MoreString {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct OneBytes {
     // message fields
     data: ::protobuf::SingularField<::std::vec::Vec<u8>>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -11563,13 +12510,7 @@ impl OneBytes {
             ptr: 0 as *const OneBytes,
         };
         unsafe {
-            instance.get(|| {
-                OneBytes {
-                    data: ::protobuf::SingularField::none(),
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(OneBytes::new)
         }
     }
 
@@ -11608,6 +12549,14 @@ impl OneBytes {
             None => &[],
         }
     }
+
+    fn get_data_for_reflect(&self) -> &::protobuf::SingularField<::std::vec::Vec<u8>> {
+        &self.data
+    }
+
+    fn mut_data_for_reflect(&mut self) -> &mut ::protobuf::SingularField<::std::vec::Vec<u8>> {
+        &mut self.data
+    }
 }
 
 impl ::protobuf::Message for OneBytes {
@@ -11616,14 +12565,14 @@ impl ::protobuf::Message for OneBytes {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
-                    try!(::protobuf::rt::read_singular_bytes_into(wire_type, is, &mut self.data));
+                    ::protobuf::rt::read_singular_bytes_into(wire_type, is, &mut self.data)?;
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -11634,8 +12583,8 @@ impl ::protobuf::Message for OneBytes {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.data.iter() {
-            my_size += ::protobuf::rt::bytes_size(1, &value);
+        if let Some(v) = self.data.as_ref() {
+            my_size += ::protobuf::rt::bytes_size(1, &v);
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
@@ -11644,9 +12593,9 @@ impl ::protobuf::Message for OneBytes {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.data.as_ref() {
-            try!(os.write_bytes(1, &v));
+            os.write_bytes(1, &v)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -11662,12 +12611,14 @@ impl ::protobuf::Message for OneBytes {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<OneBytes>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -11688,10 +12639,10 @@ impl ::protobuf::MessageStatic for OneBytes {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_field_accessor::<_, ::protobuf::types::ProtobufTypeBytes>(
                     "data",
-                    OneBytes::has_data,
-                    OneBytes::get_data,
+                    OneBytes::get_data_for_reflect,
+                    OneBytes::mut_data_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<OneBytes>(
                     "OneBytes",
@@ -11710,26 +12661,25 @@ impl ::protobuf::Clear for OneBytes {
     }
 }
 
-impl ::std::cmp::PartialEq for OneBytes {
-    fn eq(&self, other: &OneBytes) -> bool {
-        self.data == other.data &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for OneBytes {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for OneBytes {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct MoreBytes {
     // message fields
     data: ::protobuf::RepeatedField<::std::vec::Vec<u8>>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -11746,13 +12696,7 @@ impl MoreBytes {
             ptr: 0 as *const MoreBytes,
         };
         unsafe {
-            instance.get(|| {
-                MoreBytes {
-                    data: ::protobuf::RepeatedField::new(),
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(MoreBytes::new)
         }
     }
 
@@ -11780,6 +12724,14 @@ impl MoreBytes {
     pub fn get_data(&self) -> &[::std::vec::Vec<u8>] {
         &self.data
     }
+
+    fn get_data_for_reflect(&self) -> &::protobuf::RepeatedField<::std::vec::Vec<u8>> {
+        &self.data
+    }
+
+    fn mut_data_for_reflect(&mut self) -> &mut ::protobuf::RepeatedField<::std::vec::Vec<u8>> {
+        &mut self.data
+    }
 }
 
 impl ::protobuf::Message for MoreBytes {
@@ -11788,14 +12740,14 @@ impl ::protobuf::Message for MoreBytes {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
-                    try!(::protobuf::rt::read_repeated_bytes_into(wire_type, is, &mut self.data));
+                    ::protobuf::rt::read_repeated_bytes_into(wire_type, is, &mut self.data)?;
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -11806,7 +12758,7 @@ impl ::protobuf::Message for MoreBytes {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.data.iter() {
+        for value in &self.data {
             my_size += ::protobuf::rt::bytes_size(1, &value);
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
@@ -11815,10 +12767,10 @@ impl ::protobuf::Message for MoreBytes {
     }
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        for v in self.data.iter() {
-            try!(os.write_bytes(1, &v));
+        for v in &self.data {
+            os.write_bytes(1, &v)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -11834,12 +12786,14 @@ impl ::protobuf::Message for MoreBytes {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<MoreBytes>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -11860,9 +12814,10 @@ impl ::protobuf::MessageStatic for MoreBytes {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_repeated_bytes_accessor(
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeBytes>(
                     "data",
-                    MoreBytes::get_data,
+                    MoreBytes::get_data_for_reflect,
+                    MoreBytes::mut_data_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<MoreBytes>(
                     "MoreBytes",
@@ -11881,26 +12836,25 @@ impl ::protobuf::Clear for MoreBytes {
     }
 }
 
-impl ::std::cmp::PartialEq for MoreBytes {
-    fn eq(&self, other: &MoreBytes) -> bool {
-        self.data == other.data &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for MoreBytes {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for MoreBytes {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct Int32Message {
     // message fields
     data: ::std::option::Option<i32>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -11917,13 +12871,7 @@ impl Int32Message {
             ptr: 0 as *const Int32Message,
         };
         unsafe {
-            instance.get(|| {
-                Int32Message {
-                    data: ::std::option::Option::None,
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(Int32Message::new)
         }
     }
 
@@ -11945,6 +12893,14 @@ impl Int32Message {
     pub fn get_data(&self) -> i32 {
         self.data.unwrap_or(0)
     }
+
+    fn get_data_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.data
+    }
+
+    fn mut_data_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.data
+    }
 }
 
 impl ::protobuf::Message for Int32Message {
@@ -11953,18 +12909,18 @@ impl ::protobuf::Message for Int32Message {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.data = ::std::option::Option::Some(tmp);
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -11975,8 +12931,8 @@ impl ::protobuf::Message for Int32Message {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.data.iter() {
-            my_size += ::protobuf::rt::value_size(1, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.data {
+            my_size += ::protobuf::rt::value_size(1, v, ::protobuf::wire_format::WireTypeVarint);
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
@@ -11985,9 +12941,9 @@ impl ::protobuf::Message for Int32Message {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.data {
-            try!(os.write_int32(1, v));
+            os.write_int32(1, v)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -12003,12 +12959,14 @@ impl ::protobuf::Message for Int32Message {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<Int32Message>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -12029,10 +12987,10 @@ impl ::protobuf::MessageStatic for Int32Message {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "data",
-                    Int32Message::has_data,
-                    Int32Message::get_data,
+                    Int32Message::get_data_for_reflect,
+                    Int32Message::mut_data_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<Int32Message>(
                     "Int32Message",
@@ -12051,26 +13009,25 @@ impl ::protobuf::Clear for Int32Message {
     }
 }
 
-impl ::std::cmp::PartialEq for Int32Message {
-    fn eq(&self, other: &Int32Message) -> bool {
-        self.data == other.data &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for Int32Message {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for Int32Message {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct Uint32Message {
     // message fields
     data: ::std::option::Option<u32>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -12087,13 +13044,7 @@ impl Uint32Message {
             ptr: 0 as *const Uint32Message,
         };
         unsafe {
-            instance.get(|| {
-                Uint32Message {
-                    data: ::std::option::Option::None,
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(Uint32Message::new)
         }
     }
 
@@ -12115,6 +13066,14 @@ impl Uint32Message {
     pub fn get_data(&self) -> u32 {
         self.data.unwrap_or(0)
     }
+
+    fn get_data_for_reflect(&self) -> &::std::option::Option<u32> {
+        &self.data
+    }
+
+    fn mut_data_for_reflect(&mut self) -> &mut ::std::option::Option<u32> {
+        &mut self.data
+    }
 }
 
 impl ::protobuf::Message for Uint32Message {
@@ -12123,18 +13082,18 @@ impl ::protobuf::Message for Uint32Message {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_uint32());
+                    let tmp = is.read_uint32()?;
                     self.data = ::std::option::Option::Some(tmp);
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -12145,8 +13104,8 @@ impl ::protobuf::Message for Uint32Message {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.data.iter() {
-            my_size += ::protobuf::rt::value_size(1, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.data {
+            my_size += ::protobuf::rt::value_size(1, v, ::protobuf::wire_format::WireTypeVarint);
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
@@ -12155,9 +13114,9 @@ impl ::protobuf::Message for Uint32Message {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.data {
-            try!(os.write_uint32(1, v));
+            os.write_uint32(1, v)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -12173,12 +13132,14 @@ impl ::protobuf::Message for Uint32Message {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<Uint32Message>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -12199,10 +13160,10 @@ impl ::protobuf::MessageStatic for Uint32Message {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_u32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeUint32>(
                     "data",
-                    Uint32Message::has_data,
-                    Uint32Message::get_data,
+                    Uint32Message::get_data_for_reflect,
+                    Uint32Message::mut_data_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<Uint32Message>(
                     "Uint32Message",
@@ -12221,26 +13182,25 @@ impl ::protobuf::Clear for Uint32Message {
     }
 }
 
-impl ::std::cmp::PartialEq for Uint32Message {
-    fn eq(&self, other: &Uint32Message) -> bool {
-        self.data == other.data &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for Uint32Message {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for Uint32Message {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct Int64Message {
     // message fields
     data: ::std::option::Option<i64>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -12257,13 +13217,7 @@ impl Int64Message {
             ptr: 0 as *const Int64Message,
         };
         unsafe {
-            instance.get(|| {
-                Int64Message {
-                    data: ::std::option::Option::None,
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(Int64Message::new)
         }
     }
 
@@ -12285,6 +13239,14 @@ impl Int64Message {
     pub fn get_data(&self) -> i64 {
         self.data.unwrap_or(0)
     }
+
+    fn get_data_for_reflect(&self) -> &::std::option::Option<i64> {
+        &self.data
+    }
+
+    fn mut_data_for_reflect(&mut self) -> &mut ::std::option::Option<i64> {
+        &mut self.data
+    }
 }
 
 impl ::protobuf::Message for Int64Message {
@@ -12293,18 +13255,18 @@ impl ::protobuf::Message for Int64Message {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int64());
+                    let tmp = is.read_int64()?;
                     self.data = ::std::option::Option::Some(tmp);
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -12315,8 +13277,8 @@ impl ::protobuf::Message for Int64Message {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.data.iter() {
-            my_size += ::protobuf::rt::value_size(1, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.data {
+            my_size += ::protobuf::rt::value_size(1, v, ::protobuf::wire_format::WireTypeVarint);
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
@@ -12325,9 +13287,9 @@ impl ::protobuf::Message for Int64Message {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.data {
-            try!(os.write_int64(1, v));
+            os.write_int64(1, v)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -12343,12 +13305,14 @@ impl ::protobuf::Message for Int64Message {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<Int64Message>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -12369,10 +13333,10 @@ impl ::protobuf::MessageStatic for Int64Message {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_i64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt64>(
                     "data",
-                    Int64Message::has_data,
-                    Int64Message::get_data,
+                    Int64Message::get_data_for_reflect,
+                    Int64Message::mut_data_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<Int64Message>(
                     "Int64Message",
@@ -12391,26 +13355,25 @@ impl ::protobuf::Clear for Int64Message {
     }
 }
 
-impl ::std::cmp::PartialEq for Int64Message {
-    fn eq(&self, other: &Int64Message) -> bool {
-        self.data == other.data &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for Int64Message {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for Int64Message {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct Uint64Message {
     // message fields
     data: ::std::option::Option<u64>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -12427,13 +13390,7 @@ impl Uint64Message {
             ptr: 0 as *const Uint64Message,
         };
         unsafe {
-            instance.get(|| {
-                Uint64Message {
-                    data: ::std::option::Option::None,
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(Uint64Message::new)
         }
     }
 
@@ -12455,6 +13412,14 @@ impl Uint64Message {
     pub fn get_data(&self) -> u64 {
         self.data.unwrap_or(0)
     }
+
+    fn get_data_for_reflect(&self) -> &::std::option::Option<u64> {
+        &self.data
+    }
+
+    fn mut_data_for_reflect(&mut self) -> &mut ::std::option::Option<u64> {
+        &mut self.data
+    }
 }
 
 impl ::protobuf::Message for Uint64Message {
@@ -12463,18 +13428,18 @@ impl ::protobuf::Message for Uint64Message {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_uint64());
+                    let tmp = is.read_uint64()?;
                     self.data = ::std::option::Option::Some(tmp);
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -12485,8 +13450,8 @@ impl ::protobuf::Message for Uint64Message {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.data.iter() {
-            my_size += ::protobuf::rt::value_size(1, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.data {
+            my_size += ::protobuf::rt::value_size(1, v, ::protobuf::wire_format::WireTypeVarint);
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
@@ -12495,9 +13460,9 @@ impl ::protobuf::Message for Uint64Message {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.data {
-            try!(os.write_uint64(1, v));
+            os.write_uint64(1, v)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -12513,12 +13478,14 @@ impl ::protobuf::Message for Uint64Message {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<Uint64Message>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -12539,10 +13506,10 @@ impl ::protobuf::MessageStatic for Uint64Message {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_u64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeUint64>(
                     "data",
-                    Uint64Message::has_data,
-                    Uint64Message::get_data,
+                    Uint64Message::get_data_for_reflect,
+                    Uint64Message::mut_data_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<Uint64Message>(
                     "Uint64Message",
@@ -12561,26 +13528,25 @@ impl ::protobuf::Clear for Uint64Message {
     }
 }
 
-impl ::std::cmp::PartialEq for Uint64Message {
-    fn eq(&self, other: &Uint64Message) -> bool {
-        self.data == other.data &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for Uint64Message {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for Uint64Message {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct BoolMessage {
     // message fields
     data: ::std::option::Option<bool>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -12597,13 +13563,7 @@ impl BoolMessage {
             ptr: 0 as *const BoolMessage,
         };
         unsafe {
-            instance.get(|| {
-                BoolMessage {
-                    data: ::std::option::Option::None,
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(BoolMessage::new)
         }
     }
 
@@ -12625,6 +13585,14 @@ impl BoolMessage {
     pub fn get_data(&self) -> bool {
         self.data.unwrap_or(false)
     }
+
+    fn get_data_for_reflect(&self) -> &::std::option::Option<bool> {
+        &self.data
+    }
+
+    fn mut_data_for_reflect(&mut self) -> &mut ::std::option::Option<bool> {
+        &mut self.data
+    }
 }
 
 impl ::protobuf::Message for BoolMessage {
@@ -12633,18 +13601,18 @@ impl ::protobuf::Message for BoolMessage {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_bool());
+                    let tmp = is.read_bool()?;
                     self.data = ::std::option::Option::Some(tmp);
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -12655,7 +13623,7 @@ impl ::protobuf::Message for BoolMessage {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        if self.data.is_some() {
+        if let Some(v) = self.data {
             my_size += 2;
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
@@ -12665,9 +13633,9 @@ impl ::protobuf::Message for BoolMessage {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.data {
-            try!(os.write_bool(1, v));
+            os.write_bool(1, v)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -12683,12 +13651,14 @@ impl ::protobuf::Message for BoolMessage {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<BoolMessage>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -12709,10 +13679,10 @@ impl ::protobuf::MessageStatic for BoolMessage {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_bool_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeBool>(
                     "data",
-                    BoolMessage::has_data,
-                    BoolMessage::get_data,
+                    BoolMessage::get_data_for_reflect,
+                    BoolMessage::mut_data_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<BoolMessage>(
                     "BoolMessage",
@@ -12731,26 +13701,25 @@ impl ::protobuf::Clear for BoolMessage {
     }
 }
 
-impl ::std::cmp::PartialEq for BoolMessage {
-    fn eq(&self, other: &BoolMessage) -> bool {
-        self.data == other.data &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for BoolMessage {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for BoolMessage {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestOneof {
     // message oneof groups
     foo: ::std::option::Option<TestOneof_oneof_foo>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -12774,13 +13743,7 @@ impl TestOneof {
             ptr: 0 as *const TestOneof,
         };
         unsafe {
-            instance.get(|| {
-                TestOneof {
-                    foo: ::std::option::Option::None,
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestOneof::new)
         }
     }
 
@@ -12828,7 +13791,6 @@ impl TestOneof {
     }
 
     // Mutable pointer to the field.
-    // If field is not initialized, it is initialized with default value first.
     pub fn mut_foo_string(&mut self) -> &mut ::std::string::String {
         if let ::std::option::Option::Some(TestOneof_oneof_foo::foo_string(_)) = self.foo {
         } else {
@@ -12878,7 +13840,6 @@ impl TestOneof {
     }
 
     // Mutable pointer to the field.
-    // If field is not initialized, it is initialized with default value first.
     pub fn mut_foo_message(&mut self) -> &mut TestAllTypes {
         if let ::std::option::Option::Some(TestOneof_oneof_foo::foo_message(_)) = self.foo {
         } else {
@@ -12916,29 +13877,29 @@ impl ::protobuf::Message for TestOneof {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    self.foo = ::std::option::Option::Some(TestOneof_oneof_foo::foo_int(try!(is.read_int32())));
+                    self.foo = ::std::option::Option::Some(TestOneof_oneof_foo::foo_int(is.read_int32()?));
                 },
                 2 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    self.foo = ::std::option::Option::Some(TestOneof_oneof_foo::foo_string(try!(is.read_string())));
+                    self.foo = ::std::option::Option::Some(TestOneof_oneof_foo::foo_string(is.read_string()?));
                 },
                 3 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    self.foo = ::std::option::Option::Some(TestOneof_oneof_foo::foo_message(try!(is.read_message())));
+                    self.foo = ::std::option::Option::Some(TestOneof_oneof_foo::foo_message(is.read_message()?));
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -12972,19 +13933,19 @@ impl ::protobuf::Message for TestOneof {
         if let ::std::option::Option::Some(ref v) = self.foo {
             match v {
                 &TestOneof_oneof_foo::foo_int(v) => {
-                    try!(os.write_int32(1, v));
+                    os.write_int32(1, v)?;
                 },
                 &TestOneof_oneof_foo::foo_string(ref v) => {
-                    try!(os.write_string(2, v));
+                    os.write_string(2, v)?;
                 },
                 &TestOneof_oneof_foo::foo_message(ref v) => {
-                    try!(os.write_tag(3, ::protobuf::wire_format::WireTypeLengthDelimited));
-                    try!(os.write_raw_varint32(v.get_cached_size()));
-                    try!(v.write_to_with_cached_sizes(os));
+                    os.write_tag(3, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+                    os.write_raw_varint32(v.get_cached_size())?;
+                    v.write_to_with_cached_sizes(os)?;
                 },
             };
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -13000,12 +13961,14 @@ impl ::protobuf::Message for TestOneof {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestOneof>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -13026,17 +13989,17 @@ impl ::protobuf::MessageStatic for TestOneof {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor::<_>(
                     "foo_int",
                     TestOneof::has_foo_int,
                     TestOneof::get_foo_int,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor::<_>(
                     "foo_string",
                     TestOneof::has_foo_string,
                     TestOneof::get_foo_string,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, TestAllTypes>(
                     "foo_message",
                     TestOneof::has_foo_message,
                     TestOneof::get_foo_message,
@@ -13060,20 +14023,19 @@ impl ::protobuf::Clear for TestOneof {
     }
 }
 
-impl ::std::cmp::PartialEq for TestOneof {
-    fn eq(&self, other: &TestOneof) -> bool {
-        self.foo == other.foo &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestOneof {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestOneof {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestOneofBackwardsCompatible {
     // message fields
     foo_int: ::std::option::Option<i32>,
@@ -13081,7 +14043,7 @@ pub struct TestOneofBackwardsCompatible {
     foo_message: ::protobuf::SingularPtrField<TestAllTypes>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -13098,15 +14060,7 @@ impl TestOneofBackwardsCompatible {
             ptr: 0 as *const TestOneofBackwardsCompatible,
         };
         unsafe {
-            instance.get(|| {
-                TestOneofBackwardsCompatible {
-                    foo_int: ::std::option::Option::None,
-                    foo_string: ::protobuf::SingularField::none(),
-                    foo_message: ::protobuf::SingularPtrField::none(),
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestOneofBackwardsCompatible::new)
         }
     }
 
@@ -13127,6 +14081,14 @@ impl TestOneofBackwardsCompatible {
 
     pub fn get_foo_int(&self) -> i32 {
         self.foo_int.unwrap_or(0)
+    }
+
+    fn get_foo_int_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.foo_int
+    }
+
+    fn mut_foo_int_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.foo_int
     }
 
     // optional string foo_string = 2;
@@ -13165,6 +14127,14 @@ impl TestOneofBackwardsCompatible {
         }
     }
 
+    fn get_foo_string_for_reflect(&self) -> &::protobuf::SingularField<::std::string::String> {
+        &self.foo_string
+    }
+
+    fn mut_foo_string_for_reflect(&mut self) -> &mut ::protobuf::SingularField<::std::string::String> {
+        &mut self.foo_string
+    }
+
     // optional .protobuf_unittest.TestAllTypes foo_message = 3;
 
     pub fn clear_foo_message(&mut self) {
@@ -13197,6 +14167,14 @@ impl TestOneofBackwardsCompatible {
     pub fn get_foo_message(&self) -> &TestAllTypes {
         self.foo_message.as_ref().unwrap_or_else(|| TestAllTypes::default_instance())
     }
+
+    fn get_foo_message_for_reflect(&self) -> &::protobuf::SingularPtrField<TestAllTypes> {
+        &self.foo_message
+    }
+
+    fn mut_foo_message_for_reflect(&mut self) -> &mut ::protobuf::SingularPtrField<TestAllTypes> {
+        &mut self.foo_message
+    }
 }
 
 impl ::protobuf::Message for TestOneofBackwardsCompatible {
@@ -13205,24 +14183,24 @@ impl ::protobuf::Message for TestOneofBackwardsCompatible {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.foo_int = ::std::option::Option::Some(tmp);
                 },
                 2 => {
-                    try!(::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.foo_string));
+                    ::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.foo_string)?;
                 },
                 3 => {
-                    try!(::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.foo_message));
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.foo_message)?;
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -13233,14 +14211,14 @@ impl ::protobuf::Message for TestOneofBackwardsCompatible {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.foo_int.iter() {
-            my_size += ::protobuf::rt::value_size(1, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.foo_int {
+            my_size += ::protobuf::rt::value_size(1, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.foo_string.iter() {
-            my_size += ::protobuf::rt::string_size(2, &value);
+        if let Some(v) = self.foo_string.as_ref() {
+            my_size += ::protobuf::rt::string_size(2, &v);
         };
-        for value in self.foo_message.iter() {
-            let len = value.compute_size();
+        if let Some(v) = self.foo_message.as_ref() {
+            let len = v.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
@@ -13250,17 +14228,17 @@ impl ::protobuf::Message for TestOneofBackwardsCompatible {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.foo_int {
-            try!(os.write_int32(1, v));
+            os.write_int32(1, v)?;
         };
         if let Some(v) = self.foo_string.as_ref() {
-            try!(os.write_string(2, &v));
+            os.write_string(2, &v)?;
         };
         if let Some(v) = self.foo_message.as_ref() {
-            try!(os.write_tag(3, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+            os.write_tag(3, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -13276,12 +14254,14 @@ impl ::protobuf::Message for TestOneofBackwardsCompatible {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestOneofBackwardsCompatible>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -13302,20 +14282,20 @@ impl ::protobuf::MessageStatic for TestOneofBackwardsCompatible {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "foo_int",
-                    TestOneofBackwardsCompatible::has_foo_int,
-                    TestOneofBackwardsCompatible::get_foo_int,
+                    TestOneofBackwardsCompatible::get_foo_int_for_reflect,
+                    TestOneofBackwardsCompatible::mut_foo_int_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "foo_string",
-                    TestOneofBackwardsCompatible::has_foo_string,
-                    TestOneofBackwardsCompatible::get_foo_string,
+                    TestOneofBackwardsCompatible::get_foo_string_for_reflect,
+                    TestOneofBackwardsCompatible::mut_foo_string_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<TestAllTypes>>(
                     "foo_message",
-                    TestOneofBackwardsCompatible::has_foo_message,
-                    TestOneofBackwardsCompatible::get_foo_message,
+                    TestOneofBackwardsCompatible::get_foo_message_for_reflect,
+                    TestOneofBackwardsCompatible::mut_foo_message_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestOneofBackwardsCompatible>(
                     "TestOneofBackwardsCompatible",
@@ -13336,22 +14316,19 @@ impl ::protobuf::Clear for TestOneofBackwardsCompatible {
     }
 }
 
-impl ::std::cmp::PartialEq for TestOneofBackwardsCompatible {
-    fn eq(&self, other: &TestOneofBackwardsCompatible) -> bool {
-        self.foo_int == other.foo_int &&
-        self.foo_string == other.foo_string &&
-        self.foo_message == other.foo_message &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestOneofBackwardsCompatible {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestOneofBackwardsCompatible {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestOneof2 {
     // message fields
     baz_int: ::std::option::Option<i32>,
@@ -13361,7 +14338,7 @@ pub struct TestOneof2 {
     bar: ::std::option::Option<TestOneof2_oneof_bar>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -13396,16 +14373,7 @@ impl TestOneof2 {
             ptr: 0 as *const TestOneof2,
         };
         unsafe {
-            instance.get(|| {
-                TestOneof2 {
-                    baz_int: ::std::option::Option::None,
-                    baz_string: ::protobuf::SingularField::none(),
-                    foo: ::std::option::Option::None,
-                    bar: ::std::option::Option::None,
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestOneof2::new)
         }
     }
 
@@ -13453,7 +14421,6 @@ impl TestOneof2 {
     }
 
     // Mutable pointer to the field.
-    // If field is not initialized, it is initialized with default value first.
     pub fn mut_foo_string(&mut self) -> &mut ::std::string::String {
         if let ::std::option::Option::Some(TestOneof2_oneof_foo::foo_string(_)) = self.foo {
         } else {
@@ -13503,7 +14470,6 @@ impl TestOneof2 {
     }
 
     // Mutable pointer to the field.
-    // If field is not initialized, it is initialized with default value first.
     pub fn mut_foo_cord(&mut self) -> &mut ::std::string::String {
         if let ::std::option::Option::Some(TestOneof2_oneof_foo::foo_cord(_)) = self.foo {
         } else {
@@ -13553,7 +14519,6 @@ impl TestOneof2 {
     }
 
     // Mutable pointer to the field.
-    // If field is not initialized, it is initialized with default value first.
     pub fn mut_foo_string_piece(&mut self) -> &mut ::std::string::String {
         if let ::std::option::Option::Some(TestOneof2_oneof_foo::foo_string_piece(_)) = self.foo {
         } else {
@@ -13603,7 +14568,6 @@ impl TestOneof2 {
     }
 
     // Mutable pointer to the field.
-    // If field is not initialized, it is initialized with default value first.
     pub fn mut_foo_bytes(&mut self) -> &mut ::std::vec::Vec<u8> {
         if let ::std::option::Option::Some(TestOneof2_oneof_foo::foo_bytes(_)) = self.foo {
         } else {
@@ -13678,7 +14642,6 @@ impl TestOneof2 {
     }
 
     // Mutable pointer to the field.
-    // If field is not initialized, it is initialized with default value first.
     pub fn mut_foo_message(&mut self) -> &mut TestOneof2_NestedMessage {
         if let ::std::option::Option::Some(TestOneof2_oneof_foo::foo_message(_)) = self.foo {
         } else {
@@ -13728,7 +14691,6 @@ impl TestOneof2 {
     }
 
     // Mutable pointer to the field.
-    // If field is not initialized, it is initialized with default value first.
     pub fn mut_foo_lazy_message(&mut self) -> &mut TestOneof2_NestedMessage {
         if let ::std::option::Option::Some(TestOneof2_oneof_foo::foo_lazy_message(_)) = self.foo {
         } else {
@@ -13828,6 +14790,14 @@ impl TestOneof2 {
         self.baz_int.unwrap_or(0)
     }
 
+    fn get_baz_int_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.baz_int
+    }
+
+    fn mut_baz_int_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.baz_int
+    }
+
     // optional string baz_string = 19;
 
     pub fn clear_baz_string(&mut self) {
@@ -13863,6 +14833,14 @@ impl TestOneof2 {
             None => "BAZ",
         }
     }
+
+    fn get_baz_string_for_reflect(&self) -> &::protobuf::SingularField<::std::string::String> {
+        &self.baz_string
+    }
+
+    fn mut_baz_string_for_reflect(&mut self) -> &mut ::protobuf::SingularField<::std::string::String> {
+        &mut self.baz_string
+    }
 }
 
 impl ::protobuf::Message for TestOneof2 {
@@ -13871,81 +14849,81 @@ impl ::protobuf::Message for TestOneof2 {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    self.foo = ::std::option::Option::Some(TestOneof2_oneof_foo::foo_int(try!(is.read_int32())));
+                    self.foo = ::std::option::Option::Some(TestOneof2_oneof_foo::foo_int(is.read_int32()?));
                 },
                 2 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    self.foo = ::std::option::Option::Some(TestOneof2_oneof_foo::foo_string(try!(is.read_string())));
+                    self.foo = ::std::option::Option::Some(TestOneof2_oneof_foo::foo_string(is.read_string()?));
                 },
                 3 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    self.foo = ::std::option::Option::Some(TestOneof2_oneof_foo::foo_cord(try!(is.read_string())));
+                    self.foo = ::std::option::Option::Some(TestOneof2_oneof_foo::foo_cord(is.read_string()?));
                 },
                 4 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    self.foo = ::std::option::Option::Some(TestOneof2_oneof_foo::foo_string_piece(try!(is.read_string())));
+                    self.foo = ::std::option::Option::Some(TestOneof2_oneof_foo::foo_string_piece(is.read_string()?));
                 },
                 5 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    self.foo = ::std::option::Option::Some(TestOneof2_oneof_foo::foo_bytes(try!(is.read_bytes())));
+                    self.foo = ::std::option::Option::Some(TestOneof2_oneof_foo::foo_bytes(is.read_bytes()?));
                 },
                 6 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    self.foo = ::std::option::Option::Some(TestOneof2_oneof_foo::foo_enum(try!(is.read_enum())));
+                    self.foo = ::std::option::Option::Some(TestOneof2_oneof_foo::foo_enum(is.read_enum()?));
                 },
                 7 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    self.foo = ::std::option::Option::Some(TestOneof2_oneof_foo::foo_message(try!(is.read_message())));
+                    self.foo = ::std::option::Option::Some(TestOneof2_oneof_foo::foo_message(is.read_message()?));
                 },
                 11 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    self.foo = ::std::option::Option::Some(TestOneof2_oneof_foo::foo_lazy_message(try!(is.read_message())));
+                    self.foo = ::std::option::Option::Some(TestOneof2_oneof_foo::foo_lazy_message(is.read_message()?));
                 },
                 12 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    self.bar = ::std::option::Option::Some(TestOneof2_oneof_bar::bar_int(try!(is.read_int32())));
+                    self.bar = ::std::option::Option::Some(TestOneof2_oneof_bar::bar_int(is.read_int32()?));
                 },
                 17 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    self.bar = ::std::option::Option::Some(TestOneof2_oneof_bar::bar_enum(try!(is.read_enum())));
+                    self.bar = ::std::option::Option::Some(TestOneof2_oneof_bar::bar_enum(is.read_enum()?));
                 },
                 18 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.baz_int = ::std::option::Option::Some(tmp);
                 },
                 19 => {
-                    try!(::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.baz_string));
+                    ::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.baz_string)?;
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -13956,11 +14934,11 @@ impl ::protobuf::Message for TestOneof2 {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.baz_int.iter() {
-            my_size += ::protobuf::rt::value_size(18, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.baz_int {
+            my_size += ::protobuf::rt::value_size(18, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.baz_string.iter() {
-            my_size += ::protobuf::rt::string_size(19, &value);
+        if let Some(v) = self.baz_string.as_ref() {
+            my_size += ::protobuf::rt::string_size(19, &v);
         };
         if let ::std::option::Option::Some(ref v) = self.foo {
             match v {
@@ -14009,54 +14987,54 @@ impl ::protobuf::Message for TestOneof2 {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.baz_int {
-            try!(os.write_int32(18, v));
+            os.write_int32(18, v)?;
         };
         if let Some(v) = self.baz_string.as_ref() {
-            try!(os.write_string(19, &v));
+            os.write_string(19, &v)?;
         };
         if let ::std::option::Option::Some(ref v) = self.foo {
             match v {
                 &TestOneof2_oneof_foo::foo_int(v) => {
-                    try!(os.write_int32(1, v));
+                    os.write_int32(1, v)?;
                 },
                 &TestOneof2_oneof_foo::foo_string(ref v) => {
-                    try!(os.write_string(2, v));
+                    os.write_string(2, v)?;
                 },
                 &TestOneof2_oneof_foo::foo_cord(ref v) => {
-                    try!(os.write_string(3, v));
+                    os.write_string(3, v)?;
                 },
                 &TestOneof2_oneof_foo::foo_string_piece(ref v) => {
-                    try!(os.write_string(4, v));
+                    os.write_string(4, v)?;
                 },
                 &TestOneof2_oneof_foo::foo_bytes(ref v) => {
-                    try!(os.write_bytes(5, v));
+                    os.write_bytes(5, v)?;
                 },
                 &TestOneof2_oneof_foo::foo_enum(v) => {
-                    try!(os.write_enum(6, v.value()));
+                    os.write_enum(6, v.value())?;
                 },
                 &TestOneof2_oneof_foo::foo_message(ref v) => {
-                    try!(os.write_tag(7, ::protobuf::wire_format::WireTypeLengthDelimited));
-                    try!(os.write_raw_varint32(v.get_cached_size()));
-                    try!(v.write_to_with_cached_sizes(os));
+                    os.write_tag(7, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+                    os.write_raw_varint32(v.get_cached_size())?;
+                    v.write_to_with_cached_sizes(os)?;
                 },
                 &TestOneof2_oneof_foo::foo_lazy_message(ref v) => {
-                    try!(os.write_tag(11, ::protobuf::wire_format::WireTypeLengthDelimited));
-                    try!(os.write_raw_varint32(v.get_cached_size()));
-                    try!(v.write_to_with_cached_sizes(os));
+                    os.write_tag(11, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+                    os.write_raw_varint32(v.get_cached_size())?;
+                    v.write_to_with_cached_sizes(os)?;
                 },
             };
         };
         if let ::std::option::Option::Some(ref v) = self.bar {
             match v {
                 &TestOneof2_oneof_bar::bar_int(v) => {
-                    try!(os.write_int32(12, v));
+                    os.write_int32(12, v)?;
                 },
                 &TestOneof2_oneof_bar::bar_enum(v) => {
-                    try!(os.write_enum(17, v.value()));
+                    os.write_enum(17, v.value())?;
                 },
             };
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -14072,12 +15050,14 @@ impl ::protobuf::Message for TestOneof2 {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestOneof2>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -14098,65 +15078,65 @@ impl ::protobuf::MessageStatic for TestOneof2 {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor::<_>(
                     "foo_int",
                     TestOneof2::has_foo_int,
                     TestOneof2::get_foo_int,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor::<_>(
                     "foo_string",
                     TestOneof2::has_foo_string,
                     TestOneof2::get_foo_string,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor::<_>(
                     "foo_cord",
                     TestOneof2::has_foo_cord,
                     TestOneof2::get_foo_cord,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor::<_>(
                     "foo_string_piece",
                     TestOneof2::has_foo_string_piece,
                     TestOneof2::get_foo_string_piece,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_bytes_accessor::<_>(
                     "foo_bytes",
                     TestOneof2::has_foo_bytes,
                     TestOneof2::get_foo_bytes,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_enum_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_enum_accessor::<_, TestOneof2_NestedEnum>(
                     "foo_enum",
                     TestOneof2::has_foo_enum,
                     TestOneof2::get_foo_enum,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, TestOneof2_NestedMessage>(
                     "foo_message",
                     TestOneof2::has_foo_message,
                     TestOneof2::get_foo_message,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, TestOneof2_NestedMessage>(
                     "foo_lazy_message",
                     TestOneof2::has_foo_lazy_message,
                     TestOneof2::get_foo_lazy_message,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor::<_>(
                     "bar_int",
                     TestOneof2::has_bar_int,
                     TestOneof2::get_bar_int,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_enum_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_enum_accessor::<_, TestOneof2_NestedEnum>(
                     "bar_enum",
                     TestOneof2::has_bar_enum,
                     TestOneof2::get_bar_enum,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "baz_int",
-                    TestOneof2::has_baz_int,
-                    TestOneof2::get_baz_int,
+                    TestOneof2::get_baz_int_for_reflect,
+                    TestOneof2::mut_baz_int_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "baz_string",
-                    TestOneof2::has_baz_string,
-                    TestOneof2::get_baz_string,
+                    TestOneof2::get_baz_string_for_reflect,
+                    TestOneof2::mut_baz_string_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestOneof2>(
                     "TestOneof2",
@@ -14186,30 +15166,26 @@ impl ::protobuf::Clear for TestOneof2 {
     }
 }
 
-impl ::std::cmp::PartialEq for TestOneof2 {
-    fn eq(&self, other: &TestOneof2) -> bool {
-        self.baz_int == other.baz_int &&
-        self.baz_string == other.baz_string &&
-        self.foo == other.foo &&
-        self.bar == other.bar &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestOneof2 {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestOneof2 {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestOneof2_NestedMessage {
     // message fields
     qux_int: ::std::option::Option<i64>,
     corge_int: ::std::vec::Vec<i32>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -14226,14 +15202,7 @@ impl TestOneof2_NestedMessage {
             ptr: 0 as *const TestOneof2_NestedMessage,
         };
         unsafe {
-            instance.get(|| {
-                TestOneof2_NestedMessage {
-                    qux_int: ::std::option::Option::None,
-                    corge_int: ::std::vec::Vec::new(),
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestOneof2_NestedMessage::new)
         }
     }
 
@@ -14254,6 +15223,14 @@ impl TestOneof2_NestedMessage {
 
     pub fn get_qux_int(&self) -> i64 {
         self.qux_int.unwrap_or(0)
+    }
+
+    fn get_qux_int_for_reflect(&self) -> &::std::option::Option<i64> {
+        &self.qux_int
+    }
+
+    fn mut_qux_int_for_reflect(&mut self) -> &mut ::std::option::Option<i64> {
+        &mut self.qux_int
     }
 
     // repeated int32 corge_int = 2;
@@ -14280,6 +15257,14 @@ impl TestOneof2_NestedMessage {
     pub fn get_corge_int(&self) -> &[i32] {
         &self.corge_int
     }
+
+    fn get_corge_int_for_reflect(&self) -> &::std::vec::Vec<i32> {
+        &self.corge_int
+    }
+
+    fn mut_corge_int_for_reflect(&mut self) -> &mut ::std::vec::Vec<i32> {
+        &mut self.corge_int
+    }
 }
 
 impl ::protobuf::Message for TestOneof2_NestedMessage {
@@ -14288,21 +15273,21 @@ impl ::protobuf::Message for TestOneof2_NestedMessage {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int64());
+                    let tmp = is.read_int64()?;
                     self.qux_int = ::std::option::Option::Some(tmp);
                 },
                 2 => {
-                    try!(::protobuf::rt::read_repeated_int32_into(wire_type, is, &mut self.corge_int));
+                    ::protobuf::rt::read_repeated_int32_into(wire_type, is, &mut self.corge_int)?;
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -14313,10 +15298,10 @@ impl ::protobuf::Message for TestOneof2_NestedMessage {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.qux_int.iter() {
-            my_size += ::protobuf::rt::value_size(1, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.qux_int {
+            my_size += ::protobuf::rt::value_size(1, v, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.corge_int.iter() {
+        for value in &self.corge_int {
             my_size += ::protobuf::rt::value_size(2, *value, ::protobuf::wire_format::WireTypeVarint);
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
@@ -14326,12 +15311,12 @@ impl ::protobuf::Message for TestOneof2_NestedMessage {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.qux_int {
-            try!(os.write_int64(1, v));
+            os.write_int64(1, v)?;
         };
-        for v in self.corge_int.iter() {
-            try!(os.write_int32(2, *v));
+        for v in &self.corge_int {
+            os.write_int32(2, *v)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -14347,12 +15332,14 @@ impl ::protobuf::Message for TestOneof2_NestedMessage {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestOneof2_NestedMessage>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -14373,14 +15360,15 @@ impl ::protobuf::MessageStatic for TestOneof2_NestedMessage {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_i64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt64>(
                     "qux_int",
-                    TestOneof2_NestedMessage::has_qux_int,
-                    TestOneof2_NestedMessage::get_qux_int,
+                    TestOneof2_NestedMessage::get_qux_int_for_reflect,
+                    TestOneof2_NestedMessage::mut_qux_int_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "corge_int",
-                    TestOneof2_NestedMessage::get_corge_int,
+                    TestOneof2_NestedMessage::get_corge_int_for_reflect,
+                    TestOneof2_NestedMessage::mut_corge_int_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestOneof2_NestedMessage>(
                     "TestOneof2_NestedMessage",
@@ -14400,17 +15388,15 @@ impl ::protobuf::Clear for TestOneof2_NestedMessage {
     }
 }
 
-impl ::std::cmp::PartialEq for TestOneof2_NestedMessage {
-    fn eq(&self, other: &TestOneof2_NestedMessage) -> bool {
-        self.qux_int == other.qux_int &&
-        self.corge_int == other.corge_int &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestOneof2_NestedMessage {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for TestOneof2_NestedMessage {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
     }
 }
 
@@ -14460,13 +15446,19 @@ impl ::protobuf::ProtobufEnum for TestOneof2_NestedEnum {
 impl ::std::marker::Copy for TestOneof2_NestedEnum {
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestOneof2_NestedEnum {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Enum(self.descriptor())
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestRequiredOneof {
     // message oneof groups
     foo: ::std::option::Option<TestRequiredOneof_oneof_foo>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -14490,13 +15482,7 @@ impl TestRequiredOneof {
             ptr: 0 as *const TestRequiredOneof,
         };
         unsafe {
-            instance.get(|| {
-                TestRequiredOneof {
-                    foo: ::std::option::Option::None,
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestRequiredOneof::new)
         }
     }
 
@@ -14544,7 +15530,6 @@ impl TestRequiredOneof {
     }
 
     // Mutable pointer to the field.
-    // If field is not initialized, it is initialized with default value first.
     pub fn mut_foo_string(&mut self) -> &mut ::std::string::String {
         if let ::std::option::Option::Some(TestRequiredOneof_oneof_foo::foo_string(_)) = self.foo {
         } else {
@@ -14594,7 +15579,6 @@ impl TestRequiredOneof {
     }
 
     // Mutable pointer to the field.
-    // If field is not initialized, it is initialized with default value first.
     pub fn mut_foo_message(&mut self) -> &mut TestRequiredOneof_NestedMessage {
         if let ::std::option::Option::Some(TestRequiredOneof_oneof_foo::foo_message(_)) = self.foo {
         } else {
@@ -14632,29 +15616,29 @@ impl ::protobuf::Message for TestRequiredOneof {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    self.foo = ::std::option::Option::Some(TestRequiredOneof_oneof_foo::foo_int(try!(is.read_int32())));
+                    self.foo = ::std::option::Option::Some(TestRequiredOneof_oneof_foo::foo_int(is.read_int32()?));
                 },
                 2 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    self.foo = ::std::option::Option::Some(TestRequiredOneof_oneof_foo::foo_string(try!(is.read_string())));
+                    self.foo = ::std::option::Option::Some(TestRequiredOneof_oneof_foo::foo_string(is.read_string()?));
                 },
                 3 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    self.foo = ::std::option::Option::Some(TestRequiredOneof_oneof_foo::foo_message(try!(is.read_message())));
+                    self.foo = ::std::option::Option::Some(TestRequiredOneof_oneof_foo::foo_message(is.read_message()?));
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -14688,19 +15672,19 @@ impl ::protobuf::Message for TestRequiredOneof {
         if let ::std::option::Option::Some(ref v) = self.foo {
             match v {
                 &TestRequiredOneof_oneof_foo::foo_int(v) => {
-                    try!(os.write_int32(1, v));
+                    os.write_int32(1, v)?;
                 },
                 &TestRequiredOneof_oneof_foo::foo_string(ref v) => {
-                    try!(os.write_string(2, v));
+                    os.write_string(2, v)?;
                 },
                 &TestRequiredOneof_oneof_foo::foo_message(ref v) => {
-                    try!(os.write_tag(3, ::protobuf::wire_format::WireTypeLengthDelimited));
-                    try!(os.write_raw_varint32(v.get_cached_size()));
-                    try!(v.write_to_with_cached_sizes(os));
+                    os.write_tag(3, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+                    os.write_raw_varint32(v.get_cached_size())?;
+                    v.write_to_with_cached_sizes(os)?;
                 },
             };
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -14716,12 +15700,14 @@ impl ::protobuf::Message for TestRequiredOneof {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestRequiredOneof>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -14742,17 +15728,17 @@ impl ::protobuf::MessageStatic for TestRequiredOneof {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor::<_>(
                     "foo_int",
                     TestRequiredOneof::has_foo_int,
                     TestRequiredOneof::get_foo_int,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor::<_>(
                     "foo_string",
                     TestRequiredOneof::has_foo_string,
                     TestRequiredOneof::get_foo_string,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, TestRequiredOneof_NestedMessage>(
                     "foo_message",
                     TestRequiredOneof::has_foo_message,
                     TestRequiredOneof::get_foo_message,
@@ -14776,26 +15762,25 @@ impl ::protobuf::Clear for TestRequiredOneof {
     }
 }
 
-impl ::std::cmp::PartialEq for TestRequiredOneof {
-    fn eq(&self, other: &TestRequiredOneof) -> bool {
-        self.foo == other.foo &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestRequiredOneof {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestRequiredOneof {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestRequiredOneof_NestedMessage {
     // message fields
     required_double: ::std::option::Option<f64>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -14812,13 +15797,7 @@ impl TestRequiredOneof_NestedMessage {
             ptr: 0 as *const TestRequiredOneof_NestedMessage,
         };
         unsafe {
-            instance.get(|| {
-                TestRequiredOneof_NestedMessage {
-                    required_double: ::std::option::Option::None,
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestRequiredOneof_NestedMessage::new)
         }
     }
 
@@ -14840,6 +15819,14 @@ impl TestRequiredOneof_NestedMessage {
     pub fn get_required_double(&self) -> f64 {
         self.required_double.unwrap_or(0.)
     }
+
+    fn get_required_double_for_reflect(&self) -> &::std::option::Option<f64> {
+        &self.required_double
+    }
+
+    fn mut_required_double_for_reflect(&mut self) -> &mut ::std::option::Option<f64> {
+        &mut self.required_double
+    }
 }
 
 impl ::protobuf::Message for TestRequiredOneof_NestedMessage {
@@ -14851,18 +15838,18 @@ impl ::protobuf::Message for TestRequiredOneof_NestedMessage {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
                     if wire_type != ::protobuf::wire_format::WireTypeFixed64 {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_double());
+                    let tmp = is.read_double()?;
                     self.required_double = ::std::option::Option::Some(tmp);
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -14873,7 +15860,7 @@ impl ::protobuf::Message for TestRequiredOneof_NestedMessage {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        if self.required_double.is_some() {
+        if let Some(v) = self.required_double {
             my_size += 9;
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
@@ -14883,9 +15870,9 @@ impl ::protobuf::Message for TestRequiredOneof_NestedMessage {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.required_double {
-            try!(os.write_double(1, v));
+            os.write_double(1, v)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -14901,12 +15888,14 @@ impl ::protobuf::Message for TestRequiredOneof_NestedMessage {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestRequiredOneof_NestedMessage>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -14927,10 +15916,10 @@ impl ::protobuf::MessageStatic for TestRequiredOneof_NestedMessage {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_f64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeDouble>(
                     "required_double",
-                    TestRequiredOneof_NestedMessage::has_required_double,
-                    TestRequiredOneof_NestedMessage::get_required_double,
+                    TestRequiredOneof_NestedMessage::get_required_double_for_reflect,
+                    TestRequiredOneof_NestedMessage::mut_required_double_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestRequiredOneof_NestedMessage>(
                     "TestRequiredOneof_NestedMessage",
@@ -14949,20 +15938,19 @@ impl ::protobuf::Clear for TestRequiredOneof_NestedMessage {
     }
 }
 
-impl ::std::cmp::PartialEq for TestRequiredOneof_NestedMessage {
-    fn eq(&self, other: &TestRequiredOneof_NestedMessage) -> bool {
-        self.required_double == other.required_double &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestRequiredOneof_NestedMessage {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestRequiredOneof_NestedMessage {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestPackedTypes {
     // message fields
     packed_int32: ::std::vec::Vec<i32>,
@@ -14981,7 +15969,7 @@ pub struct TestPackedTypes {
     packed_enum: ::std::vec::Vec<ForeignEnum>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -14998,26 +15986,7 @@ impl TestPackedTypes {
             ptr: 0 as *const TestPackedTypes,
         };
         unsafe {
-            instance.get(|| {
-                TestPackedTypes {
-                    packed_int32: ::std::vec::Vec::new(),
-                    packed_int64: ::std::vec::Vec::new(),
-                    packed_uint32: ::std::vec::Vec::new(),
-                    packed_uint64: ::std::vec::Vec::new(),
-                    packed_sint32: ::std::vec::Vec::new(),
-                    packed_sint64: ::std::vec::Vec::new(),
-                    packed_fixed32: ::std::vec::Vec::new(),
-                    packed_fixed64: ::std::vec::Vec::new(),
-                    packed_sfixed32: ::std::vec::Vec::new(),
-                    packed_sfixed64: ::std::vec::Vec::new(),
-                    packed_float: ::std::vec::Vec::new(),
-                    packed_double: ::std::vec::Vec::new(),
-                    packed_bool: ::std::vec::Vec::new(),
-                    packed_enum: ::std::vec::Vec::new(),
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestPackedTypes::new)
         }
     }
 
@@ -15046,6 +16015,14 @@ impl TestPackedTypes {
         &self.packed_int32
     }
 
+    fn get_packed_int32_for_reflect(&self) -> &::std::vec::Vec<i32> {
+        &self.packed_int32
+    }
+
+    fn mut_packed_int32_for_reflect(&mut self) -> &mut ::std::vec::Vec<i32> {
+        &mut self.packed_int32
+    }
+
     // repeated int64 packed_int64 = 91;
 
     pub fn clear_packed_int64(&mut self) {
@@ -15069,6 +16046,14 @@ impl TestPackedTypes {
 
     pub fn get_packed_int64(&self) -> &[i64] {
         &self.packed_int64
+    }
+
+    fn get_packed_int64_for_reflect(&self) -> &::std::vec::Vec<i64> {
+        &self.packed_int64
+    }
+
+    fn mut_packed_int64_for_reflect(&mut self) -> &mut ::std::vec::Vec<i64> {
+        &mut self.packed_int64
     }
 
     // repeated uint32 packed_uint32 = 92;
@@ -15096,6 +16081,14 @@ impl TestPackedTypes {
         &self.packed_uint32
     }
 
+    fn get_packed_uint32_for_reflect(&self) -> &::std::vec::Vec<u32> {
+        &self.packed_uint32
+    }
+
+    fn mut_packed_uint32_for_reflect(&mut self) -> &mut ::std::vec::Vec<u32> {
+        &mut self.packed_uint32
+    }
+
     // repeated uint64 packed_uint64 = 93;
 
     pub fn clear_packed_uint64(&mut self) {
@@ -15119,6 +16112,14 @@ impl TestPackedTypes {
 
     pub fn get_packed_uint64(&self) -> &[u64] {
         &self.packed_uint64
+    }
+
+    fn get_packed_uint64_for_reflect(&self) -> &::std::vec::Vec<u64> {
+        &self.packed_uint64
+    }
+
+    fn mut_packed_uint64_for_reflect(&mut self) -> &mut ::std::vec::Vec<u64> {
+        &mut self.packed_uint64
     }
 
     // repeated sint32 packed_sint32 = 94;
@@ -15146,6 +16147,14 @@ impl TestPackedTypes {
         &self.packed_sint32
     }
 
+    fn get_packed_sint32_for_reflect(&self) -> &::std::vec::Vec<i32> {
+        &self.packed_sint32
+    }
+
+    fn mut_packed_sint32_for_reflect(&mut self) -> &mut ::std::vec::Vec<i32> {
+        &mut self.packed_sint32
+    }
+
     // repeated sint64 packed_sint64 = 95;
 
     pub fn clear_packed_sint64(&mut self) {
@@ -15169,6 +16178,14 @@ impl TestPackedTypes {
 
     pub fn get_packed_sint64(&self) -> &[i64] {
         &self.packed_sint64
+    }
+
+    fn get_packed_sint64_for_reflect(&self) -> &::std::vec::Vec<i64> {
+        &self.packed_sint64
+    }
+
+    fn mut_packed_sint64_for_reflect(&mut self) -> &mut ::std::vec::Vec<i64> {
+        &mut self.packed_sint64
     }
 
     // repeated fixed32 packed_fixed32 = 96;
@@ -15196,6 +16213,14 @@ impl TestPackedTypes {
         &self.packed_fixed32
     }
 
+    fn get_packed_fixed32_for_reflect(&self) -> &::std::vec::Vec<u32> {
+        &self.packed_fixed32
+    }
+
+    fn mut_packed_fixed32_for_reflect(&mut self) -> &mut ::std::vec::Vec<u32> {
+        &mut self.packed_fixed32
+    }
+
     // repeated fixed64 packed_fixed64 = 97;
 
     pub fn clear_packed_fixed64(&mut self) {
@@ -15219,6 +16244,14 @@ impl TestPackedTypes {
 
     pub fn get_packed_fixed64(&self) -> &[u64] {
         &self.packed_fixed64
+    }
+
+    fn get_packed_fixed64_for_reflect(&self) -> &::std::vec::Vec<u64> {
+        &self.packed_fixed64
+    }
+
+    fn mut_packed_fixed64_for_reflect(&mut self) -> &mut ::std::vec::Vec<u64> {
+        &mut self.packed_fixed64
     }
 
     // repeated sfixed32 packed_sfixed32 = 98;
@@ -15246,6 +16279,14 @@ impl TestPackedTypes {
         &self.packed_sfixed32
     }
 
+    fn get_packed_sfixed32_for_reflect(&self) -> &::std::vec::Vec<i32> {
+        &self.packed_sfixed32
+    }
+
+    fn mut_packed_sfixed32_for_reflect(&mut self) -> &mut ::std::vec::Vec<i32> {
+        &mut self.packed_sfixed32
+    }
+
     // repeated sfixed64 packed_sfixed64 = 99;
 
     pub fn clear_packed_sfixed64(&mut self) {
@@ -15269,6 +16310,14 @@ impl TestPackedTypes {
 
     pub fn get_packed_sfixed64(&self) -> &[i64] {
         &self.packed_sfixed64
+    }
+
+    fn get_packed_sfixed64_for_reflect(&self) -> &::std::vec::Vec<i64> {
+        &self.packed_sfixed64
+    }
+
+    fn mut_packed_sfixed64_for_reflect(&mut self) -> &mut ::std::vec::Vec<i64> {
+        &mut self.packed_sfixed64
     }
 
     // repeated float packed_float = 100;
@@ -15296,6 +16345,14 @@ impl TestPackedTypes {
         &self.packed_float
     }
 
+    fn get_packed_float_for_reflect(&self) -> &::std::vec::Vec<f32> {
+        &self.packed_float
+    }
+
+    fn mut_packed_float_for_reflect(&mut self) -> &mut ::std::vec::Vec<f32> {
+        &mut self.packed_float
+    }
+
     // repeated double packed_double = 101;
 
     pub fn clear_packed_double(&mut self) {
@@ -15319,6 +16376,14 @@ impl TestPackedTypes {
 
     pub fn get_packed_double(&self) -> &[f64] {
         &self.packed_double
+    }
+
+    fn get_packed_double_for_reflect(&self) -> &::std::vec::Vec<f64> {
+        &self.packed_double
+    }
+
+    fn mut_packed_double_for_reflect(&mut self) -> &mut ::std::vec::Vec<f64> {
+        &mut self.packed_double
     }
 
     // repeated bool packed_bool = 102;
@@ -15346,6 +16411,14 @@ impl TestPackedTypes {
         &self.packed_bool
     }
 
+    fn get_packed_bool_for_reflect(&self) -> &::std::vec::Vec<bool> {
+        &self.packed_bool
+    }
+
+    fn mut_packed_bool_for_reflect(&mut self) -> &mut ::std::vec::Vec<bool> {
+        &mut self.packed_bool
+    }
+
     // repeated .protobuf_unittest.ForeignEnum packed_enum = 103;
 
     pub fn clear_packed_enum(&mut self) {
@@ -15370,6 +16443,14 @@ impl TestPackedTypes {
     pub fn get_packed_enum(&self) -> &[ForeignEnum] {
         &self.packed_enum
     }
+
+    fn get_packed_enum_for_reflect(&self) -> &::std::vec::Vec<ForeignEnum> {
+        &self.packed_enum
+    }
+
+    fn mut_packed_enum_for_reflect(&mut self) -> &mut ::std::vec::Vec<ForeignEnum> {
+        &mut self.packed_enum
+    }
 }
 
 impl ::protobuf::Message for TestPackedTypes {
@@ -15378,53 +16459,53 @@ impl ::protobuf::Message for TestPackedTypes {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 90 => {
-                    try!(::protobuf::rt::read_repeated_int32_into(wire_type, is, &mut self.packed_int32));
+                    ::protobuf::rt::read_repeated_int32_into(wire_type, is, &mut self.packed_int32)?;
                 },
                 91 => {
-                    try!(::protobuf::rt::read_repeated_int64_into(wire_type, is, &mut self.packed_int64));
+                    ::protobuf::rt::read_repeated_int64_into(wire_type, is, &mut self.packed_int64)?;
                 },
                 92 => {
-                    try!(::protobuf::rt::read_repeated_uint32_into(wire_type, is, &mut self.packed_uint32));
+                    ::protobuf::rt::read_repeated_uint32_into(wire_type, is, &mut self.packed_uint32)?;
                 },
                 93 => {
-                    try!(::protobuf::rt::read_repeated_uint64_into(wire_type, is, &mut self.packed_uint64));
+                    ::protobuf::rt::read_repeated_uint64_into(wire_type, is, &mut self.packed_uint64)?;
                 },
                 94 => {
-                    try!(::protobuf::rt::read_repeated_sint32_into(wire_type, is, &mut self.packed_sint32));
+                    ::protobuf::rt::read_repeated_sint32_into(wire_type, is, &mut self.packed_sint32)?;
                 },
                 95 => {
-                    try!(::protobuf::rt::read_repeated_sint64_into(wire_type, is, &mut self.packed_sint64));
+                    ::protobuf::rt::read_repeated_sint64_into(wire_type, is, &mut self.packed_sint64)?;
                 },
                 96 => {
-                    try!(::protobuf::rt::read_repeated_fixed32_into(wire_type, is, &mut self.packed_fixed32));
+                    ::protobuf::rt::read_repeated_fixed32_into(wire_type, is, &mut self.packed_fixed32)?;
                 },
                 97 => {
-                    try!(::protobuf::rt::read_repeated_fixed64_into(wire_type, is, &mut self.packed_fixed64));
+                    ::protobuf::rt::read_repeated_fixed64_into(wire_type, is, &mut self.packed_fixed64)?;
                 },
                 98 => {
-                    try!(::protobuf::rt::read_repeated_sfixed32_into(wire_type, is, &mut self.packed_sfixed32));
+                    ::protobuf::rt::read_repeated_sfixed32_into(wire_type, is, &mut self.packed_sfixed32)?;
                 },
                 99 => {
-                    try!(::protobuf::rt::read_repeated_sfixed64_into(wire_type, is, &mut self.packed_sfixed64));
+                    ::protobuf::rt::read_repeated_sfixed64_into(wire_type, is, &mut self.packed_sfixed64)?;
                 },
                 100 => {
-                    try!(::protobuf::rt::read_repeated_float_into(wire_type, is, &mut self.packed_float));
+                    ::protobuf::rt::read_repeated_float_into(wire_type, is, &mut self.packed_float)?;
                 },
                 101 => {
-                    try!(::protobuf::rt::read_repeated_double_into(wire_type, is, &mut self.packed_double));
+                    ::protobuf::rt::read_repeated_double_into(wire_type, is, &mut self.packed_double)?;
                 },
                 102 => {
-                    try!(::protobuf::rt::read_repeated_bool_into(wire_type, is, &mut self.packed_bool));
+                    ::protobuf::rt::read_repeated_bool_into(wire_type, is, &mut self.packed_bool)?;
                 },
                 103 => {
-                    try!(::protobuf::rt::read_repeated_enum_into(wire_type, is, &mut self.packed_enum));
+                    ::protobuf::rt::read_repeated_enum_into(wire_type, is, &mut self.packed_enum)?;
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -15484,118 +16565,118 @@ impl ::protobuf::Message for TestPackedTypes {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if !self.packed_int32.is_empty() {
-            try!(os.write_tag(90, ::protobuf::wire_format::WireTypeLengthDelimited));
+            os.write_tag(90, ::protobuf::wire_format::WireTypeLengthDelimited)?;
             // TODO: Data size is computed again, it should be cached
-            try!(os.write_raw_varint32(::protobuf::rt::vec_packed_varint_data_size(&self.packed_int32)));
-            for v in self.packed_int32.iter() {
-                try!(os.write_int32_no_tag(*v));
+            os.write_raw_varint32(::protobuf::rt::vec_packed_varint_data_size(&self.packed_int32))?;
+            for v in &self.packed_int32 {
+                os.write_int32_no_tag(*v)?;
             };
         };
         if !self.packed_int64.is_empty() {
-            try!(os.write_tag(91, ::protobuf::wire_format::WireTypeLengthDelimited));
+            os.write_tag(91, ::protobuf::wire_format::WireTypeLengthDelimited)?;
             // TODO: Data size is computed again, it should be cached
-            try!(os.write_raw_varint32(::protobuf::rt::vec_packed_varint_data_size(&self.packed_int64)));
-            for v in self.packed_int64.iter() {
-                try!(os.write_int64_no_tag(*v));
+            os.write_raw_varint32(::protobuf::rt::vec_packed_varint_data_size(&self.packed_int64))?;
+            for v in &self.packed_int64 {
+                os.write_int64_no_tag(*v)?;
             };
         };
         if !self.packed_uint32.is_empty() {
-            try!(os.write_tag(92, ::protobuf::wire_format::WireTypeLengthDelimited));
+            os.write_tag(92, ::protobuf::wire_format::WireTypeLengthDelimited)?;
             // TODO: Data size is computed again, it should be cached
-            try!(os.write_raw_varint32(::protobuf::rt::vec_packed_varint_data_size(&self.packed_uint32)));
-            for v in self.packed_uint32.iter() {
-                try!(os.write_uint32_no_tag(*v));
+            os.write_raw_varint32(::protobuf::rt::vec_packed_varint_data_size(&self.packed_uint32))?;
+            for v in &self.packed_uint32 {
+                os.write_uint32_no_tag(*v)?;
             };
         };
         if !self.packed_uint64.is_empty() {
-            try!(os.write_tag(93, ::protobuf::wire_format::WireTypeLengthDelimited));
+            os.write_tag(93, ::protobuf::wire_format::WireTypeLengthDelimited)?;
             // TODO: Data size is computed again, it should be cached
-            try!(os.write_raw_varint32(::protobuf::rt::vec_packed_varint_data_size(&self.packed_uint64)));
-            for v in self.packed_uint64.iter() {
-                try!(os.write_uint64_no_tag(*v));
+            os.write_raw_varint32(::protobuf::rt::vec_packed_varint_data_size(&self.packed_uint64))?;
+            for v in &self.packed_uint64 {
+                os.write_uint64_no_tag(*v)?;
             };
         };
         if !self.packed_sint32.is_empty() {
-            try!(os.write_tag(94, ::protobuf::wire_format::WireTypeLengthDelimited));
+            os.write_tag(94, ::protobuf::wire_format::WireTypeLengthDelimited)?;
             // TODO: Data size is computed again, it should be cached
-            try!(os.write_raw_varint32(::protobuf::rt::vec_packed_varint_zigzag_data_size(&self.packed_sint32)));
-            for v in self.packed_sint32.iter() {
-                try!(os.write_sint32_no_tag(*v));
+            os.write_raw_varint32(::protobuf::rt::vec_packed_varint_zigzag_data_size(&self.packed_sint32))?;
+            for v in &self.packed_sint32 {
+                os.write_sint32_no_tag(*v)?;
             };
         };
         if !self.packed_sint64.is_empty() {
-            try!(os.write_tag(95, ::protobuf::wire_format::WireTypeLengthDelimited));
+            os.write_tag(95, ::protobuf::wire_format::WireTypeLengthDelimited)?;
             // TODO: Data size is computed again, it should be cached
-            try!(os.write_raw_varint32(::protobuf::rt::vec_packed_varint_zigzag_data_size(&self.packed_sint64)));
-            for v in self.packed_sint64.iter() {
-                try!(os.write_sint64_no_tag(*v));
+            os.write_raw_varint32(::protobuf::rt::vec_packed_varint_zigzag_data_size(&self.packed_sint64))?;
+            for v in &self.packed_sint64 {
+                os.write_sint64_no_tag(*v)?;
             };
         };
         if !self.packed_fixed32.is_empty() {
-            try!(os.write_tag(96, ::protobuf::wire_format::WireTypeLengthDelimited));
+            os.write_tag(96, ::protobuf::wire_format::WireTypeLengthDelimited)?;
             // TODO: Data size is computed again, it should be cached
-            try!(os.write_raw_varint32((self.packed_fixed32.len() * 4) as u32));
-            for v in self.packed_fixed32.iter() {
-                try!(os.write_fixed32_no_tag(*v));
+            os.write_raw_varint32((self.packed_fixed32.len() * 4) as u32)?;
+            for v in &self.packed_fixed32 {
+                os.write_fixed32_no_tag(*v)?;
             };
         };
         if !self.packed_fixed64.is_empty() {
-            try!(os.write_tag(97, ::protobuf::wire_format::WireTypeLengthDelimited));
+            os.write_tag(97, ::protobuf::wire_format::WireTypeLengthDelimited)?;
             // TODO: Data size is computed again, it should be cached
-            try!(os.write_raw_varint32((self.packed_fixed64.len() * 8) as u32));
-            for v in self.packed_fixed64.iter() {
-                try!(os.write_fixed64_no_tag(*v));
+            os.write_raw_varint32((self.packed_fixed64.len() * 8) as u32)?;
+            for v in &self.packed_fixed64 {
+                os.write_fixed64_no_tag(*v)?;
             };
         };
         if !self.packed_sfixed32.is_empty() {
-            try!(os.write_tag(98, ::protobuf::wire_format::WireTypeLengthDelimited));
+            os.write_tag(98, ::protobuf::wire_format::WireTypeLengthDelimited)?;
             // TODO: Data size is computed again, it should be cached
-            try!(os.write_raw_varint32((self.packed_sfixed32.len() * 4) as u32));
-            for v in self.packed_sfixed32.iter() {
-                try!(os.write_sfixed32_no_tag(*v));
+            os.write_raw_varint32((self.packed_sfixed32.len() * 4) as u32)?;
+            for v in &self.packed_sfixed32 {
+                os.write_sfixed32_no_tag(*v)?;
             };
         };
         if !self.packed_sfixed64.is_empty() {
-            try!(os.write_tag(99, ::protobuf::wire_format::WireTypeLengthDelimited));
+            os.write_tag(99, ::protobuf::wire_format::WireTypeLengthDelimited)?;
             // TODO: Data size is computed again, it should be cached
-            try!(os.write_raw_varint32((self.packed_sfixed64.len() * 8) as u32));
-            for v in self.packed_sfixed64.iter() {
-                try!(os.write_sfixed64_no_tag(*v));
+            os.write_raw_varint32((self.packed_sfixed64.len() * 8) as u32)?;
+            for v in &self.packed_sfixed64 {
+                os.write_sfixed64_no_tag(*v)?;
             };
         };
         if !self.packed_float.is_empty() {
-            try!(os.write_tag(100, ::protobuf::wire_format::WireTypeLengthDelimited));
+            os.write_tag(100, ::protobuf::wire_format::WireTypeLengthDelimited)?;
             // TODO: Data size is computed again, it should be cached
-            try!(os.write_raw_varint32((self.packed_float.len() * 4) as u32));
-            for v in self.packed_float.iter() {
-                try!(os.write_float_no_tag(*v));
+            os.write_raw_varint32((self.packed_float.len() * 4) as u32)?;
+            for v in &self.packed_float {
+                os.write_float_no_tag(*v)?;
             };
         };
         if !self.packed_double.is_empty() {
-            try!(os.write_tag(101, ::protobuf::wire_format::WireTypeLengthDelimited));
+            os.write_tag(101, ::protobuf::wire_format::WireTypeLengthDelimited)?;
             // TODO: Data size is computed again, it should be cached
-            try!(os.write_raw_varint32((self.packed_double.len() * 8) as u32));
-            for v in self.packed_double.iter() {
-                try!(os.write_double_no_tag(*v));
+            os.write_raw_varint32((self.packed_double.len() * 8) as u32)?;
+            for v in &self.packed_double {
+                os.write_double_no_tag(*v)?;
             };
         };
         if !self.packed_bool.is_empty() {
-            try!(os.write_tag(102, ::protobuf::wire_format::WireTypeLengthDelimited));
+            os.write_tag(102, ::protobuf::wire_format::WireTypeLengthDelimited)?;
             // TODO: Data size is computed again, it should be cached
-            try!(os.write_raw_varint32((self.packed_bool.len() * 1) as u32));
-            for v in self.packed_bool.iter() {
-                try!(os.write_bool_no_tag(*v));
+            os.write_raw_varint32((self.packed_bool.len() * 1) as u32)?;
+            for v in &self.packed_bool {
+                os.write_bool_no_tag(*v)?;
             };
         };
         if !self.packed_enum.is_empty() {
-            try!(os.write_tag(103, ::protobuf::wire_format::WireTypeLengthDelimited));
+            os.write_tag(103, ::protobuf::wire_format::WireTypeLengthDelimited)?;
             // TODO: Data size is computed again, it should be cached
-            try!(os.write_raw_varint32(::protobuf::rt::vec_packed_enum_data_size(&self.packed_enum)));
-            for v in self.packed_enum.iter() {
-                try!(os.write_enum_no_tag(v.value()));
+            os.write_raw_varint32(::protobuf::rt::vec_packed_enum_data_size(&self.packed_enum))?;
+            for v in &self.packed_enum {
+                os.write_enum_no_tag(v.value())?;
             };
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -15611,12 +16692,14 @@ impl ::protobuf::Message for TestPackedTypes {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestPackedTypes>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -15637,61 +16720,75 @@ impl ::protobuf::MessageStatic for TestPackedTypes {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_repeated_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "packed_int32",
-                    TestPackedTypes::get_packed_int32,
+                    TestPackedTypes::get_packed_int32_for_reflect,
+                    TestPackedTypes::mut_packed_int32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_i64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeInt64>(
                     "packed_int64",
-                    TestPackedTypes::get_packed_int64,
+                    TestPackedTypes::get_packed_int64_for_reflect,
+                    TestPackedTypes::mut_packed_int64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_u32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeUint32>(
                     "packed_uint32",
-                    TestPackedTypes::get_packed_uint32,
+                    TestPackedTypes::get_packed_uint32_for_reflect,
+                    TestPackedTypes::mut_packed_uint32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_u64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeUint64>(
                     "packed_uint64",
-                    TestPackedTypes::get_packed_uint64,
+                    TestPackedTypes::get_packed_uint64_for_reflect,
+                    TestPackedTypes::mut_packed_uint64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeSint32>(
                     "packed_sint32",
-                    TestPackedTypes::get_packed_sint32,
+                    TestPackedTypes::get_packed_sint32_for_reflect,
+                    TestPackedTypes::mut_packed_sint32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_i64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeSint64>(
                     "packed_sint64",
-                    TestPackedTypes::get_packed_sint64,
+                    TestPackedTypes::get_packed_sint64_for_reflect,
+                    TestPackedTypes::mut_packed_sint64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_u32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeFixed32>(
                     "packed_fixed32",
-                    TestPackedTypes::get_packed_fixed32,
+                    TestPackedTypes::get_packed_fixed32_for_reflect,
+                    TestPackedTypes::mut_packed_fixed32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_u64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeFixed64>(
                     "packed_fixed64",
-                    TestPackedTypes::get_packed_fixed64,
+                    TestPackedTypes::get_packed_fixed64_for_reflect,
+                    TestPackedTypes::mut_packed_fixed64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeSfixed32>(
                     "packed_sfixed32",
-                    TestPackedTypes::get_packed_sfixed32,
+                    TestPackedTypes::get_packed_sfixed32_for_reflect,
+                    TestPackedTypes::mut_packed_sfixed32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_i64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeSfixed64>(
                     "packed_sfixed64",
-                    TestPackedTypes::get_packed_sfixed64,
+                    TestPackedTypes::get_packed_sfixed64_for_reflect,
+                    TestPackedTypes::mut_packed_sfixed64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_f32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeFloat>(
                     "packed_float",
-                    TestPackedTypes::get_packed_float,
+                    TestPackedTypes::get_packed_float_for_reflect,
+                    TestPackedTypes::mut_packed_float_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_f64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeDouble>(
                     "packed_double",
-                    TestPackedTypes::get_packed_double,
+                    TestPackedTypes::get_packed_double_for_reflect,
+                    TestPackedTypes::mut_packed_double_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_bool_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeBool>(
                     "packed_bool",
-                    TestPackedTypes::get_packed_bool,
+                    TestPackedTypes::get_packed_bool_for_reflect,
+                    TestPackedTypes::mut_packed_bool_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_enum_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeEnum<ForeignEnum>>(
                     "packed_enum",
-                    TestPackedTypes::get_packed_enum,
+                    TestPackedTypes::get_packed_enum_for_reflect,
+                    TestPackedTypes::mut_packed_enum_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestPackedTypes>(
                     "TestPackedTypes",
@@ -15723,33 +16820,19 @@ impl ::protobuf::Clear for TestPackedTypes {
     }
 }
 
-impl ::std::cmp::PartialEq for TestPackedTypes {
-    fn eq(&self, other: &TestPackedTypes) -> bool {
-        self.packed_int32 == other.packed_int32 &&
-        self.packed_int64 == other.packed_int64 &&
-        self.packed_uint32 == other.packed_uint32 &&
-        self.packed_uint64 == other.packed_uint64 &&
-        self.packed_sint32 == other.packed_sint32 &&
-        self.packed_sint64 == other.packed_sint64 &&
-        self.packed_fixed32 == other.packed_fixed32 &&
-        self.packed_fixed64 == other.packed_fixed64 &&
-        self.packed_sfixed32 == other.packed_sfixed32 &&
-        self.packed_sfixed64 == other.packed_sfixed64 &&
-        self.packed_float == other.packed_float &&
-        self.packed_double == other.packed_double &&
-        self.packed_bool == other.packed_bool &&
-        self.packed_enum == other.packed_enum &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestPackedTypes {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestPackedTypes {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestUnpackedTypes {
     // message fields
     unpacked_int32: ::std::vec::Vec<i32>,
@@ -15768,7 +16851,7 @@ pub struct TestUnpackedTypes {
     unpacked_enum: ::std::vec::Vec<ForeignEnum>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -15785,26 +16868,7 @@ impl TestUnpackedTypes {
             ptr: 0 as *const TestUnpackedTypes,
         };
         unsafe {
-            instance.get(|| {
-                TestUnpackedTypes {
-                    unpacked_int32: ::std::vec::Vec::new(),
-                    unpacked_int64: ::std::vec::Vec::new(),
-                    unpacked_uint32: ::std::vec::Vec::new(),
-                    unpacked_uint64: ::std::vec::Vec::new(),
-                    unpacked_sint32: ::std::vec::Vec::new(),
-                    unpacked_sint64: ::std::vec::Vec::new(),
-                    unpacked_fixed32: ::std::vec::Vec::new(),
-                    unpacked_fixed64: ::std::vec::Vec::new(),
-                    unpacked_sfixed32: ::std::vec::Vec::new(),
-                    unpacked_sfixed64: ::std::vec::Vec::new(),
-                    unpacked_float: ::std::vec::Vec::new(),
-                    unpacked_double: ::std::vec::Vec::new(),
-                    unpacked_bool: ::std::vec::Vec::new(),
-                    unpacked_enum: ::std::vec::Vec::new(),
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestUnpackedTypes::new)
         }
     }
 
@@ -15833,6 +16897,14 @@ impl TestUnpackedTypes {
         &self.unpacked_int32
     }
 
+    fn get_unpacked_int32_for_reflect(&self) -> &::std::vec::Vec<i32> {
+        &self.unpacked_int32
+    }
+
+    fn mut_unpacked_int32_for_reflect(&mut self) -> &mut ::std::vec::Vec<i32> {
+        &mut self.unpacked_int32
+    }
+
     // repeated int64 unpacked_int64 = 91;
 
     pub fn clear_unpacked_int64(&mut self) {
@@ -15856,6 +16928,14 @@ impl TestUnpackedTypes {
 
     pub fn get_unpacked_int64(&self) -> &[i64] {
         &self.unpacked_int64
+    }
+
+    fn get_unpacked_int64_for_reflect(&self) -> &::std::vec::Vec<i64> {
+        &self.unpacked_int64
+    }
+
+    fn mut_unpacked_int64_for_reflect(&mut self) -> &mut ::std::vec::Vec<i64> {
+        &mut self.unpacked_int64
     }
 
     // repeated uint32 unpacked_uint32 = 92;
@@ -15883,6 +16963,14 @@ impl TestUnpackedTypes {
         &self.unpacked_uint32
     }
 
+    fn get_unpacked_uint32_for_reflect(&self) -> &::std::vec::Vec<u32> {
+        &self.unpacked_uint32
+    }
+
+    fn mut_unpacked_uint32_for_reflect(&mut self) -> &mut ::std::vec::Vec<u32> {
+        &mut self.unpacked_uint32
+    }
+
     // repeated uint64 unpacked_uint64 = 93;
 
     pub fn clear_unpacked_uint64(&mut self) {
@@ -15906,6 +16994,14 @@ impl TestUnpackedTypes {
 
     pub fn get_unpacked_uint64(&self) -> &[u64] {
         &self.unpacked_uint64
+    }
+
+    fn get_unpacked_uint64_for_reflect(&self) -> &::std::vec::Vec<u64> {
+        &self.unpacked_uint64
+    }
+
+    fn mut_unpacked_uint64_for_reflect(&mut self) -> &mut ::std::vec::Vec<u64> {
+        &mut self.unpacked_uint64
     }
 
     // repeated sint32 unpacked_sint32 = 94;
@@ -15933,6 +17029,14 @@ impl TestUnpackedTypes {
         &self.unpacked_sint32
     }
 
+    fn get_unpacked_sint32_for_reflect(&self) -> &::std::vec::Vec<i32> {
+        &self.unpacked_sint32
+    }
+
+    fn mut_unpacked_sint32_for_reflect(&mut self) -> &mut ::std::vec::Vec<i32> {
+        &mut self.unpacked_sint32
+    }
+
     // repeated sint64 unpacked_sint64 = 95;
 
     pub fn clear_unpacked_sint64(&mut self) {
@@ -15956,6 +17060,14 @@ impl TestUnpackedTypes {
 
     pub fn get_unpacked_sint64(&self) -> &[i64] {
         &self.unpacked_sint64
+    }
+
+    fn get_unpacked_sint64_for_reflect(&self) -> &::std::vec::Vec<i64> {
+        &self.unpacked_sint64
+    }
+
+    fn mut_unpacked_sint64_for_reflect(&mut self) -> &mut ::std::vec::Vec<i64> {
+        &mut self.unpacked_sint64
     }
 
     // repeated fixed32 unpacked_fixed32 = 96;
@@ -15983,6 +17095,14 @@ impl TestUnpackedTypes {
         &self.unpacked_fixed32
     }
 
+    fn get_unpacked_fixed32_for_reflect(&self) -> &::std::vec::Vec<u32> {
+        &self.unpacked_fixed32
+    }
+
+    fn mut_unpacked_fixed32_for_reflect(&mut self) -> &mut ::std::vec::Vec<u32> {
+        &mut self.unpacked_fixed32
+    }
+
     // repeated fixed64 unpacked_fixed64 = 97;
 
     pub fn clear_unpacked_fixed64(&mut self) {
@@ -16006,6 +17126,14 @@ impl TestUnpackedTypes {
 
     pub fn get_unpacked_fixed64(&self) -> &[u64] {
         &self.unpacked_fixed64
+    }
+
+    fn get_unpacked_fixed64_for_reflect(&self) -> &::std::vec::Vec<u64> {
+        &self.unpacked_fixed64
+    }
+
+    fn mut_unpacked_fixed64_for_reflect(&mut self) -> &mut ::std::vec::Vec<u64> {
+        &mut self.unpacked_fixed64
     }
 
     // repeated sfixed32 unpacked_sfixed32 = 98;
@@ -16033,6 +17161,14 @@ impl TestUnpackedTypes {
         &self.unpacked_sfixed32
     }
 
+    fn get_unpacked_sfixed32_for_reflect(&self) -> &::std::vec::Vec<i32> {
+        &self.unpacked_sfixed32
+    }
+
+    fn mut_unpacked_sfixed32_for_reflect(&mut self) -> &mut ::std::vec::Vec<i32> {
+        &mut self.unpacked_sfixed32
+    }
+
     // repeated sfixed64 unpacked_sfixed64 = 99;
 
     pub fn clear_unpacked_sfixed64(&mut self) {
@@ -16056,6 +17192,14 @@ impl TestUnpackedTypes {
 
     pub fn get_unpacked_sfixed64(&self) -> &[i64] {
         &self.unpacked_sfixed64
+    }
+
+    fn get_unpacked_sfixed64_for_reflect(&self) -> &::std::vec::Vec<i64> {
+        &self.unpacked_sfixed64
+    }
+
+    fn mut_unpacked_sfixed64_for_reflect(&mut self) -> &mut ::std::vec::Vec<i64> {
+        &mut self.unpacked_sfixed64
     }
 
     // repeated float unpacked_float = 100;
@@ -16083,6 +17227,14 @@ impl TestUnpackedTypes {
         &self.unpacked_float
     }
 
+    fn get_unpacked_float_for_reflect(&self) -> &::std::vec::Vec<f32> {
+        &self.unpacked_float
+    }
+
+    fn mut_unpacked_float_for_reflect(&mut self) -> &mut ::std::vec::Vec<f32> {
+        &mut self.unpacked_float
+    }
+
     // repeated double unpacked_double = 101;
 
     pub fn clear_unpacked_double(&mut self) {
@@ -16106,6 +17258,14 @@ impl TestUnpackedTypes {
 
     pub fn get_unpacked_double(&self) -> &[f64] {
         &self.unpacked_double
+    }
+
+    fn get_unpacked_double_for_reflect(&self) -> &::std::vec::Vec<f64> {
+        &self.unpacked_double
+    }
+
+    fn mut_unpacked_double_for_reflect(&mut self) -> &mut ::std::vec::Vec<f64> {
+        &mut self.unpacked_double
     }
 
     // repeated bool unpacked_bool = 102;
@@ -16133,6 +17293,14 @@ impl TestUnpackedTypes {
         &self.unpacked_bool
     }
 
+    fn get_unpacked_bool_for_reflect(&self) -> &::std::vec::Vec<bool> {
+        &self.unpacked_bool
+    }
+
+    fn mut_unpacked_bool_for_reflect(&mut self) -> &mut ::std::vec::Vec<bool> {
+        &mut self.unpacked_bool
+    }
+
     // repeated .protobuf_unittest.ForeignEnum unpacked_enum = 103;
 
     pub fn clear_unpacked_enum(&mut self) {
@@ -16157,6 +17325,14 @@ impl TestUnpackedTypes {
     pub fn get_unpacked_enum(&self) -> &[ForeignEnum] {
         &self.unpacked_enum
     }
+
+    fn get_unpacked_enum_for_reflect(&self) -> &::std::vec::Vec<ForeignEnum> {
+        &self.unpacked_enum
+    }
+
+    fn mut_unpacked_enum_for_reflect(&mut self) -> &mut ::std::vec::Vec<ForeignEnum> {
+        &mut self.unpacked_enum
+    }
 }
 
 impl ::protobuf::Message for TestUnpackedTypes {
@@ -16165,53 +17341,53 @@ impl ::protobuf::Message for TestUnpackedTypes {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 90 => {
-                    try!(::protobuf::rt::read_repeated_int32_into(wire_type, is, &mut self.unpacked_int32));
+                    ::protobuf::rt::read_repeated_int32_into(wire_type, is, &mut self.unpacked_int32)?;
                 },
                 91 => {
-                    try!(::protobuf::rt::read_repeated_int64_into(wire_type, is, &mut self.unpacked_int64));
+                    ::protobuf::rt::read_repeated_int64_into(wire_type, is, &mut self.unpacked_int64)?;
                 },
                 92 => {
-                    try!(::protobuf::rt::read_repeated_uint32_into(wire_type, is, &mut self.unpacked_uint32));
+                    ::protobuf::rt::read_repeated_uint32_into(wire_type, is, &mut self.unpacked_uint32)?;
                 },
                 93 => {
-                    try!(::protobuf::rt::read_repeated_uint64_into(wire_type, is, &mut self.unpacked_uint64));
+                    ::protobuf::rt::read_repeated_uint64_into(wire_type, is, &mut self.unpacked_uint64)?;
                 },
                 94 => {
-                    try!(::protobuf::rt::read_repeated_sint32_into(wire_type, is, &mut self.unpacked_sint32));
+                    ::protobuf::rt::read_repeated_sint32_into(wire_type, is, &mut self.unpacked_sint32)?;
                 },
                 95 => {
-                    try!(::protobuf::rt::read_repeated_sint64_into(wire_type, is, &mut self.unpacked_sint64));
+                    ::protobuf::rt::read_repeated_sint64_into(wire_type, is, &mut self.unpacked_sint64)?;
                 },
                 96 => {
-                    try!(::protobuf::rt::read_repeated_fixed32_into(wire_type, is, &mut self.unpacked_fixed32));
+                    ::protobuf::rt::read_repeated_fixed32_into(wire_type, is, &mut self.unpacked_fixed32)?;
                 },
                 97 => {
-                    try!(::protobuf::rt::read_repeated_fixed64_into(wire_type, is, &mut self.unpacked_fixed64));
+                    ::protobuf::rt::read_repeated_fixed64_into(wire_type, is, &mut self.unpacked_fixed64)?;
                 },
                 98 => {
-                    try!(::protobuf::rt::read_repeated_sfixed32_into(wire_type, is, &mut self.unpacked_sfixed32));
+                    ::protobuf::rt::read_repeated_sfixed32_into(wire_type, is, &mut self.unpacked_sfixed32)?;
                 },
                 99 => {
-                    try!(::protobuf::rt::read_repeated_sfixed64_into(wire_type, is, &mut self.unpacked_sfixed64));
+                    ::protobuf::rt::read_repeated_sfixed64_into(wire_type, is, &mut self.unpacked_sfixed64)?;
                 },
                 100 => {
-                    try!(::protobuf::rt::read_repeated_float_into(wire_type, is, &mut self.unpacked_float));
+                    ::protobuf::rt::read_repeated_float_into(wire_type, is, &mut self.unpacked_float)?;
                 },
                 101 => {
-                    try!(::protobuf::rt::read_repeated_double_into(wire_type, is, &mut self.unpacked_double));
+                    ::protobuf::rt::read_repeated_double_into(wire_type, is, &mut self.unpacked_double)?;
                 },
                 102 => {
-                    try!(::protobuf::rt::read_repeated_bool_into(wire_type, is, &mut self.unpacked_bool));
+                    ::protobuf::rt::read_repeated_bool_into(wire_type, is, &mut self.unpacked_bool)?;
                 },
                 103 => {
-                    try!(::protobuf::rt::read_repeated_enum_into(wire_type, is, &mut self.unpacked_enum));
+                    ::protobuf::rt::read_repeated_enum_into(wire_type, is, &mut self.unpacked_enum)?;
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -16222,23 +17398,23 @@ impl ::protobuf::Message for TestUnpackedTypes {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.unpacked_int32.iter() {
+        for value in &self.unpacked_int32 {
             my_size += ::protobuf::rt::value_size(90, *value, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.unpacked_int64.iter() {
+        for value in &self.unpacked_int64 {
             my_size += ::protobuf::rt::value_size(91, *value, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.unpacked_uint32.iter() {
+        for value in &self.unpacked_uint32 {
             my_size += ::protobuf::rt::value_size(92, *value, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.unpacked_uint64.iter() {
+        for value in &self.unpacked_uint64 {
             my_size += ::protobuf::rt::value_size(93, *value, ::protobuf::wire_format::WireTypeVarint);
         };
-        for value in self.unpacked_sint32.iter() {
-            my_size += ::protobuf::rt::value_size(94, *value, ::protobuf::wire_format::WireTypeVarint);
+        for value in &self.unpacked_sint32 {
+            my_size += ::protobuf::rt::value_varint_zigzag_size(94, *value);
         };
-        for value in self.unpacked_sint64.iter() {
-            my_size += ::protobuf::rt::value_size(95, *value, ::protobuf::wire_format::WireTypeVarint);
+        for value in &self.unpacked_sint64 {
+            my_size += ::protobuf::rt::value_varint_zigzag_size(95, *value);
         };
         my_size += 6 * self.unpacked_fixed32.len() as u32;
         my_size += 10 * self.unpacked_fixed64.len() as u32;
@@ -16247,7 +17423,7 @@ impl ::protobuf::Message for TestUnpackedTypes {
         my_size += 6 * self.unpacked_float.len() as u32;
         my_size += 10 * self.unpacked_double.len() as u32;
         my_size += 3 * self.unpacked_bool.len() as u32;
-        for value in self.unpacked_enum.iter() {
+        for value in &self.unpacked_enum {
             my_size += ::protobuf::rt::enum_size(103, *value);
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
@@ -16256,49 +17432,49 @@ impl ::protobuf::Message for TestUnpackedTypes {
     }
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        for v in self.unpacked_int32.iter() {
-            try!(os.write_int32(90, *v));
+        for v in &self.unpacked_int32 {
+            os.write_int32(90, *v)?;
         };
-        for v in self.unpacked_int64.iter() {
-            try!(os.write_int64(91, *v));
+        for v in &self.unpacked_int64 {
+            os.write_int64(91, *v)?;
         };
-        for v in self.unpacked_uint32.iter() {
-            try!(os.write_uint32(92, *v));
+        for v in &self.unpacked_uint32 {
+            os.write_uint32(92, *v)?;
         };
-        for v in self.unpacked_uint64.iter() {
-            try!(os.write_uint64(93, *v));
+        for v in &self.unpacked_uint64 {
+            os.write_uint64(93, *v)?;
         };
-        for v in self.unpacked_sint32.iter() {
-            try!(os.write_sint32(94, *v));
+        for v in &self.unpacked_sint32 {
+            os.write_sint32(94, *v)?;
         };
-        for v in self.unpacked_sint64.iter() {
-            try!(os.write_sint64(95, *v));
+        for v in &self.unpacked_sint64 {
+            os.write_sint64(95, *v)?;
         };
-        for v in self.unpacked_fixed32.iter() {
-            try!(os.write_fixed32(96, *v));
+        for v in &self.unpacked_fixed32 {
+            os.write_fixed32(96, *v)?;
         };
-        for v in self.unpacked_fixed64.iter() {
-            try!(os.write_fixed64(97, *v));
+        for v in &self.unpacked_fixed64 {
+            os.write_fixed64(97, *v)?;
         };
-        for v in self.unpacked_sfixed32.iter() {
-            try!(os.write_sfixed32(98, *v));
+        for v in &self.unpacked_sfixed32 {
+            os.write_sfixed32(98, *v)?;
         };
-        for v in self.unpacked_sfixed64.iter() {
-            try!(os.write_sfixed64(99, *v));
+        for v in &self.unpacked_sfixed64 {
+            os.write_sfixed64(99, *v)?;
         };
-        for v in self.unpacked_float.iter() {
-            try!(os.write_float(100, *v));
+        for v in &self.unpacked_float {
+            os.write_float(100, *v)?;
         };
-        for v in self.unpacked_double.iter() {
-            try!(os.write_double(101, *v));
+        for v in &self.unpacked_double {
+            os.write_double(101, *v)?;
         };
-        for v in self.unpacked_bool.iter() {
-            try!(os.write_bool(102, *v));
+        for v in &self.unpacked_bool {
+            os.write_bool(102, *v)?;
         };
-        for v in self.unpacked_enum.iter() {
-            try!(os.write_enum(103, v.value()));
+        for v in &self.unpacked_enum {
+            os.write_enum(103, v.value())?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -16314,12 +17490,14 @@ impl ::protobuf::Message for TestUnpackedTypes {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestUnpackedTypes>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -16340,61 +17518,75 @@ impl ::protobuf::MessageStatic for TestUnpackedTypes {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_repeated_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "unpacked_int32",
-                    TestUnpackedTypes::get_unpacked_int32,
+                    TestUnpackedTypes::get_unpacked_int32_for_reflect,
+                    TestUnpackedTypes::mut_unpacked_int32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_i64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeInt64>(
                     "unpacked_int64",
-                    TestUnpackedTypes::get_unpacked_int64,
+                    TestUnpackedTypes::get_unpacked_int64_for_reflect,
+                    TestUnpackedTypes::mut_unpacked_int64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_u32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeUint32>(
                     "unpacked_uint32",
-                    TestUnpackedTypes::get_unpacked_uint32,
+                    TestUnpackedTypes::get_unpacked_uint32_for_reflect,
+                    TestUnpackedTypes::mut_unpacked_uint32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_u64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeUint64>(
                     "unpacked_uint64",
-                    TestUnpackedTypes::get_unpacked_uint64,
+                    TestUnpackedTypes::get_unpacked_uint64_for_reflect,
+                    TestUnpackedTypes::mut_unpacked_uint64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeSint32>(
                     "unpacked_sint32",
-                    TestUnpackedTypes::get_unpacked_sint32,
+                    TestUnpackedTypes::get_unpacked_sint32_for_reflect,
+                    TestUnpackedTypes::mut_unpacked_sint32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_i64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeSint64>(
                     "unpacked_sint64",
-                    TestUnpackedTypes::get_unpacked_sint64,
+                    TestUnpackedTypes::get_unpacked_sint64_for_reflect,
+                    TestUnpackedTypes::mut_unpacked_sint64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_u32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeFixed32>(
                     "unpacked_fixed32",
-                    TestUnpackedTypes::get_unpacked_fixed32,
+                    TestUnpackedTypes::get_unpacked_fixed32_for_reflect,
+                    TestUnpackedTypes::mut_unpacked_fixed32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_u64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeFixed64>(
                     "unpacked_fixed64",
-                    TestUnpackedTypes::get_unpacked_fixed64,
+                    TestUnpackedTypes::get_unpacked_fixed64_for_reflect,
+                    TestUnpackedTypes::mut_unpacked_fixed64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeSfixed32>(
                     "unpacked_sfixed32",
-                    TestUnpackedTypes::get_unpacked_sfixed32,
+                    TestUnpackedTypes::get_unpacked_sfixed32_for_reflect,
+                    TestUnpackedTypes::mut_unpacked_sfixed32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_i64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeSfixed64>(
                     "unpacked_sfixed64",
-                    TestUnpackedTypes::get_unpacked_sfixed64,
+                    TestUnpackedTypes::get_unpacked_sfixed64_for_reflect,
+                    TestUnpackedTypes::mut_unpacked_sfixed64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_f32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeFloat>(
                     "unpacked_float",
-                    TestUnpackedTypes::get_unpacked_float,
+                    TestUnpackedTypes::get_unpacked_float_for_reflect,
+                    TestUnpackedTypes::mut_unpacked_float_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_f64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeDouble>(
                     "unpacked_double",
-                    TestUnpackedTypes::get_unpacked_double,
+                    TestUnpackedTypes::get_unpacked_double_for_reflect,
+                    TestUnpackedTypes::mut_unpacked_double_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_bool_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeBool>(
                     "unpacked_bool",
-                    TestUnpackedTypes::get_unpacked_bool,
+                    TestUnpackedTypes::get_unpacked_bool_for_reflect,
+                    TestUnpackedTypes::mut_unpacked_bool_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_enum_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeEnum<ForeignEnum>>(
                     "unpacked_enum",
-                    TestUnpackedTypes::get_unpacked_enum,
+                    TestUnpackedTypes::get_unpacked_enum_for_reflect,
+                    TestUnpackedTypes::mut_unpacked_enum_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestUnpackedTypes>(
                     "TestUnpackedTypes",
@@ -16426,37 +17618,23 @@ impl ::protobuf::Clear for TestUnpackedTypes {
     }
 }
 
-impl ::std::cmp::PartialEq for TestUnpackedTypes {
-    fn eq(&self, other: &TestUnpackedTypes) -> bool {
-        self.unpacked_int32 == other.unpacked_int32 &&
-        self.unpacked_int64 == other.unpacked_int64 &&
-        self.unpacked_uint32 == other.unpacked_uint32 &&
-        self.unpacked_uint64 == other.unpacked_uint64 &&
-        self.unpacked_sint32 == other.unpacked_sint32 &&
-        self.unpacked_sint64 == other.unpacked_sint64 &&
-        self.unpacked_fixed32 == other.unpacked_fixed32 &&
-        self.unpacked_fixed64 == other.unpacked_fixed64 &&
-        self.unpacked_sfixed32 == other.unpacked_sfixed32 &&
-        self.unpacked_sfixed64 == other.unpacked_sfixed64 &&
-        self.unpacked_float == other.unpacked_float &&
-        self.unpacked_double == other.unpacked_double &&
-        self.unpacked_bool == other.unpacked_bool &&
-        self.unpacked_enum == other.unpacked_enum &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestUnpackedTypes {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestUnpackedTypes {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestPackedExtensions {
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -16473,12 +17651,7 @@ impl TestPackedExtensions {
             ptr: 0 as *const TestPackedExtensions,
         };
         unsafe {
-            instance.get(|| {
-                TestPackedExtensions {
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestPackedExtensions::new)
         }
     }
 }
@@ -16489,11 +17662,11 @@ impl ::protobuf::Message for TestPackedExtensions {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -16510,7 +17683,7 @@ impl ::protobuf::Message for TestPackedExtensions {
     }
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -16526,12 +17699,14 @@ impl ::protobuf::Message for TestPackedExtensions {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestPackedExtensions>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -16568,23 +17743,23 @@ impl ::protobuf::Clear for TestPackedExtensions {
     }
 }
 
-impl ::std::cmp::PartialEq for TestPackedExtensions {
-    fn eq(&self, other: &TestPackedExtensions) -> bool {
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestPackedExtensions {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestPackedExtensions {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestUnpackedExtensions {
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -16601,12 +17776,7 @@ impl TestUnpackedExtensions {
             ptr: 0 as *const TestUnpackedExtensions,
         };
         unsafe {
-            instance.get(|| {
-                TestUnpackedExtensions {
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestUnpackedExtensions::new)
         }
     }
 }
@@ -16617,11 +17787,11 @@ impl ::protobuf::Message for TestUnpackedExtensions {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -16638,7 +17808,7 @@ impl ::protobuf::Message for TestUnpackedExtensions {
     }
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -16654,12 +17824,14 @@ impl ::protobuf::Message for TestUnpackedExtensions {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestUnpackedExtensions>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -16696,19 +17868,19 @@ impl ::protobuf::Clear for TestUnpackedExtensions {
     }
 }
 
-impl ::std::cmp::PartialEq for TestUnpackedExtensions {
-    fn eq(&self, other: &TestUnpackedExtensions) -> bool {
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestUnpackedExtensions {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestUnpackedExtensions {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestDynamicExtensions {
     // message fields
     scalar_extension: ::std::option::Option<u32>,
@@ -16720,7 +17892,7 @@ pub struct TestDynamicExtensions {
     packed_extension: ::std::vec::Vec<i32>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -16737,19 +17909,7 @@ impl TestDynamicExtensions {
             ptr: 0 as *const TestDynamicExtensions,
         };
         unsafe {
-            instance.get(|| {
-                TestDynamicExtensions {
-                    scalar_extension: ::std::option::Option::None,
-                    enum_extension: ::std::option::Option::None,
-                    dynamic_enum_extension: ::std::option::Option::None,
-                    message_extension: ::protobuf::SingularPtrField::none(),
-                    dynamic_message_extension: ::protobuf::SingularPtrField::none(),
-                    repeated_extension: ::protobuf::RepeatedField::new(),
-                    packed_extension: ::std::vec::Vec::new(),
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestDynamicExtensions::new)
         }
     }
 
@@ -16772,6 +17932,14 @@ impl TestDynamicExtensions {
         self.scalar_extension.unwrap_or(0)
     }
 
+    fn get_scalar_extension_for_reflect(&self) -> &::std::option::Option<u32> {
+        &self.scalar_extension
+    }
+
+    fn mut_scalar_extension_for_reflect(&mut self) -> &mut ::std::option::Option<u32> {
+        &mut self.scalar_extension
+    }
+
     // optional .protobuf_unittest.ForeignEnum enum_extension = 2001;
 
     pub fn clear_enum_extension(&mut self) {
@@ -16791,6 +17959,14 @@ impl TestDynamicExtensions {
         self.enum_extension.unwrap_or(ForeignEnum::FOREIGN_FOO)
     }
 
+    fn get_enum_extension_for_reflect(&self) -> &::std::option::Option<ForeignEnum> {
+        &self.enum_extension
+    }
+
+    fn mut_enum_extension_for_reflect(&mut self) -> &mut ::std::option::Option<ForeignEnum> {
+        &mut self.enum_extension
+    }
+
     // optional .protobuf_unittest.TestDynamicExtensions.DynamicEnumType dynamic_enum_extension = 2002;
 
     pub fn clear_dynamic_enum_extension(&mut self) {
@@ -16808,6 +17984,14 @@ impl TestDynamicExtensions {
 
     pub fn get_dynamic_enum_extension(&self) -> TestDynamicExtensions_DynamicEnumType {
         self.dynamic_enum_extension.unwrap_or(TestDynamicExtensions_DynamicEnumType::DYNAMIC_FOO)
+    }
+
+    fn get_dynamic_enum_extension_for_reflect(&self) -> &::std::option::Option<TestDynamicExtensions_DynamicEnumType> {
+        &self.dynamic_enum_extension
+    }
+
+    fn mut_dynamic_enum_extension_for_reflect(&mut self) -> &mut ::std::option::Option<TestDynamicExtensions_DynamicEnumType> {
+        &mut self.dynamic_enum_extension
     }
 
     // optional .protobuf_unittest.ForeignMessage message_extension = 2003;
@@ -16843,6 +18027,14 @@ impl TestDynamicExtensions {
         self.message_extension.as_ref().unwrap_or_else(|| ForeignMessage::default_instance())
     }
 
+    fn get_message_extension_for_reflect(&self) -> &::protobuf::SingularPtrField<ForeignMessage> {
+        &self.message_extension
+    }
+
+    fn mut_message_extension_for_reflect(&mut self) -> &mut ::protobuf::SingularPtrField<ForeignMessage> {
+        &mut self.message_extension
+    }
+
     // optional .protobuf_unittest.TestDynamicExtensions.DynamicMessageType dynamic_message_extension = 2004;
 
     pub fn clear_dynamic_message_extension(&mut self) {
@@ -16876,6 +18068,14 @@ impl TestDynamicExtensions {
         self.dynamic_message_extension.as_ref().unwrap_or_else(|| TestDynamicExtensions_DynamicMessageType::default_instance())
     }
 
+    fn get_dynamic_message_extension_for_reflect(&self) -> &::protobuf::SingularPtrField<TestDynamicExtensions_DynamicMessageType> {
+        &self.dynamic_message_extension
+    }
+
+    fn mut_dynamic_message_extension_for_reflect(&mut self) -> &mut ::protobuf::SingularPtrField<TestDynamicExtensions_DynamicMessageType> {
+        &mut self.dynamic_message_extension
+    }
+
     // repeated string repeated_extension = 2005;
 
     pub fn clear_repeated_extension(&mut self) {
@@ -16899,6 +18099,14 @@ impl TestDynamicExtensions {
 
     pub fn get_repeated_extension(&self) -> &[::std::string::String] {
         &self.repeated_extension
+    }
+
+    fn get_repeated_extension_for_reflect(&self) -> &::protobuf::RepeatedField<::std::string::String> {
+        &self.repeated_extension
+    }
+
+    fn mut_repeated_extension_for_reflect(&mut self) -> &mut ::protobuf::RepeatedField<::std::string::String> {
+        &mut self.repeated_extension
     }
 
     // repeated sint32 packed_extension = 2006;
@@ -16925,6 +18133,14 @@ impl TestDynamicExtensions {
     pub fn get_packed_extension(&self) -> &[i32] {
         &self.packed_extension
     }
+
+    fn get_packed_extension_for_reflect(&self) -> &::std::vec::Vec<i32> {
+        &self.packed_extension
+    }
+
+    fn mut_packed_extension_for_reflect(&mut self) -> &mut ::std::vec::Vec<i32> {
+        &mut self.packed_extension
+    }
 }
 
 impl ::protobuf::Message for TestDynamicExtensions {
@@ -16933,44 +18149,44 @@ impl ::protobuf::Message for TestDynamicExtensions {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 2000 => {
                     if wire_type != ::protobuf::wire_format::WireTypeFixed32 {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_fixed32());
+                    let tmp = is.read_fixed32()?;
                     self.scalar_extension = ::std::option::Option::Some(tmp);
                 },
                 2001 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_enum());
+                    let tmp = is.read_enum()?;
                     self.enum_extension = ::std::option::Option::Some(tmp);
                 },
                 2002 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_enum());
+                    let tmp = is.read_enum()?;
                     self.dynamic_enum_extension = ::std::option::Option::Some(tmp);
                 },
                 2003 => {
-                    try!(::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.message_extension));
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.message_extension)?;
                 },
                 2004 => {
-                    try!(::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.dynamic_message_extension));
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.dynamic_message_extension)?;
                 },
                 2005 => {
-                    try!(::protobuf::rt::read_repeated_string_into(wire_type, is, &mut self.repeated_extension));
+                    ::protobuf::rt::read_repeated_string_into(wire_type, is, &mut self.repeated_extension)?;
                 },
                 2006 => {
-                    try!(::protobuf::rt::read_repeated_sint32_into(wire_type, is, &mut self.packed_extension));
+                    ::protobuf::rt::read_repeated_sint32_into(wire_type, is, &mut self.packed_extension)?;
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -16981,24 +18197,24 @@ impl ::protobuf::Message for TestDynamicExtensions {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        if self.scalar_extension.is_some() {
+        if let Some(v) = self.scalar_extension {
             my_size += 6;
         };
-        for value in self.enum_extension.iter() {
-            my_size += ::protobuf::rt::enum_size(2001, *value);
+        if let Some(v) = self.enum_extension {
+            my_size += ::protobuf::rt::enum_size(2001, v);
         };
-        for value in self.dynamic_enum_extension.iter() {
-            my_size += ::protobuf::rt::enum_size(2002, *value);
+        if let Some(v) = self.dynamic_enum_extension {
+            my_size += ::protobuf::rt::enum_size(2002, v);
         };
-        for value in self.message_extension.iter() {
-            let len = value.compute_size();
+        if let Some(v) = self.message_extension.as_ref() {
+            let len = v.compute_size();
             my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
-        for value in self.dynamic_message_extension.iter() {
-            let len = value.compute_size();
+        if let Some(v) = self.dynamic_message_extension.as_ref() {
+            let len = v.compute_size();
             my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
-        for value in self.repeated_extension.iter() {
+        for value in &self.repeated_extension {
             my_size += ::protobuf::rt::string_size(2005, &value);
         };
         if !self.packed_extension.is_empty() {
@@ -17011,36 +18227,36 @@ impl ::protobuf::Message for TestDynamicExtensions {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.scalar_extension {
-            try!(os.write_fixed32(2000, v));
+            os.write_fixed32(2000, v)?;
         };
         if let Some(v) = self.enum_extension {
-            try!(os.write_enum(2001, v.value()));
+            os.write_enum(2001, v.value())?;
         };
         if let Some(v) = self.dynamic_enum_extension {
-            try!(os.write_enum(2002, v.value()));
+            os.write_enum(2002, v.value())?;
         };
         if let Some(v) = self.message_extension.as_ref() {
-            try!(os.write_tag(2003, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+            os.write_tag(2003, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
         if let Some(v) = self.dynamic_message_extension.as_ref() {
-            try!(os.write_tag(2004, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+            os.write_tag(2004, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
-        for v in self.repeated_extension.iter() {
-            try!(os.write_string(2005, &v));
+        for v in &self.repeated_extension {
+            os.write_string(2005, &v)?;
         };
         if !self.packed_extension.is_empty() {
-            try!(os.write_tag(2006, ::protobuf::wire_format::WireTypeLengthDelimited));
+            os.write_tag(2006, ::protobuf::wire_format::WireTypeLengthDelimited)?;
             // TODO: Data size is computed again, it should be cached
-            try!(os.write_raw_varint32(::protobuf::rt::vec_packed_varint_zigzag_data_size(&self.packed_extension)));
-            for v in self.packed_extension.iter() {
-                try!(os.write_sint32_no_tag(*v));
+            os.write_raw_varint32(::protobuf::rt::vec_packed_varint_zigzag_data_size(&self.packed_extension))?;
+            for v in &self.packed_extension {
+                os.write_sint32_no_tag(*v)?;
             };
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -17056,12 +18272,14 @@ impl ::protobuf::Message for TestDynamicExtensions {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestDynamicExtensions>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -17082,38 +18300,40 @@ impl ::protobuf::MessageStatic for TestDynamicExtensions {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_u32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeFixed32>(
                     "scalar_extension",
-                    TestDynamicExtensions::has_scalar_extension,
-                    TestDynamicExtensions::get_scalar_extension,
+                    TestDynamicExtensions::get_scalar_extension_for_reflect,
+                    TestDynamicExtensions::mut_scalar_extension_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_enum_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeEnum<ForeignEnum>>(
                     "enum_extension",
-                    TestDynamicExtensions::has_enum_extension,
-                    TestDynamicExtensions::get_enum_extension,
+                    TestDynamicExtensions::get_enum_extension_for_reflect,
+                    TestDynamicExtensions::mut_enum_extension_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_enum_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeEnum<TestDynamicExtensions_DynamicEnumType>>(
                     "dynamic_enum_extension",
-                    TestDynamicExtensions::has_dynamic_enum_extension,
-                    TestDynamicExtensions::get_dynamic_enum_extension,
+                    TestDynamicExtensions::get_dynamic_enum_extension_for_reflect,
+                    TestDynamicExtensions::mut_dynamic_enum_extension_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<ForeignMessage>>(
                     "message_extension",
-                    TestDynamicExtensions::has_message_extension,
-                    TestDynamicExtensions::get_message_extension,
+                    TestDynamicExtensions::get_message_extension_for_reflect,
+                    TestDynamicExtensions::mut_message_extension_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<TestDynamicExtensions_DynamicMessageType>>(
                     "dynamic_message_extension",
-                    TestDynamicExtensions::has_dynamic_message_extension,
-                    TestDynamicExtensions::get_dynamic_message_extension,
+                    TestDynamicExtensions::get_dynamic_message_extension_for_reflect,
+                    TestDynamicExtensions::mut_dynamic_message_extension_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "repeated_extension",
-                    TestDynamicExtensions::get_repeated_extension,
+                    TestDynamicExtensions::get_repeated_extension_for_reflect,
+                    TestDynamicExtensions::mut_repeated_extension_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeSint32>(
                     "packed_extension",
-                    TestDynamicExtensions::get_packed_extension,
+                    TestDynamicExtensions::get_packed_extension_for_reflect,
+                    TestDynamicExtensions::mut_packed_extension_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestDynamicExtensions>(
                     "TestDynamicExtensions",
@@ -17138,32 +18358,25 @@ impl ::protobuf::Clear for TestDynamicExtensions {
     }
 }
 
-impl ::std::cmp::PartialEq for TestDynamicExtensions {
-    fn eq(&self, other: &TestDynamicExtensions) -> bool {
-        self.scalar_extension == other.scalar_extension &&
-        self.enum_extension == other.enum_extension &&
-        self.dynamic_enum_extension == other.dynamic_enum_extension &&
-        self.message_extension == other.message_extension &&
-        self.dynamic_message_extension == other.dynamic_message_extension &&
-        self.repeated_extension == other.repeated_extension &&
-        self.packed_extension == other.packed_extension &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestDynamicExtensions {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestDynamicExtensions {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestDynamicExtensions_DynamicMessageType {
     // message fields
     dynamic_field: ::std::option::Option<i32>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -17180,13 +18393,7 @@ impl TestDynamicExtensions_DynamicMessageType {
             ptr: 0 as *const TestDynamicExtensions_DynamicMessageType,
         };
         unsafe {
-            instance.get(|| {
-                TestDynamicExtensions_DynamicMessageType {
-                    dynamic_field: ::std::option::Option::None,
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestDynamicExtensions_DynamicMessageType::new)
         }
     }
 
@@ -17208,6 +18415,14 @@ impl TestDynamicExtensions_DynamicMessageType {
     pub fn get_dynamic_field(&self) -> i32 {
         self.dynamic_field.unwrap_or(0)
     }
+
+    fn get_dynamic_field_for_reflect(&self) -> &::std::option::Option<i32> {
+        &self.dynamic_field
+    }
+
+    fn mut_dynamic_field_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+        &mut self.dynamic_field
+    }
 }
 
 impl ::protobuf::Message for TestDynamicExtensions_DynamicMessageType {
@@ -17216,18 +18431,18 @@ impl ::protobuf::Message for TestDynamicExtensions_DynamicMessageType {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 2100 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_int32());
+                    let tmp = is.read_int32()?;
                     self.dynamic_field = ::std::option::Option::Some(tmp);
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -17238,8 +18453,8 @@ impl ::protobuf::Message for TestDynamicExtensions_DynamicMessageType {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.dynamic_field.iter() {
-            my_size += ::protobuf::rt::value_size(2100, *value, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.dynamic_field {
+            my_size += ::protobuf::rt::value_size(2100, v, ::protobuf::wire_format::WireTypeVarint);
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
@@ -17248,9 +18463,9 @@ impl ::protobuf::Message for TestDynamicExtensions_DynamicMessageType {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.dynamic_field {
-            try!(os.write_int32(2100, v));
+            os.write_int32(2100, v)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -17266,12 +18481,14 @@ impl ::protobuf::Message for TestDynamicExtensions_DynamicMessageType {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestDynamicExtensions_DynamicMessageType>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -17292,10 +18509,10 @@ impl ::protobuf::MessageStatic for TestDynamicExtensions_DynamicMessageType {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "dynamic_field",
-                    TestDynamicExtensions_DynamicMessageType::has_dynamic_field,
-                    TestDynamicExtensions_DynamicMessageType::get_dynamic_field,
+                    TestDynamicExtensions_DynamicMessageType::get_dynamic_field_for_reflect,
+                    TestDynamicExtensions_DynamicMessageType::mut_dynamic_field_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestDynamicExtensions_DynamicMessageType>(
                     "TestDynamicExtensions_DynamicMessageType",
@@ -17314,16 +18531,15 @@ impl ::protobuf::Clear for TestDynamicExtensions_DynamicMessageType {
     }
 }
 
-impl ::std::cmp::PartialEq for TestDynamicExtensions_DynamicMessageType {
-    fn eq(&self, other: &TestDynamicExtensions_DynamicMessageType) -> bool {
-        self.dynamic_field == other.dynamic_field &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestDynamicExtensions_DynamicMessageType {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for TestDynamicExtensions_DynamicMessageType {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
     }
 }
 
@@ -17373,7 +18589,13 @@ impl ::protobuf::ProtobufEnum for TestDynamicExtensions_DynamicEnumType {
 impl ::std::marker::Copy for TestDynamicExtensions_DynamicEnumType {
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestDynamicExtensions_DynamicEnumType {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Enum(self.descriptor())
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestRepeatedScalarDifferentTagSizes {
     // message fields
     repeated_fixed32: ::std::vec::Vec<u32>,
@@ -17384,7 +18606,7 @@ pub struct TestRepeatedScalarDifferentTagSizes {
     repeated_uint64: ::std::vec::Vec<u64>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -17401,18 +18623,7 @@ impl TestRepeatedScalarDifferentTagSizes {
             ptr: 0 as *const TestRepeatedScalarDifferentTagSizes,
         };
         unsafe {
-            instance.get(|| {
-                TestRepeatedScalarDifferentTagSizes {
-                    repeated_fixed32: ::std::vec::Vec::new(),
-                    repeated_int32: ::std::vec::Vec::new(),
-                    repeated_fixed64: ::std::vec::Vec::new(),
-                    repeated_int64: ::std::vec::Vec::new(),
-                    repeated_float: ::std::vec::Vec::new(),
-                    repeated_uint64: ::std::vec::Vec::new(),
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestRepeatedScalarDifferentTagSizes::new)
         }
     }
 
@@ -17441,6 +18652,14 @@ impl TestRepeatedScalarDifferentTagSizes {
         &self.repeated_fixed32
     }
 
+    fn get_repeated_fixed32_for_reflect(&self) -> &::std::vec::Vec<u32> {
+        &self.repeated_fixed32
+    }
+
+    fn mut_repeated_fixed32_for_reflect(&mut self) -> &mut ::std::vec::Vec<u32> {
+        &mut self.repeated_fixed32
+    }
+
     // repeated int32 repeated_int32 = 13;
 
     pub fn clear_repeated_int32(&mut self) {
@@ -17464,6 +18683,14 @@ impl TestRepeatedScalarDifferentTagSizes {
 
     pub fn get_repeated_int32(&self) -> &[i32] {
         &self.repeated_int32
+    }
+
+    fn get_repeated_int32_for_reflect(&self) -> &::std::vec::Vec<i32> {
+        &self.repeated_int32
+    }
+
+    fn mut_repeated_int32_for_reflect(&mut self) -> &mut ::std::vec::Vec<i32> {
+        &mut self.repeated_int32
     }
 
     // repeated fixed64 repeated_fixed64 = 2046;
@@ -17491,6 +18718,14 @@ impl TestRepeatedScalarDifferentTagSizes {
         &self.repeated_fixed64
     }
 
+    fn get_repeated_fixed64_for_reflect(&self) -> &::std::vec::Vec<u64> {
+        &self.repeated_fixed64
+    }
+
+    fn mut_repeated_fixed64_for_reflect(&mut self) -> &mut ::std::vec::Vec<u64> {
+        &mut self.repeated_fixed64
+    }
+
     // repeated int64 repeated_int64 = 2047;
 
     pub fn clear_repeated_int64(&mut self) {
@@ -17514,6 +18749,14 @@ impl TestRepeatedScalarDifferentTagSizes {
 
     pub fn get_repeated_int64(&self) -> &[i64] {
         &self.repeated_int64
+    }
+
+    fn get_repeated_int64_for_reflect(&self) -> &::std::vec::Vec<i64> {
+        &self.repeated_int64
+    }
+
+    fn mut_repeated_int64_for_reflect(&mut self) -> &mut ::std::vec::Vec<i64> {
+        &mut self.repeated_int64
     }
 
     // repeated float repeated_float = 262142;
@@ -17541,6 +18784,14 @@ impl TestRepeatedScalarDifferentTagSizes {
         &self.repeated_float
     }
 
+    fn get_repeated_float_for_reflect(&self) -> &::std::vec::Vec<f32> {
+        &self.repeated_float
+    }
+
+    fn mut_repeated_float_for_reflect(&mut self) -> &mut ::std::vec::Vec<f32> {
+        &mut self.repeated_float
+    }
+
     // repeated uint64 repeated_uint64 = 262143;
 
     pub fn clear_repeated_uint64(&mut self) {
@@ -17565,6 +18816,14 @@ impl TestRepeatedScalarDifferentTagSizes {
     pub fn get_repeated_uint64(&self) -> &[u64] {
         &self.repeated_uint64
     }
+
+    fn get_repeated_uint64_for_reflect(&self) -> &::std::vec::Vec<u64> {
+        &self.repeated_uint64
+    }
+
+    fn mut_repeated_uint64_for_reflect(&mut self) -> &mut ::std::vec::Vec<u64> {
+        &mut self.repeated_uint64
+    }
 }
 
 impl ::protobuf::Message for TestRepeatedScalarDifferentTagSizes {
@@ -17573,29 +18832,29 @@ impl ::protobuf::Message for TestRepeatedScalarDifferentTagSizes {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 12 => {
-                    try!(::protobuf::rt::read_repeated_fixed32_into(wire_type, is, &mut self.repeated_fixed32));
+                    ::protobuf::rt::read_repeated_fixed32_into(wire_type, is, &mut self.repeated_fixed32)?;
                 },
                 13 => {
-                    try!(::protobuf::rt::read_repeated_int32_into(wire_type, is, &mut self.repeated_int32));
+                    ::protobuf::rt::read_repeated_int32_into(wire_type, is, &mut self.repeated_int32)?;
                 },
                 2046 => {
-                    try!(::protobuf::rt::read_repeated_fixed64_into(wire_type, is, &mut self.repeated_fixed64));
+                    ::protobuf::rt::read_repeated_fixed64_into(wire_type, is, &mut self.repeated_fixed64)?;
                 },
                 2047 => {
-                    try!(::protobuf::rt::read_repeated_int64_into(wire_type, is, &mut self.repeated_int64));
+                    ::protobuf::rt::read_repeated_int64_into(wire_type, is, &mut self.repeated_int64)?;
                 },
                 262142 => {
-                    try!(::protobuf::rt::read_repeated_float_into(wire_type, is, &mut self.repeated_float));
+                    ::protobuf::rt::read_repeated_float_into(wire_type, is, &mut self.repeated_float)?;
                 },
                 262143 => {
-                    try!(::protobuf::rt::read_repeated_uint64_into(wire_type, is, &mut self.repeated_uint64));
+                    ::protobuf::rt::read_repeated_uint64_into(wire_type, is, &mut self.repeated_uint64)?;
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -17607,15 +18866,15 @@ impl ::protobuf::Message for TestRepeatedScalarDifferentTagSizes {
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
         my_size += 5 * self.repeated_fixed32.len() as u32;
-        for value in self.repeated_int32.iter() {
+        for value in &self.repeated_int32 {
             my_size += ::protobuf::rt::value_size(13, *value, ::protobuf::wire_format::WireTypeVarint);
         };
         my_size += 10 * self.repeated_fixed64.len() as u32;
-        for value in self.repeated_int64.iter() {
+        for value in &self.repeated_int64 {
             my_size += ::protobuf::rt::value_size(2047, *value, ::protobuf::wire_format::WireTypeVarint);
         };
         my_size += 7 * self.repeated_float.len() as u32;
-        for value in self.repeated_uint64.iter() {
+        for value in &self.repeated_uint64 {
             my_size += ::protobuf::rt::value_size(262143, *value, ::protobuf::wire_format::WireTypeVarint);
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
@@ -17624,25 +18883,25 @@ impl ::protobuf::Message for TestRepeatedScalarDifferentTagSizes {
     }
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        for v in self.repeated_fixed32.iter() {
-            try!(os.write_fixed32(12, *v));
+        for v in &self.repeated_fixed32 {
+            os.write_fixed32(12, *v)?;
         };
-        for v in self.repeated_int32.iter() {
-            try!(os.write_int32(13, *v));
+        for v in &self.repeated_int32 {
+            os.write_int32(13, *v)?;
         };
-        for v in self.repeated_fixed64.iter() {
-            try!(os.write_fixed64(2046, *v));
+        for v in &self.repeated_fixed64 {
+            os.write_fixed64(2046, *v)?;
         };
-        for v in self.repeated_int64.iter() {
-            try!(os.write_int64(2047, *v));
+        for v in &self.repeated_int64 {
+            os.write_int64(2047, *v)?;
         };
-        for v in self.repeated_float.iter() {
-            try!(os.write_float(262142, *v));
+        for v in &self.repeated_float {
+            os.write_float(262142, *v)?;
         };
-        for v in self.repeated_uint64.iter() {
-            try!(os.write_uint64(262143, *v));
+        for v in &self.repeated_uint64 {
+            os.write_uint64(262143, *v)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -17658,12 +18917,14 @@ impl ::protobuf::Message for TestRepeatedScalarDifferentTagSizes {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestRepeatedScalarDifferentTagSizes>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -17684,29 +18945,35 @@ impl ::protobuf::MessageStatic for TestRepeatedScalarDifferentTagSizes {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_repeated_u32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeFixed32>(
                     "repeated_fixed32",
-                    TestRepeatedScalarDifferentTagSizes::get_repeated_fixed32,
+                    TestRepeatedScalarDifferentTagSizes::get_repeated_fixed32_for_reflect,
+                    TestRepeatedScalarDifferentTagSizes::mut_repeated_fixed32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_i32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "repeated_int32",
-                    TestRepeatedScalarDifferentTagSizes::get_repeated_int32,
+                    TestRepeatedScalarDifferentTagSizes::get_repeated_int32_for_reflect,
+                    TestRepeatedScalarDifferentTagSizes::mut_repeated_int32_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_u64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeFixed64>(
                     "repeated_fixed64",
-                    TestRepeatedScalarDifferentTagSizes::get_repeated_fixed64,
+                    TestRepeatedScalarDifferentTagSizes::get_repeated_fixed64_for_reflect,
+                    TestRepeatedScalarDifferentTagSizes::mut_repeated_fixed64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_i64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeInt64>(
                     "repeated_int64",
-                    TestRepeatedScalarDifferentTagSizes::get_repeated_int64,
+                    TestRepeatedScalarDifferentTagSizes::get_repeated_int64_for_reflect,
+                    TestRepeatedScalarDifferentTagSizes::mut_repeated_int64_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_f32_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeFloat>(
                     "repeated_float",
-                    TestRepeatedScalarDifferentTagSizes::get_repeated_float,
+                    TestRepeatedScalarDifferentTagSizes::get_repeated_float_for_reflect,
+                    TestRepeatedScalarDifferentTagSizes::mut_repeated_float_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_u64_accessor(
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeUint64>(
                     "repeated_uint64",
-                    TestRepeatedScalarDifferentTagSizes::get_repeated_uint64,
+                    TestRepeatedScalarDifferentTagSizes::get_repeated_uint64_for_reflect,
+                    TestRepeatedScalarDifferentTagSizes::mut_repeated_uint64_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestRepeatedScalarDifferentTagSizes>(
                     "TestRepeatedScalarDifferentTagSizes",
@@ -17730,25 +18997,19 @@ impl ::protobuf::Clear for TestRepeatedScalarDifferentTagSizes {
     }
 }
 
-impl ::std::cmp::PartialEq for TestRepeatedScalarDifferentTagSizes {
-    fn eq(&self, other: &TestRepeatedScalarDifferentTagSizes) -> bool {
-        self.repeated_fixed32 == other.repeated_fixed32 &&
-        self.repeated_int32 == other.repeated_int32 &&
-        self.repeated_fixed64 == other.repeated_fixed64 &&
-        self.repeated_int64 == other.repeated_int64 &&
-        self.repeated_float == other.repeated_float &&
-        self.repeated_uint64 == other.repeated_uint64 &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestRepeatedScalarDifferentTagSizes {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestRepeatedScalarDifferentTagSizes {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestParsingMerge {
     // message fields
     required_all_types: ::protobuf::SingularPtrField<TestAllTypes>,
@@ -17756,7 +19017,7 @@ pub struct TestParsingMerge {
     repeated_all_types: ::protobuf::RepeatedField<TestAllTypes>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -17773,15 +19034,7 @@ impl TestParsingMerge {
             ptr: 0 as *const TestParsingMerge,
         };
         unsafe {
-            instance.get(|| {
-                TestParsingMerge {
-                    required_all_types: ::protobuf::SingularPtrField::none(),
-                    optional_all_types: ::protobuf::SingularPtrField::none(),
-                    repeated_all_types: ::protobuf::RepeatedField::new(),
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestParsingMerge::new)
         }
     }
 
@@ -17818,6 +19071,14 @@ impl TestParsingMerge {
         self.required_all_types.as_ref().unwrap_or_else(|| TestAllTypes::default_instance())
     }
 
+    fn get_required_all_types_for_reflect(&self) -> &::protobuf::SingularPtrField<TestAllTypes> {
+        &self.required_all_types
+    }
+
+    fn mut_required_all_types_for_reflect(&mut self) -> &mut ::protobuf::SingularPtrField<TestAllTypes> {
+        &mut self.required_all_types
+    }
+
     // optional .protobuf_unittest.TestAllTypes optional_all_types = 2;
 
     pub fn clear_optional_all_types(&mut self) {
@@ -17851,6 +19112,14 @@ impl TestParsingMerge {
         self.optional_all_types.as_ref().unwrap_or_else(|| TestAllTypes::default_instance())
     }
 
+    fn get_optional_all_types_for_reflect(&self) -> &::protobuf::SingularPtrField<TestAllTypes> {
+        &self.optional_all_types
+    }
+
+    fn mut_optional_all_types_for_reflect(&mut self) -> &mut ::protobuf::SingularPtrField<TestAllTypes> {
+        &mut self.optional_all_types
+    }
+
     // repeated .protobuf_unittest.TestAllTypes repeated_all_types = 3;
 
     pub fn clear_repeated_all_types(&mut self) {
@@ -17875,6 +19144,14 @@ impl TestParsingMerge {
     pub fn get_repeated_all_types(&self) -> &[TestAllTypes] {
         &self.repeated_all_types
     }
+
+    fn get_repeated_all_types_for_reflect(&self) -> &::protobuf::RepeatedField<TestAllTypes> {
+        &self.repeated_all_types
+    }
+
+    fn mut_repeated_all_types_for_reflect(&mut self) -> &mut ::protobuf::RepeatedField<TestAllTypes> {
+        &mut self.repeated_all_types
+    }
 }
 
 impl ::protobuf::Message for TestParsingMerge {
@@ -17886,20 +19163,20 @@ impl ::protobuf::Message for TestParsingMerge {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
-                    try!(::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.required_all_types));
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.required_all_types)?;
                 },
                 2 => {
-                    try!(::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.optional_all_types));
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.optional_all_types)?;
                 },
                 3 => {
-                    try!(::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.repeated_all_types));
+                    ::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.repeated_all_types)?;
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -17910,15 +19187,15 @@ impl ::protobuf::Message for TestParsingMerge {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.required_all_types.iter() {
-            let len = value.compute_size();
+        if let Some(v) = self.required_all_types.as_ref() {
+            let len = v.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
-        for value in self.optional_all_types.iter() {
-            let len = value.compute_size();
+        if let Some(v) = self.optional_all_types.as_ref() {
+            let len = v.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
-        for value in self.repeated_all_types.iter() {
+        for value in &self.repeated_all_types {
             let len = value.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
@@ -17929,21 +19206,21 @@ impl ::protobuf::Message for TestParsingMerge {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.required_all_types.as_ref() {
-            try!(os.write_tag(1, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+            os.write_tag(1, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
         if let Some(v) = self.optional_all_types.as_ref() {
-            try!(os.write_tag(2, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+            os.write_tag(2, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
-        for v in self.repeated_all_types.iter() {
-            try!(os.write_tag(3, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+        for v in &self.repeated_all_types {
+            os.write_tag(3, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -17959,12 +19236,14 @@ impl ::protobuf::Message for TestParsingMerge {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestParsingMerge>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -17985,19 +19264,20 @@ impl ::protobuf::MessageStatic for TestParsingMerge {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<TestAllTypes>>(
                     "required_all_types",
-                    TestParsingMerge::has_required_all_types,
-                    TestParsingMerge::get_required_all_types,
+                    TestParsingMerge::get_required_all_types_for_reflect,
+                    TestParsingMerge::mut_required_all_types_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<TestAllTypes>>(
                     "optional_all_types",
-                    TestParsingMerge::has_optional_all_types,
-                    TestParsingMerge::get_optional_all_types,
+                    TestParsingMerge::get_optional_all_types_for_reflect,
+                    TestParsingMerge::mut_optional_all_types_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<TestAllTypes>>(
                     "repeated_all_types",
-                    TestParsingMerge::get_repeated_all_types,
+                    TestParsingMerge::get_repeated_all_types_for_reflect,
+                    TestParsingMerge::mut_repeated_all_types_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestParsingMerge>(
                     "TestParsingMerge",
@@ -18018,22 +19298,19 @@ impl ::protobuf::Clear for TestParsingMerge {
     }
 }
 
-impl ::std::cmp::PartialEq for TestParsingMerge {
-    fn eq(&self, other: &TestParsingMerge) -> bool {
-        self.required_all_types == other.required_all_types &&
-        self.optional_all_types == other.optional_all_types &&
-        self.repeated_all_types == other.repeated_all_types &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestParsingMerge {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestParsingMerge {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestParsingMerge_RepeatedFieldsGenerator {
     // message fields
     field1: ::protobuf::RepeatedField<TestAllTypes>,
@@ -18043,7 +19320,7 @@ pub struct TestParsingMerge_RepeatedFieldsGenerator {
     ext2: ::protobuf::RepeatedField<TestAllTypes>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -18060,17 +19337,7 @@ impl TestParsingMerge_RepeatedFieldsGenerator {
             ptr: 0 as *const TestParsingMerge_RepeatedFieldsGenerator,
         };
         unsafe {
-            instance.get(|| {
-                TestParsingMerge_RepeatedFieldsGenerator {
-                    field1: ::protobuf::RepeatedField::new(),
-                    field2: ::protobuf::RepeatedField::new(),
-                    field3: ::protobuf::RepeatedField::new(),
-                    ext1: ::protobuf::RepeatedField::new(),
-                    ext2: ::protobuf::RepeatedField::new(),
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestParsingMerge_RepeatedFieldsGenerator::new)
         }
     }
 
@@ -18099,6 +19366,14 @@ impl TestParsingMerge_RepeatedFieldsGenerator {
         &self.field1
     }
 
+    fn get_field1_for_reflect(&self) -> &::protobuf::RepeatedField<TestAllTypes> {
+        &self.field1
+    }
+
+    fn mut_field1_for_reflect(&mut self) -> &mut ::protobuf::RepeatedField<TestAllTypes> {
+        &mut self.field1
+    }
+
     // repeated .protobuf_unittest.TestAllTypes field2 = 2;
 
     pub fn clear_field2(&mut self) {
@@ -18122,6 +19397,14 @@ impl TestParsingMerge_RepeatedFieldsGenerator {
 
     pub fn get_field2(&self) -> &[TestAllTypes] {
         &self.field2
+    }
+
+    fn get_field2_for_reflect(&self) -> &::protobuf::RepeatedField<TestAllTypes> {
+        &self.field2
+    }
+
+    fn mut_field2_for_reflect(&mut self) -> &mut ::protobuf::RepeatedField<TestAllTypes> {
+        &mut self.field2
     }
 
     // repeated .protobuf_unittest.TestAllTypes field3 = 3;
@@ -18149,6 +19432,14 @@ impl TestParsingMerge_RepeatedFieldsGenerator {
         &self.field3
     }
 
+    fn get_field3_for_reflect(&self) -> &::protobuf::RepeatedField<TestAllTypes> {
+        &self.field3
+    }
+
+    fn mut_field3_for_reflect(&mut self) -> &mut ::protobuf::RepeatedField<TestAllTypes> {
+        &mut self.field3
+    }
+
     // repeated .protobuf_unittest.TestAllTypes ext1 = 1000;
 
     pub fn clear_ext1(&mut self) {
@@ -18172,6 +19463,14 @@ impl TestParsingMerge_RepeatedFieldsGenerator {
 
     pub fn get_ext1(&self) -> &[TestAllTypes] {
         &self.ext1
+    }
+
+    fn get_ext1_for_reflect(&self) -> &::protobuf::RepeatedField<TestAllTypes> {
+        &self.ext1
+    }
+
+    fn mut_ext1_for_reflect(&mut self) -> &mut ::protobuf::RepeatedField<TestAllTypes> {
+        &mut self.ext1
     }
 
     // repeated .protobuf_unittest.TestAllTypes ext2 = 1001;
@@ -18198,6 +19497,14 @@ impl TestParsingMerge_RepeatedFieldsGenerator {
     pub fn get_ext2(&self) -> &[TestAllTypes] {
         &self.ext2
     }
+
+    fn get_ext2_for_reflect(&self) -> &::protobuf::RepeatedField<TestAllTypes> {
+        &self.ext2
+    }
+
+    fn mut_ext2_for_reflect(&mut self) -> &mut ::protobuf::RepeatedField<TestAllTypes> {
+        &mut self.ext2
+    }
 }
 
 impl ::protobuf::Message for TestParsingMerge_RepeatedFieldsGenerator {
@@ -18206,26 +19513,26 @@ impl ::protobuf::Message for TestParsingMerge_RepeatedFieldsGenerator {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
-                    try!(::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.field1));
+                    ::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.field1)?;
                 },
                 2 => {
-                    try!(::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.field2));
+                    ::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.field2)?;
                 },
                 3 => {
-                    try!(::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.field3));
+                    ::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.field3)?;
                 },
                 1000 => {
-                    try!(::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.ext1));
+                    ::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.ext1)?;
                 },
                 1001 => {
-                    try!(::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.ext2));
+                    ::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.ext2)?;
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -18236,23 +19543,23 @@ impl ::protobuf::Message for TestParsingMerge_RepeatedFieldsGenerator {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.field1.iter() {
+        for value in &self.field1 {
             let len = value.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
-        for value in self.field2.iter() {
+        for value in &self.field2 {
             let len = value.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
-        for value in self.field3.iter() {
+        for value in &self.field3 {
             let len = value.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
-        for value in self.ext1.iter() {
+        for value in &self.ext1 {
             let len = value.compute_size();
             my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
-        for value in self.ext2.iter() {
+        for value in &self.ext2 {
             let len = value.compute_size();
             my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         };
@@ -18262,32 +19569,32 @@ impl ::protobuf::Message for TestParsingMerge_RepeatedFieldsGenerator {
     }
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        for v in self.field1.iter() {
-            try!(os.write_tag(1, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+        for v in &self.field1 {
+            os.write_tag(1, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
-        for v in self.field2.iter() {
-            try!(os.write_tag(2, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+        for v in &self.field2 {
+            os.write_tag(2, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
-        for v in self.field3.iter() {
-            try!(os.write_tag(3, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+        for v in &self.field3 {
+            os.write_tag(3, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
-        for v in self.ext1.iter() {
-            try!(os.write_tag(1000, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+        for v in &self.ext1 {
+            os.write_tag(1000, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
-        for v in self.ext2.iter() {
-            try!(os.write_tag(1001, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+        for v in &self.ext2 {
+            os.write_tag(1001, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -18303,12 +19610,14 @@ impl ::protobuf::Message for TestParsingMerge_RepeatedFieldsGenerator {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestParsingMerge_RepeatedFieldsGenerator>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -18329,25 +19638,30 @@ impl ::protobuf::MessageStatic for TestParsingMerge_RepeatedFieldsGenerator {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_repeated_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<TestAllTypes>>(
                     "field1",
-                    TestParsingMerge_RepeatedFieldsGenerator::get_field1,
+                    TestParsingMerge_RepeatedFieldsGenerator::get_field1_for_reflect,
+                    TestParsingMerge_RepeatedFieldsGenerator::mut_field1_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<TestAllTypes>>(
                     "field2",
-                    TestParsingMerge_RepeatedFieldsGenerator::get_field2,
+                    TestParsingMerge_RepeatedFieldsGenerator::get_field2_for_reflect,
+                    TestParsingMerge_RepeatedFieldsGenerator::mut_field2_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<TestAllTypes>>(
                     "field3",
-                    TestParsingMerge_RepeatedFieldsGenerator::get_field3,
+                    TestParsingMerge_RepeatedFieldsGenerator::get_field3_for_reflect,
+                    TestParsingMerge_RepeatedFieldsGenerator::mut_field3_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<TestAllTypes>>(
                     "ext1",
-                    TestParsingMerge_RepeatedFieldsGenerator::get_ext1,
+                    TestParsingMerge_RepeatedFieldsGenerator::get_ext1_for_reflect,
+                    TestParsingMerge_RepeatedFieldsGenerator::mut_ext1_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_message_accessor(
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<TestAllTypes>>(
                     "ext2",
-                    TestParsingMerge_RepeatedFieldsGenerator::get_ext2,
+                    TestParsingMerge_RepeatedFieldsGenerator::get_ext2_for_reflect,
+                    TestParsingMerge_RepeatedFieldsGenerator::mut_ext2_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestParsingMerge_RepeatedFieldsGenerator>(
                     "TestParsingMerge_RepeatedFieldsGenerator",
@@ -18370,30 +19684,25 @@ impl ::protobuf::Clear for TestParsingMerge_RepeatedFieldsGenerator {
     }
 }
 
-impl ::std::cmp::PartialEq for TestParsingMerge_RepeatedFieldsGenerator {
-    fn eq(&self, other: &TestParsingMerge_RepeatedFieldsGenerator) -> bool {
-        self.field1 == other.field1 &&
-        self.field2 == other.field2 &&
-        self.field3 == other.field3 &&
-        self.ext1 == other.ext1 &&
-        self.ext2 == other.ext2 &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestParsingMerge_RepeatedFieldsGenerator {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestParsingMerge_RepeatedFieldsGenerator {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct TestCommentInjectionMessage {
     // message fields
     a: ::protobuf::SingularField<::std::string::String>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -18410,13 +19719,7 @@ impl TestCommentInjectionMessage {
             ptr: 0 as *const TestCommentInjectionMessage,
         };
         unsafe {
-            instance.get(|| {
-                TestCommentInjectionMessage {
-                    a: ::protobuf::SingularField::none(),
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(TestCommentInjectionMessage::new)
         }
     }
 
@@ -18455,6 +19758,14 @@ impl TestCommentInjectionMessage {
             None => "*/ <- Neither should this.",
         }
     }
+
+    fn get_a_for_reflect(&self) -> &::protobuf::SingularField<::std::string::String> {
+        &self.a
+    }
+
+    fn mut_a_for_reflect(&mut self) -> &mut ::protobuf::SingularField<::std::string::String> {
+        &mut self.a
+    }
 }
 
 impl ::protobuf::Message for TestCommentInjectionMessage {
@@ -18463,14 +19774,14 @@ impl ::protobuf::Message for TestCommentInjectionMessage {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
-                    try!(::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.a));
+                    ::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.a)?;
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -18481,8 +19792,8 @@ impl ::protobuf::Message for TestCommentInjectionMessage {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        for value in self.a.iter() {
-            my_size += ::protobuf::rt::string_size(1, &value);
+        if let Some(v) = self.a.as_ref() {
+            my_size += ::protobuf::rt::string_size(1, &v);
         };
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
@@ -18491,9 +19802,9 @@ impl ::protobuf::Message for TestCommentInjectionMessage {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.a.as_ref() {
-            try!(os.write_string(1, &v));
+            os.write_string(1, &v)?;
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -18509,12 +19820,14 @@ impl ::protobuf::Message for TestCommentInjectionMessage {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<TestCommentInjectionMessage>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -18535,10 +19848,10 @@ impl ::protobuf::MessageStatic for TestCommentInjectionMessage {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_string_accessor(
+                fields.push(::protobuf::reflect::accessor::make_singular_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "a",
-                    TestCommentInjectionMessage::has_a,
-                    TestCommentInjectionMessage::get_a,
+                    TestCommentInjectionMessage::get_a_for_reflect,
+                    TestCommentInjectionMessage::mut_a_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<TestCommentInjectionMessage>(
                     "TestCommentInjectionMessage",
@@ -18557,24 +19870,23 @@ impl ::protobuf::Clear for TestCommentInjectionMessage {
     }
 }
 
-impl ::std::cmp::PartialEq for TestCommentInjectionMessage {
-    fn eq(&self, other: &TestCommentInjectionMessage) -> bool {
-        self.a == other.a &&
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for TestCommentInjectionMessage {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for TestCommentInjectionMessage {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct FooRequest {
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -18591,12 +19903,7 @@ impl FooRequest {
             ptr: 0 as *const FooRequest,
         };
         unsafe {
-            instance.get(|| {
-                FooRequest {
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(FooRequest::new)
         }
     }
 }
@@ -18607,11 +19914,11 @@ impl ::protobuf::Message for FooRequest {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -18628,7 +19935,7 @@ impl ::protobuf::Message for FooRequest {
     }
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -18644,12 +19951,14 @@ impl ::protobuf::Message for FooRequest {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<FooRequest>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -18686,23 +19995,23 @@ impl ::protobuf::Clear for FooRequest {
     }
 }
 
-impl ::std::cmp::PartialEq for FooRequest {
-    fn eq(&self, other: &FooRequest) -> bool {
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for FooRequest {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for FooRequest {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct FooResponse {
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -18719,12 +20028,7 @@ impl FooResponse {
             ptr: 0 as *const FooResponse,
         };
         unsafe {
-            instance.get(|| {
-                FooResponse {
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(FooResponse::new)
         }
     }
 }
@@ -18735,11 +20039,11 @@ impl ::protobuf::Message for FooResponse {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -18756,7 +20060,7 @@ impl ::protobuf::Message for FooResponse {
     }
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -18772,12 +20076,14 @@ impl ::protobuf::Message for FooResponse {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<FooResponse>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -18814,23 +20120,23 @@ impl ::protobuf::Clear for FooResponse {
     }
 }
 
-impl ::std::cmp::PartialEq for FooResponse {
-    fn eq(&self, other: &FooResponse) -> bool {
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for FooResponse {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for FooResponse {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct FooClientMessage {
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -18847,12 +20153,7 @@ impl FooClientMessage {
             ptr: 0 as *const FooClientMessage,
         };
         unsafe {
-            instance.get(|| {
-                FooClientMessage {
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(FooClientMessage::new)
         }
     }
 }
@@ -18863,11 +20164,11 @@ impl ::protobuf::Message for FooClientMessage {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -18884,7 +20185,7 @@ impl ::protobuf::Message for FooClientMessage {
     }
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -18900,12 +20201,14 @@ impl ::protobuf::Message for FooClientMessage {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<FooClientMessage>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -18942,23 +20245,23 @@ impl ::protobuf::Clear for FooClientMessage {
     }
 }
 
-impl ::std::cmp::PartialEq for FooClientMessage {
-    fn eq(&self, other: &FooClientMessage) -> bool {
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for FooClientMessage {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for FooClientMessage {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct FooServerMessage {
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -18975,12 +20278,7 @@ impl FooServerMessage {
             ptr: 0 as *const FooServerMessage,
         };
         unsafe {
-            instance.get(|| {
-                FooServerMessage {
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(FooServerMessage::new)
         }
     }
 }
@@ -18991,11 +20289,11 @@ impl ::protobuf::Message for FooServerMessage {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -19012,7 +20310,7 @@ impl ::protobuf::Message for FooServerMessage {
     }
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -19028,12 +20326,14 @@ impl ::protobuf::Message for FooServerMessage {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<FooServerMessage>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -19070,23 +20370,23 @@ impl ::protobuf::Clear for FooServerMessage {
     }
 }
 
-impl ::std::cmp::PartialEq for FooServerMessage {
-    fn eq(&self, other: &FooServerMessage) -> bool {
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for FooServerMessage {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for FooServerMessage {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct BarRequest {
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -19103,12 +20403,7 @@ impl BarRequest {
             ptr: 0 as *const BarRequest,
         };
         unsafe {
-            instance.get(|| {
-                BarRequest {
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(BarRequest::new)
         }
     }
 }
@@ -19119,11 +20414,11 @@ impl ::protobuf::Message for BarRequest {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -19140,7 +20435,7 @@ impl ::protobuf::Message for BarRequest {
     }
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -19156,12 +20451,14 @@ impl ::protobuf::Message for BarRequest {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<BarRequest>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -19198,23 +20495,23 @@ impl ::protobuf::Clear for BarRequest {
     }
 }
 
-impl ::std::cmp::PartialEq for BarRequest {
-    fn eq(&self, other: &BarRequest) -> bool {
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for BarRequest {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-#[derive(Clone,Default)]
+impl ::protobuf::reflect::ProtobufValue for BarRequest {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct BarResponse {
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::std::cell::Cell<u32>,
+    cached_size: ::protobuf::CachedSize,
 }
 
 // see codegen.rs for the explanation why impl Sync explicitly
@@ -19231,12 +20528,7 @@ impl BarResponse {
             ptr: 0 as *const BarResponse,
         };
         unsafe {
-            instance.get(|| {
-                BarResponse {
-                    unknown_fields: ::protobuf::UnknownFields::new(),
-                    cached_size: ::std::cell::Cell::new(0),
-                }
-            })
+            instance.get(BarResponse::new)
         }
     }
 }
@@ -19247,11 +20539,11 @@ impl ::protobuf::Message for BarResponse {
     }
 
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
             };
         }
@@ -19268,7 +20560,7 @@ impl ::protobuf::Message for BarResponse {
     }
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
 
@@ -19284,12 +20576,14 @@ impl ::protobuf::Message for BarResponse {
         &mut self.unknown_fields
     }
 
-    fn type_id(&self) -> ::std::any::TypeId {
-        ::std::any::TypeId::of::<BarResponse>()
-    }
-
     fn as_any(&self) -> &::std::any::Any {
         self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -19326,15 +20620,15 @@ impl ::protobuf::Clear for BarResponse {
     }
 }
 
-impl ::std::cmp::PartialEq for BarResponse {
-    fn eq(&self, other: &BarResponse) -> bool {
-        self.unknown_fields == other.unknown_fields
-    }
-}
-
 impl ::std::fmt::Debug for BarResponse {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for BarResponse {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
     }
 }
 
@@ -19384,13 +20678,32 @@ impl ::protobuf::ProtobufEnum for ForeignEnum {
 impl ::std::marker::Copy for ForeignEnum {
 }
 
-#[derive(Clone,PartialEq,Eq,Debug,Hash)]
+impl ::protobuf::reflect::ProtobufValue for ForeignEnum {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Enum(self.descriptor())
+    }
+}
+
+// Note: you cannot use pattern matching for enums with allow_alias option
+#[derive(Clone,Eq,Debug)]
 pub enum TestEnumWithDupValue {
     FOO1, // 1
     BAR1, // 2
     BAZ, // 3
     FOO2, // 1
     BAR2, // 2
+}
+
+impl ::std::cmp::PartialEq for TestEnumWithDupValue {
+    fn eq(&self, other: &Self) -> bool {
+        self.value() == other.value()
+    }
+}
+
+impl ::std::hash::Hash for TestEnumWithDupValue {
+    fn hash<H : ::std::hash::Hasher>(&self, state: &mut H) {
+        state.write_i32(self.value())
+    }
 }
 
 impl ::protobuf::ProtobufEnum for TestEnumWithDupValue {
@@ -19438,6 +20751,12 @@ impl ::protobuf::ProtobufEnum for TestEnumWithDupValue {
 }
 
 impl ::std::marker::Copy for TestEnumWithDupValue {
+}
+
+impl ::protobuf::reflect::ProtobufValue for TestEnumWithDupValue {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Enum(self.descriptor())
+    }
 }
 
 #[derive(Clone,PartialEq,Eq,Debug,Hash)]
@@ -19496,6 +20815,12 @@ impl ::protobuf::ProtobufEnum for TestSparseEnum {
 }
 
 impl ::std::marker::Copy for TestSparseEnum {
+}
+
+impl ::protobuf::reflect::ProtobufValue for TestSparseEnum {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Enum(self.descriptor())
+    }
 }
 
 static file_descriptor_proto_data: &'static [u8] = &[
@@ -19581,11 +20906,11 @@ static file_descriptor_proto_data: &'static [u8] = &[
     0x70, 0x74, 0x69, 0x6f, 0x6e, 0x61, 0x6c, 0x49, 0x6d, 0x70, 0x6f, 0x72, 0x74, 0x45, 0x6e, 0x75,
     0x6d, 0x12, 0x36, 0x0a, 0x15, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x61, 0x6c, 0x5f, 0x73, 0x74,
     0x72, 0x69, 0x6e, 0x67, 0x5f, 0x70, 0x69, 0x65, 0x63, 0x65, 0x18, 0x18, 0x20, 0x01, 0x28, 0x09,
-    0x42, 0x02, 0x08, 0x02, 0x52, 0x13, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x61, 0x6c, 0x53, 0x74,
-    0x72, 0x69, 0x6e, 0x67, 0x50, 0x69, 0x65, 0x63, 0x65, 0x12, 0x27, 0x0a, 0x0d, 0x6f, 0x70, 0x74,
+    0x52, 0x13, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x61, 0x6c, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67,
+    0x50, 0x69, 0x65, 0x63, 0x65, 0x42, 0x02, 0x08, 0x02, 0x12, 0x27, 0x0a, 0x0d, 0x6f, 0x70, 0x74,
     0x69, 0x6f, 0x6e, 0x61, 0x6c, 0x5f, 0x63, 0x6f, 0x72, 0x64, 0x18, 0x19, 0x20, 0x01, 0x28, 0x09,
-    0x42, 0x02, 0x08, 0x01, 0x52, 0x0c, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x61, 0x6c, 0x43, 0x6f,
-    0x72, 0x64, 0x12, 0x72, 0x0a, 0x1e, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x61, 0x6c, 0x5f, 0x70,
+    0x52, 0x0c, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x61, 0x6c, 0x43, 0x6f, 0x72, 0x64, 0x42, 0x02,
+    0x08, 0x01, 0x12, 0x72, 0x0a, 0x1e, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x61, 0x6c, 0x5f, 0x70,
     0x75, 0x62, 0x6c, 0x69, 0x63, 0x5f, 0x69, 0x6d, 0x70, 0x6f, 0x72, 0x74, 0x5f, 0x6d, 0x65, 0x73,
     0x73, 0x61, 0x67, 0x65, 0x18, 0x1a, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x2d, 0x2e, 0x70, 0x72, 0x6f,
     0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x5f, 0x69,
@@ -19597,8 +20922,8 @@ static file_descriptor_proto_data: &'static [u8] = &[
     0x1b, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x2d, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66,
     0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x41, 0x6c,
     0x6c, 0x54, 0x79, 0x70, 0x65, 0x73, 0x2e, 0x4e, 0x65, 0x73, 0x74, 0x65, 0x64, 0x4d, 0x65, 0x73,
-    0x73, 0x61, 0x67, 0x65, 0x42, 0x02, 0x28, 0x01, 0x52, 0x13, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e,
-    0x61, 0x6c, 0x4c, 0x61, 0x7a, 0x79, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x25, 0x0a,
+    0x73, 0x61, 0x67, 0x65, 0x52, 0x13, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x61, 0x6c, 0x4c, 0x61,
+    0x7a, 0x79, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x42, 0x02, 0x28, 0x01, 0x12, 0x25, 0x0a,
     0x0e, 0x72, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64, 0x5f, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x18,
     0x1f, 0x20, 0x03, 0x28, 0x05, 0x52, 0x0d, 0x72, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64, 0x49,
     0x6e, 0x74, 0x33, 0x32, 0x12, 0x25, 0x0a, 0x0e, 0x72, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64,
@@ -19674,17 +20999,17 @@ static file_descriptor_proto_data: &'static [u8] = &[
     0x12, 0x72, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64, 0x49, 0x6d, 0x70, 0x6f, 0x72, 0x74, 0x45,
     0x6e, 0x75, 0x6d, 0x12, 0x36, 0x0a, 0x15, 0x72, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64, 0x5f,
     0x73, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x5f, 0x70, 0x69, 0x65, 0x63, 0x65, 0x18, 0x36, 0x20, 0x03,
-    0x28, 0x09, 0x42, 0x02, 0x08, 0x02, 0x52, 0x13, 0x72, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64,
-    0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x50, 0x69, 0x65, 0x63, 0x65, 0x12, 0x27, 0x0a, 0x0d, 0x72,
+    0x28, 0x09, 0x52, 0x13, 0x72, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64, 0x53, 0x74, 0x72, 0x69,
+    0x6e, 0x67, 0x50, 0x69, 0x65, 0x63, 0x65, 0x42, 0x02, 0x08, 0x02, 0x12, 0x27, 0x0a, 0x0d, 0x72,
     0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64, 0x5f, 0x63, 0x6f, 0x72, 0x64, 0x18, 0x37, 0x20, 0x03,
-    0x28, 0x09, 0x42, 0x02, 0x08, 0x01, 0x52, 0x0c, 0x72, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64,
-    0x43, 0x6f, 0x72, 0x64, 0x12, 0x65, 0x0a, 0x15, 0x72, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64,
+    0x28, 0x09, 0x52, 0x0c, 0x72, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64, 0x43, 0x6f, 0x72, 0x64,
+    0x42, 0x02, 0x08, 0x01, 0x12, 0x65, 0x0a, 0x15, 0x72, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64,
     0x5f, 0x6c, 0x61, 0x7a, 0x79, 0x5f, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x18, 0x39, 0x20,
     0x03, 0x28, 0x0b, 0x32, 0x2d, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75,
     0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x41, 0x6c, 0x6c, 0x54,
     0x79, 0x70, 0x65, 0x73, 0x2e, 0x4e, 0x65, 0x73, 0x74, 0x65, 0x64, 0x4d, 0x65, 0x73, 0x73, 0x61,
-    0x67, 0x65, 0x42, 0x02, 0x28, 0x01, 0x52, 0x13, 0x72, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64,
-    0x4c, 0x61, 0x7a, 0x79, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x27, 0x0a, 0x0d, 0x64,
+    0x67, 0x65, 0x52, 0x13, 0x72, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64, 0x4c, 0x61, 0x7a, 0x79,
+    0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x42, 0x02, 0x28, 0x01, 0x12, 0x27, 0x0a, 0x0d, 0x64,
     0x65, 0x66, 0x61, 0x75, 0x6c, 0x74, 0x5f, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x18, 0x3d, 0x20, 0x01,
     0x28, 0x05, 0x3a, 0x02, 0x34, 0x31, 0x52, 0x0c, 0x64, 0x65, 0x66, 0x61, 0x75, 0x6c, 0x74, 0x49,
     0x6e, 0x74, 0x33, 0x32, 0x12, 0x27, 0x0a, 0x0d, 0x64, 0x65, 0x66, 0x61, 0x75, 0x6c, 0x74, 0x5f,
@@ -19746,11 +21071,11 @@ static file_descriptor_proto_data: &'static [u8] = &[
     0x64, 0x65, 0x66, 0x61, 0x75, 0x6c, 0x74, 0x49, 0x6d, 0x70, 0x6f, 0x72, 0x74, 0x45, 0x6e, 0x75,
     0x6d, 0x12, 0x39, 0x0a, 0x14, 0x64, 0x65, 0x66, 0x61, 0x75, 0x6c, 0x74, 0x5f, 0x73, 0x74, 0x72,
     0x69, 0x6e, 0x67, 0x5f, 0x70, 0x69, 0x65, 0x63, 0x65, 0x18, 0x54, 0x20, 0x01, 0x28, 0x09, 0x3a,
-    0x03, 0x61, 0x62, 0x63, 0x42, 0x02, 0x08, 0x02, 0x52, 0x12, 0x64, 0x65, 0x66, 0x61, 0x75, 0x6c,
-    0x74, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x50, 0x69, 0x65, 0x63, 0x65, 0x12, 0x2a, 0x0a, 0x0c,
+    0x03, 0x61, 0x62, 0x63, 0x52, 0x12, 0x64, 0x65, 0x66, 0x61, 0x75, 0x6c, 0x74, 0x53, 0x74, 0x72,
+    0x69, 0x6e, 0x67, 0x50, 0x69, 0x65, 0x63, 0x65, 0x42, 0x02, 0x08, 0x02, 0x12, 0x2a, 0x0a, 0x0c,
     0x64, 0x65, 0x66, 0x61, 0x75, 0x6c, 0x74, 0x5f, 0x63, 0x6f, 0x72, 0x64, 0x18, 0x55, 0x20, 0x01,
-    0x28, 0x09, 0x3a, 0x03, 0x31, 0x32, 0x33, 0x42, 0x02, 0x08, 0x01, 0x52, 0x0b, 0x64, 0x65, 0x66,
-    0x61, 0x75, 0x6c, 0x74, 0x43, 0x6f, 0x72, 0x64, 0x12, 0x23, 0x0a, 0x0c, 0x6f, 0x6e, 0x65, 0x6f,
+    0x28, 0x09, 0x3a, 0x03, 0x31, 0x32, 0x33, 0x52, 0x0b, 0x64, 0x65, 0x66, 0x61, 0x75, 0x6c, 0x74,
+    0x43, 0x6f, 0x72, 0x64, 0x42, 0x02, 0x08, 0x01, 0x12, 0x23, 0x0a, 0x0c, 0x6f, 0x6e, 0x65, 0x6f,
     0x66, 0x5f, 0x75, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x18, 0x6f, 0x20, 0x01, 0x28, 0x0d, 0x48, 0x00,
     0x52, 0x0b, 0x6f, 0x6e, 0x65, 0x6f, 0x66, 0x55, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x12, 0x61, 0x0a,
     0x14, 0x6f, 0x6e, 0x65, 0x6f, 0x66, 0x5f, 0x6e, 0x65, 0x73, 0x74, 0x65, 0x64, 0x5f, 0x6d, 0x65,
@@ -19787,13 +21112,13 @@ static file_descriptor_proto_data: &'static [u8] = &[
     0x22, 0x45, 0x0a, 0x14, 0x54, 0x65, 0x73, 0x74, 0x44, 0x65, 0x70, 0x72, 0x65, 0x63, 0x61, 0x74,
     0x65, 0x64, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x73, 0x12, 0x2d, 0x0a, 0x10, 0x64, 0x65, 0x70, 0x72,
     0x65, 0x63, 0x61, 0x74, 0x65, 0x64, 0x5f, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x18, 0x01, 0x20, 0x01,
-    0x28, 0x05, 0x42, 0x02, 0x18, 0x01, 0x52, 0x0f, 0x64, 0x65, 0x70, 0x72, 0x65, 0x63, 0x61, 0x74,
-    0x65, 0x64, 0x49, 0x6e, 0x74, 0x33, 0x32, 0x22, 0x1e, 0x0a, 0x0e, 0x46, 0x6f, 0x72, 0x65, 0x69,
+    0x28, 0x05, 0x52, 0x0f, 0x64, 0x65, 0x70, 0x72, 0x65, 0x63, 0x61, 0x74, 0x65, 0x64, 0x49, 0x6e,
+    0x74, 0x33, 0x32, 0x42, 0x02, 0x18, 0x01, 0x22, 0x1e, 0x0a, 0x0e, 0x46, 0x6f, 0x72, 0x65, 0x69,
     0x67, 0x6e, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x0c, 0x0a, 0x01, 0x63, 0x18, 0x01,
     0x20, 0x01, 0x28, 0x05, 0x52, 0x01, 0x63, 0x22, 0x30, 0x0a, 0x12, 0x54, 0x65, 0x73, 0x74, 0x52,
-    0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x64, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x73, 0x52, 0x03, 0x62,
-    0x61, 0x72, 0x52, 0x03, 0x62, 0x61, 0x7a, 0x4a, 0x04, 0x08, 0x02, 0x10, 0x03, 0x4a, 0x04, 0x08,
-    0x0f, 0x10, 0x10, 0x4a, 0x04, 0x08, 0x09, 0x10, 0x0c, 0x22, 0x1d, 0x0a, 0x11, 0x54, 0x65, 0x73,
+    0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x64, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x73, 0x4a, 0x04, 0x08,
+    0x02, 0x10, 0x03, 0x4a, 0x04, 0x08, 0x0f, 0x10, 0x10, 0x4a, 0x04, 0x08, 0x09, 0x10, 0x0c, 0x52,
+    0x03, 0x62, 0x61, 0x72, 0x52, 0x03, 0x62, 0x61, 0x7a, 0x22, 0x1d, 0x0a, 0x11, 0x54, 0x65, 0x73,
     0x74, 0x41, 0x6c, 0x6c, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x2a, 0x08,
     0x08, 0x01, 0x10, 0x80, 0x80, 0x80, 0x80, 0x02, 0x22, 0xb5, 0x01, 0x0a, 0x13, 0x54, 0x65, 0x73,
     0x74, 0x4e, 0x65, 0x73, 0x74, 0x65, 0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e,
@@ -19926,13 +21251,13 @@ static file_descriptor_proto_data: &'static [u8] = &[
     0x62, 0x5f, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32,
     0x1f, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74,
     0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x41, 0x6c, 0x6c, 0x54, 0x79, 0x70, 0x65, 0x73,
-    0x42, 0x02, 0x28, 0x00, 0x52, 0x0a, 0x73, 0x75, 0x62, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65,
+    0x52, 0x0a, 0x73, 0x75, 0x62, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x42, 0x02, 0x28, 0x00,
     0x22, 0x57, 0x0a, 0x0f, 0x54, 0x65, 0x73, 0x74, 0x4c, 0x61, 0x7a, 0x79, 0x4d, 0x65, 0x73, 0x73,
     0x61, 0x67, 0x65, 0x12, 0x44, 0x0a, 0x0b, 0x73, 0x75, 0x62, 0x5f, 0x6d, 0x65, 0x73, 0x73, 0x61,
     0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1f, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
     0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73,
-    0x74, 0x41, 0x6c, 0x6c, 0x54, 0x79, 0x70, 0x65, 0x73, 0x42, 0x02, 0x28, 0x01, 0x52, 0x0a, 0x73,
-    0x75, 0x62, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x22, 0xd8, 0x02, 0x0a, 0x18, 0x54, 0x65,
+    0x74, 0x41, 0x6c, 0x6c, 0x54, 0x79, 0x70, 0x65, 0x73, 0x52, 0x0a, 0x73, 0x75, 0x62, 0x4d, 0x65,
+    0x73, 0x73, 0x61, 0x67, 0x65, 0x42, 0x02, 0x28, 0x01, 0x22, 0xd8, 0x02, 0x0a, 0x18, 0x54, 0x65,
     0x73, 0x74, 0x4e, 0x65, 0x73, 0x74, 0x65, 0x64, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x48,
     0x61, 0x73, 0x42, 0x69, 0x74, 0x73, 0x12, 0x71, 0x0a, 0x17, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e,
     0x61, 0x6c, 0x5f, 0x6e, 0x65, 0x73, 0x74, 0x65, 0x64, 0x5f, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67,
@@ -19970,11 +21295,11 @@ static file_descriptor_proto_data: &'static [u8] = &[
     0x73, 0x74, 0x2e, 0x46, 0x6f, 0x72, 0x65, 0x69, 0x67, 0x6e, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67,
     0x65, 0x52, 0x0c, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x12,
     0x2e, 0x0a, 0x10, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x50, 0x69, 0x65, 0x63, 0x65, 0x46, 0x69,
-    0x65, 0x6c, 0x64, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x42, 0x02, 0x08, 0x02, 0x52, 0x10, 0x73,
-    0x74, 0x72, 0x69, 0x6e, 0x67, 0x50, 0x69, 0x65, 0x63, 0x65, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x12,
+    0x65, 0x6c, 0x64, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x10, 0x73, 0x74, 0x72, 0x69, 0x6e,
+    0x67, 0x50, 0x69, 0x65, 0x63, 0x65, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x42, 0x02, 0x08, 0x02, 0x12,
     0x20, 0x0a, 0x09, 0x43, 0x6f, 0x72, 0x64, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x18, 0x06, 0x20, 0x01,
-    0x28, 0x09, 0x42, 0x02, 0x08, 0x01, 0x52, 0x09, 0x63, 0x6f, 0x72, 0x64, 0x46, 0x69, 0x65, 0x6c,
-    0x64, 0x12, 0x36, 0x0a, 0x16, 0x52, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64, 0x50, 0x72, 0x69,
+    0x28, 0x09, 0x52, 0x09, 0x63, 0x6f, 0x72, 0x64, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x42, 0x02, 0x08,
+    0x01, 0x12, 0x36, 0x0a, 0x16, 0x52, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64, 0x50, 0x72, 0x69,
     0x6d, 0x69, 0x74, 0x69, 0x76, 0x65, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x18, 0x07, 0x20, 0x03, 0x28,
     0x05, 0x52, 0x16, 0x72, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64, 0x50, 0x72, 0x69, 0x6d, 0x69,
     0x74, 0x69, 0x76, 0x65, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x12, 0x30, 0x0a, 0x13, 0x52, 0x65, 0x70,
@@ -19993,12 +21318,12 @@ static file_descriptor_proto_data: &'static [u8] = &[
     0x61, 0x74, 0x65, 0x64, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x46, 0x69, 0x65, 0x6c, 0x64,
     0x12, 0x3e, 0x0a, 0x18, 0x52, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64, 0x53, 0x74, 0x72, 0x69,
     0x6e, 0x67, 0x50, 0x69, 0x65, 0x63, 0x65, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x18, 0x0b, 0x20, 0x03,
-    0x28, 0x09, 0x42, 0x02, 0x08, 0x02, 0x52, 0x18, 0x72, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64,
-    0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x50, 0x69, 0x65, 0x63, 0x65, 0x46, 0x69, 0x65, 0x6c, 0x64,
+    0x28, 0x09, 0x52, 0x18, 0x72, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64, 0x53, 0x74, 0x72, 0x69,
+    0x6e, 0x67, 0x50, 0x69, 0x65, 0x63, 0x65, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x42, 0x02, 0x08, 0x02,
     0x12, 0x30, 0x0a, 0x11, 0x52, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64, 0x43, 0x6f, 0x72, 0x64,
-    0x46, 0x69, 0x65, 0x6c, 0x64, 0x18, 0x0c, 0x20, 0x03, 0x28, 0x09, 0x42, 0x02, 0x08, 0x01, 0x52,
-    0x11, 0x72, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64, 0x43, 0x6f, 0x72, 0x64, 0x46, 0x69, 0x65,
-    0x6c, 0x64, 0x22, 0x8e, 0x02, 0x0a, 0x12, 0x54, 0x65, 0x73, 0x74, 0x46, 0x69, 0x65, 0x6c, 0x64,
+    0x46, 0x69, 0x65, 0x6c, 0x64, 0x18, 0x0c, 0x20, 0x03, 0x28, 0x09, 0x52, 0x11, 0x72, 0x65, 0x70,
+    0x65, 0x61, 0x74, 0x65, 0x64, 0x43, 0x6f, 0x72, 0x64, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x42, 0x02,
+    0x08, 0x01, 0x22, 0x8e, 0x02, 0x0a, 0x12, 0x54, 0x65, 0x73, 0x74, 0x46, 0x69, 0x65, 0x6c, 0x64,
     0x4f, 0x72, 0x64, 0x65, 0x72, 0x69, 0x6e, 0x67, 0x73, 0x12, 0x1b, 0x0a, 0x09, 0x6d, 0x79, 0x5f,
     0x73, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x18, 0x0b, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x6d, 0x79,
     0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x12, 0x15, 0x0a, 0x06, 0x6d, 0x79, 0x5f, 0x69, 0x6e, 0x74,
@@ -20071,11 +21396,11 @@ static file_descriptor_proto_data: &'static [u8] = &[
     0x65, 0x73, 0x57, 0x69, 0x74, 0x68, 0x5a, 0x65, 0x72, 0x6f, 0x12, 0x3d, 0x0a, 0x16, 0x73, 0x74,
     0x72, 0x69, 0x6e, 0x67, 0x5f, 0x70, 0x69, 0x65, 0x63, 0x65, 0x5f, 0x77, 0x69, 0x74, 0x68, 0x5f,
     0x7a, 0x65, 0x72, 0x6f, 0x18, 0x19, 0x20, 0x01, 0x28, 0x09, 0x3a, 0x04, 0x61, 0x62, 0x00, 0x63,
-    0x42, 0x02, 0x08, 0x02, 0x52, 0x13, 0x73, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x50, 0x69, 0x65, 0x63,
-    0x65, 0x57, 0x69, 0x74, 0x68, 0x5a, 0x65, 0x72, 0x6f, 0x12, 0x2e, 0x0a, 0x0e, 0x63, 0x6f, 0x72,
+    0x52, 0x13, 0x73, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x50, 0x69, 0x65, 0x63, 0x65, 0x57, 0x69, 0x74,
+    0x68, 0x5a, 0x65, 0x72, 0x6f, 0x42, 0x02, 0x08, 0x02, 0x12, 0x2e, 0x0a, 0x0e, 0x63, 0x6f, 0x72,
     0x64, 0x5f, 0x77, 0x69, 0x74, 0x68, 0x5f, 0x7a, 0x65, 0x72, 0x6f, 0x18, 0x1a, 0x20, 0x01, 0x28,
-    0x09, 0x3a, 0x04, 0x31, 0x32, 0x00, 0x33, 0x42, 0x02, 0x08, 0x01, 0x52, 0x0c, 0x63, 0x6f, 0x72,
-    0x64, 0x57, 0x69, 0x74, 0x68, 0x5a, 0x65, 0x72, 0x6f, 0x12, 0x39, 0x0a, 0x12, 0x72, 0x65, 0x70,
+    0x09, 0x3a, 0x04, 0x31, 0x32, 0x00, 0x33, 0x52, 0x0c, 0x63, 0x6f, 0x72, 0x64, 0x57, 0x69, 0x74,
+    0x68, 0x5a, 0x65, 0x72, 0x6f, 0x42, 0x02, 0x08, 0x01, 0x12, 0x39, 0x0a, 0x12, 0x72, 0x65, 0x70,
     0x6c, 0x61, 0x63, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x5f, 0x73, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x18,
     0x1b, 0x20, 0x01, 0x28, 0x09, 0x3a, 0x0a, 0x24, 0x7b, 0x75, 0x6e, 0x6b, 0x6e, 0x6f, 0x77, 0x6e,
     0x7d, 0x52, 0x11, 0x72, 0x65, 0x70, 0x6c, 0x61, 0x63, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x53, 0x74,
@@ -20129,11 +21454,11 @@ static file_descriptor_proto_data: &'static [u8] = &[
     0x12, 0x1f, 0x0a, 0x0a, 0x66, 0x6f, 0x6f, 0x5f, 0x73, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x18, 0x02,
     0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x09, 0x66, 0x6f, 0x6f, 0x53, 0x74, 0x72, 0x69, 0x6e,
     0x67, 0x12, 0x1f, 0x0a, 0x08, 0x66, 0x6f, 0x6f, 0x5f, 0x63, 0x6f, 0x72, 0x64, 0x18, 0x03, 0x20,
-    0x01, 0x28, 0x09, 0x48, 0x00, 0x42, 0x02, 0x08, 0x01, 0x52, 0x07, 0x66, 0x6f, 0x6f, 0x43, 0x6f,
-    0x72, 0x64, 0x12, 0x2e, 0x0a, 0x10, 0x66, 0x6f, 0x6f, 0x5f, 0x73, 0x74, 0x72, 0x69, 0x6e, 0x67,
-    0x5f, 0x70, 0x69, 0x65, 0x63, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x42, 0x02,
-    0x08, 0x02, 0x52, 0x0e, 0x66, 0x6f, 0x6f, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x50, 0x69, 0x65,
-    0x63, 0x65, 0x12, 0x1d, 0x0a, 0x09, 0x66, 0x6f, 0x6f, 0x5f, 0x62, 0x79, 0x74, 0x65, 0x73, 0x18,
+    0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x07, 0x66, 0x6f, 0x6f, 0x43, 0x6f, 0x72, 0x64, 0x42, 0x02,
+    0x08, 0x01, 0x12, 0x2e, 0x0a, 0x10, 0x66, 0x6f, 0x6f, 0x5f, 0x73, 0x74, 0x72, 0x69, 0x6e, 0x67,
+    0x5f, 0x70, 0x69, 0x65, 0x63, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x0e,
+    0x66, 0x6f, 0x6f, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x50, 0x69, 0x65, 0x63, 0x65, 0x42, 0x02,
+    0x08, 0x02, 0x12, 0x1d, 0x0a, 0x09, 0x66, 0x6f, 0x6f, 0x5f, 0x62, 0x79, 0x74, 0x65, 0x73, 0x18,
     0x05, 0x20, 0x01, 0x28, 0x0c, 0x48, 0x00, 0x52, 0x08, 0x66, 0x6f, 0x6f, 0x42, 0x79, 0x74, 0x65,
     0x73, 0x12, 0x45, 0x0a, 0x08, 0x66, 0x6f, 0x6f, 0x5f, 0x65, 0x6e, 0x75, 0x6d, 0x18, 0x06, 0x20,
     0x01, 0x28, 0x0e, 0x32, 0x28, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75,
@@ -20149,8 +21474,8 @@ static file_descriptor_proto_data: &'static [u8] = &[
     0x28, 0x0b, 0x32, 0x2b, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e,
     0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x4f, 0x6e, 0x65, 0x6f, 0x66,
     0x32, 0x2e, 0x4e, 0x65, 0x73, 0x74, 0x65, 0x64, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x48,
-    0x00, 0x42, 0x02, 0x28, 0x01, 0x52, 0x0e, 0x66, 0x6f, 0x6f, 0x4c, 0x61, 0x7a, 0x79, 0x4d, 0x65,
-    0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x1c, 0x0a, 0x07, 0x62, 0x61, 0x72, 0x5f, 0x69, 0x6e, 0x74,
+    0x00, 0x52, 0x0e, 0x66, 0x6f, 0x6f, 0x4c, 0x61, 0x7a, 0x79, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67,
+    0x65, 0x42, 0x02, 0x28, 0x01, 0x12, 0x1c, 0x0a, 0x07, 0x62, 0x61, 0x72, 0x5f, 0x69, 0x6e, 0x74,
     0x18, 0x0c, 0x20, 0x01, 0x28, 0x05, 0x3a, 0x01, 0x35, 0x48, 0x01, 0x52, 0x06, 0x62, 0x61, 0x72,
     0x49, 0x6e, 0x74, 0x12, 0x4a, 0x0a, 0x08, 0x62, 0x61, 0x72, 0x5f, 0x65, 0x6e, 0x75, 0x6d, 0x18,
     0x11, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x28, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66,
@@ -20185,86 +21510,86 @@ static file_descriptor_proto_data: &'static [u8] = &[
     0x65, 0x71, 0x75, 0x69, 0x72, 0x65, 0x64, 0x44, 0x6f, 0x75, 0x62, 0x6c, 0x65, 0x42, 0x05, 0x0a,
     0x03, 0x66, 0x6f, 0x6f, 0x22, 0xed, 0x04, 0x0a, 0x0f, 0x54, 0x65, 0x73, 0x74, 0x50, 0x61, 0x63,
     0x6b, 0x65, 0x64, 0x54, 0x79, 0x70, 0x65, 0x73, 0x12, 0x25, 0x0a, 0x0c, 0x70, 0x61, 0x63, 0x6b,
-    0x65, 0x64, 0x5f, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x18, 0x5a, 0x20, 0x03, 0x28, 0x05, 0x42, 0x02,
-    0x10, 0x01, 0x52, 0x0b, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x49, 0x6e, 0x74, 0x33, 0x32, 0x12,
+    0x65, 0x64, 0x5f, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x18, 0x5a, 0x20, 0x03, 0x28, 0x05, 0x52, 0x0b,
+    0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x49, 0x6e, 0x74, 0x33, 0x32, 0x42, 0x02, 0x10, 0x01, 0x12,
     0x25, 0x0a, 0x0c, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x69, 0x6e, 0x74, 0x36, 0x34, 0x18,
-    0x5b, 0x20, 0x03, 0x28, 0x03, 0x42, 0x02, 0x10, 0x01, 0x52, 0x0b, 0x70, 0x61, 0x63, 0x6b, 0x65,
-    0x64, 0x49, 0x6e, 0x74, 0x36, 0x34, 0x12, 0x27, 0x0a, 0x0d, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64,
-    0x5f, 0x75, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x18, 0x5c, 0x20, 0x03, 0x28, 0x0d, 0x42, 0x02, 0x10,
-    0x01, 0x52, 0x0c, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x55, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x12,
+    0x5b, 0x20, 0x03, 0x28, 0x03, 0x52, 0x0b, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x49, 0x6e, 0x74,
+    0x36, 0x34, 0x42, 0x02, 0x10, 0x01, 0x12, 0x27, 0x0a, 0x0d, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64,
+    0x5f, 0x75, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x18, 0x5c, 0x20, 0x03, 0x28, 0x0d, 0x52, 0x0c, 0x70,
+    0x61, 0x63, 0x6b, 0x65, 0x64, 0x55, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x42, 0x02, 0x10, 0x01, 0x12,
     0x27, 0x0a, 0x0d, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x75, 0x69, 0x6e, 0x74, 0x36, 0x34,
-    0x18, 0x5d, 0x20, 0x03, 0x28, 0x04, 0x42, 0x02, 0x10, 0x01, 0x52, 0x0c, 0x70, 0x61, 0x63, 0x6b,
-    0x65, 0x64, 0x55, 0x69, 0x6e, 0x74, 0x36, 0x34, 0x12, 0x27, 0x0a, 0x0d, 0x70, 0x61, 0x63, 0x6b,
-    0x65, 0x64, 0x5f, 0x73, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x18, 0x5e, 0x20, 0x03, 0x28, 0x11, 0x42,
-    0x02, 0x10, 0x01, 0x52, 0x0c, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x53, 0x69, 0x6e, 0x74, 0x33,
-    0x32, 0x12, 0x27, 0x0a, 0x0d, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x73, 0x69, 0x6e, 0x74,
-    0x36, 0x34, 0x18, 0x5f, 0x20, 0x03, 0x28, 0x12, 0x42, 0x02, 0x10, 0x01, 0x52, 0x0c, 0x70, 0x61,
-    0x63, 0x6b, 0x65, 0x64, 0x53, 0x69, 0x6e, 0x74, 0x36, 0x34, 0x12, 0x29, 0x0a, 0x0e, 0x70, 0x61,
+    0x18, 0x5d, 0x20, 0x03, 0x28, 0x04, 0x52, 0x0c, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x55, 0x69,
+    0x6e, 0x74, 0x36, 0x34, 0x42, 0x02, 0x10, 0x01, 0x12, 0x27, 0x0a, 0x0d, 0x70, 0x61, 0x63, 0x6b,
+    0x65, 0x64, 0x5f, 0x73, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x18, 0x5e, 0x20, 0x03, 0x28, 0x11, 0x52,
+    0x0c, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x53, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x42, 0x02, 0x10,
+    0x01, 0x12, 0x27, 0x0a, 0x0d, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x73, 0x69, 0x6e, 0x74,
+    0x36, 0x34, 0x18, 0x5f, 0x20, 0x03, 0x28, 0x12, 0x52, 0x0c, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64,
+    0x53, 0x69, 0x6e, 0x74, 0x36, 0x34, 0x42, 0x02, 0x10, 0x01, 0x12, 0x29, 0x0a, 0x0e, 0x70, 0x61,
     0x63, 0x6b, 0x65, 0x64, 0x5f, 0x66, 0x69, 0x78, 0x65, 0x64, 0x33, 0x32, 0x18, 0x60, 0x20, 0x03,
-    0x28, 0x07, 0x42, 0x02, 0x10, 0x01, 0x52, 0x0d, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x46, 0x69,
-    0x78, 0x65, 0x64, 0x33, 0x32, 0x12, 0x29, 0x0a, 0x0e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f,
-    0x66, 0x69, 0x78, 0x65, 0x64, 0x36, 0x34, 0x18, 0x61, 0x20, 0x03, 0x28, 0x06, 0x42, 0x02, 0x10,
-    0x01, 0x52, 0x0d, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x46, 0x69, 0x78, 0x65, 0x64, 0x36, 0x34,
+    0x28, 0x07, 0x52, 0x0d, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x46, 0x69, 0x78, 0x65, 0x64, 0x33,
+    0x32, 0x42, 0x02, 0x10, 0x01, 0x12, 0x29, 0x0a, 0x0e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f,
+    0x66, 0x69, 0x78, 0x65, 0x64, 0x36, 0x34, 0x18, 0x61, 0x20, 0x03, 0x28, 0x06, 0x52, 0x0d, 0x70,
+    0x61, 0x63, 0x6b, 0x65, 0x64, 0x46, 0x69, 0x78, 0x65, 0x64, 0x36, 0x34, 0x42, 0x02, 0x10, 0x01,
     0x12, 0x2b, 0x0a, 0x0f, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x73, 0x66, 0x69, 0x78, 0x65,
-    0x64, 0x33, 0x32, 0x18, 0x62, 0x20, 0x03, 0x28, 0x0f, 0x42, 0x02, 0x10, 0x01, 0x52, 0x0e, 0x70,
-    0x61, 0x63, 0x6b, 0x65, 0x64, 0x53, 0x66, 0x69, 0x78, 0x65, 0x64, 0x33, 0x32, 0x12, 0x2b, 0x0a,
+    0x64, 0x33, 0x32, 0x18, 0x62, 0x20, 0x03, 0x28, 0x0f, 0x52, 0x0e, 0x70, 0x61, 0x63, 0x6b, 0x65,
+    0x64, 0x53, 0x66, 0x69, 0x78, 0x65, 0x64, 0x33, 0x32, 0x42, 0x02, 0x10, 0x01, 0x12, 0x2b, 0x0a,
     0x0f, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x73, 0x66, 0x69, 0x78, 0x65, 0x64, 0x36, 0x34,
-    0x18, 0x63, 0x20, 0x03, 0x28, 0x10, 0x42, 0x02, 0x10, 0x01, 0x52, 0x0e, 0x70, 0x61, 0x63, 0x6b,
-    0x65, 0x64, 0x53, 0x66, 0x69, 0x78, 0x65, 0x64, 0x36, 0x34, 0x12, 0x25, 0x0a, 0x0c, 0x70, 0x61,
+    0x18, 0x63, 0x20, 0x03, 0x28, 0x10, 0x52, 0x0e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x53, 0x66,
+    0x69, 0x78, 0x65, 0x64, 0x36, 0x34, 0x42, 0x02, 0x10, 0x01, 0x12, 0x25, 0x0a, 0x0c, 0x70, 0x61,
     0x63, 0x6b, 0x65, 0x64, 0x5f, 0x66, 0x6c, 0x6f, 0x61, 0x74, 0x18, 0x64, 0x20, 0x03, 0x28, 0x02,
-    0x42, 0x02, 0x10, 0x01, 0x52, 0x0b, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x46, 0x6c, 0x6f, 0x61,
-    0x74, 0x12, 0x27, 0x0a, 0x0d, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x64, 0x6f, 0x75, 0x62,
-    0x6c, 0x65, 0x18, 0x65, 0x20, 0x03, 0x28, 0x01, 0x42, 0x02, 0x10, 0x01, 0x52, 0x0c, 0x70, 0x61,
-    0x63, 0x6b, 0x65, 0x64, 0x44, 0x6f, 0x75, 0x62, 0x6c, 0x65, 0x12, 0x23, 0x0a, 0x0b, 0x70, 0x61,
-    0x63, 0x6b, 0x65, 0x64, 0x5f, 0x62, 0x6f, 0x6f, 0x6c, 0x18, 0x66, 0x20, 0x03, 0x28, 0x08, 0x42,
-    0x02, 0x10, 0x01, 0x52, 0x0a, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x42, 0x6f, 0x6f, 0x6c, 0x12,
+    0x52, 0x0b, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x46, 0x6c, 0x6f, 0x61, 0x74, 0x42, 0x02, 0x10,
+    0x01, 0x12, 0x27, 0x0a, 0x0d, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x64, 0x6f, 0x75, 0x62,
+    0x6c, 0x65, 0x18, 0x65, 0x20, 0x03, 0x28, 0x01, 0x52, 0x0c, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64,
+    0x44, 0x6f, 0x75, 0x62, 0x6c, 0x65, 0x42, 0x02, 0x10, 0x01, 0x12, 0x23, 0x0a, 0x0b, 0x70, 0x61,
+    0x63, 0x6b, 0x65, 0x64, 0x5f, 0x62, 0x6f, 0x6f, 0x6c, 0x18, 0x66, 0x20, 0x03, 0x28, 0x08, 0x52,
+    0x0a, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x42, 0x6f, 0x6f, 0x6c, 0x42, 0x02, 0x10, 0x01, 0x12,
     0x43, 0x0a, 0x0b, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x65, 0x6e, 0x75, 0x6d, 0x18, 0x67,
     0x20, 0x03, 0x28, 0x0e, 0x32, 0x1e, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f,
     0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x46, 0x6f, 0x72, 0x65, 0x69, 0x67, 0x6e,
-    0x45, 0x6e, 0x75, 0x6d, 0x42, 0x02, 0x10, 0x01, 0x52, 0x0a, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64,
-    0x45, 0x6e, 0x75, 0x6d, 0x22, 0xa7, 0x05, 0x0a, 0x11, 0x54, 0x65, 0x73, 0x74, 0x55, 0x6e, 0x70,
+    0x45, 0x6e, 0x75, 0x6d, 0x52, 0x0a, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x45, 0x6e, 0x75, 0x6d,
+    0x42, 0x02, 0x10, 0x01, 0x22, 0xa7, 0x05, 0x0a, 0x11, 0x54, 0x65, 0x73, 0x74, 0x55, 0x6e, 0x70,
     0x61, 0x63, 0x6b, 0x65, 0x64, 0x54, 0x79, 0x70, 0x65, 0x73, 0x12, 0x29, 0x0a, 0x0e, 0x75, 0x6e,
     0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x18, 0x5a, 0x20, 0x03,
-    0x28, 0x05, 0x42, 0x02, 0x10, 0x00, 0x52, 0x0d, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64,
-    0x49, 0x6e, 0x74, 0x33, 0x32, 0x12, 0x29, 0x0a, 0x0e, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65,
-    0x64, 0x5f, 0x69, 0x6e, 0x74, 0x36, 0x34, 0x18, 0x5b, 0x20, 0x03, 0x28, 0x03, 0x42, 0x02, 0x10,
-    0x00, 0x52, 0x0d, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x49, 0x6e, 0x74, 0x36, 0x34,
+    0x28, 0x05, 0x52, 0x0d, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x49, 0x6e, 0x74, 0x33,
+    0x32, 0x42, 0x02, 0x10, 0x00, 0x12, 0x29, 0x0a, 0x0e, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65,
+    0x64, 0x5f, 0x69, 0x6e, 0x74, 0x36, 0x34, 0x18, 0x5b, 0x20, 0x03, 0x28, 0x03, 0x52, 0x0d, 0x75,
+    0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x49, 0x6e, 0x74, 0x36, 0x34, 0x42, 0x02, 0x10, 0x00,
     0x12, 0x2b, 0x0a, 0x0f, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x75, 0x69, 0x6e,
-    0x74, 0x33, 0x32, 0x18, 0x5c, 0x20, 0x03, 0x28, 0x0d, 0x42, 0x02, 0x10, 0x00, 0x52, 0x0e, 0x75,
-    0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x55, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x12, 0x2b, 0x0a,
+    0x74, 0x33, 0x32, 0x18, 0x5c, 0x20, 0x03, 0x28, 0x0d, 0x52, 0x0e, 0x75, 0x6e, 0x70, 0x61, 0x63,
+    0x6b, 0x65, 0x64, 0x55, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x42, 0x02, 0x10, 0x00, 0x12, 0x2b, 0x0a,
     0x0f, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x75, 0x69, 0x6e, 0x74, 0x36, 0x34,
-    0x18, 0x5d, 0x20, 0x03, 0x28, 0x04, 0x42, 0x02, 0x10, 0x00, 0x52, 0x0e, 0x75, 0x6e, 0x70, 0x61,
-    0x63, 0x6b, 0x65, 0x64, 0x55, 0x69, 0x6e, 0x74, 0x36, 0x34, 0x12, 0x2b, 0x0a, 0x0f, 0x75, 0x6e,
+    0x18, 0x5d, 0x20, 0x03, 0x28, 0x04, 0x52, 0x0e, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64,
+    0x55, 0x69, 0x6e, 0x74, 0x36, 0x34, 0x42, 0x02, 0x10, 0x00, 0x12, 0x2b, 0x0a, 0x0f, 0x75, 0x6e,
     0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x73, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x18, 0x5e, 0x20,
-    0x03, 0x28, 0x11, 0x42, 0x02, 0x10, 0x00, 0x52, 0x0e, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65,
-    0x64, 0x53, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x12, 0x2b, 0x0a, 0x0f, 0x75, 0x6e, 0x70, 0x61, 0x63,
+    0x03, 0x28, 0x11, 0x52, 0x0e, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x53, 0x69, 0x6e,
+    0x74, 0x33, 0x32, 0x42, 0x02, 0x10, 0x00, 0x12, 0x2b, 0x0a, 0x0f, 0x75, 0x6e, 0x70, 0x61, 0x63,
     0x6b, 0x65, 0x64, 0x5f, 0x73, 0x69, 0x6e, 0x74, 0x36, 0x34, 0x18, 0x5f, 0x20, 0x03, 0x28, 0x12,
-    0x42, 0x02, 0x10, 0x00, 0x52, 0x0e, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x53, 0x69,
-    0x6e, 0x74, 0x36, 0x34, 0x12, 0x2d, 0x0a, 0x10, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64,
-    0x5f, 0x66, 0x69, 0x78, 0x65, 0x64, 0x33, 0x32, 0x18, 0x60, 0x20, 0x03, 0x28, 0x07, 0x42, 0x02,
-    0x10, 0x00, 0x52, 0x0f, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x46, 0x69, 0x78, 0x65,
-    0x64, 0x33, 0x32, 0x12, 0x2d, 0x0a, 0x10, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f,
-    0x66, 0x69, 0x78, 0x65, 0x64, 0x36, 0x34, 0x18, 0x61, 0x20, 0x03, 0x28, 0x06, 0x42, 0x02, 0x10,
-    0x00, 0x52, 0x0f, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x46, 0x69, 0x78, 0x65, 0x64,
-    0x36, 0x34, 0x12, 0x2f, 0x0a, 0x11, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x73,
-    0x66, 0x69, 0x78, 0x65, 0x64, 0x33, 0x32, 0x18, 0x62, 0x20, 0x03, 0x28, 0x0f, 0x42, 0x02, 0x10,
-    0x00, 0x52, 0x10, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x53, 0x66, 0x69, 0x78, 0x65,
-    0x64, 0x33, 0x32, 0x12, 0x2f, 0x0a, 0x11, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f,
-    0x73, 0x66, 0x69, 0x78, 0x65, 0x64, 0x36, 0x34, 0x18, 0x63, 0x20, 0x03, 0x28, 0x10, 0x42, 0x02,
-    0x10, 0x00, 0x52, 0x10, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x53, 0x66, 0x69, 0x78,
-    0x65, 0x64, 0x36, 0x34, 0x12, 0x29, 0x0a, 0x0e, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64,
-    0x5f, 0x66, 0x6c, 0x6f, 0x61, 0x74, 0x18, 0x64, 0x20, 0x03, 0x28, 0x02, 0x42, 0x02, 0x10, 0x00,
-    0x52, 0x0d, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x46, 0x6c, 0x6f, 0x61, 0x74, 0x12,
+    0x52, 0x0e, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x53, 0x69, 0x6e, 0x74, 0x36, 0x34,
+    0x42, 0x02, 0x10, 0x00, 0x12, 0x2d, 0x0a, 0x10, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64,
+    0x5f, 0x66, 0x69, 0x78, 0x65, 0x64, 0x33, 0x32, 0x18, 0x60, 0x20, 0x03, 0x28, 0x07, 0x52, 0x0f,
+    0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x46, 0x69, 0x78, 0x65, 0x64, 0x33, 0x32, 0x42,
+    0x02, 0x10, 0x00, 0x12, 0x2d, 0x0a, 0x10, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f,
+    0x66, 0x69, 0x78, 0x65, 0x64, 0x36, 0x34, 0x18, 0x61, 0x20, 0x03, 0x28, 0x06, 0x52, 0x0f, 0x75,
+    0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x46, 0x69, 0x78, 0x65, 0x64, 0x36, 0x34, 0x42, 0x02,
+    0x10, 0x00, 0x12, 0x2f, 0x0a, 0x11, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x73,
+    0x66, 0x69, 0x78, 0x65, 0x64, 0x33, 0x32, 0x18, 0x62, 0x20, 0x03, 0x28, 0x0f, 0x52, 0x10, 0x75,
+    0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x53, 0x66, 0x69, 0x78, 0x65, 0x64, 0x33, 0x32, 0x42,
+    0x02, 0x10, 0x00, 0x12, 0x2f, 0x0a, 0x11, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f,
+    0x73, 0x66, 0x69, 0x78, 0x65, 0x64, 0x36, 0x34, 0x18, 0x63, 0x20, 0x03, 0x28, 0x10, 0x52, 0x10,
+    0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x53, 0x66, 0x69, 0x78, 0x65, 0x64, 0x36, 0x34,
+    0x42, 0x02, 0x10, 0x00, 0x12, 0x29, 0x0a, 0x0e, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64,
+    0x5f, 0x66, 0x6c, 0x6f, 0x61, 0x74, 0x18, 0x64, 0x20, 0x03, 0x28, 0x02, 0x52, 0x0d, 0x75, 0x6e,
+    0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x46, 0x6c, 0x6f, 0x61, 0x74, 0x42, 0x02, 0x10, 0x00, 0x12,
     0x2b, 0x0a, 0x0f, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x64, 0x6f, 0x75, 0x62,
-    0x6c, 0x65, 0x18, 0x65, 0x20, 0x03, 0x28, 0x01, 0x42, 0x02, 0x10, 0x00, 0x52, 0x0e, 0x75, 0x6e,
-    0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x44, 0x6f, 0x75, 0x62, 0x6c, 0x65, 0x12, 0x27, 0x0a, 0x0d,
+    0x6c, 0x65, 0x18, 0x65, 0x20, 0x03, 0x28, 0x01, 0x52, 0x0e, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b,
+    0x65, 0x64, 0x44, 0x6f, 0x75, 0x62, 0x6c, 0x65, 0x42, 0x02, 0x10, 0x00, 0x12, 0x27, 0x0a, 0x0d,
     0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x62, 0x6f, 0x6f, 0x6c, 0x18, 0x66, 0x20,
-    0x03, 0x28, 0x08, 0x42, 0x02, 0x10, 0x00, 0x52, 0x0c, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65,
-    0x64, 0x42, 0x6f, 0x6f, 0x6c, 0x12, 0x47, 0x0a, 0x0d, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65,
+    0x03, 0x28, 0x08, 0x52, 0x0c, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x42, 0x6f, 0x6f,
+    0x6c, 0x42, 0x02, 0x10, 0x00, 0x12, 0x47, 0x0a, 0x0d, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65,
     0x64, 0x5f, 0x65, 0x6e, 0x75, 0x6d, 0x18, 0x67, 0x20, 0x03, 0x28, 0x0e, 0x32, 0x1e, 0x2e, 0x70,
     0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74,
-    0x2e, 0x46, 0x6f, 0x72, 0x65, 0x69, 0x67, 0x6e, 0x45, 0x6e, 0x75, 0x6d, 0x42, 0x02, 0x10, 0x00,
-    0x52, 0x0c, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x45, 0x6e, 0x75, 0x6d, 0x22, 0x20,
+    0x2e, 0x46, 0x6f, 0x72, 0x65, 0x69, 0x67, 0x6e, 0x45, 0x6e, 0x75, 0x6d, 0x52, 0x0c, 0x75, 0x6e,
+    0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x45, 0x6e, 0x75, 0x6d, 0x42, 0x02, 0x10, 0x00, 0x22, 0x20,
     0x0a, 0x14, 0x54, 0x65, 0x73, 0x74, 0x50, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x45, 0x78, 0x74, 0x65,
     0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x2a, 0x08, 0x08, 0x01, 0x10, 0x80, 0x80, 0x80, 0x80, 0x02,
     0x22, 0x22, 0x0a, 0x16, 0x54, 0x65, 0x73, 0x74, 0x55, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64,
@@ -20302,8 +21627,8 @@ static file_descriptor_proto_data: &'static [u8] = &[
     0x73, 0x69, 0x6f, 0x6e, 0x18, 0xd5, 0x0f, 0x20, 0x03, 0x28, 0x09, 0x52, 0x11, 0x72, 0x65, 0x70,
     0x65, 0x61, 0x74, 0x65, 0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x12, 0x2e,
     0x0a, 0x10, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x65, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69,
-    0x6f, 0x6e, 0x18, 0xd6, 0x0f, 0x20, 0x03, 0x28, 0x11, 0x42, 0x02, 0x10, 0x01, 0x52, 0x0f, 0x70,
-    0x61, 0x63, 0x6b, 0x65, 0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x1a, 0x3a,
+    0x6f, 0x6e, 0x18, 0xd6, 0x0f, 0x20, 0x03, 0x28, 0x11, 0x52, 0x0f, 0x70, 0x61, 0x63, 0x6b, 0x65,
+    0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x42, 0x02, 0x10, 0x01, 0x1a, 0x3a,
     0x0a, 0x12, 0x44, 0x79, 0x6e, 0x61, 0x6d, 0x69, 0x63, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65,
     0x54, 0x79, 0x70, 0x65, 0x12, 0x24, 0x0a, 0x0d, 0x64, 0x79, 0x6e, 0x61, 0x6d, 0x69, 0x63, 0x5f,
     0x66, 0x69, 0x65, 0x6c, 0x64, 0x18, 0xb4, 0x10, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0c, 0x64, 0x79,
@@ -20571,15 +21896,15 @@ static file_descriptor_proto_data: &'static [u8] = &[
     0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x18, 0x20, 0x01, 0x28, 0x09, 0x12, 0x24, 0x2e,
     0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73,
     0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x41, 0x6c, 0x6c, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69,
-    0x6f, 0x6e, 0x73, 0x42, 0x02, 0x08, 0x02, 0x52, 0x1c, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x61,
-    0x6c, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x50, 0x69, 0x65, 0x63, 0x65, 0x45, 0x78, 0x74, 0x65,
-    0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x3a, 0x60, 0x0a, 0x17, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x61,
+    0x6f, 0x6e, 0x73, 0x52, 0x1c, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x61, 0x6c, 0x53, 0x74, 0x72,
+    0x69, 0x6e, 0x67, 0x50, 0x69, 0x65, 0x63, 0x65, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f,
+    0x6e, 0x42, 0x02, 0x08, 0x02, 0x3a, 0x60, 0x0a, 0x17, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x61,
     0x6c, 0x5f, 0x63, 0x6f, 0x72, 0x64, 0x5f, 0x65, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e,
     0x18, 0x19, 0x20, 0x01, 0x28, 0x09, 0x12, 0x24, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75,
     0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x41,
-    0x6c, 0x6c, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x42, 0x02, 0x08, 0x01,
-    0x52, 0x15, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x61, 0x6c, 0x43, 0x6f, 0x72, 0x64, 0x45, 0x78,
-    0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x3a, 0xab, 0x01, 0x0a, 0x28, 0x6f, 0x70, 0x74, 0x69,
+    0x6c, 0x6c, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x15, 0x6f, 0x70,
+    0x74, 0x69, 0x6f, 0x6e, 0x61, 0x6c, 0x43, 0x6f, 0x72, 0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73,
+    0x69, 0x6f, 0x6e, 0x42, 0x02, 0x08, 0x01, 0x3a, 0xab, 0x01, 0x0a, 0x28, 0x6f, 0x70, 0x74, 0x69,
     0x6f, 0x6e, 0x61, 0x6c, 0x5f, 0x70, 0x75, 0x62, 0x6c, 0x69, 0x63, 0x5f, 0x69, 0x6d, 0x70, 0x6f,
     0x72, 0x74, 0x5f, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x5f, 0x65, 0x78, 0x74, 0x65, 0x6e,
     0x73, 0x69, 0x6f, 0x6e, 0x18, 0x1a, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x2d, 0x2e, 0x70, 0x72, 0x6f,
@@ -20598,9 +21923,9 @@ static file_descriptor_proto_data: &'static [u8] = &[
     0x2e, 0x4e, 0x65, 0x73, 0x74, 0x65, 0x64, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x24,
     0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65,
     0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x41, 0x6c, 0x6c, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73,
-    0x69, 0x6f, 0x6e, 0x73, 0x42, 0x02, 0x28, 0x01, 0x52, 0x1c, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e,
-    0x61, 0x6c, 0x4c, 0x61, 0x7a, 0x79, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x45, 0x78, 0x74,
-    0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x3a, 0x5e, 0x0a, 0x18, 0x72, 0x65, 0x70, 0x65, 0x61, 0x74,
+    0x69, 0x6f, 0x6e, 0x73, 0x52, 0x1c, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x61, 0x6c, 0x4c, 0x61,
+    0x7a, 0x79, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69,
+    0x6f, 0x6e, 0x42, 0x02, 0x28, 0x01, 0x3a, 0x5e, 0x0a, 0x18, 0x72, 0x65, 0x70, 0x65, 0x61, 0x74,
     0x65, 0x64, 0x5f, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x5f, 0x65, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69,
     0x6f, 0x6e, 0x18, 0x1f, 0x20, 0x03, 0x28, 0x05, 0x12, 0x24, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
     0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73,
@@ -20753,16 +22078,16 @@ static file_descriptor_proto_data: &'static [u8] = &[
     0x6e, 0x67, 0x5f, 0x70, 0x69, 0x65, 0x63, 0x65, 0x5f, 0x65, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69,
     0x6f, 0x6e, 0x18, 0x36, 0x20, 0x03, 0x28, 0x09, 0x12, 0x24, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
     0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73,
-    0x74, 0x41, 0x6c, 0x6c, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x42, 0x02,
-    0x08, 0x02, 0x52, 0x1c, 0x72, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64, 0x53, 0x74, 0x72, 0x69,
-    0x6e, 0x67, 0x50, 0x69, 0x65, 0x63, 0x65, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e,
+    0x74, 0x41, 0x6c, 0x6c, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x1c,
+    0x72, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x50, 0x69,
+    0x65, 0x63, 0x65, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x42, 0x02, 0x08, 0x02,
     0x3a, 0x60, 0x0a, 0x17, 0x72, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64, 0x5f, 0x63, 0x6f, 0x72,
     0x64, 0x5f, 0x65, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x37, 0x20, 0x03, 0x28,
     0x09, 0x12, 0x24, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69,
     0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x41, 0x6c, 0x6c, 0x45, 0x78, 0x74,
-    0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x42, 0x02, 0x08, 0x01, 0x52, 0x15, 0x72, 0x65, 0x70,
-    0x65, 0x61, 0x74, 0x65, 0x64, 0x43, 0x6f, 0x72, 0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69,
-    0x6f, 0x6e, 0x3a, 0x9e, 0x01, 0x0a, 0x1f, 0x72, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64, 0x5f,
+    0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x15, 0x72, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65,
+    0x64, 0x43, 0x6f, 0x72, 0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x42, 0x02,
+    0x08, 0x01, 0x3a, 0x9e, 0x01, 0x0a, 0x1f, 0x72, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64, 0x5f,
     0x6c, 0x61, 0x7a, 0x79, 0x5f, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x5f, 0x65, 0x78, 0x74,
     0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x39, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x2d, 0x2e, 0x70,
     0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74,
@@ -20770,9 +22095,9 @@ static file_descriptor_proto_data: &'static [u8] = &[
     0x73, 0x74, 0x65, 0x64, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x24, 0x2e, 0x70, 0x72,
     0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e,
     0x54, 0x65, 0x73, 0x74, 0x41, 0x6c, 0x6c, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e,
-    0x73, 0x42, 0x02, 0x28, 0x01, 0x52, 0x1c, 0x72, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64, 0x4c,
-    0x61, 0x7a, 0x79, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73,
-    0x69, 0x6f, 0x6e, 0x3a, 0x60, 0x0a, 0x17, 0x64, 0x65, 0x66, 0x61, 0x75, 0x6c, 0x74, 0x5f, 0x69,
+    0x73, 0x52, 0x1c, 0x72, 0x65, 0x70, 0x65, 0x61, 0x74, 0x65, 0x64, 0x4c, 0x61, 0x7a, 0x79, 0x4d,
+    0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x42,
+    0x02, 0x28, 0x01, 0x3a, 0x60, 0x0a, 0x17, 0x64, 0x65, 0x66, 0x61, 0x75, 0x6c, 0x74, 0x5f, 0x69,
     0x6e, 0x74, 0x33, 0x32, 0x5f, 0x65, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x3d,
     0x20, 0x01, 0x28, 0x05, 0x12, 0x24, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f,
     0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x41, 0x6c, 0x6c,
@@ -20901,15 +22226,15 @@ static file_descriptor_proto_data: &'static [u8] = &[
     0x18, 0x54, 0x20, 0x01, 0x28, 0x09, 0x12, 0x24, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75,
     0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x41,
     0x6c, 0x6c, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x3a, 0x03, 0x61, 0x62,
-    0x63, 0x42, 0x02, 0x08, 0x02, 0x52, 0x1b, 0x64, 0x65, 0x66, 0x61, 0x75, 0x6c, 0x74, 0x53, 0x74,
-    0x72, 0x69, 0x6e, 0x67, 0x50, 0x69, 0x65, 0x63, 0x65, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69,
-    0x6f, 0x6e, 0x3a, 0x63, 0x0a, 0x16, 0x64, 0x65, 0x66, 0x61, 0x75, 0x6c, 0x74, 0x5f, 0x63, 0x6f,
+    0x63, 0x52, 0x1b, 0x64, 0x65, 0x66, 0x61, 0x75, 0x6c, 0x74, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67,
+    0x50, 0x69, 0x65, 0x63, 0x65, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x42, 0x02,
+    0x08, 0x02, 0x3a, 0x63, 0x0a, 0x16, 0x64, 0x65, 0x66, 0x61, 0x75, 0x6c, 0x74, 0x5f, 0x63, 0x6f,
     0x72, 0x64, 0x5f, 0x65, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x55, 0x20, 0x01,
     0x28, 0x09, 0x12, 0x24, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e,
     0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x41, 0x6c, 0x6c, 0x45, 0x78,
-    0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x3a, 0x03, 0x31, 0x32, 0x33, 0x42, 0x02, 0x08,
-    0x01, 0x52, 0x14, 0x64, 0x65, 0x66, 0x61, 0x75, 0x6c, 0x74, 0x43, 0x6f, 0x72, 0x64, 0x45, 0x78,
-    0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x3a, 0x5a, 0x0a, 0x16, 0x6f, 0x6e, 0x65, 0x6f, 0x66,
+    0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x3a, 0x03, 0x31, 0x32, 0x33, 0x52, 0x14, 0x64,
+    0x65, 0x66, 0x61, 0x75, 0x6c, 0x74, 0x43, 0x6f, 0x72, 0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73,
+    0x69, 0x6f, 0x6e, 0x42, 0x02, 0x08, 0x01, 0x3a, 0x5a, 0x0a, 0x16, 0x6f, 0x6e, 0x65, 0x6f, 0x66,
     0x5f, 0x75, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x5f, 0x65, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f,
     0x6e, 0x18, 0x6f, 0x20, 0x01, 0x28, 0x0d, 0x12, 0x24, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62,
     0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74,
@@ -20951,188 +22276,188 @@ static file_descriptor_proto_data: &'static [u8] = &[
     0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x5a, 0x20, 0x03, 0x28, 0x05, 0x12, 0x27, 0x2e, 0x70,
     0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74,
     0x2e, 0x54, 0x65, 0x73, 0x74, 0x50, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x45, 0x78, 0x74, 0x65, 0x6e,
-    0x73, 0x69, 0x6f, 0x6e, 0x73, 0x42, 0x02, 0x10, 0x01, 0x52, 0x14, 0x70, 0x61, 0x63, 0x6b, 0x65,
-    0x64, 0x49, 0x6e, 0x74, 0x33, 0x32, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x3a,
+    0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x14, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x49, 0x6e, 0x74,
+    0x33, 0x32, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x42, 0x02, 0x10, 0x01, 0x3a,
     0x61, 0x0a, 0x16, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x69, 0x6e, 0x74, 0x36, 0x34, 0x5f,
     0x65, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x5b, 0x20, 0x03, 0x28, 0x03, 0x12,
     0x27, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74,
     0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x50, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x45, 0x78,
-    0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x42, 0x02, 0x10, 0x01, 0x52, 0x14, 0x70, 0x61,
-    0x63, 0x6b, 0x65, 0x64, 0x49, 0x6e, 0x74, 0x36, 0x34, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69,
-    0x6f, 0x6e, 0x3a, 0x63, 0x0a, 0x17, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x75, 0x69, 0x6e,
+    0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x14, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64,
+    0x49, 0x6e, 0x74, 0x36, 0x34, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x42, 0x02,
+    0x10, 0x01, 0x3a, 0x63, 0x0a, 0x17, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x75, 0x69, 0x6e,
     0x74, 0x33, 0x32, 0x5f, 0x65, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x5c, 0x20,
     0x03, 0x28, 0x0d, 0x12, 0x27, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75,
     0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x50, 0x61, 0x63, 0x6b,
-    0x65, 0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x42, 0x02, 0x10, 0x01,
-    0x52, 0x15, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x55, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x45, 0x78,
-    0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x3a, 0x63, 0x0a, 0x17, 0x70, 0x61, 0x63, 0x6b, 0x65,
+    0x65, 0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x15, 0x70, 0x61,
+    0x63, 0x6b, 0x65, 0x64, 0x55, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73,
+    0x69, 0x6f, 0x6e, 0x42, 0x02, 0x10, 0x01, 0x3a, 0x63, 0x0a, 0x17, 0x70, 0x61, 0x63, 0x6b, 0x65,
     0x64, 0x5f, 0x75, 0x69, 0x6e, 0x74, 0x36, 0x34, 0x5f, 0x65, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69,
     0x6f, 0x6e, 0x18, 0x5d, 0x20, 0x03, 0x28, 0x04, 0x12, 0x27, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
     0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73,
     0x74, 0x50, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e,
-    0x73, 0x42, 0x02, 0x10, 0x01, 0x52, 0x15, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x55, 0x69, 0x6e,
-    0x74, 0x36, 0x34, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x3a, 0x63, 0x0a, 0x17,
+    0x73, 0x52, 0x15, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x55, 0x69, 0x6e, 0x74, 0x36, 0x34, 0x45,
+    0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x42, 0x02, 0x10, 0x01, 0x3a, 0x63, 0x0a, 0x17,
     0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x73, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x5f, 0x65, 0x78,
     0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x5e, 0x20, 0x03, 0x28, 0x11, 0x12, 0x27, 0x2e,
     0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73,
     0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x50, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x45, 0x78, 0x74, 0x65,
-    0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x42, 0x02, 0x10, 0x01, 0x52, 0x15, 0x70, 0x61, 0x63, 0x6b,
-    0x65, 0x64, 0x53, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f,
-    0x6e, 0x3a, 0x63, 0x0a, 0x17, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x73, 0x69, 0x6e, 0x74,
+    0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x15, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x53, 0x69,
+    0x6e, 0x74, 0x33, 0x32, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x42, 0x02, 0x10,
+    0x01, 0x3a, 0x63, 0x0a, 0x17, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x73, 0x69, 0x6e, 0x74,
     0x36, 0x34, 0x5f, 0x65, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x5f, 0x20, 0x03,
     0x28, 0x12, 0x12, 0x27, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e,
     0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x50, 0x61, 0x63, 0x6b, 0x65,
-    0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x42, 0x02, 0x10, 0x01, 0x52,
-    0x15, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x53, 0x69, 0x6e, 0x74, 0x36, 0x34, 0x45, 0x78, 0x74,
-    0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x3a, 0x65, 0x0a, 0x18, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64,
+    0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x15, 0x70, 0x61, 0x63,
+    0x6b, 0x65, 0x64, 0x53, 0x69, 0x6e, 0x74, 0x36, 0x34, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69,
+    0x6f, 0x6e, 0x42, 0x02, 0x10, 0x01, 0x3a, 0x65, 0x0a, 0x18, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64,
     0x5f, 0x66, 0x69, 0x78, 0x65, 0x64, 0x33, 0x32, 0x5f, 0x65, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69,
     0x6f, 0x6e, 0x18, 0x60, 0x20, 0x03, 0x28, 0x07, 0x12, 0x27, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
     0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73,
     0x74, 0x50, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e,
-    0x73, 0x42, 0x02, 0x10, 0x01, 0x52, 0x16, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x46, 0x69, 0x78,
-    0x65, 0x64, 0x33, 0x32, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x3a, 0x65, 0x0a,
+    0x73, 0x52, 0x16, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x46, 0x69, 0x78, 0x65, 0x64, 0x33, 0x32,
+    0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x42, 0x02, 0x10, 0x01, 0x3a, 0x65, 0x0a,
     0x18, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x66, 0x69, 0x78, 0x65, 0x64, 0x36, 0x34, 0x5f,
     0x65, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x61, 0x20, 0x03, 0x28, 0x06, 0x12,
     0x27, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74,
     0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x50, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x45, 0x78,
-    0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x42, 0x02, 0x10, 0x01, 0x52, 0x16, 0x70, 0x61,
-    0x63, 0x6b, 0x65, 0x64, 0x46, 0x69, 0x78, 0x65, 0x64, 0x36, 0x34, 0x45, 0x78, 0x74, 0x65, 0x6e,
-    0x73, 0x69, 0x6f, 0x6e, 0x3a, 0x67, 0x0a, 0x19, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x73,
+    0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x16, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64,
+    0x46, 0x69, 0x78, 0x65, 0x64, 0x36, 0x34, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e,
+    0x42, 0x02, 0x10, 0x01, 0x3a, 0x67, 0x0a, 0x19, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x73,
     0x66, 0x69, 0x78, 0x65, 0x64, 0x33, 0x32, 0x5f, 0x65, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f,
     0x6e, 0x18, 0x62, 0x20, 0x03, 0x28, 0x0f, 0x12, 0x27, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62,
     0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74,
     0x50, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73,
-    0x42, 0x02, 0x10, 0x01, 0x52, 0x17, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x53, 0x66, 0x69, 0x78,
-    0x65, 0x64, 0x33, 0x32, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x3a, 0x67, 0x0a,
+    0x52, 0x17, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x53, 0x66, 0x69, 0x78, 0x65, 0x64, 0x33, 0x32,
+    0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x42, 0x02, 0x10, 0x01, 0x3a, 0x67, 0x0a,
     0x19, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x73, 0x66, 0x69, 0x78, 0x65, 0x64, 0x36, 0x34,
     0x5f, 0x65, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x63, 0x20, 0x03, 0x28, 0x10,
     0x12, 0x27, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74,
     0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x50, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x45,
-    0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x42, 0x02, 0x10, 0x01, 0x52, 0x17, 0x70,
-    0x61, 0x63, 0x6b, 0x65, 0x64, 0x53, 0x66, 0x69, 0x78, 0x65, 0x64, 0x36, 0x34, 0x45, 0x78, 0x74,
-    0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x3a, 0x61, 0x0a, 0x16, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64,
+    0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x17, 0x70, 0x61, 0x63, 0x6b, 0x65,
+    0x64, 0x53, 0x66, 0x69, 0x78, 0x65, 0x64, 0x36, 0x34, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69,
+    0x6f, 0x6e, 0x42, 0x02, 0x10, 0x01, 0x3a, 0x61, 0x0a, 0x16, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64,
     0x5f, 0x66, 0x6c, 0x6f, 0x61, 0x74, 0x5f, 0x65, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e,
     0x18, 0x64, 0x20, 0x03, 0x28, 0x02, 0x12, 0x27, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75,
     0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x50,
-    0x61, 0x63, 0x6b, 0x65, 0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x42,
-    0x02, 0x10, 0x01, 0x52, 0x14, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x46, 0x6c, 0x6f, 0x61, 0x74,
-    0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x3a, 0x63, 0x0a, 0x17, 0x70, 0x61, 0x63,
+    0x61, 0x63, 0x6b, 0x65, 0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52,
+    0x14, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x46, 0x6c, 0x6f, 0x61, 0x74, 0x45, 0x78, 0x74, 0x65,
+    0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x42, 0x02, 0x10, 0x01, 0x3a, 0x63, 0x0a, 0x17, 0x70, 0x61, 0x63,
     0x6b, 0x65, 0x64, 0x5f, 0x64, 0x6f, 0x75, 0x62, 0x6c, 0x65, 0x5f, 0x65, 0x78, 0x74, 0x65, 0x6e,
     0x73, 0x69, 0x6f, 0x6e, 0x18, 0x65, 0x20, 0x03, 0x28, 0x01, 0x12, 0x27, 0x2e, 0x70, 0x72, 0x6f,
     0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x54,
     0x65, 0x73, 0x74, 0x50, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69,
-    0x6f, 0x6e, 0x73, 0x42, 0x02, 0x10, 0x01, 0x52, 0x15, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x44,
-    0x6f, 0x75, 0x62, 0x6c, 0x65, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x3a, 0x5f,
+    0x6f, 0x6e, 0x73, 0x52, 0x15, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x44, 0x6f, 0x75, 0x62, 0x6c,
+    0x65, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x42, 0x02, 0x10, 0x01, 0x3a, 0x5f,
     0x0a, 0x15, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x62, 0x6f, 0x6f, 0x6c, 0x5f, 0x65, 0x78,
     0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x66, 0x20, 0x03, 0x28, 0x08, 0x12, 0x27, 0x2e,
     0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73,
     0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x50, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x45, 0x78, 0x74, 0x65,
-    0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x42, 0x02, 0x10, 0x01, 0x52, 0x13, 0x70, 0x61, 0x63, 0x6b,
-    0x65, 0x64, 0x42, 0x6f, 0x6f, 0x6c, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x3a,
+    0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x13, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x42, 0x6f,
+    0x6f, 0x6c, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x42, 0x02, 0x10, 0x01, 0x3a,
     0x7f, 0x0a, 0x15, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x65, 0x6e, 0x75, 0x6d, 0x5f, 0x65,
     0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x67, 0x20, 0x03, 0x28, 0x0e, 0x32, 0x1e,
     0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65,
     0x73, 0x74, 0x2e, 0x46, 0x6f, 0x72, 0x65, 0x69, 0x67, 0x6e, 0x45, 0x6e, 0x75, 0x6d, 0x12, 0x27,
     0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65,
     0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x50, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x45, 0x78, 0x74,
-    0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x42, 0x02, 0x10, 0x01, 0x52, 0x13, 0x70, 0x61, 0x63,
-    0x6b, 0x65, 0x64, 0x45, 0x6e, 0x75, 0x6d, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e,
+    0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x13, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x45,
+    0x6e, 0x75, 0x6d, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x42, 0x02, 0x10, 0x01,
     0x3a, 0x67, 0x0a, 0x18, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x69, 0x6e, 0x74,
     0x33, 0x32, 0x5f, 0x65, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x5a, 0x20, 0x03,
     0x28, 0x05, 0x12, 0x29, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e,
     0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x55, 0x6e, 0x70, 0x61, 0x63,
-    0x6b, 0x65, 0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x42, 0x02, 0x10,
-    0x00, 0x52, 0x16, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x49, 0x6e, 0x74, 0x33, 0x32,
-    0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x3a, 0x67, 0x0a, 0x18, 0x75, 0x6e, 0x70,
+    0x6b, 0x65, 0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x16, 0x75,
+    0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x49, 0x6e, 0x74, 0x33, 0x32, 0x45, 0x78, 0x74, 0x65,
+    0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x42, 0x02, 0x10, 0x00, 0x3a, 0x67, 0x0a, 0x18, 0x75, 0x6e, 0x70,
     0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x69, 0x6e, 0x74, 0x36, 0x34, 0x5f, 0x65, 0x78, 0x74, 0x65,
     0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x5b, 0x20, 0x03, 0x28, 0x03, 0x12, 0x29, 0x2e, 0x70, 0x72,
     0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e,
     0x54, 0x65, 0x73, 0x74, 0x55, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x45, 0x78, 0x74, 0x65,
-    0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x42, 0x02, 0x10, 0x00, 0x52, 0x16, 0x75, 0x6e, 0x70, 0x61,
-    0x63, 0x6b, 0x65, 0x64, 0x49, 0x6e, 0x74, 0x36, 0x34, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69,
-    0x6f, 0x6e, 0x3a, 0x69, 0x0a, 0x19, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x75,
+    0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x16, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64,
+    0x49, 0x6e, 0x74, 0x36, 0x34, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x42, 0x02,
+    0x10, 0x00, 0x3a, 0x69, 0x0a, 0x19, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x75,
     0x69, 0x6e, 0x74, 0x33, 0x32, 0x5f, 0x65, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x18,
     0x5c, 0x20, 0x03, 0x28, 0x0d, 0x12, 0x29, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66,
     0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x55, 0x6e,
     0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73,
-    0x42, 0x02, 0x10, 0x00, 0x52, 0x17, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x55, 0x69,
-    0x6e, 0x74, 0x33, 0x32, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x3a, 0x69, 0x0a,
+    0x52, 0x17, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x55, 0x69, 0x6e, 0x74, 0x33, 0x32,
+    0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x42, 0x02, 0x10, 0x00, 0x3a, 0x69, 0x0a,
     0x19, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x75, 0x69, 0x6e, 0x74, 0x36, 0x34,
     0x5f, 0x65, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x5d, 0x20, 0x03, 0x28, 0x04,
     0x12, 0x29, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74,
     0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x55, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65,
-    0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x42, 0x02, 0x10, 0x00, 0x52,
-    0x17, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x55, 0x69, 0x6e, 0x74, 0x36, 0x34, 0x45,
-    0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x3a, 0x69, 0x0a, 0x19, 0x75, 0x6e, 0x70, 0x61,
+    0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x17, 0x75, 0x6e, 0x70,
+    0x61, 0x63, 0x6b, 0x65, 0x64, 0x55, 0x69, 0x6e, 0x74, 0x36, 0x34, 0x45, 0x78, 0x74, 0x65, 0x6e,
+    0x73, 0x69, 0x6f, 0x6e, 0x42, 0x02, 0x10, 0x00, 0x3a, 0x69, 0x0a, 0x19, 0x75, 0x6e, 0x70, 0x61,
     0x63, 0x6b, 0x65, 0x64, 0x5f, 0x73, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x5f, 0x65, 0x78, 0x74, 0x65,
     0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x5e, 0x20, 0x03, 0x28, 0x11, 0x12, 0x29, 0x2e, 0x70, 0x72,
     0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e,
     0x54, 0x65, 0x73, 0x74, 0x55, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x45, 0x78, 0x74, 0x65,
-    0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x42, 0x02, 0x10, 0x00, 0x52, 0x17, 0x75, 0x6e, 0x70, 0x61,
-    0x63, 0x6b, 0x65, 0x64, 0x53, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73,
-    0x69, 0x6f, 0x6e, 0x3a, 0x69, 0x0a, 0x19, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f,
+    0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x17, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64,
+    0x53, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x42,
+    0x02, 0x10, 0x00, 0x3a, 0x69, 0x0a, 0x19, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f,
     0x73, 0x69, 0x6e, 0x74, 0x36, 0x34, 0x5f, 0x65, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e,
     0x18, 0x5f, 0x20, 0x03, 0x28, 0x12, 0x12, 0x29, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75,
     0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x55,
     0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e,
-    0x73, 0x42, 0x02, 0x10, 0x00, 0x52, 0x17, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x53,
-    0x69, 0x6e, 0x74, 0x36, 0x34, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x3a, 0x6b,
+    0x73, 0x52, 0x17, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x53, 0x69, 0x6e, 0x74, 0x36,
+    0x34, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x42, 0x02, 0x10, 0x00, 0x3a, 0x6b,
     0x0a, 0x1a, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x66, 0x69, 0x78, 0x65, 0x64,
     0x33, 0x32, 0x5f, 0x65, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x60, 0x20, 0x03,
     0x28, 0x07, 0x12, 0x29, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e,
     0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x55, 0x6e, 0x70, 0x61, 0x63,
-    0x6b, 0x65, 0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x42, 0x02, 0x10,
-    0x00, 0x52, 0x18, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x46, 0x69, 0x78, 0x65, 0x64,
-    0x33, 0x32, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x3a, 0x6b, 0x0a, 0x1a, 0x75,
+    0x6b, 0x65, 0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x18, 0x75,
+    0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x46, 0x69, 0x78, 0x65, 0x64, 0x33, 0x32, 0x45, 0x78,
+    0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x42, 0x02, 0x10, 0x00, 0x3a, 0x6b, 0x0a, 0x1a, 0x75,
     0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x66, 0x69, 0x78, 0x65, 0x64, 0x36, 0x34, 0x5f,
     0x65, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x61, 0x20, 0x03, 0x28, 0x06, 0x12,
     0x29, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74,
     0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x55, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64,
-    0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x42, 0x02, 0x10, 0x00, 0x52, 0x18,
-    0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x46, 0x69, 0x78, 0x65, 0x64, 0x36, 0x34, 0x45,
-    0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x3a, 0x6d, 0x0a, 0x1b, 0x75, 0x6e, 0x70, 0x61,
+    0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x18, 0x75, 0x6e, 0x70, 0x61,
+    0x63, 0x6b, 0x65, 0x64, 0x46, 0x69, 0x78, 0x65, 0x64, 0x36, 0x34, 0x45, 0x78, 0x74, 0x65, 0x6e,
+    0x73, 0x69, 0x6f, 0x6e, 0x42, 0x02, 0x10, 0x00, 0x3a, 0x6d, 0x0a, 0x1b, 0x75, 0x6e, 0x70, 0x61,
     0x63, 0x6b, 0x65, 0x64, 0x5f, 0x73, 0x66, 0x69, 0x78, 0x65, 0x64, 0x33, 0x32, 0x5f, 0x65, 0x78,
     0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x62, 0x20, 0x03, 0x28, 0x0f, 0x12, 0x29, 0x2e,
     0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73,
     0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x55, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x45, 0x78,
-    0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x42, 0x02, 0x10, 0x00, 0x52, 0x19, 0x75, 0x6e,
-    0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x53, 0x66, 0x69, 0x78, 0x65, 0x64, 0x33, 0x32, 0x45, 0x78,
-    0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x3a, 0x6d, 0x0a, 0x1b, 0x75, 0x6e, 0x70, 0x61, 0x63,
+    0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x19, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b,
+    0x65, 0x64, 0x53, 0x66, 0x69, 0x78, 0x65, 0x64, 0x33, 0x32, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73,
+    0x69, 0x6f, 0x6e, 0x42, 0x02, 0x10, 0x00, 0x3a, 0x6d, 0x0a, 0x1b, 0x75, 0x6e, 0x70, 0x61, 0x63,
     0x6b, 0x65, 0x64, 0x5f, 0x73, 0x66, 0x69, 0x78, 0x65, 0x64, 0x36, 0x34, 0x5f, 0x65, 0x78, 0x74,
     0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x63, 0x20, 0x03, 0x28, 0x10, 0x12, 0x29, 0x2e, 0x70,
     0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74,
     0x2e, 0x54, 0x65, 0x73, 0x74, 0x55, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x45, 0x78, 0x74,
-    0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x42, 0x02, 0x10, 0x00, 0x52, 0x19, 0x75, 0x6e, 0x70,
-    0x61, 0x63, 0x6b, 0x65, 0x64, 0x53, 0x66, 0x69, 0x78, 0x65, 0x64, 0x36, 0x34, 0x45, 0x78, 0x74,
-    0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x3a, 0x67, 0x0a, 0x18, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b,
+    0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x19, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65,
+    0x64, 0x53, 0x66, 0x69, 0x78, 0x65, 0x64, 0x36, 0x34, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69,
+    0x6f, 0x6e, 0x42, 0x02, 0x10, 0x00, 0x3a, 0x67, 0x0a, 0x18, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b,
     0x65, 0x64, 0x5f, 0x66, 0x6c, 0x6f, 0x61, 0x74, 0x5f, 0x65, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69,
     0x6f, 0x6e, 0x18, 0x64, 0x20, 0x03, 0x28, 0x02, 0x12, 0x29, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
     0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73,
     0x74, 0x55, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69,
-    0x6f, 0x6e, 0x73, 0x42, 0x02, 0x10, 0x00, 0x52, 0x16, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65,
-    0x64, 0x46, 0x6c, 0x6f, 0x61, 0x74, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x3a,
+    0x6f, 0x6e, 0x73, 0x52, 0x16, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x46, 0x6c, 0x6f,
+    0x61, 0x74, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x42, 0x02, 0x10, 0x00, 0x3a,
     0x69, 0x0a, 0x19, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x64, 0x6f, 0x75, 0x62,
     0x6c, 0x65, 0x5f, 0x65, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x65, 0x20, 0x03,
     0x28, 0x01, 0x12, 0x29, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e,
     0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x55, 0x6e, 0x70, 0x61, 0x63,
-    0x6b, 0x65, 0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x42, 0x02, 0x10,
-    0x00, 0x52, 0x17, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x44, 0x6f, 0x75, 0x62, 0x6c,
-    0x65, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x3a, 0x65, 0x0a, 0x17, 0x75, 0x6e,
+    0x6b, 0x65, 0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x17, 0x75,
+    0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x44, 0x6f, 0x75, 0x62, 0x6c, 0x65, 0x45, 0x78, 0x74,
+    0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x42, 0x02, 0x10, 0x00, 0x3a, 0x65, 0x0a, 0x17, 0x75, 0x6e,
     0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x62, 0x6f, 0x6f, 0x6c, 0x5f, 0x65, 0x78, 0x74, 0x65,
     0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x66, 0x20, 0x03, 0x28, 0x08, 0x12, 0x29, 0x2e, 0x70, 0x72,
     0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75, 0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e,
     0x54, 0x65, 0x73, 0x74, 0x55, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x45, 0x78, 0x74, 0x65,
-    0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x42, 0x02, 0x10, 0x00, 0x52, 0x15, 0x75, 0x6e, 0x70, 0x61,
-    0x63, 0x6b, 0x65, 0x64, 0x42, 0x6f, 0x6f, 0x6c, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f,
-    0x6e, 0x3a, 0x85, 0x01, 0x0a, 0x17, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x65,
+    0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x15, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64,
+    0x42, 0x6f, 0x6f, 0x6c, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x42, 0x02, 0x10,
+    0x00, 0x3a, 0x85, 0x01, 0x0a, 0x17, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x5f, 0x65,
     0x6e, 0x75, 0x6d, 0x5f, 0x65, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x67, 0x20,
     0x03, 0x28, 0x0e, 0x32, 0x1e, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75,
     0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x46, 0x6f, 0x72, 0x65, 0x69, 0x67, 0x6e, 0x45,
     0x6e, 0x75, 0x6d, 0x12, 0x29, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x75,
     0x6e, 0x69, 0x74, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x55, 0x6e, 0x70, 0x61,
-    0x63, 0x6b, 0x65, 0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x42, 0x02,
-    0x10, 0x00, 0x52, 0x15, 0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x45, 0x6e, 0x75, 0x6d,
-    0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x42, 0x1d, 0x42, 0x0d, 0x55, 0x6e, 0x69,
+    0x63, 0x6b, 0x65, 0x64, 0x45, 0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x15,
+    0x75, 0x6e, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x64, 0x45, 0x6e, 0x75, 0x6d, 0x45, 0x78, 0x74, 0x65,
+    0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x42, 0x02, 0x10, 0x00, 0x42, 0x1d, 0x42, 0x0d, 0x55, 0x6e, 0x69,
     0x74, 0x74, 0x65, 0x73, 0x74, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x48, 0x01, 0x80, 0x01, 0x01, 0x88,
     0x01, 0x01, 0x90, 0x01, 0x01, 0xf8, 0x01, 0x01, 0x4a, 0x99, 0x8c, 0x03, 0x0a, 0x07, 0x12, 0x05,
     0x24, 0x00, 0x87, 0x07, 0x16, 0x0a, 0xff, 0x0d, 0x0a, 0x01, 0x0c, 0x12, 0x03, 0x24, 0x00, 0x12,

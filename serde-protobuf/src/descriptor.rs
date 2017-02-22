@@ -38,8 +38,8 @@
 //! #   }
 //! # }
 //! # fn foo() -> Result<(), Error> {
-//! let mut file = try!(fs::File::open("testdata/descriptors.pb"));
-//! let proto = try!(protobuf::parse_from_reader(&mut file));
+//! let mut file = fs::File::open("testdata/descriptors.pb")?;
+//! let proto = protobuf::parse_from_reader(&mut file)?;
 //! let descriptors = Descriptors::from_proto(&proto);
 //! # Ok(())
 //! # }

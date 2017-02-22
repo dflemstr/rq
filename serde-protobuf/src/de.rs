@@ -37,8 +37,8 @@
 //! # }
 //! # fn foo() -> Result<(), Error> {
 //! // Load a descriptor registry (see descriptor module)
-//! let mut file = try!(fs::File::open("testdata/descriptors.pb"));
-//! let proto = try!(protobuf::parse_from_reader(&mut file));
+//! let mut file = fs::File::open("testdata/descriptors.pb")?;
+//! let proto = protobuf::parse_from_reader(&mut file)?;
 //! let descriptors = Descriptors::from_proto(&proto);
 //!
 //! // Set up some data to read
@@ -47,10 +47,10 @@
 //!
 //! // Create a deserializer
 //! let name = ".protobuf_unittest.TestAllTypes";
-//! let mut deserializer = try!(Deserializer::for_named_message(&descriptors, name, input));
+//! let mut deserializer = Deserializer::for_named_message(&descriptors, name, input)?;
 //!
 //! // Deserialize some struct
-//! let value = try!(Value::deserialize(&mut deserializer));
+//! let value = Value::deserialize(&mut deserializer)?;
 //! # println!("{:?}", value);
 //! # Ok(())
 //! # }
@@ -59,14 +59,14 @@
 //! # }
 //! ```
 
-use std::collections;
-use std::vec;
-
-use protobuf;
-use serde;
 
 use descriptor;
 use error;
+
+use protobuf;
+use serde;
+use std::collections;
+use std::vec;
 use value;
 
 /// A deserializer that can deserialize a single message type.
@@ -137,32 +137,21 @@ impl<'a> Deserializer<'a> {
     }
 }
 
-impl<'a> serde::Deserializer for Deserializer<'a> {
+impl<'a, 'b> serde::Deserializer for &'b mut Deserializer<'a> {
     type Error = error::Error;
 
     forward_to_deserialize! {
-        deserialize_bool,
-        deserialize_f64, deserialize_f32,
-        deserialize_u8, deserialize_u16, deserialize_u32, deserialize_u64, deserialize_usize,
-        deserialize_i8, deserialize_i16, deserialize_i32, deserialize_i64, deserialize_isize,
-        deserialize_char, deserialize_str, deserialize_string,
-        deserialize_ignored_any,
-        deserialize_bytes,
-        deserialize_unit_struct, deserialize_unit,
-        deserialize_seq, deserialize_seq_fixed_size,
-        deserialize_map, deserialize_newtype_struct, deserialize_struct_field,
-        deserialize_tuple,
-        deserialize_enum,
-        deserialize_struct, deserialize_tuple_struct,
-        deserialize_option
+        bool u8 u16 u32 u64 i8 i16 i32 i64 f32 f64 char str string unit option
+        seq seq_fixed_size bytes byte_buf map unit_struct newtype_struct
+        tuple_struct struct struct_field tuple enum ignored_any
     }
 
     #[inline]
-    fn deserialize<V>(&mut self, mut visitor: V) -> Result<V::Value, Self::Error>
+    fn deserialize<V>(self, visitor: V) -> Result<V::Value, Self::Error>
         where V: serde::de::Visitor
     {
         let mut message = value::Message::new(self.descriptor);
-        try!(message.merge_from(self.descriptors, self.descriptor, &mut self.input));
+        message.merge_from(self.descriptors, self.descriptor, &mut self.input)?;
         visitor.visit_map(MessageVisitor::new(self.descriptors, self.descriptor, message))
     }
 }
@@ -186,12 +175,12 @@ impl<'a> serde::de::MapVisitor for MessageVisitor<'a> {
     type Error = error::Error;
 
     #[inline]
-    fn visit_key<K>(&mut self) -> error::Result<Option<K>>
-        where K: serde::Deserialize
+    fn visit_key_seed<K>(&mut self, seed: K) -> error::Result<Option<K::Value>>
+        where K: serde::de::DeserializeSeed
     {
         if let Some((k, v)) = self.fields.next() {
             let descriptor = self.descriptor.field_by_number(k).expect("Lost track of field");
-            let key = try!(K::deserialize(&mut MessageKeyDeserializer::new(descriptor)));
+            let key = seed.deserialize(MessageKeyDeserializer::new(descriptor))?;
             self.field = Some((descriptor, v));
             Ok(Some(key))
         } else {
@@ -200,21 +189,14 @@ impl<'a> serde::de::MapVisitor for MessageVisitor<'a> {
     }
 
     #[inline]
-    fn visit_value<V>(&mut self) -> error::Result<V>
-        where V: serde::Deserialize
+    fn visit_value_seed<V>(&mut self, seed: V) -> error::Result<V::Value>
+        where V: serde::de::DeserializeSeed
     {
         let (descriptor, field) = self.field
             .take()
             .expect("visit_value was called before visit_key");
 
-        Ok(try!(V::deserialize(&mut MessageFieldDeserializer::new(self.descriptors,
-                                                                  descriptor,
-                                                                  field))))
-    }
-
-    #[inline]
-    fn end(&mut self) -> error::Result<()> {
-        Ok(())
+        seed.deserialize(MessageFieldDeserializer::new(self.descriptors, descriptor, field))
     }
 }
 
@@ -229,24 +211,13 @@ impl<'a> serde::Deserializer for MessageKeyDeserializer<'a> {
     type Error = error::Error;
 
     forward_to_deserialize! {
-        deserialize_bool,
-        deserialize_f64, deserialize_f32,
-        deserialize_u8, deserialize_u16, deserialize_u32, deserialize_u64, deserialize_usize,
-        deserialize_i8, deserialize_i16, deserialize_i32, deserialize_i64, deserialize_isize,
-        deserialize_char, deserialize_str, deserialize_string,
-        deserialize_ignored_any,
-        deserialize_bytes,
-        deserialize_unit_struct, deserialize_unit,
-        deserialize_seq, deserialize_seq_fixed_size,
-        deserialize_map, deserialize_newtype_struct, deserialize_struct_field,
-        deserialize_tuple,
-        deserialize_enum,
-        deserialize_struct, deserialize_tuple_struct,
-        deserialize_option
+        bool u8 u16 u32 u64 i8 i16 i32 i64 f32 f64 char str string unit option
+        seq seq_fixed_size bytes byte_buf map unit_struct newtype_struct
+        tuple_struct struct struct_field tuple enum ignored_any
     }
 
     #[inline]
-    fn deserialize<V>(&mut self, mut visitor: V) -> error::Result<V::Value>
+    fn deserialize<V>(self, visitor: V) -> error::Result<V::Value>
         where V: serde::de::Visitor
     {
         visitor.visit_str(self.descriptor.name())
@@ -271,24 +242,13 @@ impl<'a> serde::Deserializer for MessageFieldDeserializer<'a> {
     type Error = error::Error;
 
     forward_to_deserialize! {
-        deserialize_bool,
-        deserialize_f64, deserialize_f32,
-        deserialize_u8, deserialize_u16, deserialize_u32, deserialize_u64, deserialize_usize,
-        deserialize_i8, deserialize_i16, deserialize_i32, deserialize_i64, deserialize_isize,
-        deserialize_char, deserialize_str, deserialize_string,
-        deserialize_ignored_any,
-        deserialize_bytes,
-        deserialize_unit_struct, deserialize_unit,
-        deserialize_seq, deserialize_seq_fixed_size,
-        deserialize_map, deserialize_newtype_struct, deserialize_struct_field,
-        deserialize_tuple,
-        deserialize_enum,
-        deserialize_struct, deserialize_tuple_struct,
-        deserialize_option
+        bool u8 u16 u32 u64 i8 i16 i32 i64 f32 f64 char str string unit option
+        seq seq_fixed_size bytes byte_buf map unit_struct newtype_struct
+        tuple_struct struct struct_field tuple enum ignored_any
     }
 
     #[inline]
-    fn deserialize<V>(&mut self, mut visitor: V) -> error::Result<V::Value>
+    fn deserialize<V>(mut self, visitor: V) -> error::Result<V::Value>
         where V: serde::de::Visitor
     {
         let ds = self.descriptors;
@@ -303,7 +263,7 @@ impl<'a> serde::Deserializer for MessageFieldDeserializer<'a> {
             },
             Some(value::Field::Singular(Some(v))) => {
                 if d.field_label() == descriptor::FieldLabel::Optional {
-                    visitor.visit_some(&mut ValueDeserializer::new(ds, d, v))
+                    visitor.visit_some(ValueDeserializer::new(ds, d, v))
                 } else {
                     visit_value(ds, d, v, visitor)
                 }
@@ -311,7 +271,7 @@ impl<'a> serde::Deserializer for MessageFieldDeserializer<'a> {
             Some(value::Field::Repeated(vs)) => {
                 visitor.visit_seq(&mut RepeatedValueVisitor::new(ds, d, vs.into_iter()))
             },
-            None => Err(serde::de::Error::end_of_stream()),
+            None => bail!(error::ErrorKind::EndOfStream),
         }
     }
 }
@@ -334,21 +294,15 @@ impl<'a> serde::de::SeqVisitor for RepeatedValueVisitor<'a> {
     type Error = error::Error;
 
     #[inline]
-    fn visit<A>(&mut self) -> error::Result<Option<A>>
-        where A: serde::de::Deserialize
+    fn visit_seed<A>(&mut self, seed: A) -> error::Result<Option<A::Value>>
+        where A: serde::de::DeserializeSeed
     {
         let ds = self.descriptors;
         let d = self.descriptor;
         match self.values.next() {
-            Some(v) => Ok(Some(try!(A::deserialize(&mut ValueDeserializer::new(ds, d, v))))),
+            Some(v) => Ok(Some(seed.deserialize(ValueDeserializer::new(ds, d, v))?)),
             None => Ok(None),
         }
-    }
-
-    #[inline]
-    fn end(&mut self) -> error::Result<()> {
-        let len = self.values.size_hint().0;
-        if len == 0 { Ok(()) } else { Err(serde::de::Error::invalid_length(len)) }
     }
 
     #[inline]
@@ -375,29 +329,18 @@ impl<'a> serde::Deserializer for ValueDeserializer<'a> {
     type Error = error::Error;
 
     forward_to_deserialize! {
-        deserialize_bool,
-        deserialize_f64, deserialize_f32,
-        deserialize_u8, deserialize_u16, deserialize_u32, deserialize_u64, deserialize_usize,
-        deserialize_i8, deserialize_i16, deserialize_i32, deserialize_i64, deserialize_isize,
-        deserialize_char, deserialize_str, deserialize_string,
-        deserialize_ignored_any,
-        deserialize_bytes,
-        deserialize_unit_struct, deserialize_unit,
-        deserialize_seq, deserialize_seq_fixed_size,
-        deserialize_map, deserialize_newtype_struct, deserialize_struct_field,
-        deserialize_tuple,
-        deserialize_enum,
-        deserialize_struct, deserialize_tuple_struct,
-        deserialize_option
+        bool u8 u16 u32 u64 i8 i16 i32 i64 f32 f64 char str string unit option
+        seq seq_fixed_size bytes byte_buf map unit_struct newtype_struct
+        tuple_struct struct struct_field tuple enum ignored_any
     }
 
     #[inline]
-    fn deserialize<V>(&mut self, visitor: V) -> error::Result<V::Value>
+    fn deserialize<V>(mut self, visitor: V) -> error::Result<V::Value>
         where V: serde::de::Visitor
     {
         match self.value.take() {
             Some(value) => visit_value(self.descriptors, self.descriptor, value, visitor),
-            None => Err(serde::de::Error::end_of_stream()),
+            None => bail!(error::ErrorKind::EndOfStream),
         }
     }
 }
@@ -406,7 +349,7 @@ impl<'a> serde::Deserializer for ValueDeserializer<'a> {
 fn visit_value<V>(descriptors: &descriptor::Descriptors,
                   descriptor: &descriptor::FieldDescriptor,
                   value: value::Value,
-                  mut visitor: V)
+                  visitor: V)
                   -> error::Result<V::Value>
     where V: serde::de::Visitor
 {

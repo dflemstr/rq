@@ -21,9 +21,6 @@ extern crate protobuf;
 #[macro_use]
 extern crate serde;
 
-#[macro_use]
-mod forward;
-
 pub mod de;
 pub mod descriptor;
 pub mod error;

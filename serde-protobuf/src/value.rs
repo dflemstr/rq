@@ -59,15 +59,15 @@ impl Message {
                       message: &descriptor::MessageDescriptor,
                       input: &mut protobuf::CodedInputStream)
                       -> error::Result<()> {
-        while !try!(input.eof()) {
-            let (number, wire_type) = try!(input.read_tag_unpack());
+        while !input.eof()? {
+            let (number, wire_type) = input.read_tag_unpack()?;
 
             if let Some(field) = message.field_by_number(number as i32) {
                 let value = self.ensure_field(field);
-                try!(value.merge_from(descriptors, field, input, wire_type));
+                value.merge_from(descriptors, field, input, wire_type)?;
             } else {
                 use protobuf::rt::read_unknown_or_skip_group as u;
-                try!(u(number, wire_type, input, &mut self.unknown));
+                u(number, wire_type, input, &mut self.unknown)?;
             }
         }
         Ok(())
@@ -151,7 +151,7 @@ impl Field {
               R: Fn(&mut protobuf::CodedInputStream<'a>) -> protobuf::ProtobufResult<A>
     {
         if expected_wire_type == actual_wire_type {
-            self.put(value_ctor(try!(reader(input))));
+            self.put(value_ctor(reader(input)?));
             Ok(())
         } else {
             Err(error::ErrorKind::BadWireType(actual_wire_type).into())
@@ -170,11 +170,11 @@ impl Field {
               R: Fn(&mut protobuf::CodedInputStream<'a>) -> protobuf::ProtobufResult<A>
     {
         if wire_format::WireType::WireTypeLengthDelimited == actual_wire_type {
-            let len = try!(input.read_raw_varint32());
+            let len = input.read_raw_varint64()?;
 
-            let old_limit = try!(input.push_limit(len));
-            while !try!(input.eof()) {
-                self.put(value_ctor(try!(reader(input))));
+            let old_limit = input.push_limit(len)?;
+            while !input.eof()? {
+                self.put(value_ctor(reader(input)?));
             }
             input.pop_limit(old_limit);
 
@@ -194,7 +194,7 @@ impl Field {
                   actual_wire_type: wire_format::WireType)
                   -> error::Result<()> {
         if wire_format::WireType::WireTypeVarint == actual_wire_type {
-            let v = try!(input.read_raw_varint32()) as i32;
+            let v = input.read_raw_varint32()? as i32;
             self.put(Value::Enum(v));
             Ok(())
         } else {
@@ -210,7 +210,7 @@ impl Field {
                      actual_wire_type: wire_format::WireType)
                      -> error::Result<()> {
         if wire_format::WireType::WireTypeLengthDelimited == actual_wire_type {
-            let len = try!(input.read_raw_varint32());
+            let len = input.read_raw_varint64()?;
             let mut msg = match *self {
                 Field::Singular(ref mut o) => {
                     if let Some(Value::Message(m)) = o.take() { m } else { Message::new(message) }
@@ -218,8 +218,8 @@ impl Field {
                 _ => Message::new(message),
             };
 
-            let old_limit = try!(input.push_limit(len));
-            try!(msg.merge_from(descriptors, message, input));
+            let old_limit = input.push_limit(len)?;
+            msg.merge_from(descriptors, message, input)?;
             input.pop_limit(old_limit);
 
             self.put(Value::Message(msg));
