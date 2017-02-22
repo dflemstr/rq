@@ -1,10 +1,10 @@
+use super::util;
 use byteorder;
 use crc;
 use error::{self, ErrorKind};
 use flate2;
 use snap;
 use std::io;
-use super::util;
 
 pub trait Limit {
     fn take_limit(&mut self) -> io::Result<bool>;
@@ -108,7 +108,7 @@ impl<R> Blocks<R>
             Err(e) => return Err(e),
         };
 
-        let compressed_size = try!(util::read_long(&mut self.input));
+        let compressed_size = util::read_long(&mut self.input)?;
         debug!("Loading block with compressed size {} containing {} objects",
                compressed_size,
                obj_count);
@@ -118,28 +118,28 @@ impl<R> Blocks<R>
                 debug!("Copying block data with null codec");
                 let mut limited = (&mut self.input).take(compressed_size as u64);
                 buffer.reserve(compressed_size as usize);
-                try!(limited.read_to_end(buffer));
+                limited.read_to_end(buffer)?;
             },
             Codec::Deflate => {
                 debug!("Copying block data with deflate codec");
                 let limited = (&mut self.input).take(compressed_size as u64);
                 let mut reader = flate2::read::DeflateDecoder::new(limited);
-                try!(reader.read_to_end(buffer));
+                reader.read_to_end(buffer)?;
             },
             Codec::Snappy => {
                 use byteorder::ByteOrder;
 
                 debug!("Copying block data with snappy codec");
                 let mut compressed = vec![0; compressed_size as usize - 4];
-                try!(self.input.read_exact(&mut compressed));
-                let decompressed_size = try!(snap::decompress_len(&compressed));
+                self.input.read_exact(&mut compressed)?;
+                let decompressed_size = snap::decompress_len(&compressed)?;
                 debug!("Decompressed block is expected to be {} bytes",
                        decompressed_size);
                 buffer.resize(decompressed_size, 0);
-                try!(snap::Decoder::new().decompress(&compressed, buffer));
+                snap::Decoder::new().decompress(&compressed, buffer)?;
 
                 let mut crc_buffer = [0; 4];
-                try!(self.input.read_exact(&mut crc_buffer));
+                self.input.read_exact(&mut crc_buffer)?;
                 let expected_crc = byteorder::BigEndian::read_u32(&crc_buffer);
                 let actual_crc = crc::crc32::checksum_ieee(&buffer);
 
@@ -154,7 +154,7 @@ impl<R> Blocks<R>
         debug!("Uncompressed block contains {} bytes", buffer.len());
 
         let mut sync_marker = vec![0; 16];
-        try!(self.input.read_exact(&mut sync_marker));
+        self.input.read_exact(&mut sync_marker)?;
 
         self.remaining = obj_count as usize;
 
@@ -179,7 +179,7 @@ impl<R> Limit for Blocks<R>
 {
     fn take_limit(&mut self) -> io::Result<bool> {
         if self.remaining == 0 {
-            try!(self.read_next_block());
+            self.read_next_block()?;
         }
 
         if self.remaining == 0 {

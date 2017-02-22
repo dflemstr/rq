@@ -14,7 +14,7 @@ fn deserialize<P>(avro_file_path: P) -> Vec<serde_value::Value>
     let mut de = serde_avro::de::Deserializer::from_container(file).unwrap();
     let mut result = Vec::new();
 
-    loop  {
+    loop {
         match serde_value::Value::deserialize(&mut de) {
             Ok(v) => result.push(v),
             Err(e) => {
@@ -24,7 +24,7 @@ fn deserialize<P>(avro_file_path: P) -> Vec<serde_value::Value>
                     },
                     _ => Err(e).unwrap(),
                 }
-            }
+            },
         }
     }
 
