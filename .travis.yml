@@ -6,47 +6,59 @@ language: rust
 services: docker
 sudo: required
 
-# TODO This is the Rust channel that build jobs will use by default but can be
-# overridden on a case by case basis down below
-rust: stable
-
 env:
   global:
     - CRATE_NAME=record-query
-
-    # default job
-    - TARGET=x86_64-unknown-linux-gnu
 
 matrix:
   include:
     # Linux
     - env: TARGET=i686-unknown-linux-gnu
+      rust: stable
     - env: TARGET=i686-unknown-linux-musl
-    # - env: TARGET=x86_64-unknown-linux-gnu  # this is the default job
+      rust: stable
+    - env: TARGET=x86_64-unknown-linux-gnu
+      rust: stable
     - env: TARGET=x86_64-unknown-linux-musl
+      rust: stable
 
     # OSX
     - env: TARGET=i686-apple-darwin
+      rust: stable
       os: osx
     - env: TARGET=x86_64-apple-darwin
+      rust: stable
       os: osx
 
     # *BSD
     - env: TARGET=i686-unknown-freebsd DISABLE_TESTS=1
+      rust: stable
     - env: TARGET=x86_64-unknown-freebsd DISABLE_TESTS=1
+      rust: stable
     - env: TARGET=x86_64-unknown-netbsd DISABLE_TESTS=1
+      rust: stable
 
     # Other architectures
     - env: TARGET=aarch64-unknown-linux-gnu
+      rust: stable
     - env: TARGET=armv7-unknown-linux-gnueabihf
+      rust: stable
     - env: TARGET=mips-unknown-linux-gnu
+      rust: stable
     - env: TARGET=mips64-unknown-linux-gnuabi64
+      rust: stable
     - env: TARGET=mips64el-unknown-linux-gnuabi64
+      rust: stable
     - env: TARGET=mipsel-unknown-linux-gnu
+      rust: stable
     - env: TARGET=powerpc-unknown-linux-gnu
+      rust: stable
     - env: TARGET=powerpc64-unknown-linux-gnu
+      rust: stable
     - env: TARGET=powerpc64le-unknown-linux-gnu
+      rust: stable
     - env: TARGET=s390x-unknown-linux-gnu DISABLE_TESTS=1
+      rust: stable
 
     # Testing other channels
     - env: TARGET=x86_64-unknown-linux-gnu
