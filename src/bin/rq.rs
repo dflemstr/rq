@@ -247,7 +247,7 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
     } else if args.flag_output_hjson {
         Err(rq::error::Error::unimplemented("hjson serialization (waiting for serde 0.9.0 \
                                              support)"
-                                            .to_owned()))
+            .to_owned()))
     } else if args.flag_output_toml {
         // TODO: add TOML ugly printing eventually; now it's always "readable"
         dispatch_format!(rq::value::toml::sink, rq::value::toml::sink)

@@ -32,6 +32,8 @@ main() {
         wget "https://s3-eu-west-1.amazonaws.com/record-query/v8/$TARGET/5.6.222/v8-build.tar.gz"
         tar -xvf v8-build.tar.gz
     fi
+
+    git describe --tags --always > git-version
 }
 
 main
