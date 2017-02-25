@@ -53,3 +53,6 @@ shared = ["v8/shared"]
 
 [profile.release]
 lto = true
+
+[workspace]
+members = ["serde-avro", "serde-protobuf"]

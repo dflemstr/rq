@@ -35,11 +35,10 @@ install:
   - cargo -V
 
 test_script:
-  # TODO run tests for other crates
   # we don't run the "test phase" when doing deploys
   - if [%APPVEYOR_REPO_TAG%]==[false] (
       cargo build --target %TARGET% &&
-      cargo test --target %TARGET% &&
+      cargo test --all --target %TARGET% &&
       cargo run --target %TARGET% --bin rq -- --help
     )
 

@@ -3,17 +3,13 @@
 set -ex
 
 main() {
-    (cd serde-avro; cross build --target $TARGET)
-    (cd serde-protobuf; cross build --target $TARGET)
     cross build --target $TARGET
 
     if [ ! -z $DISABLE_TESTS ]; then
         return
     fi
 
-    (cd serde-avro; cross test --target $TARGET)
-    (cd serde-protobuf; cross test --target $TARGET)
-    cross test --target $TARGET
+    cross test --all --target $TARGET
 
     cross run --target $TARGET --bin rq -- --help
 }
