@@ -1,0 +1,82 @@
+
+
+[target.aarch64-unknown-linux-gnu]
+image = "dflemstr/rust-buildenv:aarch64-unknown-linux-gnu"
+
+[target.arm-unknown-linux-gnueabi]
+image = "dflemstr/rust-buildenv:arm-unknown-linux-gnueabi"
+
+[target.arm-unknown-linux-musleabi]
+image = "dflemstr/rust-buildenv:arm-unknown-linux-musleabi"
+
+[target.armv7-unknown-linux-gnueabihf]
+image = "dflemstr/rust-buildenv:armv7-unknown-linux-gnueabihf"
+
+[target.armv7-unknown-linux-musleabihf]
+image = "dflemstr/rust-buildenv:armv7-unknown-linux-musleabihf"
+
+[target.i686-unknown-freebsd]
+image = "dflemstr/rust-buildenv:i686-unknown-freebsd"
+
+[target.i686-unknown-linux-gnu]
+image = "dflemstr/rust-buildenv:i686-unknown-linux-gnu"
+
+[target.i686-unknown-linux-musl]
+image = "dflemstr/rust-buildenv:i686-unknown-linux-musl"
+
+[target.mips64el-unknown-linux-gnuabi64]
+image = "dflemstr/rust-buildenv:mips64el-unknown-linux-gnuabi64"
+
+[target.mips64-unknown-linux-gnuabi64]
+image = "dflemstr/rust-buildenv:mips64-unknown-linux-gnuabi64"
+
+[target.mipsel-unknown-linux-gnu]
+image = "dflemstr/rust-buildenv:mipsel-unknown-linux-gnu"
+
+[target.mips-unknown-linux-gnu]
+image = "dflemstr/rust-buildenv:mips-unknown-linux-gnu"
+
+[target.powerpc64le-unknown-linux-gnu]
+image = "dflemstr/rust-buildenv:powerpc64le-unknown-linux-gnu"
+
+[target.powerpc64-unknown-linux-gnu]
+image = "dflemstr/rust-buildenv:powerpc64-unknown-linux-gnu"
+
+[target.powerpc-unknown-linux-gnu]
+image = "dflemstr/rust-buildenv:powerpc-unknown-linux-gnu"
+
+[target.s390x-unknown-linux-gnu]
+image = "dflemstr/rust-buildenv:s390x-unknown-linux-gnu"
+
+[target.sparc64-unknown-linux-gnu]
+image = "dflemstr/rust-buildenv:sparc64-unknown-linux-gnu"
+
+[target.thumbv6m-none-eabi]
+image = "dflemstr/rust-buildenv:thumbv6m-none-eabi"
+
+[target.thumbv7em-none-eabi]
+image = "dflemstr/rust-buildenv:thumbv7em-none-eabi"
+
+[target.thumbv7em-none-eabihf]
+image = "dflemstr/rust-buildenv:thumbv7em-none-eabihf"
+
+[target.thumbv7m-none-eabi]
+image = "dflemstr/rust-buildenv:thumbv7m-none-eabi"
+
+[target.x86_64-pc-windows-gnu]
+image = "dflemstr/rust-buildenv:x86_64-pc-windows-gnu"
+
+[target.x86_64-unknown-dragonfly]
+image = "dflemstr/rust-buildenv:x86_64-unknown-dragonfly"
+
+[target.x86_64-unknown-freebsd]
+image = "dflemstr/rust-buildenv:x86_64-unknown-freebsd"
+
+[target.x86_64-unknown-linux-gnu]
+image = "dflemstr/rust-buildenv:x86_64-unknown-linux-gnu"
+
+[target.x86_64-unknown-linux-musl]
+image = "dflemstr/rust-buildenv:x86_64-unknown-linux-musl"
+
+[target.x86_64-unknown-netbsd]
+image = "dflemstr/rust-buildenv:x86_64-unknown-netbsd"
