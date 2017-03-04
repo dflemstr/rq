@@ -116,8 +116,6 @@ before_install: set -e
 install:
   - sh ci/install.sh
   - source ~/.cargo/env || true
-  - export V8_LIBS=$PWD/v8-build/lib/libv8uber.a
-  - export V8_SOURCE=$PWD/v8-build
 
 script:
   - bash ci/script.sh

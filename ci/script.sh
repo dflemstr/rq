@@ -3,6 +3,8 @@
 set -ex
 
 main() {
+    export V8_LIBS=$PWD/v8-build/lib/libv8uber.a
+    export V8_SOURCE=$PWD/v8-build
     cross build --target $TARGET
 
     if [ ! -z $DISABLE_TESTS ]; then
