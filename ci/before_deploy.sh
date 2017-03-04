@@ -21,6 +21,12 @@ main() {
 
     cp target/$TARGET/release/rq $stage/
 
+    revision=$(git describe --tags)
+    curl "https://img.shields.io/badge/${TARGET//-/--}-${revision//-/--}-blue.png" > "$stage/badge.png"
+    curl "https://img.shields.io/badge/${TARGET//-/--}-${revision//-/--}-blue.svg" > "$stage/badge.svg"
+    curl "https://img.shields.io/badge/v-$(echo $revision | sed 's/-/--/g;s/v//')-blue.png" > "$stage/badge-small.png"
+    curl "https://img.shields.io/badge/v-$(echo $revision | sed 's/-/--/g;s/v//')-blue.svg" > "$stage/badge-small.svg"
+
     cd $stage
     tar czf $src/$CRATE_NAME-$TRAVIS_TAG-$TARGET.tar.gz *
     cd $src
