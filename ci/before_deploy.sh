@@ -4,34 +4,24 @@ set -ex
 
 main() {
     local src=$(pwd) \
-          stage=
+          deploy=target/deploy \
+          revision=$(git describe --tags)
 
-    case $TRAVIS_OS_NAME in
-        linux)
-            stage=$(mktemp -d)
-            ;;
-        osx)
-            stage=$(mktemp -d -t tmp)
-            ;;
-    esac
-
+    mkdir -p "$deploy/$TARGET/$revision"
     test -f Cargo.lock || cargo generate-lockfile
 
     cross build --bin rq --target $TARGET --release
 
-    cp target/$TARGET/release/rq $stage/
+    cp target/$TARGET/release/rq $deploy/$TARGET/rq
+    cp target/$TARGET/release/rq $deploy/$TARGET/$revision/rq
 
-    revision=$(git describe --tags)
-    curl "https://img.shields.io/badge/${TARGET//-/--}-${revision//-/--}-blue.png" > "$stage/badge.png"
-    curl "https://img.shields.io/badge/${TARGET//-/--}-${revision//-/--}-blue.svg" > "$stage/badge.svg"
-    curl "https://img.shields.io/badge/v-$(echo $revision | sed 's/-/--/g;s/v//')-blue.png" > "$stage/badge-small.png"
-    curl "https://img.shields.io/badge/v-$(echo $revision | sed 's/-/--/g;s/v//')-blue.svg" > "$stage/badge-small.svg"
+    curl "https://img.shields.io/badge/${TARGET//-/--}-${revision//-/--}-blue.png" > "$deploy/$TARGET/badge.png"
+    curl "https://img.shields.io/badge/${TARGET//-/--}-${revision//-/--}-blue.svg" > "$deploy/$TARGET/badge.svg"
+    curl "https://img.shields.io/badge/v-$(echo $revision | sed 's/-/--/g;s/v//')-blue.png" > "$deploy/$TARGET/badge-small.png"
+    curl "https://img.shields.io/badge/v-$(echo $revision | sed 's/-/--/g;s/v//')-blue.svg" > "$deploy/$TARGET/badge-small.svg"
 
-    cd $stage
-    tar czf $src/$CRATE_NAME-$TRAVIS_TAG-$TARGET.tar.gz *
-    cd $src
-
-    rm -rf $stage
+    cd $deploy
+    tar czf $CRATE_NAME-$TRAVIS_TAG-$TARGET.tar.gz *
 }
 
 main
