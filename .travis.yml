@@ -56,22 +56,10 @@ matrix:
       rust: nightly
   allow_failures:
     # Linux
-    - env: TARGET=i686-unknown-linux-gnu
-      rust: stable
     - env: TARGET=i686-unknown-linux-musl
-      rust: stable
-    - env: TARGET=x86_64-unknown-linux-gnu
       rust: stable
     - env: TARGET=x86_64-unknown-linux-musl
       rust: stable
-
-    # OSX
-    - env: TARGET=i686-apple-darwin
-      rust: stable
-      os: osx
-    - env: TARGET=x86_64-apple-darwin
-      rust: stable
-      os: osx
 
     # *BSD
     - env: TARGET=i686-unknown-freebsd DISABLE_TESTS=1
