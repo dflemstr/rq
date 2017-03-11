@@ -10,6 +10,9 @@ main() {
     mkdir -p "$deploy/$TARGET/$revision"
     test -f Cargo.lock || cargo generate-lockfile
 
+    export V8_LIBS=$PWD/v8-build/lib/libv8uber.a
+    export V8_SOURCE=$PWD/v8-build
+
     cross build --bin rq --target $TARGET --release
 
     cp target/$TARGET/release/rq $deploy/$TARGET/rq
