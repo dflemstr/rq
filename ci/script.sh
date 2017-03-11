@@ -14,7 +14,7 @@ main() {
     cross test --all --target "$TARGET"
 }
 
-# we don't run the "test phase" when doing deploys
-if [ "$TRAVIS_REPO_SLUG" != 'dflemstr/rq' ] || [ "$TRAVIS_BRANCH" != 'master' ]
+# we don't run the "test phase" when doing tagged deploys
+if [ -z "$TRAVIS_TAG" ]
 then main
 fi
