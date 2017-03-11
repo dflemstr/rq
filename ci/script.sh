@@ -15,6 +15,6 @@ main() {
 }
 
 # we don't run the "test phase" when doing deploys
-if ! [ "$TRAVIS_REPO_SLUG" = 'dflemstr/rq' ] && ! [ "$TRAVIS_BRANCH" = 'master' ]
+if [ "$TRAVIS_REPO_SLUG" != 'dflemstr/rq' ] || [ "$TRAVIS_BRANCH" != 'master' ]
 then main
 fi
