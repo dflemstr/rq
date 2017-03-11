@@ -12,8 +12,6 @@ main() {
     fi
 
     cross test --all --target $TARGET
-
-    cross run --target $TARGET --bin rq -- --help
 }
 
 # we don't run the "test phase" when doing deploys
