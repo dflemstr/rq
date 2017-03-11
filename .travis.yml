@@ -13,7 +13,7 @@ env:
 matrix:
   include:
     # Linux
-    - env: TARGET=i686-unknown-linux-gnu
+    - env: TARGET=i686-unknown-linux-gnu DISABLE_TESTS=1
       rust: stable
     - env: TARGET=i686-unknown-linux-musl
       rust: stable
