@@ -1,6 +1,6 @@
 [root]
 name = "serde-protobuf"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "error-chain 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "linked-hash-map 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -450,7 +450,7 @@ dependencies = [
  "serde 0.9.11 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde-avro 0.5.0",
  "serde-hjson 0.8.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "serde-protobuf 0.4.0",
+ "serde-protobuf 0.5.0",
  "serde_cbor 0.5.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_json 0.9.9 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_yaml 0.6.2 (registry+https://github.com/rust-lang/crates.io-index)",
