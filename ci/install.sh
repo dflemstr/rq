@@ -6,7 +6,7 @@ main() {
 
     source ~/.cargo/env || true
 
-    cargo install --git https://github.com/dflemstr/cross.git --branch env --force
+    cargo install --git https://github.com/dflemstr/cross.git --branch rq --force
 
     if [ ! -d v8-build ]
     then
