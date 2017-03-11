@@ -23,7 +23,7 @@ matrix:
       rust: stable
 
     # OSX
-    - env: TARGET=i686-apple-darwin
+    - env: TARGET=i686-apple-darwin DISABLE_TESTS=1
       rust: stable
       os: osx
       osx_image: xcode8
