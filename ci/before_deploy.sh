@@ -25,7 +25,7 @@ main() {
     curl "https://img.shields.io/badge/v-$(echo "$revision" | sed 's/-/--/g;s/v//')-blue.svg" > "$deploy/$TARGET/badge-small.svg"
 
     cd $deploy
-    tar czf "$CRATE_NAME-$TRAVIS_TAG-$TARGET.tar.gz" -- *
+    tar czf "$CRATE_NAME-$revision-$TARGET.tar.gz" -- *
 }
 
 main
