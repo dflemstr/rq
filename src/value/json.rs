@@ -1,5 +1,3 @@
-
-
 use ansi_term;
 use dtoa;
 
@@ -11,7 +9,7 @@ use std::io;
 use std::str;
 use value;
 
-pub struct JsonSource<R>(serde_json::StreamDeserializer<value::Value, io::Bytes<R>>)
+pub struct JsonSource<R>(serde_json::StreamDeserializer<serde_json::de::IteratorRead<io::Bytes<R>>, value::Value>)
     where R: io::Read;
 
 pub struct JsonSink<W, F>(W, F)
@@ -50,7 +48,7 @@ pub struct ReadableFormatter {
 pub fn source<R>(r: R) -> JsonSource<R>
     where R: io::Read
 {
-    JsonSource(serde_json::StreamDeserializer::new(r.bytes()))
+    JsonSource(serde_json::Deserializer::from_iter(r.bytes()).into_iter())
 }
 
 #[inline]
@@ -127,13 +125,38 @@ impl ReadableFormatter {
             object_key_escape_style: Colour::Blue.dimmed(),
         }
     }
+
+    /// Writes an integer value like `-123` to the specified writer.
+    #[inline]
+    fn write_integer<W, I>(&mut self, mut writer: &mut W, value: I) -> serde_json::Result<()>
+        where W: io::Write + ?Sized,
+              I: itoa::Integer
+    {
+        try!(write!(writer, "{}", self.number_style.prefix()));
+        try!(itoa::write(&mut writer, value));
+        try!(write!(writer, "{}", self.number_style.suffix()));
+        Ok(())
+    }
+
+    /// Writes a floating point value like `-31.26e+12` to the
+    /// specified writer.
+    #[inline]
+    fn write_floating<W, F>(&mut self, mut writer: &mut W, value: F) -> serde_json::Result<()>
+        where W: io::Write + ?Sized,
+              F: dtoa::Floating
+    {
+        try!(write!(writer, "{}", self.number_style.prefix()));
+        try!(dtoa::write(&mut writer, value));
+        try!(write!(writer, "{}", self.number_style.suffix()));
+        Ok(())
+    }
 }
 
 impl serde_json::ser::Formatter for ReadableFormatter {
     /// Writes a `null` value to the specified writer.
     #[inline]
     fn write_null<W>(&mut self, writer: &mut W) -> serde_json::Result<()>
-        where W: io::Write
+        where W: io::Write + ?Sized
     {
         write!(writer, "{}", self.null_style.paint("null")).map_err(From::from)
     }
@@ -141,7 +164,7 @@ impl serde_json::ser::Formatter for ReadableFormatter {
     /// Writes a `true` or `false` value to the specified writer.
     #[inline]
     fn write_bool<W>(&mut self, writer: &mut W, value: bool) -> serde_json::Result<()>
-        where W: io::Write
+        where W: io::Write + ?Sized
     {
         let s = if value {
             self.true_style.paint("true")
@@ -151,36 +174,81 @@ impl serde_json::ser::Formatter for ReadableFormatter {
         write!(writer, "{}", s).map_err(From::from)
     }
 
-    /// Writes an integer value like `-123` to the specified writer.
     #[inline]
-    fn write_integer<W, I>(&mut self, writer: &mut W, value: I) -> serde_json::Result<()>
-        where W: io::Write,
-              I: itoa::Integer
+    fn write_i8<W>(&mut self, writer: &mut W, value: i8) -> serde_json::Result<()>
+        where W: io::Write + ?Sized
     {
-        try!(write!(writer, "{}", self.number_style.prefix()));
-        try!(itoa::write(writer, value));
-        try!(write!(writer, "{}", self.number_style.suffix()));
-        Ok(())
+        self.write_integer(writer, value)
     }
 
-    /// Writes a floating point value like `-31.26e+12` to the
-    /// specified writer.
     #[inline]
-    fn write_floating<W, F>(&mut self, writer: &mut W, value: F) -> serde_json::Result<()>
-        where W: io::Write,
-              F: dtoa::Floating
+    fn write_i16<W>(&mut self, writer: &mut W, value: i16) -> serde_json::Result<()>
+        where W: io::Write + ?Sized
     {
-        try!(write!(writer, "{}", self.number_style.prefix()));
-        try!(dtoa::write(writer, value));
-        try!(write!(writer, "{}", self.number_style.suffix()));
-        Ok(())
+        self.write_integer(writer, value)
+    }
+
+    #[inline]
+    fn write_i32<W>(&mut self, writer: &mut W, value: i32) -> serde_json::Result<()>
+        where W: io::Write + ?Sized
+    {
+        self.write_integer(writer, value)
+    }
+
+    #[inline]
+    fn write_i64<W>(&mut self, writer: &mut W, value: i64) -> serde_json::Result<()>
+        where W: io::Write + ?Sized
+    {
+        self.write_integer(writer, value)
+    }
+
+    #[inline]
+    fn write_u8<W>(&mut self, writer: &mut W, value: u8) -> serde_json::Result<()>
+        where W: io::Write + ?Sized
+    {
+        self.write_integer(writer, value)
+    }
+
+    #[inline]
+    fn write_u16<W>(&mut self, writer: &mut W, value: u16) -> serde_json::Result<()>
+        where W: io::Write + ?Sized
+    {
+        self.write_integer(writer, value)
+    }
+
+    #[inline]
+    fn write_u32<W>(&mut self, writer: &mut W, value: u32) -> serde_json::Result<()>
+        where W: io::Write + ?Sized
+    {
+        self.write_integer(writer, value)
+    }
+
+    #[inline]
+    fn write_u64<W>(&mut self, writer: &mut W, value: u64) -> serde_json::Result<()>
+        where W: io::Write + ?Sized
+    {
+        self.write_integer(writer, value)
+    }
+
+    #[inline]
+    fn write_f32<W>(&mut self, writer: &mut W, value: f32) -> serde_json::Result<()>
+        where W: io::Write + ?Sized
+    {
+        self.write_floating(writer, value)
+    }
+
+    #[inline]
+    fn write_f64<W>(&mut self, writer: &mut W, value: f64) -> serde_json::Result<()>
+        where W: io::Write + ?Sized
+    {
+        self.write_floating(writer, value)
     }
 
     /// Called before each series of `write_string_fragment` and
     /// `write_char_escape`.  Writes a `"` to the specified writer.
     #[inline]
     fn begin_string<W>(&mut self, writer: &mut W) -> serde_json::Result<()>
-        where W: io::Write
+        where W: io::Write + ?Sized
     {
         let style = if self.is_in_object_key {
             self.object_key_quote_style
@@ -195,7 +263,7 @@ impl serde_json::ser::Formatter for ReadableFormatter {
     /// `write_char_escape`.  Writes a `"` to the specified writer.
     #[inline]
     fn end_string<W>(&mut self, writer: &mut W) -> serde_json::Result<()>
-        where W: io::Write
+        where W: io::Write + ?Sized
     {
         let style = if self.is_in_object_key {
             self.object_key_quote_style
@@ -213,7 +281,7 @@ impl serde_json::ser::Formatter for ReadableFormatter {
                                 writer: &mut W,
                                 fragment: &[u8])
                                 -> serde_json::Result<()>
-        where W: io::Write
+        where W: io::Write + ?Sized
     {
         let style = if self.is_in_object_key {
             self.object_key_char_style
@@ -231,7 +299,7 @@ impl serde_json::ser::Formatter for ReadableFormatter {
                             writer: &mut W,
                             char_escape: serde_json::ser::CharEscape)
                             -> serde_json::Result<()>
-        where W: io::Write
+        where W: io::Write + ?Sized
     {
         use serde_json::ser::CharEscape::*;
 
@@ -272,7 +340,7 @@ impl serde_json::ser::Formatter for ReadableFormatter {
     /// writer.
     #[inline]
     fn begin_array<W>(&mut self, writer: &mut W) -> serde_json::Result<()>
-        where W: io::Write
+        where W: io::Write + ?Sized
     {
         self.current_indent += 1;
         self.has_value = false;
@@ -284,7 +352,7 @@ impl serde_json::ser::Formatter for ReadableFormatter {
     /// writer.
     #[inline]
     fn end_array<W>(&mut self, writer: &mut W) -> serde_json::Result<()>
-        where W: io::Write
+        where W: io::Write + ?Sized
     {
         self.current_indent -= 1;
 
@@ -300,7 +368,7 @@ impl serde_json::ser::Formatter for ReadableFormatter {
     /// the specified writer.
     #[inline]
     fn begin_array_value<W>(&mut self, writer: &mut W, first: bool) -> serde_json::Result<()>
-        where W: io::Write
+        where W: io::Write + ?Sized
     {
         if !first {
             try!(write!(writer, "{}", self.array_comma_style.paint(",")));
@@ -314,7 +382,7 @@ impl serde_json::ser::Formatter for ReadableFormatter {
     /// Called after every array value.
     #[inline]
     fn end_array_value<W>(&mut self, _writer: &mut W) -> serde_json::Result<()>
-        where W: io::Write
+        where W: io::Write + ?Sized
     {
         self.has_value = true;
         Ok(())
@@ -324,7 +392,7 @@ impl serde_json::ser::Formatter for ReadableFormatter {
     /// writer.
     #[inline]
     fn begin_object<W>(&mut self, writer: &mut W) -> serde_json::Result<()>
-        where W: io::Write
+        where W: io::Write + ?Sized
     {
         self.current_indent += 1;
         self.has_value = false;
@@ -336,7 +404,7 @@ impl serde_json::ser::Formatter for ReadableFormatter {
     /// writer.
     #[inline]
     fn end_object<W>(&mut self, writer: &mut W) -> serde_json::Result<()>
-        where W: io::Write
+        where W: io::Write + ?Sized
     {
         self.current_indent -= 1;
 
@@ -351,7 +419,7 @@ impl serde_json::ser::Formatter for ReadableFormatter {
     /// Called before every object key.
     #[inline]
     fn begin_object_key<W>(&mut self, writer: &mut W, first: bool) -> serde_json::Result<()>
-        where W: io::Write
+        where W: io::Write + ?Sized
     {
         self.is_in_object_key = true;
 
@@ -369,7 +437,7 @@ impl serde_json::ser::Formatter for ReadableFormatter {
     /// `begin_object_value`.
     #[inline]
     fn end_object_key<W>(&mut self, _writer: &mut W) -> serde_json::Result<()>
-        where W: io::Write
+        where W: io::Write + ?Sized
     {
         self.is_in_object_key = false;
         Ok(())
@@ -380,7 +448,7 @@ impl serde_json::ser::Formatter for ReadableFormatter {
     /// `end_object_key`.
     #[inline]
     fn begin_object_value<W>(&mut self, writer: &mut W) -> serde_json::Result<()>
-        where W: io::Write
+        where W: io::Write + ?Sized
     {
         write!(writer, "{}", self.object_colon_style.paint(": ")).map_err(From::from)
     }
@@ -388,7 +456,7 @@ impl serde_json::ser::Formatter for ReadableFormatter {
     /// Called after every object value.
     #[inline]
     fn end_object_value<W>(&mut self, _writer: &mut W) -> serde_json::Result<()>
-        where W: io::Write
+        where W: io::Write + ?Sized
     {
         self.has_value = true;
         Ok(())
@@ -396,7 +464,7 @@ impl serde_json::ser::Formatter for ReadableFormatter {
 }
 
 fn indent<W>(wr: &mut W, n: usize) -> serde_json::error::Result<()>
-    where W: io::Write
+    where W: io::Write + ?Sized
 {
     for _ in 0..n {
         try!(wr.write_all(b"  "));

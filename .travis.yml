@@ -1,84 +1,139 @@
-language: generic
-sudo: required
+# Based on the "trust" template v0.1.1
+# https://github.com/japaric/trust/tree/v0.1.1
+
 dist: trusty
+language: rust
+services: docker
+sudo: required
 
-services:
-  - docker
-
-cache: cargo
+env:
+  global:
+    - CRATE_NAME=record-query
 
 matrix:
   include:
-    - os: linux
-      env: >
-        TARGET=x86_64-unknown-linux-gnu
-        USE_DOCKER=true
-    - os: linux
-      env: >
-        TARGET=x86_64-unknown-linux-musl
-        USE_DOCKER=true
-    - os: linux
-      env: >
-        TARGET=i686-unknown-linux-gnu
-        USE_DOCKER=true
-        SKIP_TESTS=true
-    #- os: linux
-    #  env: >
-    #    TARGET=i686-unknown-linux-musl
-    #    USE_DOCKER=true
-    #    SKIP_TESTS=true
-    - os: linux
-      env: >
-        TARGET=arm-unknown-linux-gnueabi
-        USE_DOCKER=true
-        SKIP_TESTS=true
-    - os: linux
-      env: >
-        TARGET=arm-unknown-linux-musleabi
-        USE_DOCKER=true
-        SKIP_TESTS=true
-    - os: linux
-      env: >
-        TARGET=arm-unknown-linux-gnueabihf
-        USE_DOCKER=true
-        SKIP_TESTS=true
-    - os: linux
-      env: >
-        TARGET=arm-unknown-linux-musleabihf
-        USE_DOCKER=true
-        SKIP_TESTS=true
-    - os: linux
-      env: >
-        TARGET=armv7-unknown-linux-gnueabihf
-        USE_DOCKER=true
-        SKIP_TESTS=true
-    - os: linux
-      env: >
-        TARGET=armv7-unknown-linux-musleabihf
-        USE_DOCKER=true
-        SKIP_TESTS=true
-    - os: osx
-      osx_image: xcode8
-      env: >
-        TARGET=x86_64-apple-darwin
-    - os: osx
-      osx_image: xcode8
-      env: >
-        TARGET=i686-apple-darwin
-        SKIP_TESTS=true
+    # Linux
+    - env: TARGET=i686-unknown-linux-gnu
+      rust: stable
+    - env: TARGET=i686-unknown-linux-musl
+      rust: stable
+    - env: TARGET=x86_64-unknown-linux-gnu
+      rust: stable
+    - env: TARGET=x86_64-unknown-linux-musl
+      rust: stable
 
-install: true # i.e. do nothing
+    # OSX
+    - env: TARGET=i686-apple-darwin
+      rust: stable
+      os: osx
+    - env: TARGET=x86_64-apple-darwin
+      rust: stable
+      os: osx
 
-script: ./ci test
+    # *BSD
+    - env: TARGET=i686-unknown-freebsd DISABLE_TESTS=1
+      rust: stable
+    - env: TARGET=x86_64-unknown-freebsd DISABLE_TESTS=1
+      rust: stable
+    - env: TARGET=x86_64-unknown-netbsd DISABLE_TESTS=1
+      rust: stable
 
-before_deploy: ./ci deploy
+    # Other architectures
+    - env: TARGET=aarch64-unknown-linux-gnu
+      rust: stable
+    - env: TARGET=armv7-unknown-linux-gnueabihf
+      rust: stable
+    - env: TARGET=mips-unknown-linux-gnu
+      rust: stable
+    - env: TARGET=mips64-unknown-linux-gnuabi64
+      rust: stable
+    - env: TARGET=mips64el-unknown-linux-gnuabi64
+      rust: stable
+    - env: TARGET=mipsel-unknown-linux-gnu
+      rust: stable
+    - env: TARGET=powerpc-unknown-linux-gnu
+      rust: stable
+    - env: TARGET=powerpc64-unknown-linux-gnu
+      rust: stable
+    - env: TARGET=powerpc64le-unknown-linux-gnu
+      rust: stable
+    - env: TARGET=s390x-unknown-linux-gnu DISABLE_TESTS=1
+      rust: stable
+
+    # Testing other channels
+    - env: TARGET=x86_64-unknown-linux-gnu
+      rust: nightly
+    - env: TARGET=x86_64-apple-darwin
+      os: osx
+      rust: nightly
+
+  allow_failures:
+    # Linux
+    - env: TARGET=i686-unknown-linux-musl
+      rust: stable
+    - env: TARGET=x86_64-unknown-linux-musl
+      rust: stable
+
+    # *BSD
+    - env: TARGET=i686-unknown-freebsd DISABLE_TESTS=1
+      rust: stable
+    - env: TARGET=x86_64-unknown-freebsd DISABLE_TESTS=1
+      rust: stable
+    - env: TARGET=x86_64-unknown-netbsd DISABLE_TESTS=1
+      rust: stable
+
+    # Other architectures
+    - env: TARGET=aarch64-unknown-linux-gnu
+      rust: stable
+    - env: TARGET=armv7-unknown-linux-gnueabihf
+      rust: stable
+    - env: TARGET=mips-unknown-linux-gnu
+      rust: stable
+    - env: TARGET=mips64-unknown-linux-gnuabi64
+      rust: stable
+    - env: TARGET=mips64el-unknown-linux-gnuabi64
+      rust: stable
+    - env: TARGET=mipsel-unknown-linux-gnu
+      rust: stable
+    - env: TARGET=powerpc-unknown-linux-gnu
+      rust: stable
+    - env: TARGET=powerpc64-unknown-linux-gnu
+      rust: stable
+    - env: TARGET=powerpc64le-unknown-linux-gnu
+      rust: stable
+    - env: TARGET=s390x-unknown-linux-gnu DISABLE_TESTS=1
+      rust: stable
+
+    # Testing other channels
+    - env: TARGET=x86_64-unknown-linux-gnu
+      rust: nightly
+    - env: TARGET=x86_64-apple-darwin
+      os: osx
+      rust: nightly
+
+before_install: set -e
+
+install:
+  - sh ci/install.sh
+  - source ~/.cargo/env || true
+
+script:
+  - bash ci/script.sh
+
+after_script: set +e
+
+before_deploy:
+  - sh ci/before_deploy.sh
 
 deploy:
-  - provider: script
-    script: ./ci deploy-gh-pages
-    skip_cleanup: true
+  - api_key: "${GITHUB_TOKEN}"
+    file_glob: true
+    file: target/deploy/$CRATE_NAME-$TRAVIS_TAG-$TARGET.*
     on:
-      repo: dflemstr/rq
+      condition: $TRAVIS_RUST_VERSION = stable
+      tags: true
+    provider: releases
+    skip_cleanup: true
   - provider: s3
     access_key_id: AKIAIMXXFE4ETRSISAEA
     secret_access_key:
@@ -91,10 +146,18 @@ deploy:
     cache_control: "max-age=3600"
     on:
       repo: dflemstr/rq
-  - provider: releases
-    api_key: "${GITHUB_TOKEN}"
-    file: "target/deploy-release/*"
-    file_glob: true
-    skip_cleanup: true
-    on:
-      tags: true
+
+cache: cargo
+before_cache:
+  # Travis can't cache files that are not readable by "others"
+  - chmod -R a+r $HOME/.cargo
+
+branches:
+  only:
+    # release tags
+    - /^v\d+\.\d+\.\d+.*$/
+    - master
+
+notifications:
+  email:
+    on_success: never

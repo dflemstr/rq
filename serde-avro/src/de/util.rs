@@ -2,9 +2,9 @@ use error::{self, ErrorKind};
 use std::io;
 
 pub fn read_block_size<R: io::Read>(reader: &mut R) -> error::Result<usize> {
-    let n = try!(read_long(reader));
+    let n = read_long(reader)?;
     let n = if n < 0 {
-        try!(read_long(reader)); // discard
+        read_long(reader)?; // discard
         n.abs()
     } else {
         n
@@ -13,7 +13,7 @@ pub fn read_block_size<R: io::Read>(reader: &mut R) -> error::Result<usize> {
 }
 
 pub fn read_int<R: io::Read>(reader: &mut R) -> error::Result<i32> {
-    let v = try!(read_long(reader));
+    let v = read_long(reader)?;
     if v < (i32::min_value() as i64) || v > (i32::max_value() as i64) {
         Err(ErrorKind::IntegerOverflow.into())
     } else {
@@ -22,7 +22,7 @@ pub fn read_int<R: io::Read>(reader: &mut R) -> error::Result<i32> {
 }
 
 pub fn read_long<R: io::Read>(reader: &mut R) -> io::Result<i64> {
-    let unsigned = try!(decode_var_len_u64(reader));
+    let unsigned = decode_var_len_u64(reader)?;
     Ok(decode_zig_zag(unsigned))
 }
 
@@ -35,7 +35,7 @@ fn decode_var_len_u64<R: io::Read>(reader: &mut R) -> io::Result<u64> {
     let mut num = 0;
     let mut i = 0;
     loop {
-        let byte = try!(reader.read_u8());
+        let byte = reader.read_u8()?;
 
         if i >= 9 && byte & 0b1111_1110 != 0 {
             // 10th byte

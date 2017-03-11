@@ -247,8 +247,8 @@ fn build_log_fun(isolate: &v8::Isolate, outer_context: &v8::Context) -> v8::valu
                                                       "log() called with too few arguments, \
                                                        requires at least two");
             Err(v8::value::Exception::error(&isolate, &message).into())
-        } else if let (Some(level), Some(name)) = (info.args.remove(0).into_int32(),
-                                                   info.args.remove(0).into_string()) {
+        } else if let (Some(level), Some(name)) =
+            (info.args.remove(0).into_int32(), info.args.remove(0).into_string()) {
             let level = match level.value() {
                 0 => log::LogLevel::Trace,
                 1 => log::LogLevel::Debug,
@@ -414,13 +414,11 @@ fn value_to_v8(isolate: &v8::Isolate, context: &v8::Context, value: &value::Valu
         Unit => v8::value::null(isolate).into(),
         Bool(v) => v8::value::Boolean::new(isolate, v).into(),
 
-        ISize(v) => v8::value::Number::new(isolate, v as f64).into(),
         I8(v) => v8::value::Integer::new(isolate, v as i32).into(),
         I16(v) => v8::value::Integer::new(isolate, v as i32).into(),
         I32(v) => v8::value::Integer::new(isolate, v as i32).into(),
         I64(v) => v8::value::Number::new(isolate, v as f64).into(),
 
-        USize(v) => v8::value::Number::new(isolate, v as f64).into(),
         U8(v) => v8::value::Integer::new_from_unsigned(isolate, v as u32).into(),
         U16(v) => v8::value::Integer::new_from_unsigned(isolate, v as u32).into(),
         U32(v) => v8::value::Integer::new_from_unsigned(isolate, v as u32).into(),
@@ -477,8 +475,6 @@ fn value_from_v8(isolate: &v8::Isolate, context: &v8::Context, value: v8::Value)
             value::Value::U32(v as u32)
         } else if (v as u64) as f64 == v {
             value::Value::U64(v as u64)
-        } else if (v as usize) as f64 == v {
-            value::Value::USize(v as usize)
         } else if (v as i8) as f64 == v {
             value::Value::I8(v as i8)
         } else if (v as i16) as f64 == v {
@@ -487,8 +483,6 @@ fn value_from_v8(isolate: &v8::Isolate, context: &v8::Context, value: v8::Value)
             value::Value::I32(v as i32)
         } else if (v as i64) as f64 == v {
             value::Value::I64(v as i64)
-        } else if (v as isize) as f64 == v {
-            value::Value::ISize(v as isize)
         } else if (v as f32) as f64 == v {
             value::Value::from_f32(v as f32)
         } else {

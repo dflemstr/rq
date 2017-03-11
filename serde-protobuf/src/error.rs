@@ -1,3 +1,5 @@
+use std::fmt;
+
 use protobuf;
 use protobuf::stream::wire_format;
 use serde;
@@ -35,14 +37,10 @@ error_chain! {
     }
 }
 
-impl serde::Error for Error {
-    fn custom<S>(msg: S) -> Error
-        where S: Into<String>
+impl serde::de::Error for Error {
+    fn custom<T>(msg: T) -> Error
+        where T: fmt::Display
     {
-        msg.into().into()
-    }
-
-    fn end_of_stream() -> Error {
-        ErrorKind::EndOfStream.into()
+        format!("{}", msg).into()
     }
 }

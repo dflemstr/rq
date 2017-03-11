@@ -141,7 +141,7 @@ impl SchemaRegistry {
 
     pub fn from_json(json: &serde_json::Value) -> Result<(SchemaRegistry, Option<SchemaRef>)> {
         let mut result = SchemaRegistry::new();
-        let r = try!(result.add_json(json));
+        let r = result.add_json(json)?;
         Ok((result, r))
     }
 
@@ -149,7 +149,7 @@ impl SchemaRegistry {
         match json {
             &serde_json::Value::Array(ref vs) => {
                 for v in vs {
-                    try!(self.create_schema_ref(None, v));
+                    self.create_schema_ref(None, v)?;
                 }
                 Ok(None)
             },
@@ -177,10 +177,10 @@ impl SchemaRegistry {
                 }
             },
             Object(ref obj) => {
-                let name = try!(obj.get("type")
+                let name = obj.get("type")
                     .and_then(Value::as_str)
                     .ok_or(Error::from(ErrorKind::InvalidSchema))
-                    .chain_err(|| ErrorKind::FieldTypeMismatch("type", "string")) as Result<&str>);
+                    .chain_err(|| ErrorKind::FieldTypeMismatch("type", "string"))?;
                 if let Some(primitive) = primitive_schema(name) {
                     Ok(primitive)
                 } else {
@@ -196,7 +196,7 @@ impl SchemaRegistry {
             },
             Array(ref elems) => {
                 let schemas =
-                    try!(elems.iter().map(|e| self.create_schema_ref(namespace, e)).collect());
+                    elems.iter().map(|e| self.create_schema_ref(namespace, e)).collect::<Result<_>>()?;
                 Ok(SchemaRef::Direct(Schema::Union(schemas)))
             },
             _ => {
@@ -208,14 +208,14 @@ impl SchemaRegistry {
 
     fn create_record(&mut self,
                      namespace: Option<&str>,
-                     obj: &collections::BTreeMap<String, serde_json::Value>)
+                     obj: &serde_json::Map<String, serde_json::Value>)
                      -> Result<SchemaRef> {
-        let (namespace, schema_name) = try!(full_name(namespace, obj));
-        let schema_id = try!(self.alloc_schema_name(schema_name.clone()));
+        let (namespace, schema_name) = full_name(namespace, obj)?;
+        let schema_id = self.alloc_schema_name(schema_name.clone())?;
         // Temporary, replaced below
         self.schemata.push(Schema::Null);
 
-        let fields = try!(obj.get("fields")
+        let fields = obj.get("fields")
             .ok_or(Error::from(ErrorKind::InvalidSchema))
             .chain_err(|| ErrorKind::RequiredFieldMissing("fields"))
             .and_then(|v| {
@@ -227,17 +227,18 @@ impl SchemaRegistry {
                 vs.iter()
                     .map(|v| self.create_field(namespace, v))
                     .collect()
-            }));
+            })?;
 
-        let doc = try!(obj.get("doc")
+        let doc = obj.get("doc")
             .map(|v| {
                 v.as_str()
                     .map(ToOwned::to_owned)
                     .map(Some)
                     .ok_or(Error::from(ErrorKind::InvalidSchema))
-                    .chain_err(|| ErrorKind::FieldTypeMismatch("doc", "string"))  as Result<Option<String>>
+                    .chain_err(|| ErrorKind::FieldTypeMismatch("doc", "string")) as
+                Result<Option<String>>
             })
-            .unwrap_or(Ok(None)));
+            .unwrap_or(Ok(None))?;
 
         self.schemata[schema_id.0] = Schema::Record(RecordSchema {
             name: schema_name,
@@ -250,28 +251,29 @@ impl SchemaRegistry {
 
     fn create_enum(&mut self,
                    namespace: Option<&str>,
-                   obj: &collections::BTreeMap<String, serde_json::Value>)
+                   obj: &serde_json::Map<String, serde_json::Value>)
                    -> Result<SchemaRef> {
-        let (_, schema_name) = try!(full_name(namespace, obj));
-        let schema_id = try!(self.alloc_schema_name(schema_name.clone()));
+        let (_, schema_name) = full_name(namespace, obj)?;
+        let schema_id = self.alloc_schema_name(schema_name.clone())?;
 
-        let doc = try!(obj.get("doc")
+        let doc = obj.get("doc")
             .map(|v| {
                 v.as_str()
                     .map(ToOwned::to_owned)
                     .map(Some)
                     .ok_or(Error::from(ErrorKind::InvalidSchema))
-                    .chain_err(|| ErrorKind::FieldTypeMismatch("doc", "string"))  as Result<Option<String>>
+                    .chain_err(|| ErrorKind::FieldTypeMismatch("doc", "string")) as
+                Result<Option<String>>
             })
-            .unwrap_or(Ok(None)));
+            .unwrap_or(Ok(None))?;
 
-        let symbols_array = try!(obj.get("symbols")
+        let symbols_array = obj.get("symbols")
             .ok_or(Error::from(ErrorKind::InvalidSchema))
-            .chain_err(|| ErrorKind::RequiredFieldMissing("symbols"))  as Result<&serde_json::Value>);
-        let symbols = try!(symbols_array.as_array()
+            .chain_err(|| ErrorKind::RequiredFieldMissing("symbols"))?;
+        let symbols = symbols_array.as_array()
             .and_then(|vs| vs.iter().map(|v| v.as_str().map(|s| s.to_owned())).collect())
             .ok_or(Error::from(ErrorKind::InvalidSchema))
-            .chain_err(|| ErrorKind::FieldTypeMismatch("symbols", "array of strings"))  as Result<Vec<String>>);
+            .chain_err(|| ErrorKind::FieldTypeMismatch("symbols", "array of strings"))?;
 
         self.schemata.push(Schema::Enum(EnumSchema {
             name: schema_name,
@@ -284,36 +286,36 @@ impl SchemaRegistry {
 
     fn create_array(&mut self,
                     namespace: Option<&str>,
-                    obj: &collections::BTreeMap<String, serde_json::Value>)
+                    obj: &serde_json::Map<String, serde_json::Value>)
                     -> Result<SchemaRef> {
-        let items = try!(obj.get("items")
+        let items = obj.get("items")
             .ok_or(Error::from(ErrorKind::InvalidSchema))
-            .chain_err(|| ErrorKind::RequiredFieldMissing("items"))  as Result<&serde_json::Value>);
-        let items_schema = try!(self.create_schema_ref(namespace, items));
+            .chain_err(|| ErrorKind::RequiredFieldMissing("items"))?;
+        let items_schema = self.create_schema_ref(namespace, items)?;
 
         Ok(SchemaRef::Direct(Schema::Array(Box::new(items_schema))))
     }
 
     fn create_map(&mut self,
                   namespace: Option<&str>,
-                  obj: &collections::BTreeMap<String, serde_json::Value>)
+                  obj: &serde_json::Map<String, serde_json::Value>)
                   -> Result<SchemaRef> {
-        let values = try!(obj.get("values")
+        let values = obj.get("values")
             .ok_or(Error::from(ErrorKind::InvalidSchema))
-            .chain_err(|| ErrorKind::RequiredFieldMissing("values"))  as Result<&serde_json::Value>);
-        let values_schema = try!(self.create_schema_ref(namespace, values));
+            .chain_err(|| ErrorKind::RequiredFieldMissing("values"))?;
+        let values_schema = self.create_schema_ref(namespace, values)?;
 
         Ok(SchemaRef::Direct(Schema::Map(Box::new(values_schema))))
     }
 
     fn create_fixed(&mut self,
                     namespace: Option<&str>,
-                    obj: &collections::BTreeMap<String, serde_json::Value>)
+                    obj: &serde_json::Map<String, serde_json::Value>)
                     -> Result<SchemaRef> {
-        let (_, schema_name) = try!(full_name(namespace, obj));
-        let schema_id = try!(self.alloc_schema_name(schema_name.clone()));
+        let (_, schema_name) = full_name(namespace, obj)?;
+        let schema_id = self.alloc_schema_name(schema_name.clone())?;
 
-        let doc = try!(obj.get("doc")
+        let doc = obj.get("doc")
             .map(|v| {
                 v.as_str()
                     .map(ToOwned::to_owned)
@@ -321,12 +323,12 @@ impl SchemaRegistry {
                     .ok_or(Error::from(ErrorKind::InvalidSchema))
                     .chain_err(|| ErrorKind::FieldTypeMismatch("doc", "string"))
             })
-            .unwrap_or(Ok(None)) as Result<Option<String>>);
+            .unwrap_or(Ok(None))?;
 
-        let size = try!(obj.get("size")
+        let size = obj.get("size")
             .and_then(serde_json::Value::as_i64)
             .ok_or(Error::from(ErrorKind::InvalidSchema))
-            .chain_err(|| ErrorKind::RequiredFieldMissing("size")) as Result<i64>);
+            .chain_err(|| ErrorKind::RequiredFieldMissing("size"))?;
 
         self.schemata.push(Schema::Fixed(FixedSchema {
             name: schema_name,
@@ -357,11 +359,11 @@ impl SchemaRegistry {
                     namespace: Option<&str>,
                     json: &serde_json::Value)
                     -> Result<(String, FieldSchema)> {
-        let name = try!(json.find("name")
+        let name = json.get("name")
             .and_then(serde_json::Value::as_str)
             .ok_or(Error::from(ErrorKind::InvalidSchema))
-            .chain_err(|| ErrorKind::RequiredFieldMissing("name")) as Result<&str>);
-        let doc = try!(json.find("doc")
+            .chain_err(|| ErrorKind::RequiredFieldMissing("name"))?;
+        let doc = json.get("doc")
             .map(|v| {
                 v.as_str()
                     .map(ToOwned::to_owned)
@@ -369,17 +371,17 @@ impl SchemaRegistry {
                     .ok_or(Error::from(ErrorKind::InvalidSchema))
                     .chain_err(|| ErrorKind::FieldTypeMismatch("doc", "string"))
             })
-            .unwrap_or(Ok(None)) as Result<Option<String>>);
-        let field_type = try!(json.find("type")
+            .unwrap_or(Ok(None))?;
+        let field_type = json.get("type")
             .ok_or(Error::from(ErrorKind::InvalidSchema))
             .chain_err(|| ErrorKind::RequiredFieldMissing("name"))
-            .and_then(|t| self.create_schema_ref(namespace, t)) as Result<SchemaRef>);
+            .and_then(|t| self.create_schema_ref(namespace, t))?;
 
         let schema = FieldSchema {
             name: name.to_owned(),
             doc: doc,
             field_type: field_type,
-            default: json.find("default").cloned(),
+            default: json.get("default").cloned(),
         };
 
         Ok((name.to_owned(), schema))
@@ -485,21 +487,21 @@ impl FixedSchema {
 }
 
 fn full_name<'a>(namespace: Option<&'a str>,
-                 obj: &'a collections::BTreeMap<String, serde_json::Value>)
+                 obj: &'a serde_json::Map<String, serde_json::Value>)
                  -> Result<(Option<&'a str>, String)> {
-    let namespace = try!(obj.get("namespace")
+    let namespace = obj.get("namespace")
         .map(|v| {
             v.as_str()
                 .map(Some)
                 .ok_or(Error::from(ErrorKind::InvalidSchema))
                 .chain_err(|| ErrorKind::FieldTypeMismatch("namespace", "string"))
         })
-        .unwrap_or(Ok(namespace)) as Result<Option<&str>>);
+        .unwrap_or(Ok(namespace))?;
 
-    let name = try!(obj.get("name")
+    let name = obj.get("name")
         .and_then(serde_json::Value::as_str)
         .ok_or(Error::from(ErrorKind::InvalidSchema))
-        .chain_err(|| ErrorKind::RequiredFieldMissing("name")) as Result<&str>);
+        .chain_err(|| ErrorKind::RequiredFieldMissing("name"))?;
 
     if let Some(ns) = namespace {
         Ok((Some(ns), format!("{}.{}", ns, name)))
@@ -540,8 +542,8 @@ fn primitive_schema(name: &str) -> Option<SchemaRef> {
 #[cfg(test)]
 mod test {
 
-    use serde_json;
     use super::*;
+    use serde_json;
 
     #[test]
     fn parse_record_schema() {

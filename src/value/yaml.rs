@@ -1,22 +1,16 @@
 use error;
-use serde;
 use serde_yaml;
 use std::io;
-use std::vec;
 use value;
-use yaml_rust;
 
-pub struct YamlSource(vec::IntoIter<yaml_rust::Yaml>);
+pub struct YamlSource<R>(Option<R>);
 pub struct YamlSink<W>(W) where W: io::Write;
 
 #[inline]
-pub fn source<R>(mut r: R) -> error::Result<YamlSource>
+pub fn source<R>(r: R) -> YamlSource<R>
     where R: io::Read
 {
-    let mut string = String::new();
-    try!(r.read_to_string(&mut string));
-    let values = try!(yaml_rust::YamlLoader::load_from_str(&string));
-    Ok(YamlSource(values.into_iter()))
+    YamlSource(Some(r))
 }
 
 #[inline]
@@ -26,18 +20,18 @@ pub fn sink<W>(w: W) -> YamlSink<W>
     YamlSink(w)
 }
 
-impl value::Source for YamlSource {
+impl<R> value::Source for YamlSource<R>
+    where R: io::Read
+{
     #[inline]
     fn read(&mut self) -> error::Result<Option<value::Value>> {
-        match self.0.next() {
-            Some(v) => {
-                let mut de = serde_yaml::Deserializer::new(&v);
-                match serde::Deserialize::deserialize(&mut de) {
-                    Ok(v) => Ok(Some(v)),
-                    Err(e) => Err(error::Error::from(e)),
-                }
-            },
-            None => Ok(None),
+        if let Some(r) = self.0.take() {
+            match serde_yaml::from_reader(r) {
+                Ok(v) => Ok(Some(v)),
+                Err(e) => Err(error::Error::from(e)),
+            }
+        } else {
+            Ok(None)
         }
     }
 }

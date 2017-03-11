@@ -235,10 +235,10 @@ mod test {
     #[test]
     fn parse_process_two_args() {
         let expected = Query(vec![Process("select".to_owned(),
-                                          vec![
-                Expression::Value(value::Value::String("abc-def".to_owned())),
-                Expression::Value(value::Value::String("ghi_123".to_owned())),
-            ])]);
+                                          vec![Expression::Value(value::Value::String("abc-def"
+                                                   .to_owned())),
+                                               Expression::Value(value::Value::String("ghi_123"
+                                                   .to_owned()))])]);
         let actual = Query::parse("select abc-def ghi_123").unwrap();
 
         assert_eq!(expected, actual);
