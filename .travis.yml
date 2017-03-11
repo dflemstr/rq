@@ -131,6 +131,7 @@ deploy:
     file: target/deploy/$CRATE_NAME-$TRAVIS_TAG-$TARGET.*
     on:
       condition: $TRAVIS_RUST_VERSION = stable
+      repo: dflemstr/rq
       tags: true
     provider: releases
     skip_cleanup: true
@@ -145,6 +146,7 @@ deploy:
     upload-dir: record-query
     cache_control: "max-age=3600"
     on:
+      condition: $TRAVIS_RUST_VERSION = stable
       repo: dflemstr/rq
 
 cache: cargo
