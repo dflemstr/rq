@@ -1,9 +1,22 @@
 [package]
 authors = ["David Flemström <david.flemstrom@gmail.com>"]
 build = "build.rs"
+categories = ["command-line-interface", "command-line-utilities", "development-tools", "text-processing", "value-formatting"]
+description = "A tool for doing record analysis and transformation"
+documentation = "https://github.com/dflemstr/rq/blob/master/README.md"
+homepage = "https://github.com/dflemstr/rq"
+keywords = ["protobuf", "command-line-tool", "cli", "json", "avro", "messagepack", "yaml", "toml", "javascript", "lodash", "record", "query"]
 license = "Apache-2.0"
 name = "record-query"
+readme = "README.md"
+repository = "https://github.com/dflemstr/rq"
 version = "0.10.0"
+
+[badges]
+
+[badges.travis-ci]
+branch = "master"
+repository = "dflemstr/rq"
 
 [build-dependencies]
 env_logger = "0.3.5"
