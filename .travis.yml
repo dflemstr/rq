@@ -26,9 +26,11 @@ matrix:
     - env: TARGET=i686-apple-darwin
       rust: stable
       os: osx
+      osx_image: xcode8
     - env: TARGET=x86_64-apple-darwin
       rust: stable
       os: osx
+      osx_image: xcode8
 
     # *BSD
     - env: TARGET=i686-unknown-freebsd DISABLE_TESTS=1
