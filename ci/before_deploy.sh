@@ -16,6 +16,7 @@ main() {
 
     cross build --bin rq --target "$TARGET" --release
 
+    strip "target/$TARGET/release/rq"
     cp "target/$TARGET/release/rq" "$deploy/$TARGET/rq"
     cp "target/$TARGET/release/rq" "$deploy/$TARGET/$revision/rq"
 
