@@ -28,6 +28,23 @@ main() {
     curl "https://img.shields.io/badge/v-$(echo "$revision" | sed 's/-/--/g;s/v//')-blue.svg" > "$deploy/$TARGET/badge-small.svg"
     mkdir -p "$deploy/$TARGET/$revision"
     cp "target/$TARGET/release/rq" "$deploy/$TARGET/$revision/rq"
+
+    if [ ! -z "$GEN_JSDOC" ]
+    then
+        curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+        apt-get update && apt-get install nodejs
+        sudo npm install -g jsdoc
+        (cd js-doc; npm install)
+        jsdoc -c js-doc/conf.json -d target/doc/js src/api.js src/prelude.js
+
+        cd target/doc
+        git init
+        git config user.email 'nobody@dflemstr.name'
+        git config user.name 'Travis CI'
+        git add .
+        git commit -m "Generate rustdoc for $TRAVIS_COMMIT"
+        git push --force "https://${GITHUB_TOKEN}@github.com/dflemstr/rq.git" master:gh-pages
+    fi
 }
 
 main
