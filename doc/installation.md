@@ -1,12 +1,14 @@
 # Installation
 
-There are many different ways to install `rq`.
+There are many different ways to install `rq`, listed from most preferred
+to least preferred.
 
-  * [Generic](#generic)
-  * [Manual download](#manual-download)
-  * [GitHub releases](#github-releases)
-  * [Arch Linux](#arch-linux)
-  * [Mac OS X](#mac-os-x)
+  * [Generic](#generic) (Up to date, fast)
+  * [Cargo](#cargo) (Stable releases, slow)
+  * [Manual download](#manual-download) (Up to date, fast)
+  * [GitHub releases](#github-releases) (Stable releases, fast)
+  * [Arch Linux](#arch-linux) (Up to date, slow)
+  * [Mac OS X](#mac-os-x) (Out of date, slow)
 
 ## Generic
 
@@ -16,6 +18,12 @@ need to compile `rq` from scratch, and you always get the latest
 version.
 
     curl -sSLf https://sh.dflemstr.name/rq | bash
+
+## Cargo
+
+There is a crate available on [crates.io](https://crates.io/), so just run:
+
+    cargo install record-query
 
 ## Manual download
 
