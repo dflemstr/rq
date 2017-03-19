@@ -32,7 +32,7 @@ main() {
     if [ ! -z "$GEN_JSDOC" ]
     then
         curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-        apt-get update && apt-get install nodejs
+        sudo apt-get install nodejs
         sudo npm install -g jsdoc
         (cd js-doc; npm install)
         jsdoc -c js-doc/conf.json -d target/doc/js src/api.js src/prelude.js
