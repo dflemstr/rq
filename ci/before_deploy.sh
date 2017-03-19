@@ -19,8 +19,7 @@ main() {
     strip "target/$TARGET/release/rq"
     cp "target/$TARGET/release/rq" "$deploy/$TARGET/rq"
 
-    cd $deploy
-    tar czf "$CRATE_NAME-$revision-$TARGET.tar.gz" -- *
+    (cd $deploy; tar czf "$CRATE_NAME-$revision-$TARGET.tar.gz" -- *)
 
     mkdir -p "$deploy/$TARGET/$revision"
     curl "https://img.shields.io/badge/${TARGET//-/--}-${revision//-/--}-blue.png" > "$deploy/$TARGET/badge.png"
