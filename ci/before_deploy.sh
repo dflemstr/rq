@@ -22,11 +22,12 @@ main() {
     cd $deploy
     tar czf "$CRATE_NAME-$revision-$TARGET.tar.gz" -- *
 
+    mkdir -p "$deploy/$TARGET/$revision"
     curl "https://img.shields.io/badge/${TARGET//-/--}-${revision//-/--}-blue.png" > "$deploy/$TARGET/badge.png"
     curl "https://img.shields.io/badge/${TARGET//-/--}-${revision//-/--}-blue.svg" > "$deploy/$TARGET/badge.svg"
     curl "https://img.shields.io/badge/v-$(echo "$revision" | sed 's/-/--/g;s/v//')-blue.png" > "$deploy/$TARGET/badge-small.png"
     curl "https://img.shields.io/badge/v-$(echo "$revision" | sed 's/-/--/g;s/v//')-blue.svg" > "$deploy/$TARGET/badge-small.svg"
-    mkdir -p "$deploy/$TARGET/$revision"
+
     cp "target/$TARGET/release/rq" "$deploy/$TARGET/$revision/rq"
 
     if [ ! -z "$GEN_JSDOC" ]
