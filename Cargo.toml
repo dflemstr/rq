@@ -10,7 +10,7 @@ license = "Apache-2.0"
 name = "record-query"
 readme = "README.md"
 repository = "https://github.com/dflemstr/rq"
-version = "0.10.3"
+version = "0.10.4"
 
 [badges]
 
