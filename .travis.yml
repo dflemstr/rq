@@ -151,11 +151,6 @@ deploy:
       condition: $TRAVIS_RUST_VERSION = stable
       repo: dflemstr/rq
 
-cache: cargo
-before_cache:
-  # Travis can't cache files that are not readable by "others"
-  - chmod -R a+r $HOME/.cargo
-
 branches:
   only:
     # release tags
