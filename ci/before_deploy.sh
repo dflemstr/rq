@@ -31,6 +31,8 @@ main() {
 
     if [ ! -z "$GEN_JSDOC" ]
     then
+        cross doc
+
         curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
         sudo apt-get install nodejs
         sudo npm install -g jsdoc
