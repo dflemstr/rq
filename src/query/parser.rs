@@ -194,7 +194,7 @@ impl fmt::Display for Rule {
             Rule::process => "process",
             Rule::expression => "expression",
             Rule::ident => "identifier",
-            Rule::js => "Javascript expression",
+            Rule::js => "JavaScript expression",
             Rule::lambda => "lambda",
             Rule::args => "lambda argument list",
             Rule::body => "lambda body",

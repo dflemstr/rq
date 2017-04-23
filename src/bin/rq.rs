@@ -324,7 +324,7 @@ fn log_error(args: &Args, error: rq::error::Error) {
     match *error.kind() {
         ErrorKind::Msg(ref m) => error!("{}", m),
         ErrorKind::V8(v8::error::ErrorKind::Javascript(ref msg, ref stack_trace)) => {
-            error!("Error while executing Javascript: {}", msg);
+            error!("Error while executing JavaScript: {}", msg);
 
             for line in format!("{}", stack_trace).lines() {
                 error!("{}", line);

@@ -1,6 +1,6 @@
 "use strict";
 /**
- * This is the rq standard library as implemented in Javascript.
+ * This is the rq standard library as implemented in JavaScript.
  *
  * Note that the examples in this file are doctests.  Any line with the format:
  *

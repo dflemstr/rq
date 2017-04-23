@@ -1,6 +1,6 @@
 "use strict";
 /**
- * This file contains the rq Javascript API implementation.  It's used
+ * This file contains the rq JavaScript API implementation.  It's used
  * by for example the `prelude` module.
  * @module api
  * @private

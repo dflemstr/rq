@@ -26,7 +26,7 @@ instructions (e.g. if you're missing other development tools).
 
 To build `rq`, navigate to the source directory.
 
-You will need a build of the V8 Javascript engine as well.  If
+You will need a build of the V8 JavaScript engine as well.  If
 your operating system package manager doesn't provide a package,
 you can download a build like this:
 
