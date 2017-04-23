@@ -90,8 +90,8 @@ Here are some example arguments:
     them together.
   - `(x, y) => {_.isEqual(x, y)}` - A lambda that takes two arguments
     and calls the lodash `_.isEqual` function.
-  - `(2 + 3)` - A simple Javascript expression.
-  - `(_.isEqual)` - A function reference captured as a Javascript
+  - `(2 + 3)` - A simple JavaScript expression.
+  - `(_.isEqual)` - A function reference captured as a JavaScript
     expression.
 
 Arguments are dynamically typed, and processes that claim to take a

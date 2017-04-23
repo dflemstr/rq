@@ -12,7 +12,7 @@ programs.  `rq` fills a similar niche as tools like `awk` or `sed`,
 but works with structured (record) data instead of text.
 
 It was created with love out of the best parts of Rust, C and
-Javascript, and is distributed as a dependency-free binary on many
+JavaScript, and is distributed as a dependency-free binary on many
 operating systems and architectures.
 
 ## Quick links
