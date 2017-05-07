@@ -70,50 +70,50 @@ use std::vec;
 use value;
 
 /// A deserializer that can deserialize a single message type.
-pub struct Deserializer<'a> {
-    descriptors: &'a descriptor::Descriptors,
-    descriptor: &'a descriptor::MessageDescriptor,
-    input: protobuf::CodedInputStream<'a>,
+pub struct Deserializer<'de> {
+    descriptors: &'de descriptor::Descriptors,
+    descriptor: &'de descriptor::MessageDescriptor,
+    input: protobuf::CodedInputStream<'de>,
 }
 
-struct MessageVisitor<'a> {
-    descriptors: &'a descriptor::Descriptors,
-    descriptor: &'a descriptor::MessageDescriptor,
+struct MessageVisitor<'de> {
+    descriptors: &'de descriptor::Descriptors,
+    descriptor: &'de descriptor::MessageDescriptor,
     fields: collections::btree_map::IntoIter<i32, value::Field>,
-    field: Option<(&'a descriptor::FieldDescriptor, value::Field)>,
+    field: Option<(&'de descriptor::FieldDescriptor, value::Field)>,
 }
 
-struct MessageKeyDeserializer<'a> {
-    descriptor: &'a descriptor::FieldDescriptor,
+struct MessageKeyDeserializer<'de> {
+    descriptor: &'de descriptor::FieldDescriptor,
 }
 
-struct MessageFieldDeserializer<'a> {
-    descriptors: &'a descriptor::Descriptors,
-    descriptor: &'a descriptor::FieldDescriptor,
+struct MessageFieldDeserializer<'de> {
+    descriptors: &'de descriptor::Descriptors,
+    descriptor: &'de descriptor::FieldDescriptor,
     field: Option<value::Field>,
 }
 
-struct RepeatedValueVisitor<'a> {
-    descriptors: &'a descriptor::Descriptors,
-    descriptor: &'a descriptor::FieldDescriptor,
+struct RepeatedValueVisitor<'de> {
+    descriptors: &'de descriptor::Descriptors,
+    descriptor: &'de descriptor::FieldDescriptor,
     values: vec::IntoIter<value::Value>,
 }
 
-struct ValueDeserializer<'a> {
-    descriptors: &'a descriptor::Descriptors,
-    descriptor: &'a descriptor::FieldDescriptor,
+struct ValueDeserializer<'de> {
+    descriptors: &'de descriptor::Descriptors,
+    descriptor: &'de descriptor::FieldDescriptor,
     value: Option<value::Value>,
 }
 
-impl<'a> Deserializer<'a> {
+impl<'de> Deserializer<'de> {
     /// Constructs a new protocol buffer deserializer for the specified message type.
     ///
     /// The caller must ensure that all of the information needed by the specified message
     /// descriptor is available in the associated descriptors registry.
-    pub fn new(descriptors: &'a descriptor::Descriptors,
-               descriptor: &'a descriptor::MessageDescriptor,
-               input: protobuf::CodedInputStream<'a>)
-               -> Deserializer<'a> {
+    pub fn new(descriptors: &'de descriptor::Descriptors,
+               descriptor: &'de descriptor::MessageDescriptor,
+               input: protobuf::CodedInputStream<'de>)
+               -> Deserializer<'de> {
         Deserializer {
             descriptors: descriptors,
             descriptor: descriptor,
@@ -125,10 +125,10 @@ impl<'a> Deserializer<'a> {
     ///
     /// The message type name must be fully quailified (for example
     /// `".google.protobuf.FileDescriptorSet"`).
-    pub fn for_named_message(descriptors: &'a descriptor::Descriptors,
+    pub fn for_named_message(descriptors: &'de descriptor::Descriptors,
                              message_name: &str,
-                             input: protobuf::CodedInputStream<'a>)
-                             -> error::Result<Deserializer<'a>> {
+                             input: protobuf::CodedInputStream<'de>)
+                             -> error::Result<Deserializer<'de>> {
         if let Some(message) = descriptors.message_by_name(message_name) {
             Ok(Deserializer::new(descriptors, message, input))
         } else {
@@ -137,18 +137,18 @@ impl<'a> Deserializer<'a> {
     }
 }
 
-impl<'a, 'b> serde::Deserializer for &'b mut Deserializer<'a> {
+impl<'de, 'b> serde::Deserializer<'de> for &'b mut Deserializer<'de> {
     type Error = error::Error;
 
-    forward_to_deserialize! {
-        bool u8 u16 u32 u64 i8 i16 i32 i64 f32 f64 char str string unit option
-        seq seq_fixed_size bytes byte_buf map unit_struct newtype_struct
-        tuple_struct struct struct_field tuple enum ignored_any
+    forward_to_deserialize_any! {
+        bool i8 i16 i32 i64 u8 u16 u32 u64 f32 f64 char str string bytes
+        byte_buf option unit unit_struct newtype_struct seq tuple
+        tuple_struct map struct enum identifier ignored_any
     }
 
     #[inline]
-    fn deserialize<V>(self, visitor: V) -> Result<V::Value, Self::Error>
-        where V: serde::de::Visitor
+    fn deserialize_any<V>(self, visitor: V) -> Result<V::Value, Self::Error>
+        where V: serde::de::Visitor<'de>
     {
         let mut message = value::Message::new(self.descriptor);
         message.merge_from(self.descriptors, self.descriptor, &mut self.input)?;
@@ -156,12 +156,12 @@ impl<'a, 'b> serde::Deserializer for &'b mut Deserializer<'a> {
     }
 }
 
-impl<'a> MessageVisitor<'a> {
+impl<'de> MessageVisitor<'de> {
     #[inline]
-    fn new(descriptors: &'a descriptor::Descriptors,
-           descriptor: &'a descriptor::MessageDescriptor,
+    fn new(descriptors: &'de descriptor::Descriptors,
+           descriptor: &'de descriptor::MessageDescriptor,
            value: value::Message)
-           -> MessageVisitor<'a> {
+           -> MessageVisitor<'de> {
         MessageVisitor {
             descriptors: descriptors,
             descriptor: descriptor,
@@ -171,12 +171,12 @@ impl<'a> MessageVisitor<'a> {
     }
 }
 
-impl<'a> serde::de::MapVisitor for MessageVisitor<'a> {
+impl<'de> serde::de::MapAccess<'de> for MessageVisitor<'de> {
     type Error = error::Error;
 
     #[inline]
-    fn visit_key_seed<K>(&mut self, seed: K) -> error::Result<Option<K::Value>>
-        where K: serde::de::DeserializeSeed
+    fn next_key_seed<K>(&mut self, seed: K) -> error::Result<Option<K::Value>>
+        where K: serde::de::DeserializeSeed<'de>
     {
         if let Some((k, v)) = self.fields.next() {
             let descriptor = self.descriptor.field_by_number(k).expect("Lost track of field");
@@ -189,8 +189,8 @@ impl<'a> serde::de::MapVisitor for MessageVisitor<'a> {
     }
 
     #[inline]
-    fn visit_value_seed<V>(&mut self, seed: V) -> error::Result<V::Value>
-        where V: serde::de::DeserializeSeed
+    fn next_value_seed<V>(&mut self, seed: V) -> error::Result<V::Value>
+        where V: serde::de::DeserializeSeed<'de>
     {
         let (descriptor, field) = self.field
             .take()
@@ -200,36 +200,36 @@ impl<'a> serde::de::MapVisitor for MessageVisitor<'a> {
     }
 }
 
-impl<'a> MessageKeyDeserializer<'a> {
+impl<'de> MessageKeyDeserializer<'de> {
     #[inline]
-    fn new(descriptor: &'a descriptor::FieldDescriptor) -> MessageKeyDeserializer<'a> {
+    fn new(descriptor: &'de descriptor::FieldDescriptor) -> MessageKeyDeserializer<'de> {
         MessageKeyDeserializer { descriptor: descriptor }
     }
 }
 
-impl<'a> serde::Deserializer for MessageKeyDeserializer<'a> {
+impl<'de> serde::Deserializer<'de> for MessageKeyDeserializer<'de> {
     type Error = error::Error;
 
-    forward_to_deserialize! {
-        bool u8 u16 u32 u64 i8 i16 i32 i64 f32 f64 char str string unit option
-        seq seq_fixed_size bytes byte_buf map unit_struct newtype_struct
-        tuple_struct struct struct_field tuple enum ignored_any
+    forward_to_deserialize_any! {
+        bool i8 i16 i32 i64 u8 u16 u32 u64 f32 f64 char str string bytes
+        byte_buf option unit unit_struct newtype_struct seq tuple
+        tuple_struct map struct enum identifier ignored_any
     }
 
     #[inline]
-    fn deserialize<V>(self, visitor: V) -> error::Result<V::Value>
-        where V: serde::de::Visitor
+    fn deserialize_any<V>(self, visitor: V) -> error::Result<V::Value>
+        where V: serde::de::Visitor<'de>
     {
         visitor.visit_str(self.descriptor.name())
     }
 }
 
-impl<'a> MessageFieldDeserializer<'a> {
+impl<'de> MessageFieldDeserializer<'de> {
     #[inline]
-    fn new(descriptors: &'a descriptor::Descriptors,
-           descriptor: &'a descriptor::FieldDescriptor,
+    fn new(descriptors: &'de descriptor::Descriptors,
+           descriptor: &'de descriptor::FieldDescriptor,
            field: value::Field)
-           -> MessageFieldDeserializer<'a> {
+           -> MessageFieldDeserializer<'de> {
         MessageFieldDeserializer {
             descriptors: descriptors,
             descriptor: descriptor,
@@ -238,18 +238,18 @@ impl<'a> MessageFieldDeserializer<'a> {
     }
 }
 
-impl<'a> serde::Deserializer for MessageFieldDeserializer<'a> {
+impl<'de> serde::Deserializer<'de> for MessageFieldDeserializer<'de> {
     type Error = error::Error;
 
-    forward_to_deserialize! {
-        bool u8 u16 u32 u64 i8 i16 i32 i64 f32 f64 char str string unit option
-        seq seq_fixed_size bytes byte_buf map unit_struct newtype_struct
-        tuple_struct struct struct_field tuple enum ignored_any
+    forward_to_deserialize_any! {
+        bool i8 i16 i32 i64 u8 u16 u32 u64 f32 f64 char str string bytes
+        byte_buf option unit unit_struct newtype_struct seq tuple
+        tuple_struct map struct enum identifier ignored_any
     }
 
     #[inline]
-    fn deserialize<V>(mut self, visitor: V) -> error::Result<V::Value>
-        where V: serde::de::Visitor
+    fn deserialize_any<V>(mut self, visitor: V) -> error::Result<V::Value>
+        where V: serde::de::Visitor<'de>
     {
         let ds = self.descriptors;
         let d = self.descriptor;
@@ -276,12 +276,12 @@ impl<'a> serde::Deserializer for MessageFieldDeserializer<'a> {
     }
 }
 
-impl<'a> RepeatedValueVisitor<'a> {
+impl<'de> RepeatedValueVisitor<'de> {
     #[inline]
-    fn new(descriptors: &'a descriptor::Descriptors,
-           descriptor: &'a descriptor::FieldDescriptor,
+    fn new(descriptors: &'de descriptor::Descriptors,
+           descriptor: &'de descriptor::FieldDescriptor,
            values: vec::IntoIter<value::Value>)
-           -> RepeatedValueVisitor<'a> {
+           -> RepeatedValueVisitor<'de> {
         RepeatedValueVisitor {
             descriptors: descriptors,
             descriptor: descriptor,
@@ -290,12 +290,12 @@ impl<'a> RepeatedValueVisitor<'a> {
     }
 }
 
-impl<'a> serde::de::SeqVisitor for RepeatedValueVisitor<'a> {
+impl<'de> serde::de::SeqAccess<'de> for RepeatedValueVisitor<'de> {
     type Error = error::Error;
 
     #[inline]
-    fn visit_seed<A>(&mut self, seed: A) -> error::Result<Option<A::Value>>
-        where A: serde::de::DeserializeSeed
+    fn next_element_seed<A>(&mut self, seed: A) -> error::Result<Option<A::Value>>
+        where A: serde::de::DeserializeSeed<'de>
     {
         let ds = self.descriptors;
         let d = self.descriptor;
@@ -306,17 +306,17 @@ impl<'a> serde::de::SeqVisitor for RepeatedValueVisitor<'a> {
     }
 
     #[inline]
-    fn size_hint(&self) -> (usize, Option<usize>) {
-        self.values.size_hint()
+    fn size_hint(&self) -> Option<usize> {
+        self.values.size_hint().1
     }
 }
 
-impl<'a> ValueDeserializer<'a> {
+impl<'de> ValueDeserializer<'de> {
     #[inline]
-    fn new(descriptors: &'a descriptor::Descriptors,
-           descriptor: &'a descriptor::FieldDescriptor,
+    fn new(descriptors: &'de descriptor::Descriptors,
+           descriptor: &'de descriptor::FieldDescriptor,
            value: value::Value)
-           -> ValueDeserializer<'a> {
+           -> ValueDeserializer<'de> {
         ValueDeserializer {
             descriptors: descriptors,
             descriptor: descriptor,
@@ -325,18 +325,18 @@ impl<'a> ValueDeserializer<'a> {
     }
 }
 
-impl<'a> serde::Deserializer for ValueDeserializer<'a> {
+impl<'de> serde::Deserializer<'de> for ValueDeserializer<'de> {
     type Error = error::Error;
 
-    forward_to_deserialize! {
-        bool u8 u16 u32 u64 i8 i16 i32 i64 f32 f64 char str string unit option
-        seq seq_fixed_size bytes byte_buf map unit_struct newtype_struct
-        tuple_struct struct struct_field tuple enum ignored_any
+    forward_to_deserialize_any! {
+        bool i8 i16 i32 i64 u8 u16 u32 u64 f32 f64 char str string bytes
+        byte_buf option unit unit_struct newtype_struct seq tuple
+        tuple_struct map struct enum identifier ignored_any
     }
 
     #[inline]
-    fn deserialize<V>(mut self, visitor: V) -> error::Result<V::Value>
-        where V: serde::de::Visitor
+    fn deserialize_any<V>(mut self, visitor: V) -> error::Result<V::Value>
+        where V: serde::de::Visitor<'de>
     {
         match self.value.take() {
             Some(value) => visit_value(self.descriptors, self.descriptor, value, visitor),
@@ -346,12 +346,12 @@ impl<'a> serde::Deserializer for ValueDeserializer<'a> {
 }
 
 #[inline]
-fn visit_value<V>(descriptors: &descriptor::Descriptors,
-                  descriptor: &descriptor::FieldDescriptor,
-                  value: value::Value,
-                  visitor: V)
-                  -> error::Result<V::Value>
-    where V: serde::de::Visitor
+fn visit_value<'de, V>(descriptors: &'de descriptor::Descriptors,
+                       descriptor: &'de descriptor::FieldDescriptor,
+                       value: value::Value,
+                       visitor: V)
+                       -> error::Result<V::Value>
+    where V: serde::de::Visitor<'de>
 {
     match value {
         value::Value::Bool(v) => visitor.visit_bool(v),
