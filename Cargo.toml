@@ -52,7 +52,6 @@ path = "serde-avro"
 version = "0.5.0"
 
 [dependencies.serde-protobuf]
-path = "serde-protobuf"
 version = "0.5.0"
 
 [dependencies.toml]
@@ -68,4 +67,4 @@ shared = ["v8/shared"]
 lto = true
 
 [workspace]
-members = ["serde-avro", "serde-protobuf"]
+members = ["serde-avro"]
