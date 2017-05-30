@@ -15,6 +15,7 @@ extern crate serde;
 #[macro_use]
 extern crate serde_derive;
 extern crate serde_json;
+extern crate serde_bytes;
 extern crate snap;
 
 mod header;
