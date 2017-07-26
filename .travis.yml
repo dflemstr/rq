@@ -117,7 +117,6 @@ before_install: set -e
 
 install:
   - ./ci/install.sh
-  - source ~/.cargo/env || true
 
 script:
   - ./ci/script.sh

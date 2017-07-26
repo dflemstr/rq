@@ -2,8 +2,14 @@
 # This script takes care of testing your crate
 
 main() {
-    export V8_LIBS=$PWD/v8-build/lib/libv8uber.a
-    export V8_SOURCE=$PWD/v8-build
+    local basedir
+    if [ "$TRAVIS_OS_NAME" = linux ]
+    then basedir=/project
+    else basedir=$PWD
+    fi
+
+    export V8_LIBS=$basedir/v8-build/lib/libv8uber.a
+    export V8_SOURCE=$basedir/v8-build
 
     cross build --target "$TARGET"
 

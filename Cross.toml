@@ -1,5 +1,5 @@
 [build.env]
-whitelist = ["V8_LIBS", "V8_SOURCE"]
+passthrough = ["V8_LIBS", "V8_SOURCE"]
 
 [target.aarch64-unknown-linux-gnu]
 image = "dflemstr/rust-buildenv:aarch64-unknown-linux-gnu"

@@ -1,12 +1,29 @@
 #!/bin/bash -ex
 
 main() {
-    curl https://sh.rustup.rs -sSf | \
-        sh -s -- -y --default-toolchain $TRAVIS_RUST_VERSION
+    local cross_target=
+    if [ "$TRAVIS_OS_NAME" = linux ]; then
+        cross_target=x86_64-unknown-linux-musl
+        sort=sort
+    else
+        cross_target=x86_64-apple-darwin
+        sort=gsort  # for `sort --sort-version`, from brew's coreutils.
+    fi
 
-    source ~/.cargo/env || true
+    # This fetches latest stable release
+    local tag
+    tag=$(git ls-remote --tags --refs --exit-code https://github.com/japaric/cross \
+              | cut -d/ -f3 \
+              | grep -E '^v[0.1.0-9.]+$' \
+              | $sort --version-sort \
+              | tail -n1)
 
-    cargo install --git https://github.com/dflemstr/cross.git --branch rq --force
+    curl -LSfs https://japaric.github.io/trust/install.sh | \
+        sh -s -- \
+           --force \
+           --git japaric/cross \
+           --tag "$tag" \
+           --target "$cross_target"
 
     if [ ! -d v8-build ]
     then
