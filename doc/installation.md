@@ -17,7 +17,7 @@ There is a generic best-effort installer available via the dreaded
 need to compile `rq` from scratch, and you always get the latest
 version.
 
-    curl -sSLf https://sh.dflemstr.name/rq | bash
+    curl -sSLf https://sh.dflemstr.io/rq | bash
 
 ## Cargo
 
