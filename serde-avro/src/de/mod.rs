@@ -14,6 +14,7 @@ pub struct Deserializer<'a, R>
     where R: io::Read + read::Limit
 {
     input: R,
+    header: borrow::Cow<'a, header::Header>,
     registry: borrow::Cow<'a, schema::SchemaRegistry>,
     schema: borrow::Cow<'a, schema::Schema>,
 }
@@ -65,20 +66,24 @@ impl<'a, R> Deserializer<'a, R>
     where R: io::Read + read::Limit
 {
     pub fn new(input: R,
+               header: &'a header::Header,
                registry: &'a schema::SchemaRegistry,
                schema: &'a schema::Schema)
                -> Deserializer<'a, R> {
         Deserializer::new_cow(input,
+                              borrow::Cow::Borrowed(header),
                               borrow::Cow::Borrowed(registry),
                               borrow::Cow::Borrowed(schema))
     }
 
     fn new_cow(input: R,
+               header: borrow::Cow<'a, header::Header>,
                registry: borrow::Cow<'a, schema::SchemaRegistry>,
                schema: borrow::Cow<'a, schema::Schema>)
                -> Deserializer<'a, R> {
         Deserializer {
             input: input,
+            header: header,
             registry: registry,
             schema: schema,
         }
@@ -95,8 +100,9 @@ impl<'a, R> Deserializer<'a, read::Blocks<R>>
         let header = {
             debug!("Parsing container header");
             let direct = read::Direct::new(&mut input, 1);
+            let default_header = Default::default();
             let mut header_de =
-                Deserializer::new(direct, &schema::EMPTY_REGISTRY, &schema::FILE_HEADER);
+                Deserializer::new(direct, &default_header, &schema::EMPTY_REGISTRY, &schema::FILE_HEADER);
             header::Header::deserialize(&mut header_de)?
         };
         debug!("Container header: {:?}", header);
@@ -105,7 +111,7 @@ impl<'a, R> Deserializer<'a, read::Blocks<R>>
             Err(ErrorKind::BadFileMagic(header.magic.to_vec()).into())
         } else {
             let codec = read::Codec::parse(header.meta.get("avro.codec").map(AsRef::as_ref))?;
-            let schema_data = header.meta
+            let schema_data = header
                 .get("avro.schema")
                 .ok_or(Error::from(ErrorKind::NoSchema))?;
 
@@ -116,11 +122,17 @@ impl<'a, R> Deserializer<'a, read::Blocks<R>>
                 .ok_or(Error::from(ErrorKind::NoRootType))?
                 .into_resolved(&registry);
 
-            let blocks = read::Blocks::new(input, codec, header.sync.to_vec());
+            let blocks = read::Blocks::new(input, codec, header.clone().sync.to_vec());
+            let header_cow = borrow::Cow::Owned(header);
             let registry_cow = borrow::Cow::Owned(registry);
             let schema_cow = borrow::Cow::Owned(root_schema);
-            Ok(Deserializer::new_cow(blocks, registry_cow, schema_cow))
+            Ok(Deserializer::new_cow(blocks, header_cow, registry_cow, schema_cow))
         }
+    }
+
+    /// Returns the name assigned to the given Avro schema.
+    pub fn name(&self) -> String {
+        self.header.name()
     }
 }
 
