@@ -2,6 +2,10 @@
 
 # `rq` [![Build Status](https://travis-ci.org/dflemstr/rq.svg?branch=master)](https://travis-ci.org/dflemstr/rq) [![Crates.io](https://img.shields.io/crates/v/record-query.svg)](https://crates.io/crates/record-query) [![Language (Rust)](https://img.shields.io/badge/powered_by-Rust-blue.svg)](http://www.rust-lang.org/)
 
+**WARNING**: `rq` is in very low maintenance mode while I (@dflemstr) focus
+on other things (such as my day job).  Pull requests are welcome but I won't
+guarantee that I will fix reported issues.
+
 This is the home of the tool called `rq` (record query).  It's a tool
 that's used for performing queries on streams of records in various
 formats.
