@@ -66,7 +66,7 @@ pub fn sink_readable<W>(w: W) -> JsonSink<W, ReadableFormatter>
 }
 
 #[inline]
-pub fn sink_readable_no_color<'a, W>(w: W) -> JsonSink<W, serde_json::ser::PrettyFormatter<'a>>
+pub fn sink_indented<'a, W>(w: W) -> JsonSink<W, serde_json::ser::PrettyFormatter<'a>>
     where W: io::Write
 {
     JsonSink(w, serde_json::ser::PrettyFormatter::new())

@@ -79,8 +79,8 @@ Options:
 
   --format <format>
       Force stylistic output formatting.  Can be one of 'compact',
-      'readable' or 'readablenocolor and the default is inferred from the
-       terminal environment.
+      'readable' (with color) or 'indented' (without color) and the default is
+       inferred from the terminal environment.
 
   <query>
       A query indicating how to transform each record.
@@ -136,7 +136,7 @@ pub struct Args {
 pub enum Format {
     Compact,
     Readable,
-    ReadableNoColor,
+    Indented,
 }
 
 fn main() {
@@ -220,7 +220,7 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
     let format = args.flag_format.unwrap_or_else(infer_format);
 
     macro_rules! dispatch_format {
-        ($compact:expr, $readable:expr, $readable_no_color:expr) => {
+        ($compact:expr, $readable:expr, $indented:expr) => {
             match format {
                 Format::Compact => {
                     let sink = $compact(&mut output);
@@ -230,8 +230,8 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
                     let sink = $readable(&mut output);
                     run_source_sink(args, paths, source, sink)
                 }
-                Format::ReadableNoColor => {
-                    let sink = $readable_no_color(&mut output);
+                Format::Indented => {
+                    let sink = $indented(&mut output);
                     run_source_sink(args, paths, source, sink)
                 }
             }
@@ -261,7 +261,7 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
     } else {
         dispatch_format!(rq::value::json::sink_compact,
                          rq::value::json::sink_readable,
-                         rq::value::json::sink_readable_no_color)
+                         rq::value::json::sink_indented)
     }
 }
 
@@ -577,8 +577,8 @@ mod test {
     }
 
     #[test]
-    fn test_docopt_format_readable_no_color() {
-        let a = parse_args(&["rq", "--format", "readablenocolor"]);
-        assert_eq!(a.flag_format, Some(Format::ReadableNoColor));
+    fn test_docopt_format_indented() {
+        let a = parse_args(&["rq", "--format", "indented"]);
+        assert_eq!(a.flag_format, Some(Format::Indented));
     }
 }
