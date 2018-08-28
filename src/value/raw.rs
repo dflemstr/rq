@@ -2,24 +2,24 @@ use error;
 use std::io;
 use value;
 
-pub struct TextSource<R>(io::Lines<io::BufReader<R>>) where R: io::Read;
+pub struct RawSource<R>(io::Lines<io::BufReader<R>>) where R: io::Read;
 
-pub struct TextSink<W>(io::LineWriter<W>) where W: io::Write;
+pub struct RawSink<W>(io::LineWriter<W>) where W: io::Write;
 
 #[inline]
-pub fn source<R>(r: R) -> TextSource<R> where R: io::Read
+pub fn source<R>(r: R) -> RawSource<R> where R: io::Read
 {
     use std::io::BufRead;
-    TextSource(io::BufReader::new(r).lines())
+    RawSource(io::BufReader::new(r).lines())
 }
 
 #[inline]
-pub fn sink<W>(w: W) -> TextSink<W> where W: io::Write
+pub fn sink<W>(w: W) -> RawSink<W> where W: io::Write
 {
-    TextSink(io::LineWriter::new(w))
+    RawSink(io::LineWriter::new(w))
 }
 
-impl<R> value::Source for TextSource<R> where R: io::Read
+impl<R> value::Source for RawSource<R> where R: io::Read
 {
     #[inline]
     fn read(&mut self) -> error::Result<Option<value::Value>> {
@@ -31,7 +31,7 @@ impl<R> value::Source for TextSource<R> where R: io::Read
     }
 }
 
-impl<W> value::Sink for TextSink<W> where W: io::Write
+impl<W> value::Sink for RawSink<W> where W: io::Write
 {
     #[inline]
     fn write(&mut self, value: value::Value) -> error::Result<()> {
@@ -42,7 +42,7 @@ impl<W> value::Sink for TextSink<W> where W: io::Write
                 self.0.write(b"\n")?;
                 Ok(())
             }
-            _ => bail!("text can only output strings")
+            _ => bail!("raw can only output strings")
         }
     }
 }

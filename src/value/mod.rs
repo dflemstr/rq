@@ -12,9 +12,9 @@ pub mod cbor;
 #[cfg(feature = "hjson_serde_0_9_support")]
 pub mod hjson;
 pub mod json;
-pub mod text;
 pub mod messagepack;
 pub mod protobuf;
+pub mod raw;
 pub mod toml;
 pub mod yaml;
 
