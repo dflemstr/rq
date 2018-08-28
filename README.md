@@ -158,3 +158,4 @@ operating systems and architectures.
 | Google Protocol Buffers | ✔️    | ✖️     |
 | YAML                    | ✔️    | ✔️     |
 | TOML                    | ✔️    | ✔️     |
+| Raw (plain text)        | ✔️    | ✔️     |
