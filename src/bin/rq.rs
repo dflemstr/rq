@@ -32,7 +32,7 @@ See https://github.com/dflemstr/rq for in-depth documentation.
 
 Usage:
   rq (--help|--version)
-  rq [-j|-r|-a|-c|-h|-m|-p <type>|-t|-y] [-J|-R|-A <type>|-C|-H|-M|-P <type>|-T|-Y] [--format <format>] [-l <spec>|-q] [--trace] [--] [<query>]
+  rq [-j|-a|-c|-h|-m|-p <type>|-r|-t|-y] [-J|-A <type>|-C|-H|-M|-P <type>|-R|-T|-Y] [--format <format>] [-l <spec>|-q] [--trace] [--] [<query>]
   rq [-l <spec>|-q] [--trace] protobuf add <schema> [--base <path>]
 
 Options:
@@ -45,10 +45,6 @@ Options:
       Input is white-space separated JSON values (default).
   -J, --output-json
       Output should be formatted as JSON values (default).
-  -r, --input-text
-      Input is plain text
-  -R, --output-text
-      Output should be formatted as plain text
   -a, --input-avro
       Input is an Apache Avro container file.
   -A <type>, --output-avro <type>
@@ -72,6 +68,10 @@ Options:
       Output should be formatted as protocol buffer objects.  The argument
       refers to the fully qualified name of the message type (including the
       leading '.').
+  -r, --input-text
+      Input is plain text.
+  -R, --output-text
+      Output should be formatted as plain text.
   -t, --input-toml
       Input is formatted as TOML document.
   -T, --output-toml
