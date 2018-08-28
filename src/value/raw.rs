@@ -42,7 +42,12 @@ impl<W> value::Sink for RawSink<W> where W: io::Write
                 self.0.write(b"\n")?;
                 Ok(())
             }
-            x => bail!("raw can only output strings, got: {:?}", x)
+            value::Value::Bytes(b) => {
+                self.0.write(&b)?;
+                self.0.write(b"\n")?;
+                Ok(())
+            }
+            x => bail!("raw can only output strings and bytes, got: {:?}", x)
         }
     }
 }
