@@ -65,6 +65,13 @@ pub fn sink_readable<W>(w: W) -> JsonSink<W, ReadableFormatter>
     JsonSink(w, ReadableFormatter::new())
 }
 
+#[inline]
+pub fn sink_readable_no_color<'a, W>(w: W) -> JsonSink<W, serde_json::ser::PrettyFormatter<'a>>
+    where W: io::Write
+{
+    JsonSink(w, serde_json::ser::PrettyFormatter::new())
+}
+
 impl<R> value::Source for JsonSource<R>
     where R: io::Read
 {

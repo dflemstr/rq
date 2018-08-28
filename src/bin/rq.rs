@@ -78,9 +78,9 @@ Options:
       Output should be formatted as YAML documents.
 
   --format <format>
-      Force stylistic output formatting.  Can be one of 'compact' or
-      'readable' and the default is inferred from the terminal
-      environment.
+      Force stylistic output formatting.  Can be one of 'compact',
+      'readable' or 'readablenocolor and the default is inferred from the
+       terminal environment.
 
   <query>
       A query indicating how to transform each record.
@@ -136,6 +136,7 @@ pub struct Args {
 pub enum Format {
     Compact,
     Readable,
+    ReadableNoColor,
 }
 
 fn main() {
@@ -219,7 +220,7 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
     let format = args.flag_format.unwrap_or_else(infer_format);
 
     macro_rules! dispatch_format {
-        ($compact:expr, $readable:expr) => {
+        ($compact:expr, $readable:expr, $readable_no_color:expr) => {
             match format {
                 Format::Compact => {
                     let sink = $compact(&mut output);
@@ -229,7 +230,10 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
                     let sink = $readable(&mut output);
                     run_source_sink(args, paths, source, sink)
                 }
-                // TODO: add colored support eventually
+                Format::ReadableNoColor => {
+                    let sink = $readable_no_color(&mut output);
+                    run_source_sink(args, paths, source, sink)
+                }
             }
         }
     }
@@ -250,13 +254,14 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
             .to_owned()))
     } else if args.flag_output_toml {
         // TODO: add TOML ugly printing eventually; now it's always "readable"
-        dispatch_format!(rq::value::toml::sink, rq::value::toml::sink)
+        dispatch_format!(rq::value::toml::sink, rq::value::toml::sink, rq::value::toml::sink)
     } else if args.flag_output_yaml {
         // TODO: add YAML ugly printing eventually; now it's always "readable"
-        dispatch_format!(rq::value::yaml::sink, rq::value::yaml::sink)
+        dispatch_format!(rq::value::yaml::sink, rq::value::yaml::sink, rq::value::yaml::sink)
     } else {
         dispatch_format!(rq::value::json::sink_compact,
-                         rq::value::json::sink_readable)
+                         rq::value::json::sink_readable,
+                         rq::value::json::sink_readable_no_color)
     }
 }
 
@@ -569,5 +574,11 @@ mod test {
     fn test_docopt_format_readable() {
         let a = parse_args(&["rq", "--format", "readable"]);
         assert_eq!(a.flag_format, Some(Format::Readable));
+    }
+
+    #[test]
+    fn test_docopt_format_readable_no_color() {
+        let a = parse_args(&["rq", "--format", "readablenocolor"]);
+        assert_eq!(a.flag_format, Some(Format::ReadableNoColor));
     }
 }
