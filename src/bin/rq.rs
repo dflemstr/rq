@@ -80,7 +80,7 @@ Options:
   --format <format>
       Force stylistic output formatting.  Can be one of 'compact',
       'readable' (with color) or 'indented' (without color) and the default is
-       inferred from the terminal environment.
+      inferred from the terminal environment.
 
   <query>
       A query indicating how to transform each record.
