@@ -32,7 +32,7 @@ See https://github.com/dflemstr/rq for in-depth documentation.
 
 Usage:
   rq (--help|--version)
-  rq [-j|-a|-c|-h|-m|-p <type>|-t|-y] [-J|-A <type>|-C|-H|-M|-P <type>|-T|-Y] [--format <format>] [-l <spec>|-q] [--trace] [--] [<query>]
+  rq [-j|-a|-c|-h|-m|-p <type>|-r|-t|-y] [-J|-A <type>|-C|-H|-M|-P <type>|-R|-T|-Y] [--format <format>] [-l <spec>|-q] [--trace] [--] [<query>]
   rq [-l <spec>|-q] [--trace] protobuf add <schema> [--base <path>]
 
 Options:
@@ -68,6 +68,10 @@ Options:
       Output should be formatted as protocol buffer objects.  The argument
       refers to the fully qualified name of the message type (including the
       leading '.').
+  -r, --input-raw
+      Input is plain text.
+  -R, --output-raw
+      Output should be formatted as plain text.
   -t, --input-toml
       Input is formatted as TOML document.
   -T, --output-toml
@@ -114,6 +118,7 @@ pub struct Args {
     pub flag_input_cbor: bool,
     pub flag_input_hjson: bool,
     pub flag_input_json: bool,
+    pub flag_input_raw: bool,
     pub flag_input_message_pack: bool,
     pub flag_input_protobuf: Option<String>,
     pub flag_input_toml: bool,
@@ -123,6 +128,7 @@ pub struct Args {
     pub flag_output_cbor: bool,
     pub flag_output_hjson: bool,
     pub flag_output_json: bool,
+    pub flag_output_raw: bool,
     pub flag_output_message_pack: bool,
     pub flag_output_protobuf: Option<String>,
     pub flag_output_toml: bool,
@@ -200,6 +206,9 @@ fn run(args: &Args, paths: &rq::config::Paths) -> rq::error::Result<()> {
     } else if args.flag_input_yaml {
         let source = rq::value::yaml::source(&mut input);
         run_source(args, paths, source)
+    } else if args.flag_input_raw {
+        let source = rq::value::raw::source(&mut input);
+        run_source(args, paths, source)
     } else {
         if !args.flag_input_json && !try!(has_ran_help(paths)) {
             warn!("You started rq without any input flags, which puts it in JSON input mode.");
@@ -258,6 +267,9 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
     } else if args.flag_output_yaml {
         // TODO: add YAML ugly printing eventually; now it's always "readable"
         dispatch_format!(rq::value::yaml::sink, rq::value::yaml::sink, rq::value::yaml::sink)
+    } else if args.flag_output_raw {
+        let sink = rq::value::raw::sink(&mut output);
+        run_source_sink(args, paths, source, sink)
     } else {
         dispatch_format!(rq::value::json::sink_compact,
                          rq::value::json::sink_readable,
@@ -491,6 +503,30 @@ mod test {
     fn test_docopt_output_json_long() {
         let a = parse_args(&["rq", "--output-json"]);
         assert!(a.flag_output_json);
+    }
+
+    #[test]
+    fn test_docopt_input_raw() {
+        let a = parse_args(&["rq", "-r"]);
+        assert!(a.flag_input_raw);
+    }
+
+    #[test]
+    fn test_docopt_input_raw_long() {
+        let a = parse_args(&["rq", "--input-raw"]);
+        assert!(a.flag_input_raw);
+    }
+
+    #[test]
+    fn test_docopt_output_raw() {
+        let a = parse_args(&["rq", "-R"]);
+        assert!(a.flag_output_raw);
+    }
+
+    #[test]
+    fn test_docopt_output_raw_long() {
+        let a = parse_args(&["rq", "--output-raw"]);
+        assert!(a.flag_output_raw);
     }
 
     #[test]
