@@ -14,6 +14,7 @@ pub mod hjson;
 pub mod json;
 pub mod messagepack;
 pub mod protobuf;
+pub mod raw;
 pub mod toml;
 pub mod yaml;
 
