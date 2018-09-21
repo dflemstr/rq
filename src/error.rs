@@ -10,6 +10,7 @@ use serde_yaml;
 use std::io;
 use std::string;
 use toml;
+#[cfg(feature = "v8")]
 use v8;
 use xdg_basedir;
 use yaml_rust;
@@ -18,7 +19,7 @@ error_chain! {
     links {
         Avro(serde_avro::error::Error, serde_avro::error::ErrorKind);
         Protobuf(serde_protobuf::error::Error, serde_protobuf::error::ErrorKind);
-        V8(v8::error::Error, v8::error::ErrorKind);
+        V8(v8::error::Error, v8::error::ErrorKind) #[cfg(feature = "v8")];
     }
 
     foreign_links {

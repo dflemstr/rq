@@ -22,6 +22,7 @@ extern crate serde_hjson;
 extern crate serde_json;
 extern crate serde_protobuf;
 extern crate serde_yaml;
+#[cfg(feature = "v8")]
 extern crate v8;
 extern crate xdg_basedir;
 extern crate toml;
@@ -30,6 +31,7 @@ extern crate yaml_rust;
 pub mod config;
 pub mod error;
 pub mod proto_index;
+#[cfg(feature = "v8")]
 pub mod query;
 pub mod value;
 
@@ -37,6 +39,7 @@ include!(concat!(env!("OUT_DIR"), "/build_info.rs"));
 
 pub const GIT_VERSION: &'static str = rq_git_version!();
 
+#[cfg(feature = "v8")]
 pub fn run_query<I, O>(query: &query::Query, source: I, mut sink: O) -> error::Result<()>
     where I: value::Source,
           O: value::Sink
