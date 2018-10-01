@@ -9,6 +9,7 @@ extern crate protobuf;
 extern crate record_query;
 extern crate rustc_serialize;
 extern crate serde_protobuf;
+#[cfg(feature = "v8")]
 extern crate v8;
 
 use record_query as rq;
@@ -277,6 +278,8 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
     }
 }
 
+
+#[cfg(feature = "v8")]
 fn run_source_sink<I, O>(args: &Args,
                          _paths: &rq::config::Paths,
                          source: I,
@@ -292,6 +295,25 @@ fn run_source_sink<I, O>(args: &Args,
     };
 
     record_query::run_query(&query, source, sink)
+}
+
+#[cfg(not(feature = "v8"))]
+fn run_source_sink<I, O>(args: &Args,
+                         _paths: &rq::config::Paths,
+                         mut source: I,
+                         mut sink: O)
+                         -> rq::error::Result<()>
+    where I: rq::value::Source,
+          O: rq::value::Sink
+{
+    if !args.arg_query.is_empty() {
+        return Err("Queries are not supported in this v8-less rq build.")?;
+    }
+
+    while let Some(result) = try!(rq::value::Source::read(&mut source)) {
+        try!(sink.write(result));
+    }
+    Ok(())
 }
 
 fn load_descriptors(paths: &rq::config::Paths)
@@ -340,6 +362,7 @@ fn log_error(args: &Args, error: rq::error::Error) {
 
     match *error.kind() {
         ErrorKind::Msg(ref m) => error!("{}", m),
+        #[cfg(feature="v8")]
         ErrorKind::V8(v8::error::ErrorKind::Javascript(ref msg, ref stack_trace)) => {
             error!("Error while executing JavaScript: {}", msg);
 
