@@ -33,7 +33,7 @@ See https://github.com/dflemstr/rq for in-depth documentation.
 
 Usage:
   rq (--help|--version)
-  rq [-j|-a|-c|-h|-m|-p <type>|-r|-t|-y] [-J|-A <type>|-C|-H|-M|-P <type>|-R|-T|-Y] [--format <format>] [-l <spec>|-q] [--trace] [--] [<query>]
+  rq [-j|-a|-c|-h|-m|-p <type>|-r|-v|-t|-y] [-J|-A <type>|-C|-H|-M|-P <type>|-R|-V|-T|-Y] [--format <format>] [-l <spec>|-q] [--trace] [--] [<query>]
   rq [-l <spec>|-q] [--trace] protobuf add <schema> [--base <path>]
 
 Options:
@@ -73,6 +73,10 @@ Options:
       Input is plain text.
   -R, --output-raw
       Output should be formatted as plain text.
+  -v, --input-csv
+      Input is CSV.
+  -V, --output-csv
+      Output should be formatted as CSV.
   -t, --input-toml
       Input is formatted as TOML document.
   -T, --output-toml
@@ -120,6 +124,7 @@ pub struct Args {
     pub flag_input_hjson: bool,
     pub flag_input_json: bool,
     pub flag_input_raw: bool,
+    pub flag_input_csv: bool,
     pub flag_input_message_pack: bool,
     pub flag_input_protobuf: Option<String>,
     pub flag_input_toml: bool,
@@ -130,6 +135,7 @@ pub struct Args {
     pub flag_output_hjson: bool,
     pub flag_output_json: bool,
     pub flag_output_raw: bool,
+    pub flag_output_csv: bool,
     pub flag_output_message_pack: bool,
     pub flag_output_protobuf: Option<String>,
     pub flag_output_toml: bool,
@@ -210,6 +216,9 @@ fn run(args: &Args, paths: &rq::config::Paths) -> rq::error::Result<()> {
     } else if args.flag_input_raw {
         let source = rq::value::raw::source(&mut input);
         run_source(args, paths, source)
+    } else if args.flag_input_csv {
+        Err(rq::error::Error::unimplemented("csv deserialization)"
+            .to_owned()))
     } else {
         if !args.flag_input_json && !try!(has_ran_help(paths)) {
             warn!("You started rq without any input flags, which puts it in JSON input mode.");
@@ -271,6 +280,9 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
     } else if args.flag_output_raw {
         let sink = rq::value::raw::sink(&mut output);
         run_source_sink(args, paths, source, sink)
+    } else if args.flag_output_csv {
+        Err(rq::error::Error::unimplemented("csv serialization)"
+            .to_owned()))
     } else {
         dispatch_format!(rq::value::json::sink_compact,
                          rq::value::json::sink_readable,
@@ -550,6 +562,30 @@ mod test {
     fn test_docopt_output_raw_long() {
         let a = parse_args(&["rq", "--output-raw"]);
         assert!(a.flag_output_raw);
+    }
+
+    #[test]
+    fn test_docopt_input_csv() {
+        let a = parse_args(&["rq", "-v"]);
+        assert!(a.flag_input_csv);
+    }
+
+    #[test]
+    fn test_docopt_input_csv_long() {
+        let a = parse_args(&["rq", "--input-csv"]);
+        assert!(a.flag_input_csv);
+    }
+
+    #[test]
+    fn test_docopt_output_csv() {
+        let a = parse_args(&["rq", "-V"]);
+        assert!(a.flag_output_csv);
+    }
+
+    #[test]
+    fn test_docopt_output_csv_long() {
+        let a = parse_args(&["rq", "--output-csv"]);
+        assert!(a.flag_output_csv);
     }
 
     #[test]
