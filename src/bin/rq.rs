@@ -217,8 +217,8 @@ fn run(args: &Args, paths: &rq::config::Paths) -> rq::error::Result<()> {
         let source = rq::value::raw::source(&mut input);
         run_source(args, paths, source)
     } else if args.flag_input_csv {
-        Err(rq::error::Error::unimplemented("csv deserialization)"
-            .to_owned()))
+        let source = rq::value::csv::source(&mut input);
+        run_source(args, paths, source)
     } else {
         if !args.flag_input_json && !try!(has_ran_help(paths)) {
             warn!("You started rq without any input flags, which puts it in JSON input mode.");
@@ -281,8 +281,8 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
         let sink = rq::value::raw::sink(&mut output);
         run_source_sink(args, paths, source, sink)
     } else if args.flag_output_csv {
-        Err(rq::error::Error::unimplemented("csv serialization)"
-            .to_owned()))
+        let sink = rq::value::csv::sink(&mut output);
+        run_source_sink(args, paths, source, sink)
     } else {
         dispatch_format!(rq::value::json::sink_compact,
                          rq::value::json::sink_readable,
