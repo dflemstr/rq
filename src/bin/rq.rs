@@ -157,7 +157,6 @@ fn main() {
 
     let args: Args = docopt::Docopt::new(DOCOPT)
         .unwrap()
-        .version(Some(VERSION.to_owned()))
         .decode()
         .unwrap_or_else(|e| handle_docopt_error(&paths, e));
 
@@ -217,10 +216,19 @@ fn run(args: &Args, paths: &rq::config::Paths) -> rq::error::Result<()> {
         let source = rq::value::raw::source(&mut input);
         run_source(args, paths, source)
     } else if args.flag_input_csv {
+        if env::args().skip(1).any(|v| v == "-v") && !try!(has_ran_cmd("version", paths)) {
+            warn!("You started rq -v, which puts it in CSV input mode.");
+            warn!("It's now waiting for CSV input, which might not be what you wanted.");
+            warn!("Specify --input-csv explicitly or run rq --version once to suppress this \
+                   warning.");
+        }
         let source = rq::value::csv::source(&mut input);
         run_source(args, paths, source)
+    } else if args.flag_version {
+        println!("{}", VERSION);
+        set_ran_cmd("version", paths)
     } else {
-        if !args.flag_input_json && !try!(has_ran_help(paths)) {
+        if !args.flag_input_json && !try!(has_ran_cmd("help", paths)) {
             warn!("You started rq without any input flags, which puts it in JSON input mode.");
             warn!("It's now waiting for JSON input, which might not be what you wanted.");
             warn!("Specify (-j|--input-json) explicitly or run rq --help once to suppress this \
@@ -345,12 +353,12 @@ fn infer_format() -> Format {
     }
 }
 
-fn has_ran_help(paths: &rq::config::Paths) -> rq::error::Result<bool> {
-    paths.find_config("has-ran-help").map(|v| !v.is_empty()).map_err(From::from)
+fn has_ran_cmd(cmd: &str, paths: &rq::config::Paths) -> rq::error::Result<bool> {
+    paths.find_config(&format!("{}{}", "has-ran-", cmd)).map(|v| !v.is_empty()).map_err(From::from)
 }
 
-fn set_ran_help(paths: &rq::config::Paths) -> rq::error::Result<()> {
-    let file = paths.preferred_config("has-ran-help");
+fn set_ran_cmd(cmd: &str, paths: &rq::config::Paths) -> rq::error::Result<()> {
+    let file = paths.preferred_config(format!("{}{}", "has-ran-", cmd));
 
     if let Some(parent) = file.parent() {
         try!(fs::create_dir_all(parent));
@@ -363,7 +371,7 @@ fn set_ran_help(paths: &rq::config::Paths) -> rq::error::Result<()> {
 
 fn handle_docopt_error(paths: &rq::config::Paths, e: docopt::Error) -> ! {
     if !e.fatal() {
-        set_ran_help(paths).unwrap();
+        set_ran_cmd("help", paths).unwrap();
     }
 
     e.exit()
