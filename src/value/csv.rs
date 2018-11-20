@@ -43,7 +43,8 @@ impl<W> value::Sink for CsvSink<W> where W: io::Write
     fn write(&mut self, value: value::Value) -> error::Result<()> {
         match value {
             value::Value::Sequence(seq) => {
-                let record: Vec<String> = seq.into_iter().map(value_to_csv).collect();
+                let record: Vec<String> =
+                    seq.into_iter().map(value_to_csv).collect::<error::Result<Vec<_>>>()?;
                 self.0.write_record(record)?;
                 Ok(())
             }
@@ -52,29 +53,29 @@ impl<W> value::Sink for CsvSink<W> where W: io::Write
     }
 }
 
-fn value_to_csv(value: value::Value) -> String {
+fn value_to_csv(value: value::Value) -> error::Result<String> {
     match value {
-        value::Value::Unit => panic!("csv cannot output nested Unit"),
-        value::Value::Bool(v) => format!("{}", v),
+        value::Value::Unit => bail!("csv cannot output nested Unit"),
+        value::Value::Bool(v) => Ok(format!("{}", v)),
 
-        value::Value::I8(v) => format!("{}", v),
-        value::Value::I16(v) => format!("{}", v),
-        value::Value::I32(v) => format!("{}", v),
-        value::Value::I64(v) => format!("{}", v),
+        value::Value::I8(v) => Ok(format!("{}", v)),
+        value::Value::I16(v) => Ok(format!("{}", v)),
+        value::Value::I32(v) => Ok(format!("{}", v)),
+        value::Value::I64(v) => Ok(format!("{}", v)),
 
-        value::Value::U8(v) => format!("{}", v),
-        value::Value::U16(v) => format!("{}", v),
-        value::Value::U32(v) => format!("{}", v),
-        value::Value::U64(v) => format!("{}", v),
+        value::Value::U8(v) => Ok(format!("{}", v)),
+        value::Value::U16(v) => Ok(format!("{}", v)),
+        value::Value::U32(v) => Ok(format!("{}", v)),
+        value::Value::U64(v) => Ok(format!("{}", v)),
 
-        value::Value::F32(ordered_float::OrderedFloat(v)) => format!("{}", v),
-        value::Value::F64(ordered_float::OrderedFloat(v)) => format!("{}", v),
+        value::Value::F32(ordered_float::OrderedFloat(v)) => Ok(format!("{}", v)),
+        value::Value::F64(ordered_float::OrderedFloat(v)) => Ok(format!("{}", v)),
 
-        value::Value::Char(v) => format!("{}", v),
-        value::Value::String(v) => format!("{}", v),
-        value::Value::Bytes(_) => panic!("csv cannot output nested bytes"),
+        value::Value::Char(v) => Ok(format!("{}", v)),
+        value::Value::String(v) => Ok(format!("{}", v)),
+        value::Value::Bytes(_) => bail!("csv cannot output nested bytes"),
 
-        value::Value::Sequence(_) => panic!("csv cannot output nested sequences"),
-        value::Value::Map(_) => panic!("csv cannot output nested maps")
+        value::Value::Sequence(_) => bail!("csv cannot output nested sequences"),
+        value::Value::Map(_) => bail!("csv cannot output nested maps")
     }
 }
