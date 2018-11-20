@@ -159,3 +159,4 @@ operating systems and architectures.
 | YAML                    | ✔️    | ✔️     |
 | TOML                    | ✔️    | ✔️     |
 | Raw (plain text)        | ✔️    | ✔️     |
+| CSV                     | ✔️    | ✔️     |
