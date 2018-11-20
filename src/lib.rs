@@ -27,6 +27,7 @@ extern crate v8;
 extern crate xdg_basedir;
 extern crate toml;
 extern crate yaml_rust;
+extern crate csv;
 
 pub mod config;
 pub mod error;

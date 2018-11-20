@@ -46,6 +46,7 @@ serde_json = "0.9.6"
 serde_yaml = "0.6.0"
 xdg-basedir = "1.0.0"
 yaml-rust = "0.3.5"
+csv = "1"
 
 [dependencies.serde-avro]
 path = "serde-avro"

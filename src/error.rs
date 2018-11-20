@@ -14,6 +14,7 @@ use toml;
 use v8;
 use xdg_basedir;
 use yaml_rust;
+use csv;
 
 error_chain! {
     links {
@@ -37,6 +38,7 @@ error_chain! {
         XdgBasedir(xdg_basedir::Error);
         Glob(glob::GlobError);
         GlobPattern(glob::PatternError);
+        Csv(csv::Error);
     }
 
     errors {
