@@ -27,7 +27,7 @@ instructions (e.g. if you're missing other development tools).
 You will need the clang development libraries. On a Debian based Linux system, 
 you can get those like this:
 
-    sudo apt install libclang-dev 
+    sudo apt install libclang-dev clang
 
 To build `rq`, navigate to the source directory.
 
