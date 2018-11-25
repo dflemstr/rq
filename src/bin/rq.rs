@@ -16,6 +16,7 @@ use record_query as rq;
 use std::env;
 use std::fs;
 use std::io;
+use std::io::prelude::*;
 use std::path;
 
 const VERSION: &'static str = rq_git_version!();
@@ -50,7 +51,7 @@ Options:
       Input is an Apache Avro container file.
   -A <schema>, --output-avro <schema>
       Output should be formatted as an Apache Avro container file.  The
-      argument refers to the Avro schema as a JSON string.
+      argument refers to the Avro JSON schema file.
   -c, --input-cbor
       Input is a series of CBOR values.
   -C, --output-cbor
@@ -268,8 +269,8 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
 
     if let Some(_) = args.flag_output_protobuf {
         Err(rq::error::Error::unimplemented("protobuf serialization".to_owned()))
-    } else if let Some(ref schema) = args.flag_output_avro {
-        let schema = try!(avro_rs::Schema::parse_str(schema));
+    } else if let Some(ref schema_filename) = args.flag_output_avro {
+        let schema = try!(read_avro_schema_from_file(path::Path::new(schema_filename)));
         let sink = try!(rq::value::avro::sink(&schema, &mut output));
         run_source_sink(args, paths, source, sink)
     } else if args.flag_output_cbor {
@@ -301,6 +302,12 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
     }
 }
 
+fn read_avro_schema_from_file(path: &path::Path) -> rq::error::Result<avro_rs::Schema> {
+    let mut file = try!(fs::File::open(path));
+    let mut buffer = String::new();
+    try!(file.read_to_string(&mut buffer));
+    Ok(try!(avro_rs::Schema::parse_str(&buffer)))
+}
 
 #[cfg(feature = "v8")]
 fn run_source_sink<I, O>(args: &Args,
