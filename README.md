@@ -150,7 +150,7 @@ operating systems and architectures.
 
 | Format                  | Read | Write |
 |-------------------------|------|-------|
-| Apache Avro             | ✔️    | ✖️     |
+| Apache Avro             | ✔️    | ✔️     |
 | CBOR                    | ✔️    | ✔️     |
 | HJSON                   | ✔️    | ✔️     |
 | JSON                    | ✔️    | ✔️     |

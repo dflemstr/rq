@@ -15,6 +15,7 @@ use v8;
 use xdg_basedir;
 use yaml_rust;
 use csv;
+use failure;
 
 error_chain! {
     links {
@@ -63,6 +64,10 @@ error_chain! {
             description("process not found")
             display("no such process: {}", name)
         }
+        Failure(msg: String) {
+            description("failure")
+            display("{}", msg)
+        }
     }
 }
 
@@ -91,5 +96,11 @@ fn format_rmpv_decode_cause(cause: &rmpv::decode::value::Error) -> String {
         rmpv::decode::value::Error::FromUtf8Error(ref e) => {
             format!("failed to properly decode UTF-8: {}", e)
         },
+    }
+}
+
+impl From<failure::Error> for Error {
+    fn from(error: failure::Error) -> Self {
+        Error::from_kind(ErrorKind::Failure(error.as_fail().to_string()))
     }
 }

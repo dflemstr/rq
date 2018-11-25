@@ -48,8 +48,9 @@ Options:
       Output should be formatted as JSON values (default).
   -a, --input-avro
       Input is an Apache Avro container file.
-  -A <type>, --output-avro <type>
-      Output should be formatted as Apache Avro messages.
+  -A <schema>, --output-avro <schema>
+      Output should be formatted as an Apache Avro container file.  The
+      argument refers to the Avro schema as a JSON string.
   -c, --input-cbor
       Input is a series of CBOR values.
   -C, --output-cbor
@@ -267,8 +268,10 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
 
     if let Some(_) = args.flag_output_protobuf {
         Err(rq::error::Error::unimplemented("protobuf serialization".to_owned()))
-    } else if let Some(_) = args.flag_output_avro {
-        Err(rq::error::Error::unimplemented("avro serialization".to_owned()))
+    } else if let Some(ref schema) = args.flag_output_avro {
+        let schema = try!(avro_rs::Schema::parse_str(schema));
+        let sink = try!(rq::value::avro::sink(&schema, &mut output));
+        run_source_sink(args, paths, source, sink)
     } else if args.flag_output_cbor {
         let sink = rq::value::cbor::sink(&mut output);
         run_source_sink(args, paths, source, sink)
