@@ -34,7 +34,7 @@ See https://github.com/dflemstr/rq for in-depth documentation.
 
 Usage:
   rq (--help|--version)
-  rq [-j|-a|-c|-h|-m|-p <type>|-r|-v|-t|-y] [-J|-A <type>|-C|-H|-M|-P <type>|-R|-V|-T|-Y] [--format <format>] [-l <spec>|-q] [--trace] [--] [<query>]
+  rq [-j|-a|-c|-h|-m|-p <type>|-r|-v|-t|-y] [-J|-A <schema>|-C|-H|-M|-P <type>|-R|-V|-T|-Y] [--format <format>] [-l <spec>|-q] [--trace] [--] [<query>]
   rq [-l <spec>|-q] [--trace] protobuf add <schema> [--base <path>]
 
 Options:
