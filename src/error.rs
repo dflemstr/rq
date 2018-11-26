@@ -1,7 +1,6 @@
 use glob;
 use protobuf;
 use rmpv;
-use serde_avro;
 use serde_cbor;
 use serde_hjson;
 use serde_json;
@@ -19,7 +18,6 @@ use failure;
 
 error_chain! {
     links {
-        Avro(serde_avro::error::Error, serde_avro::error::ErrorKind);
         Protobuf(serde_protobuf::error::Error, serde_protobuf::error::ErrorKind);
         V8(v8::error::Error, v8::error::ErrorKind) #[cfg(feature = "v8")];
     }

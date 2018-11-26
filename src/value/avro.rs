@@ -1,43 +1,67 @@
 use error;
-use serde;
-use serde_avro;
 use avro_rs;
 use std;
 use std::io;
 use value;
 
-pub struct AvroSource<R>(serde_avro::de::Deserializer<'static, serde_avro::de::read::Blocks<R>>)
-    where R: io::Read;
+pub struct AvroSource<'a, R>(avro_rs::Reader<'a, R>) where R: io::Read;
 
 pub struct AvroSink<'a, W>(avro_rs::Writer<'a, W>) where W: io::Write;
 
 #[inline]
-pub fn source<R>(input: R) -> error::Result<AvroSource<R>>
+pub fn source<'a, R>(r: R) -> error::Result<AvroSource<'a, R>>
     where R: io::Read
 {
-    let de = serde_avro::de::Deserializer::from_container(input)?;
-    Ok(AvroSource(de))
+    Ok(AvroSource(avro_rs::Reader::new(r)?))
 }
 
 #[inline]
-pub fn sink<W>(schema: &avro_rs::Schema, w: W) -> error::Result<AvroSink<W>> where W: io::Write
+pub fn sink<W>(schema: &avro_rs::Schema, w: W) -> error::Result<AvroSink<W>>
+    where W: io::Write
 {
     Ok(AvroSink(avro_rs::Writer::new(schema, w)))
 }
 
-impl<R> value::Source for AvroSource<R>
-    where R: io::Read
+impl<'a, R> value::Source for AvroSource<'a, R> where R: io::Read
 {
     #[inline]
     fn read(&mut self) -> error::Result<Option<value::Value>> {
-        match serde::Deserialize::deserialize(&mut self.0) {
-            Ok(v) => Ok(Some(v)),
-            Err(e) => {
-                match *e.kind() {
-                    serde_avro::error::ErrorKind::EndOfStream => Ok(None),
-                    _ => Err(error::Error::from(e)),
-                }
-            },
+        match self.0.next() {
+            Some(Ok(v)) => Ok(Some(value_from_avro(v))),
+            Some(Err(e)) => Err(error::Error::from(e)),
+            None => Ok(None)
+        }
+    }
+}
+
+fn value_from_avro(value: avro_rs::types::Value) -> value::Value {
+    use avro_rs::types::Value;
+    match value {
+        Value::Null => value::Value::Unit,
+        Value::Boolean(v) => value::Value::Bool(v),
+        Value::Int(v) => value::Value::I32(v),
+        Value::Long(v) => value::Value::I64(v),
+        Value::Float(v) => value::Value::from_f32(v),
+        Value::Double(v) => value::Value::from_f64(v),
+        Value::Bytes(v) => value::Value::Bytes(v),
+        Value::String(v) => value::Value::String(v),
+        Value::Fixed(_, v) => value::Value::Bytes(v),
+        Value::Enum(_, v) => value::Value::String(v),
+        Value::Union(boxed) => value_from_avro(*boxed),
+        Value::Array(v) => {
+            value::Value::Sequence(v.into_iter()
+                .map(|v| value_from_avro(v))
+                .collect())
+        }
+        Value::Map(v) => {
+            value::Value::Map(v.into_iter()
+                .map(|(k, v)| (value::Value::String(k), value_from_avro(v)))
+                .collect())
+        }
+        Value::Record(v) => {
+            value::Value::Map(v.into_iter()
+                .map(|(k, v)| (value::Value::String(k), value_from_avro(v)))
+                .collect())
         }
     }
 }
@@ -80,8 +104,10 @@ fn value_to_avro(value: value::Value) -> error::Result<avro_rs::types::Value> {
         value::Value::Bytes(v) => Ok(Value::Bytes(v)),
 
         value::Value::Sequence(v) => {
-            Ok(Value::Array(v.into_iter().map(|v| value_to_avro(v)).collect::<error::Result<Vec<_>>>()?))
-        },
+            Ok(Value::Array(v.into_iter()
+                .map(|v| value_to_avro(v))
+                .collect::<error::Result<Vec<_>>>()?))
+        }
         value::Value::Map(v) => {
             Ok(Value::Record(v.into_iter()
                 .map(|(k, v)| {
