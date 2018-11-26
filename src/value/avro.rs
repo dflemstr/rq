@@ -16,10 +16,10 @@ pub fn source<'a, R>(r: R) -> error::Result<AvroSource<'a, R>>
 }
 
 #[inline]
-pub fn sink<W>(schema: &avro_rs::Schema, w: W) -> error::Result<AvroSink<W>>
-    where W: io::Write
+pub fn sink<W>(schema: &avro_rs::Schema, w: W, codec: avro_rs::Codec)
+               -> error::Result<AvroSink<W>> where W: io::Write
 {
-    Ok(AvroSink(avro_rs::Writer::new(schema, w)))
+    Ok(AvroSink(avro_rs::Writer::with_codec(schema, w, codec)))
 }
 
 impl<'a, R> value::Source for AvroSource<'a, R> where R: io::Read
