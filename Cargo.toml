@@ -58,7 +58,7 @@ version = "0.9.1"
 optional = true
 
 [dependencies.avro-rs]
-version = "0.6.1"
+version = "0.6.2"
 features = ["snappy"]
 
 [features]

@@ -44,9 +44,11 @@ dependencies = [
 
 [[package]]
 name = "avro-rs"
-version = "0.6.1"
+version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
+ "byteorder 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "crc 1.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "failure 0.1.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "failure_derive 0.1.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "libflate 0.1.18 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -508,7 +510,7 @@ name = "record-query"
 version = "0.10.4"
 dependencies = [
  "ansi_term 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "avro-rs 0.6.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "avro-rs 0.6.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "csv 1.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "docopt 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "dtoa 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1008,7 +1010,7 @@ dependencies = [
 "checksum ansi_term 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)" = "23ac7c30002a5accbf7e8987d0632fa6de155b7c3d39d0067317a391e00a2ef6"
 "checksum aster 0.38.0 (registry+https://github.com/rust-lang/crates.io-index)" = "2c9b49e42a449c0b79d8acb91db37621de0978064dca7d3288ddcf030123e5b3"
 "checksum atty 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)" = "d912da0db7fa85514874458ca3651fe2cddace8d0b0505571dbdcd41ab490159"
-"checksum avro-rs 0.6.1 (registry+https://github.com/rust-lang/crates.io-index)" = "9c9c5901ac0d5e5a70e62b1fbefba906b502dc01bca9feb9db4d44eaf041816f"
+"checksum avro-rs 0.6.2 (registry+https://github.com/rust-lang/crates.io-index)" = "748c839eba2b3d6cb6685a35707afabb1f175a23829d0b9549334607e8e57f69"
 "checksum backtrace 0.3.9 (registry+https://github.com/rust-lang/crates.io-index)" = "89a47830402e9981c5c41223151efcced65a0510c13097c769cede7efb34782a"
 "checksum backtrace-sys 0.1.24 (registry+https://github.com/rust-lang/crates.io-index)" = "c66d56ac8dabd07f6aacdaf633f4b8262f5b3601a810a0dcddffd5c22c69daa0"
 "checksum bindgen 0.22.1 (registry+https://github.com/rust-lang/crates.io-index)" = "88f9d9abd7964621201c558021ff4f39b7b4d571a9a56a88844da9971e2344ce"
