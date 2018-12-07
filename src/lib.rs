@@ -16,7 +16,6 @@ extern crate protobuf;
 extern crate rmp;
 extern crate rmpv;
 extern crate serde;
-extern crate serde_avro;
 extern crate serde_cbor;
 extern crate serde_hjson;
 extern crate serde_json;
@@ -28,6 +27,8 @@ extern crate xdg_basedir;
 extern crate toml;
 extern crate yaml_rust;
 extern crate csv;
+extern crate avro_rs;
+extern crate failure;
 
 pub mod config;
 pub mod error;

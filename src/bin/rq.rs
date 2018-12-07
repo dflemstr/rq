@@ -14,8 +14,10 @@ extern crate v8;
 
 use record_query as rq;
 use std::env;
+use std::str::FromStr;
 use std::fs;
 use std::io;
+use std::io::prelude::*;
 use std::path;
 
 const VERSION: &'static str = rq_git_version!();
@@ -33,7 +35,7 @@ See https://github.com/dflemstr/rq for in-depth documentation.
 
 Usage:
   rq (--help|--version)
-  rq [-j|-a|-c|-h|-m|-p <type>|-r|-v|-t|-y] [-J|-A <type>|-C|-H|-M|-P <type>|-R|-V|-T|-Y] [--format <format>] [-l <spec>|-q] [--trace] [--] [<query>]
+  rq [-j|-a|-c|-h|-m|-p <type>|-r|-v|-t|-y] [-J|-A <schema>|-C|-H|-M|-P <type>|-R|-V|-T|-Y] [--format <format>] [--codec <codec>] [-l <spec>|-q] [--trace] [--] [<query>]
   rq [-l <spec>|-q] [--trace] protobuf add <schema> [--base <path>]
 
 Options:
@@ -48,8 +50,9 @@ Options:
       Output should be formatted as JSON values (default).
   -a, --input-avro
       Input is an Apache Avro container file.
-  -A <type>, --output-avro <type>
-      Output should be formatted as Apache Avro messages.
+  -A <schema>, --output-avro <schema>
+      Output should be formatted as an Apache Avro container file.  The
+      argument refers to the Avro JSON schema file.
   -c, --input-cbor
       Input is a series of CBOR values.
   -C, --output-cbor
@@ -91,6 +94,10 @@ Options:
       'readable' (with color) or 'indented' (without color) and the default is
       inferred from the terminal environment.
 
+  --codec <codec>
+      Specify codec for Avro output.  Can be one of 'null' (no compression),
+      'deflate' or 'snappy'.  Default is 'null'.
+
   <query>
       A query indicating how to transform each record.
 
@@ -118,6 +125,7 @@ pub struct Args {
     pub flag__: bool,
     pub flag_base: Option<String>,
     pub flag_format: Option<Format>,
+    pub flag_codec: Option<String>,
     pub flag_help: bool,
     pub flag_input_avro: bool,
     pub flag_input_cbor: bool,
@@ -267,8 +275,20 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
 
     if let Some(_) = args.flag_output_protobuf {
         Err(rq::error::Error::unimplemented("protobuf serialization".to_owned()))
-    } else if let Some(_) = args.flag_output_avro {
-        Err(rq::error::Error::unimplemented("avro serialization".to_owned()))
+    } else if let Some(ref schema_filename) = args.flag_output_avro {
+        let schema = try!(read_avro_schema_from_file(path::Path::new(schema_filename)));
+        let codec_string = if let Some(ref c) = args.flag_codec {
+            c.as_str()
+        } else {
+            "null"
+        };
+        let codec = match avro_rs::Codec::from_str(&codec_string) {
+            Ok(v) => v,
+            Err(_) => return Err(rq::error::Error::from(
+                format!("illegal Avro codec: {}", codec_string)))
+        };
+        let sink = try!(rq::value::avro::sink(&schema, &mut output, codec));
+        run_source_sink(args, paths, source, sink)
     } else if args.flag_output_cbor {
         let sink = rq::value::cbor::sink(&mut output);
         run_source_sink(args, paths, source, sink)
@@ -298,6 +318,12 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
     }
 }
 
+fn read_avro_schema_from_file(path: &path::Path) -> rq::error::Result<avro_rs::Schema> {
+    let mut file = try!(fs::File::open(path));
+    let mut buffer = String::new();
+    try!(file.read_to_string(&mut buffer));
+    Ok(try!(avro_rs::Schema::parse_str(&buffer)))
+}
 
 #[cfg(feature = "v8")]
 fn run_source_sink<I, O>(args: &Args,
