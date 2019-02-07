@@ -1,159 +1,131 @@
 extern crate ansi_term;
-extern crate docopt;
 extern crate env_logger;
+extern crate failure;
 #[macro_use]
 extern crate log;
 extern crate nix;
 extern crate protobuf;
-#[macro_use(rq_git_version)]
 extern crate record_query;
-extern crate rustc_serialize;
 extern crate serde_protobuf;
-#[cfg(feature = "v8")]
+#[macro_use]
+extern crate structopt;
+#[cfg(feature = "js")]
 extern crate v8;
 
 use record_query as rq;
 use std::env;
-use std::str::FromStr;
 use std::fs;
 use std::io;
 use std::io::prelude::*;
 use std::path;
+use std::str;
 
-const VERSION: &'static str = rq_git_version!();
-
-#[cfg_attr(rustfmt, rustfmt_skip)]
-pub const DOCOPT: &'static str = concat!("
-rq - record query ", rq_git_version!(), "
-
+#[derive(Debug, StructOpt)]
+#[structopt(
+    name = "rq",
+    about = r#"
 A tool for manipulating data records.
 
 Records are read from stdin, processed, and written to stdout.  The tool accepts
 a query in the custom rq query language as its main command-line arguments.
 
 See https://github.com/dflemstr/rq for in-depth documentation.
+"#
+)]
+pub struct Options {
+    #[structopt(subcommand)]
+    pub subcmd: Option<Subcmd>,
 
-Usage:
-  rq (--help|--version)
-  rq [-j|-a|-c|-h|-m|-p <type>|-r|-v|-t|-y] [-J|-A <schema>|-C|-H|-M|-P <type>|-R|-V|-T|-Y] [--format <format>] [--codec <codec>] [-l <spec>|-q] [--trace] [--] [<query>]
-  rq [-l <spec>|-q] [--trace] protobuf add <schema> [--base <path>]
+    /// A query indicating how to transform each record.
+    pub arg_query: Option<String>,
 
-Options:
-  --help
-      Show this screen.
-  --version
-      Show the program name and version.
-
-  -j, --input-json
-      Input is white-space separated JSON values (default).
-  -J, --output-json
-      Output should be formatted as JSON values (default).
-  -a, --input-avro
-      Input is an Apache Avro container file.
-  -A <schema>, --output-avro <schema>
-      Output should be formatted as an Apache Avro container file.  The
-      argument refers to the Avro JSON schema file.
-  -c, --input-cbor
-      Input is a series of CBOR values.
-  -C, --output-cbor
-      Output is a series of CBOR values.
-  -h, --input-hjson
-      Input is a HJSON document.
-  -H, --output-hjson
-      Output should be formatted as HJSON values.
-  -m, --input-message-pack
-      Input is formatted as MessagePack.
-  -M, --output-message-pack
-      Output should be formatted as MessagePack values.
-  -p <type>, --input-protobuf <type>
-      Input is a single protocol buffer object.  The argument refers to the
-      fully qualified name of the message type (including the leading '.').
-  -P <type>, --output-protobuf <type>
-      Output should be formatted as protocol buffer objects.  The argument
-      refers to the fully qualified name of the message type (including the
-      leading '.').
-  -r, --input-raw
-      Input is plain text.
-  -R, --output-raw
-      Output should be formatted as plain text.
-  -v, --input-csv
-      Input is CSV.
-  -V, --output-csv
-      Output should be formatted as CSV.
-  -t, --input-toml
-      Input is formatted as TOML document.
-  -T, --output-toml
-      Output should be formatted as TOML document.
-  -y, --input-yaml
-      Input is a series of YAML documents.
-  -Y, --output-yaml
-      Output should be formatted as YAML documents.
-
-  --format <format>
-      Force stylistic output formatting.  Can be one of 'compact',
-      'readable' (with color) or 'indented' (without color) and the default is
-      inferred from the terminal environment.
-
-  --codec <codec>
-      Specify codec for Avro output.  Can be one of 'null' (no compression),
-      'deflate' or 'snappy'.  Default is 'null'.
-
-  <query>
-      A query indicating how to transform each record.
-
-  --base <path>
-      Directories are significant when dealing with protocol buffer
-      schemas.  This specifies the base directory used to normalize schema
-      file paths [default: .]
-
-  -l <spec>, --log <spec>
-      Configure logging using the supplied specification, in the format of
-      `env_logger`, for example `rq=info,v8=trace`.
-      See: https://doc.rust-lang.org/log/env_logger
-  --trace
-      Enable (back)trace output on error.
-  -q, --quiet
-      Log nothing.
-");
-
-#[derive(Debug, RustcDecodable)]
-pub struct Args {
-    pub arg_query: String,
-    pub arg_schema: String,
-    pub cmd_add: bool,
-    pub cmd_protobuf: bool,
-    pub flag__: bool,
-    pub flag_base: Option<String>,
+    /// Force stylistic output formatting.  Can be one of 'compact',
+    /// 'readable' (with color) or 'indented' (without color) and the default is
+    /// inferred from the terminal environment.
+    #[structopt(long = "format")]
     pub flag_format: Option<Format>,
+    #[structopt(long = "codec")]
     pub flag_codec: Option<String>,
-    pub flag_help: bool,
+
+    /// Input is an Apache Avro container file.
+    #[structopt(short = "a", long = "input-avro")]
     pub flag_input_avro: bool,
+    /// Input is a series of CBOR values.
+    #[structopt(short = "c", long = "input-cbor")]
     pub flag_input_cbor: bool,
+    /// Input is a HJSON document.
+    #[structopt(short = "h", long = "input-hjson")]
     pub flag_input_hjson: bool,
+    /// Input is white-space separated JSON values (default).
+    #[structopt(short = "j", long = "input-json")]
     pub flag_input_json: bool,
-    pub flag_input_raw: bool,
+    /// Input is CSV.
+    #[structopt(short = "v", long = "input-csv")]
     pub flag_input_csv: bool,
+    /// Input is formatted as MessagePack.
+    #[structopt(short = "m", long = "input-message-pack")]
     pub flag_input_message_pack: bool,
+    #[structopt(short = "p", long = "input-protobuf")]
     pub flag_input_protobuf: Option<String>,
+    /// Input is plain text.
+    #[structopt(short = "r", long = "input-raw")]
+    pub flag_input_raw: bool,
+    /// Input is formatted as TOML document.
+    #[structopt(short = "t", long = "input-toml")]
     pub flag_input_toml: bool,
+    /// Input is a series of YAML documents.
+    #[structopt(short = "y", long = "input-yaml")]
     pub flag_input_yaml: bool,
-    pub flag_log: Option<String>,
+
+    #[structopt(short = "A", long = "output-avro")]
     pub flag_output_avro: Option<String>,
+    #[structopt(short = "C", long = "output-cbor")]
     pub flag_output_cbor: bool,
+    #[structopt(short = "H", long = "output-hjson")]
     pub flag_output_hjson: bool,
+    #[structopt(short = "J", long = "output-json")]
     pub flag_output_json: bool,
+    #[structopt(short = "R", long = "output-raw")]
     pub flag_output_raw: bool,
+    #[structopt(short = "V", long = "output-csv")]
     pub flag_output_csv: bool,
+    #[structopt(short = "M", long = "output-message-pack")]
     pub flag_output_message_pack: bool,
+    #[structopt(short = "P", long = "output-protobuf")]
     pub flag_output_protobuf: Option<String>,
+    #[structopt(short = "T", long = "output-toml")]
     pub flag_output_toml: bool,
+    #[structopt(short = "Y", long = "output-yaml")]
     pub flag_output_yaml: bool,
+
+    #[structopt(short = "l", long = "log")]
+    pub flag_log: Option<String>,
+    #[structopt(short = "q", long = "quiet")]
     pub flag_quiet: bool,
+    #[structopt(long = "trace")]
     pub flag_trace: bool,
-    pub flag_version: bool,
 }
 
-#[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd, RustcDecodable)]
+#[derive(Debug, StructOpt)]
+pub enum Subcmd {
+    #[structopt(name = "protobuf")]
+    Protobuf {
+        #[structopt(subcommand)]
+        subcmd: ProtobufSubcmd,
+    },
+}
+
+#[derive(Debug, StructOpt)]
+pub enum ProtobufSubcmd {
+    #[structopt(name = "add")]
+    Add {
+        schema: path::PathBuf,
+        #[structopt(short = "b", long = "base")]
+        base: Option<path::PathBuf>,
+    },
+}
+
+#[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub enum Format {
     Compact,
     Readable,
@@ -161,48 +133,55 @@ pub enum Format {
 }
 
 fn main() {
+    use structopt::StructOpt;
+
     let paths = rq::config::Paths::new().unwrap();
 
-    let args: Args = docopt::Docopt::new(DOCOPT)
-        .unwrap()
-        .decode()
-        .unwrap_or_else(|e| handle_docopt_error(&paths, e));
+    let args: Options = match Options::clap().get_matches_safe() {
+        Err(e) => {
+            match e.kind {
+                structopt::clap::ErrorKind::HelpDisplayed => set_ran_cmd("help", &paths).unwrap(),
+                structopt::clap::ErrorKind::VersionDisplayed => {
+                    set_ran_cmd("version", &paths).unwrap()
+                }
+                _ => (),
+            }
+            e.exit()
+        }
+        Ok(a) => Options::from_clap(&a),
+    };
 
     setup_log(args.flag_log.as_ref().map(String::as_ref), args.flag_quiet);
 
     main_with_args(&args, &paths).unwrap_or_else(|e| log_error(&args, e));
 }
 
-fn main_with_args(args: &Args, paths: &rq::config::Paths) -> rq::error::Result<()> {
-    if args.cmd_protobuf {
-        if args.cmd_add {
-            let schema = path::Path::new(&args.arg_schema);
-            let base = path::Path::new(if let Some(ref b) = args.flag_base {
-                b.as_str()
-            } else {
-                "."
-            });
-            rq::proto_index::add_file(&paths, base, schema)
-        } else {
-            unreachable!()
-        }
-    } else {
-        run(&args, &paths)
+fn main_with_args(args: &Options, paths: &rq::config::Paths) -> rq::error::Result<()> {
+    match args.subcmd {
+        Some(Subcmd::Protobuf { ref subcmd }) => match subcmd {
+            ProtobufSubcmd::Add { schema, base } => {
+                let base = base
+                    .as_ref()
+                    .map(|p| p.as_path())
+                    .unwrap_or_else(|| path::Path::new("."));
+                rq::proto_index::add_file(&paths, base, &schema)
+            }
+        },
+        None => run(&args, &paths),
     }
 }
 
-fn run(args: &Args, paths: &rq::config::Paths) -> rq::error::Result<()> {
-
+fn run(args: &Options, paths: &rq::config::Paths) -> rq::error::Result<()> {
     let stdin = io::stdin();
     let mut input = stdin.lock();
 
     if let Some(ref name) = args.flag_input_protobuf {
-        let proto_descriptors = try!(load_descriptors(&paths));
+        let proto_descriptors = load_descriptors(&paths)?;
         let stream = protobuf::CodedInputStream::new(&mut input);
-        let source = try!(rq::value::protobuf::source(&proto_descriptors, name, stream));
+        let source = rq::value::protobuf::source(&proto_descriptors, name, stream)?;
         run_source(args, paths, source)
     } else if args.flag_input_avro {
-        let source = try!(rq::value::avro::source(&mut input));
+        let source = rq::value::avro::source(&mut input)?;
         run_source(args, paths, source)
     } else if args.flag_input_cbor {
         let source = rq::value::cbor::source(&mut input);
@@ -211,11 +190,13 @@ fn run(args: &Args, paths: &rq::config::Paths) -> rq::error::Result<()> {
         let source = rq::value::messagepack::source(&mut input);
         run_source(args, paths, source)
     } else if args.flag_input_hjson {
-        Err(rq::error::Error::unimplemented("hjson deserialization (waiting for serde 0.9.0 \
-                                             support)"
-            .to_owned()))
+        Err(rq::error::Error::unimplemented(
+            "hjson deserialization (waiting for serde 0.9.0 \
+             support)"
+                .to_owned(),
+        ))
     } else if args.flag_input_toml {
-        let source = try!(rq::value::toml::source(&mut input));
+        let source = rq::value::toml::source(&mut input)?;
         run_source(args, paths, source)
     } else if args.flag_input_yaml {
         let source = rq::value::yaml::source(&mut input);
@@ -224,31 +205,33 @@ fn run(args: &Args, paths: &rq::config::Paths) -> rq::error::Result<()> {
         let source = rq::value::raw::source(&mut input);
         run_source(args, paths, source)
     } else if args.flag_input_csv {
-        if env::args().skip(1).any(|v| v == "-v") && !try!(has_ran_cmd("version", paths)) {
+        if env::args().skip(1).any(|v| v == "-v") && !has_ran_cmd("help", paths)? {
             warn!("You started rq -v, which puts it in CSV input mode.");
             warn!("It's now waiting for CSV input, which might not be what you wanted.");
-            warn!("Specify --input-csv explicitly or run rq --version once to suppress this \
-                   warning.");
+            warn!(
+                "Specify --input-csv explicitly or run rq --help once to suppress this \
+                 warning."
+            );
         }
         let source = rq::value::csv::source(&mut input);
         run_source(args, paths, source)
-    } else if args.flag_version {
-        println!("{}", VERSION);
-        set_ran_cmd("version", paths)
     } else {
-        if !args.flag_input_json && !try!(has_ran_cmd("help", paths)) {
+        if !args.flag_input_json && !has_ran_cmd("help", paths)? {
             warn!("You started rq without any input flags, which puts it in JSON input mode.");
             warn!("It's now waiting for JSON input, which might not be what you wanted.");
-            warn!("Specify (-j|--input-json) explicitly or run rq --help once to suppress this \
-                   warning.");
+            warn!(
+                "Specify (-j|--input-json) explicitly or run rq --help once to suppress this \
+                 warning."
+            );
         }
         let source = rq::value::json::source(&mut input);
         run_source(args, paths, source)
     }
 }
 
-fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error::Result<()>
-    where I: rq::value::Source
+fn run_source<I>(args: &Options, paths: &rq::config::Paths, source: I) -> rq::error::Result<()>
+where
+    I: rq::value::Source,
 {
     let mut output = io::stdout();
 
@@ -270,13 +253,17 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
                     run_source_sink(args, paths, source, sink)
                 }
             }
-        }
+        };
     }
 
     if let Some(_) = args.flag_output_protobuf {
-        Err(rq::error::Error::unimplemented("protobuf serialization".to_owned()))
+        Err(rq::error::Error::unimplemented(
+            "protobuf serialization".to_owned(),
+        ))
     } else if let Some(ref schema_filename) = args.flag_output_avro {
-        let schema = try!(read_avro_schema_from_file(path::Path::new(schema_filename)));
+        use std::str::FromStr;
+
+        let schema = read_avro_schema_from_file(path::Path::new(schema_filename))?;
         let codec_string = if let Some(ref c) = args.flag_codec {
             c.as_str()
         } else {
@@ -284,10 +271,14 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
         };
         let codec = match avro_rs::Codec::from_str(&codec_string) {
             Ok(v) => v,
-            Err(_) => return Err(rq::error::Error::from(
-                format!("illegal Avro codec: {}", codec_string)))
+            Err(_) => {
+                return Err(rq::error::Error::Message(format!(
+                    "illegal Avro codec: {}",
+                    codec_string
+                )));
+            }
         };
-        let sink = try!(rq::value::avro::sink(&schema, &mut output, codec));
+        let sink = rq::value::avro::sink(&schema, &mut output, codec)?;
         run_source_sink(args, paths, source, sink)
     } else if args.flag_output_cbor {
         let sink = rq::value::cbor::sink(&mut output);
@@ -296,15 +287,25 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
         let sink = rq::value::messagepack::sink(&mut output);
         run_source_sink(args, paths, source, sink)
     } else if args.flag_output_hjson {
-        Err(rq::error::Error::unimplemented("hjson serialization (waiting for serde 0.9.0 \
-                                             support)"
-            .to_owned()))
+        Err(rq::error::Error::unimplemented(
+            "hjson serialization (waiting for serde 0.9.0 \
+             support)"
+                .to_owned(),
+        ))
     } else if args.flag_output_toml {
         // TODO: add TOML ugly printing eventually; now it's always "readable"
-        dispatch_format!(rq::value::toml::sink, rq::value::toml::sink, rq::value::toml::sink)
+        dispatch_format!(
+            rq::value::toml::sink,
+            rq::value::toml::sink,
+            rq::value::toml::sink
+        )
     } else if args.flag_output_yaml {
         // TODO: add YAML ugly printing eventually; now it's always "readable"
-        dispatch_format!(rq::value::yaml::sink, rq::value::yaml::sink, rq::value::yaml::sink)
+        dispatch_format!(
+            rq::value::yaml::sink,
+            rq::value::yaml::sink,
+            rq::value::yaml::sink
+        )
     } else if args.flag_output_raw {
         let sink = rq::value::raw::sink(&mut output);
         run_source_sink(args, paths, source, sink)
@@ -312,67 +313,76 @@ fn run_source<I>(args: &Args, paths: &rq::config::Paths, source: I) -> rq::error
         let sink = rq::value::csv::sink(&mut output);
         run_source_sink(args, paths, source, sink)
     } else {
-        dispatch_format!(rq::value::json::sink_compact,
-                         rq::value::json::sink_readable,
-                         rq::value::json::sink_indented)
+        dispatch_format!(
+            rq::value::json::sink_compact,
+            rq::value::json::sink_readable,
+            rq::value::json::sink_indented
+        )
     }
 }
 
 fn read_avro_schema_from_file(path: &path::Path) -> rq::error::Result<avro_rs::Schema> {
-    let mut file = try!(fs::File::open(path));
+    let mut file = fs::File::open(path)?;
     let mut buffer = String::new();
-    try!(file.read_to_string(&mut buffer));
-    Ok(try!(avro_rs::Schema::parse_str(&buffer)))
+    file.read_to_string(&mut buffer)?;
+    Ok(avro_rs::Schema::parse_str(&buffer)
+        .map_err(|e| rq::error::Error::Avro(rq::error::Avro::downcast(e)))?)
 }
 
-#[cfg(feature = "v8")]
-fn run_source_sink<I, O>(args: &Args,
-                         _paths: &rq::config::Paths,
-                         source: I,
-                         sink: O)
-                         -> rq::error::Result<()>
-    where I: rq::value::Source,
-          O: rq::value::Sink
+#[cfg(feature = "js")]
+fn run_source_sink<I, O>(
+    args: &Options,
+    _paths: &rq::config::Paths,
+    source: I,
+    sink: O,
+) -> rq::error::Result<()>
+where
+    I: rq::value::Source,
+    O: rq::value::Sink,
 {
-    let query = if args.arg_query.is_empty() {
-        rq::query::Query::empty()
-    } else {
-        try!(rq::query::Query::parse(&args.arg_query))
+    let query = match args.arg_query {
+        None => rq::query::Query::empty(),
+        Some(ref query) => rq::query::Query::parse(query)?,
     };
 
     record_query::run_query(&query, source, sink)
 }
 
-#[cfg(not(feature = "v8"))]
-fn run_source_sink<I, O>(args: &Args,
-                         _paths: &rq::config::Paths,
-                         mut source: I,
-                         mut sink: O)
-                         -> rq::error::Result<()>
-    where I: rq::value::Source,
-          O: rq::value::Sink
+#[cfg(not(feature = "js"))]
+fn run_source_sink<I, O>(
+    args: &Options,
+    _paths: &rq::config::Paths,
+    mut source: I,
+    mut sink: O,
+) -> rq::error::Result<()>
+where
+    I: rq::value::Source,
+    O: rq::value::Sink,
 {
     if !args.arg_query.is_empty() {
         return Err("Queries are not supported in this v8-less rq build.")?;
     }
 
-    while let Some(result) = try!(rq::value::Source::read(&mut source)) {
-        try!(sink.write(result));
+    while let Some(result) = rq::value::Source::read(&mut source)? {
+        sink.write(result)?;
     }
     Ok(())
 }
 
-fn load_descriptors(paths: &rq::config::Paths)
-                    -> rq::error::Result<serde_protobuf::descriptor::Descriptors> {
-    let descriptors_proto = try!(rq::proto_index::compile_descriptor_set(paths));
-    Ok(serde_protobuf::descriptor::Descriptors::from_proto(&descriptors_proto))
+fn load_descriptors(
+    paths: &rq::config::Paths,
+) -> rq::error::Result<serde_protobuf::descriptor::Descriptors> {
+    let descriptors_proto = rq::proto_index::compile_descriptor_set(paths)?;
+    Ok(serde_protobuf::descriptor::Descriptors::from_proto(
+        &descriptors_proto,
+    ))
 }
 
 fn infer_format() -> Format {
     use nix::unistd;
-    use nix::sys::ioctl;
+    use std::os::unix::io::AsRawFd;
 
-    if unistd::isatty(ioctl::libc::STDOUT_FILENO).unwrap_or(false) {
+    if unistd::isatty(io::stdin().as_raw_fd()).unwrap_or(false) {
         Format::Readable
     } else {
         Format::Compact
@@ -380,42 +390,39 @@ fn infer_format() -> Format {
 }
 
 fn has_ran_cmd(cmd: &str, paths: &rq::config::Paths) -> rq::error::Result<bool> {
-    paths.find_config(&format!("{}{}", "has-ran-", cmd)).map(|v| !v.is_empty()).map_err(From::from)
+    paths
+        .find_config(&format!("{}{}", "has-ran-", cmd))
+        .map(|v| !v.is_empty())
+        .map_err(From::from)
 }
 
 fn set_ran_cmd(cmd: &str, paths: &rq::config::Paths) -> rq::error::Result<()> {
     let file = paths.preferred_config(format!("{}{}", "has-ran-", cmd));
 
     if let Some(parent) = file.parent() {
-        try!(fs::create_dir_all(parent));
+        fs::create_dir_all(parent)?;
     }
 
-    try!(fs::File::create(&file));
+    fs::File::create(&file)?;
 
     Ok(())
 }
 
-fn handle_docopt_error(paths: &rq::config::Paths, e: docopt::Error) -> ! {
-    if !e.fatal() {
-        set_ran_cmd("help", paths).unwrap();
-    }
+fn log_error(args: &Options, error: rq::error::Error) {
+    use failure::Fail;
 
-    e.exit()
-}
-
-fn log_error(args: &Args, error: rq::error::Error) {
-    use record_query::error::ErrorKind;
-
-    match *error.kind() {
-        ErrorKind::Msg(ref m) => error!("{}", m),
-        #[cfg(feature="v8")]
-        ErrorKind::V8(v8::error::ErrorKind::Javascript(ref msg, ref stack_trace)) => {
-            error!("Error while executing JavaScript: {}", msg);
+    match error {
+        #[cfg(feature = "v8")]
+        rq::error::Error::Js(v8::error::Error::Javascript {
+            ref message,
+            ref stack_trace,
+        }) => {
+            error!("Error while executing JavaScript: {}", message);
 
             for line in format!("{}", stack_trace).lines() {
                 error!("{}", line);
             }
-        },
+        }
         _ => {
             let main_str = format!("{}", error);
             let mut main_lines = main_str.lines();
@@ -423,7 +430,7 @@ fn log_error(args: &Args, error: rq::error::Error) {
             for line in main_lines {
                 error!("  {}", line);
             }
-            for e in error.iter().skip(1) {
+            for e in failure::Fail::iter_causes(&error) {
                 let sub_str = format!("{}", e);
                 let mut sub_lines = sub_str.lines();
                 error!("Caused by: {}", sub_lines.next().unwrap());
@@ -431,7 +438,7 @@ fn log_error(args: &Args, error: rq::error::Error) {
                     error!("  {}", line);
                 }
             }
-        },
+        }
     }
 
     if args.flag_trace || env::var("RUST_BACKTRACE").as_ref().map(String::as_str) == Ok("1") {
@@ -450,75 +457,88 @@ fn log_error(args: &Args, error: rq::error::Error) {
 }
 
 fn setup_log(spec: Option<&str>, quiet: bool) {
-    use log::LogLevelFilter;
-
-    let mut builder = env_logger::LogBuilder::new();
+    let mut builder = env_logger::Builder::new();
 
     if quiet {
-        builder.filter(None, LogLevelFilter::Off);
+        builder.filter(None, log::LevelFilter::Off);
     } else if let Some(s) = spec {
         builder.parse(s);
     } else if let Ok(s) = env::var("RUST_LOG") {
         builder.parse(&s);
     } else {
-        builder.filter(None, LogLevelFilter::Info);
+        builder.filter(None, log::LevelFilter::Info);
     };
 
     builder.format(format_log_record);
 
-    builder.init().unwrap();
+    builder.init();
 }
 
-fn format_log_record(record: &log::LogRecord) -> String {
+impl str::FromStr for Format {
+    type Err = failure::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "compact" => Ok(Format::Compact),
+            "readable" => Ok(Format::Readable),
+            "indented" => Ok(Format::Indented),
+            _ => Err(failure::err_msg(format!("unrecognized format: {}", s))),
+        }
+    }
+}
+
+fn format_log_record(
+    formatter: &mut env_logger::fmt::Formatter,
+    record: &log::Record,
+) -> io::Result<()> {
     use ansi_term::ANSIStrings;
     use ansi_term::Colour;
     use ansi_term::Style;
-    use log::LogLevel;
     use nix::unistd;
-    use nix::sys::ioctl;
+    use std::os::unix::io::AsRawFd;
 
-    if unistd::isatty(ioctl::libc::STDERR_FILENO).unwrap_or(false) {
+    if unistd::isatty(io::stderr().as_raw_fd()).unwrap_or(false) {
         let normal = Style::new();
         let (front, back) = match record.level() {
-            LogLevel::Error => (Colour::Red.normal(), Colour::Red.dimmed()),
-            LogLevel::Warn => (Colour::Yellow.normal(), Colour::Yellow.dimmed()),
-            LogLevel::Info => (Colour::Blue.normal(), Colour::Blue.dimmed()),
-            LogLevel::Debug => (Colour::Purple.normal(), Colour::Purple.dimmed()),
-            LogLevel::Trace => (Colour::White.dimmed(), Colour::Black.normal()),
+            log::Level::Error => (Colour::Red.normal(), Colour::Red.dimmed()),
+            log::Level::Warn => (Colour::Yellow.normal(), Colour::Yellow.dimmed()),
+            log::Level::Info => (Colour::Blue.normal(), Colour::Blue.dimmed()),
+            log::Level::Debug => (Colour::Purple.normal(), Colour::Purple.dimmed()),
+            log::Level::Trace => (Colour::White.dimmed(), Colour::Black.normal()),
         };
 
-        let strings = &[back.paint("["),
-                        front.paint(format!("{}", record.level())),
-                        back.paint("]"),
-                        normal.paint(" "),
-                        back.paint("["),
-                        front.paint(record.location().module_path()),
-                        back.paint("]"),
-                        normal.paint(" "),
-                        front.paint(format!("{}", record.args()))];
+        let strings = &[
+            back.paint("["),
+            front.paint(format!("{}", record.level())),
+            back.paint("]"),
+            normal.paint(" "),
+            back.paint("["),
+            front.paint(record.module_path().unwrap_or("<unknown>")),
+            back.paint("]"),
+            normal.paint(" "),
+            front.paint(format!("{}", record.args())),
+        ];
 
-        format!("{}", ANSIStrings(strings))
+        writeln!(formatter, "{}", ANSIStrings(strings))
     } else {
-        format!("[{}] [{}] {}",
-                record.level(),
-                record.location().module_path(),
-                record.args())
+        writeln!(
+            formatter,
+            "[{}] [{}] {}",
+            record.level(),
+            record.module_path().unwrap_or("<unknown>"),
+            record.args()
+        )
     }
-
 }
 
 #[cfg(test)]
 mod test {
 
-    use docopt;
     use super::*;
 
-    fn parse_args(args: &[&str]) -> Args {
-        let a = docopt::Docopt::new(DOCOPT)
-            .unwrap()
-            .argv(args)
-            .decode()
-            .unwrap();
+    fn parse_args(args: &[&str]) -> Options {
+        use structopt::StructOpt;
+        let a = Options::from_iter_safe(args.iter()).unwrap();
         println!("{:?}", a);
         a
     }
@@ -529,7 +549,7 @@ mod test {
         assert!(a.flag_input_json);
         assert_eq!(a.flag_output_protobuf, Some(".foo.Bar".to_owned()));
         assert_eq!(a.flag_log, Some("info".to_owned()));
-        assert_eq!(a.arg_query, "select x");
+        assert_eq!(a.arg_query, Some("select x".to_owned()));
     }
 
     #[test]
@@ -538,16 +558,13 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(all(target_arch = "x86", target_pointer_width = "32", target_env = "musl"), ignore)]
+    #[cfg_attr(
+        all(target_arch = "x86", target_pointer_width = "32", target_env = "musl"),
+        ignore
+    )]
     #[should_panic(expected = "Help")]
     fn test_docopt_help() {
         parse_args(&["rq", "--help"]);
-    }
-
-    #[test]
-    fn test_docopt_version() {
-        let a = parse_args(&["rq", "--version"]);
-        assert!(a.flag_version);
     }
 
     #[test]
@@ -671,26 +688,18 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(all(target_arch = "x86", target_pointer_width = "32", target_env = "musl"), ignore)]
-    #[should_panic(expected = "NoMatch")]
-    fn test_docopt_input_conflict() {
-        parse_args(&["rq", "-jc"]);
-    }
-
-    #[test]
-    #[cfg_attr(all(target_arch = "x86", target_pointer_width = "32", target_env = "musl"), ignore)]
-    #[should_panic(expected = "NoMatch")]
-    fn test_docopt_output_conflict() {
-        parse_args(&["rq", "-JC"]);
-    }
-
-    #[test]
     fn test_docopt_protobuf_add_schema() {
         let a = parse_args(&["rq", "-l", "info", "protobuf", "add", "schema.proto"]);
         assert_eq!(a.flag_log, Some("info".to_owned()));
-        assert!(a.cmd_protobuf);
-        assert!(a.cmd_add);
-        assert_eq!(a.arg_schema, "schema.proto");
+        assert_eq!(
+            Some(path::PathBuf::from("schema.proto")),
+            match a.subcmd {
+                Some(Subcmd::Protobuf { subcmd }) => match subcmd {
+                    ProtobufSubcmd::Add { schema, .. } => Some(schema),
+                },
+                _ => None,
+            }
+        );
     }
 
     #[test]

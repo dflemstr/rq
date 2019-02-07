@@ -21,7 +21,7 @@ mod js_doctest {
     }
 
     fn run_js_doctest(input: &str, query_str: &str, expected_output_str: &str) {
-        let _ = env_logger::init();
+        let _ = env_logger::try_init();
         let mut actual_output_bytes = Vec::new();
 
         {
@@ -51,7 +51,7 @@ mod js_doctest {
             fn $id() {
                 run_js_doctest($input, concat!($process, " ", $args), $output)
             }
-        }
+        };
     }
 
     include!(concat!(env!("OUT_DIR"), "/js_doctests.rs"));

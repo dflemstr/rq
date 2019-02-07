@@ -6,12 +6,16 @@ use toml;
 use error;
 use value;
 
+#[derive(Debug)]
 pub struct TomlSource(Option<String>);
+
+#[derive(Debug)]
 pub struct TomlSink<W: io::Write>(W);
 
 #[inline]
 pub fn source<R>(mut r: R) -> error::Result<TomlSource>
-    where R: io::Read
+where
+    R: io::Read,
 {
     let mut string = String::new();
     try!(r.read_to_string(&mut string));
@@ -20,7 +24,8 @@ pub fn source<R>(mut r: R) -> error::Result<TomlSource>
 
 #[inline]
 pub fn sink<W>(w: W) -> TomlSink<W>
-    where W: io::Write
+where
+    W: io::Write,
 {
     TomlSink(w)
 }
@@ -35,14 +40,15 @@ impl value::Source for TomlSource {
                     Ok(v) => Ok(Some(v)),
                     Err(e) => Err(error::Error::from(e)),
                 }
-            },
+            }
             None => Ok(None),
         }
     }
 }
 
 impl<W> value::Sink for TomlSink<W>
-    where W: io::Write
+where
+    W: io::Write,
 {
     #[inline]
     fn write(&mut self, value: value::Value) -> error::Result<()> {

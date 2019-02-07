@@ -1,3 +1,5 @@
+#![allow(unused_must_use)]
+
 use error;
 
 use pest::prelude::*;
@@ -226,19 +228,19 @@ pub fn parse_query(input: &str) -> error::Result<query::Query> {
         let description = if rules.len() == 1 {
             format!("unexpected input at {}, expected {}", pos, rules[0])
         } else {
-            let rule_strings = rules.iter()
-                .map(|r| format!("{}", r))
-                .collect::<Vec<_>>();
-            let rule_desc = format!("{} or {}",
-                                    rule_strings[0..rule_strings.len() - 1].join(", "),
-                                    rule_strings[rule_strings.len() - 1]);
+            let rule_strings = rules.iter().map(|r| format!("{}", r)).collect::<Vec<_>>();
+            let rule_desc = format!(
+                "{} or {}",
+                rule_strings[0..rule_strings.len() - 1].join(", "),
+                rule_strings[rule_strings.len() - 1]
+            );
             format!("unexpected input at {}; expected one of {}", pos, rule_desc)
         };
 
         let spaces = iter::repeat(' ').take(pos).collect::<String>();
         let msg = format!("{}\n{}\n{}^", description, input, spaces);
 
-        Err(error::ErrorKind::SyntaxError(msg).into())
+        Err(error::Error::SyntaxError { msg })
     }
 }
 
@@ -260,7 +262,7 @@ fn unescape_string(string: &str) -> String {
                     'u' => decode_hex_escape(&mut chars),
                     _ => unreachable!(),
                 }
-            },
+            }
             _ => c,
         };
         result.push(r);
@@ -270,10 +272,12 @@ fn unescape_string(string: &str) -> String {
 }
 
 fn decode_hex_escape(chars: &mut str::Chars) -> char {
-    let p1 = hex_chars([chars.next().unwrap(),
-                        chars.next().unwrap(),
-                        chars.next().unwrap(),
-                        chars.next().unwrap()]);
+    let p1 = hex_chars([
+        chars.next().unwrap(),
+        chars.next().unwrap(),
+        chars.next().unwrap(),
+        chars.next().unwrap(),
+    ]);
 
     // TODO: raise error instead
     match p1 {
@@ -285,22 +289,22 @@ fn decode_hex_escape(chars: &mut str::Chars) -> char {
             if 'u' != chars.next().unwrap() {
                 panic!("Expected another Unicode escape sequence");
             }
-            let p2 = hex_chars([chars.next().unwrap(),
-                                chars.next().unwrap(),
-                                chars.next().unwrap(),
-                                chars.next().unwrap()]);
+            let p2 = hex_chars([
+                chars.next().unwrap(),
+                chars.next().unwrap(),
+                chars.next().unwrap(),
+                chars.next().unwrap(),
+            ]);
 
             let p = (((p1 - 0xD800) as u32) << 10 | (p2 - 0xDC00) as u32) + 0x1_0000;
-            match char::from_u32(p as u32) {
+            match char::from_u32(p) {
                 Some(c) => c,
                 None => panic!("Illegal Unicode code point {}", p),
             }
-        },
-        _ => {
-            match char::from_u32(p1 as u32) {
-                Some(c) => c,
-                None => panic!("Illegal Unicode code point {}", p1),
-            }
+        }
+        _ => match char::from_u32(p1 as u32) {
+            Some(c) => c,
+            None => panic!("Illegal Unicode code point {}", p1),
         },
     }
 }

@@ -10,7 +10,9 @@ use value;
 
 pub struct HjsonSource(serde_hjson::StreamDeserializer<value::Value, vec::IntoIter<u8>>);
 
-pub struct HjsonSink<W>(Option<serde_hjson::Serializer<W, Formatter>>) where W: io::Write;
+pub struct HjsonSink<W>(Option<serde_hjson::Serializer<W, Formatter>>)
+where
+    W: io::Write;
 
 struct Formatter {
     current_indent: usize,
@@ -22,17 +24,24 @@ struct Formatter {
 
 #[inline]
 pub fn source<R>(r: R) -> error::Result<HjsonSource>
-    where R: io::Read
+where
+    R: io::Read,
 {
     let bytes = try!(r.bytes().collect::<io::Result<Vec<u8>>>());
-    Ok(HjsonSource(serde_hjson::StreamDeserializer::new(bytes.into_iter())))
+    Ok(HjsonSource(serde_hjson::StreamDeserializer::new(
+        bytes.into_iter(),
+    )))
 }
 
 #[inline]
 pub fn sink<W>(w: W) -> HjsonSink<W>
-    where W: io::Write
+where
+    W: io::Write,
 {
-    HjsonSink(Some(serde_hjson::Serializer::with_formatter(w, Formatter::new())))
+    HjsonSink(Some(serde_hjson::Serializer::with_formatter(
+        w,
+        Formatter::new(),
+    )))
 }
 
 impl value::Source for HjsonSource {
@@ -47,7 +56,8 @@ impl value::Source for HjsonSource {
 }
 
 impl<W> value::Sink for HjsonSink<W>
-    where W: io::Write
+where
+    W: io::Write,
 {
     #[inline]
     fn write(&mut self, v: value::Value) -> error::Result<()> {
@@ -58,8 +68,10 @@ impl<W> value::Sink for HjsonSink<W>
         // Some juggling required here to get the underlying writer temporarily, to write a newline.
         let mut w = mem::replace(&mut self.0, None).unwrap().into_inner();
         let result = w.write_all(&[10]);
-        mem::replace(&mut self.0,
-                     Some(serde_hjson::Serializer::with_formatter(w, Formatter::new())));
+        mem::replace(
+            &mut self.0,
+            Some(serde_hjson::Serializer::with_formatter(w, Formatter::new())),
+        );
 
         result.map_err(From::from)
     }
@@ -79,7 +91,8 @@ impl Formatter {
 
 impl serde_hjson::ser::Formatter for Formatter {
     fn open<W>(&mut self, writer: &mut W, ch: u8) -> serde_hjson::Result<()>
-        where W: io::Write
+    where
+        W: io::Write,
     {
         if self.current_indent > 0 && !self.current_is_array && !self.braces_same_line {
             try!(self.newline(writer, 0));
@@ -93,21 +106,26 @@ impl serde_hjson::ser::Formatter for Formatter {
     }
 
     fn comma<W>(&mut self, writer: &mut W, _: bool) -> serde_hjson::Result<()>
-        where W: io::Write
+    where
+        W: io::Write,
     {
         try!(writer.write_all(b"\n"));
         indent(writer, self.current_indent)
     }
 
     fn colon<W>(&mut self, writer: &mut W) -> serde_hjson::Result<()>
-        where W: io::Write
+    where
+        W: io::Write,
     {
         self.at_colon = !self.braces_same_line;
-        writer.write_all(if self.braces_same_line { b": " } else { b":" }).map_err(From::from)
+        writer
+            .write_all(if self.braces_same_line { b": " } else { b":" })
+            .map_err(From::from)
     }
 
     fn close<W>(&mut self, writer: &mut W, ch: u8) -> serde_hjson::Result<()>
-        where W: io::Write
+    where
+        W: io::Write,
     {
         self.current_indent -= 1;
         self.current_is_array = self.stack.pop().unwrap();
@@ -117,7 +135,8 @@ impl serde_hjson::ser::Formatter for Formatter {
     }
 
     fn newline<W>(&mut self, writer: &mut W, add_indent: i32) -> serde_hjson::Result<()>
-        where W: io::Write
+    where
+        W: io::Write,
     {
         self.at_colon = false;
         try!(writer.write_all(b"\n"));
@@ -126,7 +145,8 @@ impl serde_hjson::ser::Formatter for Formatter {
     }
 
     fn start_value<W>(&mut self, writer: &mut W) -> serde_hjson::Result<()>
-        where W: io::Write
+    where
+        W: io::Write,
     {
         if self.at_colon {
             self.at_colon = false;
@@ -137,7 +157,8 @@ impl serde_hjson::ser::Formatter for Formatter {
 }
 
 fn indent<W>(wr: &mut W, n: usize) -> serde_hjson::Result<()>
-    where W: io::Write
+where
+    W: io::Write,
 {
     for _ in 0..n {
         try!(wr.write_all(b"  "));

@@ -1,3 +1,4 @@
+use csv;
 use glob;
 use protobuf;
 use rmpv;
@@ -13,92 +14,146 @@ use toml;
 use v8;
 use xdg_basedir;
 use yaml_rust;
-use csv;
-use failure;
 
-error_chain! {
-    links {
-        Protobuf(serde_protobuf::error::Error, serde_protobuf::error::ErrorKind);
-        V8(v8::error::Error, v8::error::ErrorKind) #[cfg(feature = "v8")];
-    }
+use std::result;
 
-    foreign_links {
-        IO(io::Error);
-        Utf8(string::FromUtf8Error);
-        NativeProtobuf(protobuf::ProtobufError);
-        MessagePackEncode(rmpv::encode::Error);
-        Cbor(serde_cbor::Error);
-        Hjson(serde_hjson::Error);
-        Json(serde_json::Error);
-        Yaml(serde_yaml::Error);
-        YamlScan(yaml_rust::ScanError);
-        TomlDeserialize(toml::de::Error);
-        TomlSerialize(toml::ser::Error);
-        XdgBasedir(xdg_basedir::Error);
-        Glob(glob::GlobError);
-        GlobPattern(glob::PatternError);
-        Csv(csv::Error);
-    }
+pub type Result<A> = result::Result<A, Error>;
 
-    errors {
-        // TODO: this should be a foreign_link but the type does not implement Display or Error
-        MessagePackDecode(cause: rmpv::decode::value::Error) {
-            description("message pack decode error")
-            display("message pack decode error: {}", format_rmpv_decode_cause(cause))
-        }
-        Unimplemented(msg: String) {
-            description("unimplemented")
-            display("unimplemented: {}", msg)
-        }
-        IllegalState(msg: String) {
-            description("illegal state")
-            display("illegal state: {}", msg)
-        }
-        SyntaxError(msg: String) {
-            description("syntax error")
-            display("syntax error: {}", msg)
-        }
-        ProcessNotFound(name: String) {
-            description("process not found")
-            display("no such process: {}", name)
-        }
-        Failure(msg: String) {
-            description("failure")
-            display("{}", msg)
-        }
-    }
+#[derive(Debug, Fail)]
+pub enum Error {
+    #[fail(display = "protobuf error")]
+    Protobuf(#[cause] serde_protobuf::error::Error),
+    #[cfg(feature = "js")]
+    #[fail(display = "JS error: {:?}", _0)]
+    Js(v8::error::Error),
+    #[fail(display = "IO error")]
+    Io(#[cause] io::Error),
+    #[fail(display = "UTF-8 error")]
+    Utf8(#[cause] string::FromUtf8Error),
+    #[fail(display = "native protobuf error")]
+    NativeProtobuf(#[cause] protobuf::ProtobufError),
+    #[fail(display = "MessagePack encode error")]
+    MessagePackEncode(#[cause] rmpv::encode::Error),
+    #[fail(display = "Avro error")]
+    Avro(#[cause] Avro),
+    #[fail(display = "CBOR error")]
+    Cbor(#[cause] serde_cbor::error::Error),
+    #[fail(display = "HJSON error")]
+    Hjson(#[cause] serde_hjson::Error),
+    #[fail(display = "JSON error")]
+    Json(#[cause] serde_json::Error),
+    #[fail(display = "YAML error")]
+    Yaml(#[cause] serde_yaml::Error),
+    #[fail(display = "YAML scan error")]
+    YamlScan(#[cause] yaml_rust::ScanError),
+    #[fail(display = "TOML deserialize error")]
+    TomlDeserialize(#[cause] toml::de::Error),
+    #[fail(display = "TOML serialize error")]
+    TomlSerialize(#[cause] toml::ser::Error),
+    #[fail(display = "XDG basedir error")]
+    XdgBasedir(#[cause] xdg_basedir::Error),
+    #[fail(display = "glob error")]
+    Glob(#[cause] glob::GlobError),
+    #[fail(display = "glob pattern error")]
+    GlobPattern(#[cause] glob::PatternError),
+    #[fail(display = "CSV error")]
+    Csv(#[cause] csv::Error),
+    #[fail(display = "MessagePack decode error")]
+    MessagePackDecode(#[cause] rmpv::decode::Error),
+    #[fail(display = "unimplemented: {}", msg)]
+    Unimplemented { msg: String },
+    #[fail(display = "illegal state: {}", msg)]
+    IllegalState { msg: String },
+    #[fail(display = "syntax error: {}", msg)]
+    SyntaxError { msg: String },
+    #[fail(display = "process not found: {}", name)]
+    ProcessNotFound { name: String },
+    #[fail(display = "format error: {}", msg)]
+    Format { msg: String },
+    #[fail(display = "internal error: {}", _0)]
+    Internal(&'static str),
+    #[fail(display = "{}", _0)]
+    Message(String),
+}
+
+#[derive(Debug, Fail)]
+pub enum Avro {
+    #[fail(display = "decode error")]
+    Decode(#[cause] avro_rs::DecodeError),
+    #[fail(display = "error when parsing schema")]
+    ParseSchema(#[cause] avro_rs::ParseSchemaError),
+    #[fail(display = "schema resolution error")]
+    SchemaResolution(#[cause] avro_rs::SchemaResolutionError),
+    #[fail(display = "validation error")]
+    Validation(#[cause] avro_rs::ValidationError),
+    #[fail(display = "{}", message)]
+    Custom { message: String },
 }
 
 impl Error {
     pub fn unimplemented(msg: String) -> Error {
-        ErrorKind::Unimplemented(msg).into()
+        Error::Unimplemented { msg }
     }
 
     pub fn illegal_state(msg: String) -> Error {
-        ErrorKind::IllegalState(msg).into()
+        Error::IllegalState { msg }
     }
 }
 
-fn format_rmpv_decode_cause(cause: &rmpv::decode::value::Error) -> String {
-    match *cause {
-        rmpv::decode::value::Error::InvalidMarkerRead(ref e) => {
-            format!("error while reading marker byte: {}", e)
-        },
-        rmpv::decode::value::Error::InvalidDataRead(ref e) => {
-            format!("error while reading data: {}", e)
-        },
-        rmpv::decode::value::Error::TypeMismatch(ref m) => {
-            format!("decoded value type isn't equal with the expected one: {:?}",
-                    m)
-        },
-        rmpv::decode::value::Error::FromUtf8Error(ref e) => {
-            format!("failed to properly decode UTF-8: {}", e)
-        },
+impl Avro {
+    pub fn downcast(error: failure::Error) -> Avro {
+        let error = match error.downcast::<avro_rs::DecodeError>() {
+            Ok(error) => return Avro::Decode(error),
+            Err(error) => error,
+        };
+
+        let error = match error.downcast::<avro_rs::ParseSchemaError>() {
+            Ok(error) => return Avro::ParseSchema(error),
+            Err(error) => error,
+        };
+
+        let error = match error.downcast::<avro_rs::SchemaResolutionError>() {
+            Ok(error) => return Avro::SchemaResolution(error),
+            Err(error) => error,
+        };
+
+        let error = match error.downcast::<avro_rs::ValidationError>() {
+            Ok(error) => return Avro::Validation(error),
+            Err(error) => error,
+        };
+
+        Avro::Custom {
+            message: error.to_string(),
+        }
     }
 }
 
-impl From<failure::Error> for Error {
-    fn from(error: failure::Error) -> Self {
-        Error::from_kind(ErrorKind::Failure(error.as_fail().to_string()))
-    }
+macro_rules! gen_from {
+    ($t:ty, $i:ident) => {
+        impl From<$t> for Error {
+            fn from(e: $t) -> Self {
+                Error::$i(e)
+            }
+        }
+    };
 }
+
+gen_from!(serde_protobuf::error::Error, Protobuf);
+gen_from!(io::Error, Io);
+#[cfg(feature = "js")]
+gen_from!(v8::error::Error, Js);
+gen_from!(string::FromUtf8Error, Utf8);
+gen_from!(protobuf::ProtobufError, NativeProtobuf);
+gen_from!(rmpv::encode::Error, MessagePackEncode);
+gen_from!(serde_cbor::error::Error, Cbor);
+gen_from!(serde_hjson::Error, Hjson);
+gen_from!(serde_json::Error, Json);
+gen_from!(serde_yaml::Error, Yaml);
+gen_from!(yaml_rust::ScanError, YamlScan);
+gen_from!(toml::de::Error, TomlDeserialize);
+gen_from!(toml::ser::Error, TomlSerialize);
+gen_from!(xdg_basedir::Error, XdgBasedir);
+gen_from!(glob::GlobError, Glob);
+gen_from!(glob::PatternError, GlobPattern);
+gen_from!(csv::Error, Csv);
+gen_from!(rmpv::decode::Error, MessagePackDecode);

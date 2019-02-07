@@ -1,5 +1,3 @@
-
-
 use error;
 
 use glob;
@@ -36,7 +34,8 @@ impl Paths {
     }
 
     pub fn preferred_config<P>(&self, path: P) -> path::PathBuf
-        where P: AsRef<path::Path>
+    where
+        P: AsRef<path::Path>,
     {
         let mut result = self.config_home.clone();
         result.push(path);
@@ -44,7 +43,8 @@ impl Paths {
     }
 
     pub fn preferred_cache<P>(&self, path: P) -> path::PathBuf
-        where P: AsRef<path::Path>
+    where
+        P: AsRef<path::Path>,
     {
         let mut result = self.cache_home.clone();
         result.push(path);
@@ -52,7 +52,8 @@ impl Paths {
     }
 
     pub fn preferred_data<P>(&self, path: P) -> path::PathBuf
-        where P: AsRef<path::Path>
+    where
+        P: AsRef<path::Path>,
     {
         let mut result = self.data_home.clone();
         result.push(path);
@@ -69,7 +70,8 @@ impl Paths {
 }
 
 fn find<P>(home: &path::Path, dirs: &[P], pattern: &str) -> error::Result<Vec<path::PathBuf>>
-    where P: AsRef<path::Path>
+where
+    P: AsRef<path::Path>,
 {
     let mut result = Vec::new();
 
@@ -82,11 +84,11 @@ fn find<P>(home: &path::Path, dirs: &[P], pattern: &str) -> error::Result<Vec<pa
     Ok(result)
 }
 
-fn run_pattern(dir: &path::Path,
-               pattern: &str,
-               result: &mut Vec<path::PathBuf>)
-               -> error::Result<()> {
-
+fn run_pattern(
+    dir: &path::Path,
+    pattern: &str,
+    result: &mut Vec<path::PathBuf>,
+) -> error::Result<()> {
     let full_pattern = format!("{}/{}", dir.to_string_lossy(), pattern);
 
     for entry in try!(glob::glob(&full_pattern)) {

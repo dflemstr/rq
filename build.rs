@@ -9,7 +9,7 @@ use std::path;
 use std::process;
 
 fn main() {
-    env_logger::init().unwrap();
+    env_logger::init();
 
     let out_dir_str = env::var_os("OUT_DIR").unwrap();
     let out_dir = path::Path::new(&out_dir_str);
@@ -28,7 +28,8 @@ fn gen_build_info(out_dir: &path::Path) -> io::Result<()> {
         io::Read::read_to_string(&mut git_version_file, &mut contents)?;
         drop_last(contents)
     } else {
-        process::Command::new("git").args(&["describe", "--tags", "--always"])
+        process::Command::new("git")
+            .args(&["describe", "--tags", "--always"])
             .output()
             .map(|o| drop_last(String::from_utf8(o.stdout).unwrap()))?
     };
@@ -37,9 +38,11 @@ fn gen_build_info(out_dir: &path::Path) -> io::Result<()> {
     let mut build_info_file = fs::File::create(build_info_path)?;
     let mut build_info = Vec::new();
     writeln!(build_info, "#[macro_export]")?;
-    writeln!(build_info,
-             "macro_rules! rq_git_version {{ () => {{ {:?} }} }}",
-             git_version)?;
+    writeln!(
+        build_info,
+        "macro_rules! rq_git_version {{ () => {{ {:?} }} }}",
+        git_version
+    )?;
     io::Write::write_all(&mut build_info_file, &build_info)?;
     Ok(())
 }
@@ -63,7 +66,8 @@ fn gen_js_doctests(out_dir: &path::Path) -> io::Result<()> {
     let mut ordinals = collections::HashMap::new();
 
     for cap in re.captures_iter(&source) {
-        let input = cap.get(1)
+        let input = cap
+            .get(1)
             .unwrap()
             .as_str()
             .replace("(empty)", "")
@@ -73,7 +77,8 @@ fn gen_js_doctests(out_dir: &path::Path) -> io::Result<()> {
             .trim()
             .to_owned();
         let process = cap.get(2).unwrap().as_str().trim();
-        let args = cap.get(3)
+        let args = cap
+            .get(3)
             .unwrap()
             .as_str()
             .replace("&lt;", "<")
@@ -81,7 +86,8 @@ fn gen_js_doctests(out_dir: &path::Path) -> io::Result<()> {
             .replace("&amp;", "&")
             .trim()
             .to_owned();
-        let output = cap.get(4)
+        let output = cap
+            .get(4)
             .unwrap()
             .as_str()
             .replace("(empty)", "")
@@ -98,14 +104,11 @@ fn gen_js_doctests(out_dir: &path::Path) -> io::Result<()> {
         let ordinal = ordinals.entry(process).or_insert(0);
         *ordinal += 1;
 
-        writeln!(target,
-                 "js_doctest!({}_{}, {:?}, {:?}, {:?}, {:?});",
-                 process,
-                 *ordinal,
-                 input,
-                 process,
-                 args,
-                 output)?;
+        writeln!(
+            target,
+            "js_doctest!({}_{}, {:?}, {:?}, {:?}, {:?});",
+            process, *ordinal, input, process, args, output
+        )?;
     }
 
     io::Write::write_all(&mut target_file, &target)?;

@@ -12,8 +12,8 @@ use value;
 const API_JS: &'static str = include_str!("../api.js");
 const PRELUDE_JS: &'static str = include_str!("../prelude.js");
 
-const MODULES: &'static [(&'static str, &'static str)] = &[("lodash",
-                                                            include_str!("../js/lodash.js"))];
+const MODULES: &'static [(&'static str, &'static str)] =
+    &[("lodash", include_str!("../js/lodash.js"))];
 
 #[derive(Debug)]
 pub struct Context {
@@ -87,23 +87,40 @@ impl Context {
         global.set(&context, &rq_key, &rq_obj);
         global.set(&context, &require_key, &require_fun);
 
-        try!(load_embedded_file(&self.isolate, &context, "api.js", API_JS));
-        try!(load_embedded_file(&self.isolate, &context, "prelude.js", PRELUDE_JS));
+        try!(load_embedded_file(
+            &self.isolate,
+            &context,
+            "api.js",
+            API_JS
+        ));
+        try!(load_embedded_file(
+            &self.isolate,
+            &context,
+            "prelude.js",
+            PRELUDE_JS
+        ));
 
         let name_key = v8::value::String::from_str(&self.isolate, name);
         let generator_fn = global.get(&context, &name_key);
 
         if !generator_fn.is_generator_function() {
-            return Err(error::ErrorKind::ProcessNotFound(name.to_owned()).into());
+            return Err(error::Error::ProcessNotFound {
+                name: name.to_owned(),
+            });
         }
 
         let process_key = v8::value::String::from_str(&self.isolate, "Process");
-        let process_fn = try!(rq_obj.get(&context, &process_key)
-            .into_object()
-            .ok_or(error::Error::from("The rq.Process global variable was not an object")));
+        let process_fn =
+            try!(rq_obj
+                .get(&context, &process_key)
+                .into_object()
+                .ok_or(error::Error::Internal(
+                    "The rq.Process global variable was not an object"
+                )));
         let process = try!(process_fn.call_as_constructor(&context, &[&generator_fn]));
-        let process = try!(process.into_object()
-            .ok_or(error::Error::from("The constructed Process was not an object")));
+        let process = try!(process.into_object().ok_or(error::Error::Internal(
+            "The constructed Process was not an object"
+        )));
         let resume_key = v8::value::String::from_str(&self.isolate, "resume");
         let resume = process.get(&context, &resume_key).into_function().unwrap();
 
@@ -142,7 +159,8 @@ impl State {
             let resume = resume.into_object().unwrap();
 
             let type_key = v8::value::String::from_str(isolate, "type");
-            let type_value = resume.get(context, &type_key)
+            let type_value = resume
+                .get(context, &type_key)
                 .into_string()
                 .expect("Generator resume type was not a string")
                 .value();
@@ -153,14 +171,16 @@ impl State {
                     let value_key = v8::value::String::from_str(isolate, "value");
                     let value = resume.get(context, &value_key);
                     State::Emit(value_from_v8(isolate, context, value))
-                },
+                }
                 _ => panic!("Unrecognized generator type: {:?}", type_value),
             }
         } else if resume.is_undefined() {
             State::End
         } else {
-            panic!("Generator resumed with some unrecognized value: {}",
-                   resume.to_detail_string(&context).value())
+            panic!(
+                "Generator resumed with some unrecognized value: {}",
+                resume.to_detail_string(&context).value()
+            )
         }
     }
 }
@@ -217,7 +237,10 @@ impl ResumeAwait {
         let next_key = v8::value::String::from_str(isolate, "next");
         let (has_next_value, next_value) = match value {
             Some(v) => (v8::value::true_(isolate), value_to_v8(isolate, context, &v)),
-            None => (v8::value::false_(isolate), v8::value::undefined(isolate).into()),
+            None => (
+                v8::value::false_(isolate),
+                v8::value::undefined(isolate).into(),
+            ),
         };
 
         params.set(context, &type_key, &type_value);
@@ -237,49 +260,60 @@ impl ResumeEmit {
 
 fn build_log_fun(isolate: &v8::Isolate, outer_context: &v8::Context) -> v8::value::Function {
     let context = outer_context.clone();
-    v8::value::Function::new(isolate,
-                             outer_context,
-                             2,
-                             Box::new(move |mut info| {
-        let isolate = info.isolate;
-        if info.args.len() < 2 {
-            let message = v8::value::String::from_str(&isolate,
-                                                      "log() called with too few arguments, \
-                                                       requires at least two");
-            Err(v8::value::Exception::error(&isolate, &message).into())
-        } else if let (Some(level), Some(name)) =
-            (info.args.remove(0).into_int32(), info.args.remove(0).into_string()) {
-            let level = match level.value() {
-                0 => log::LogLevel::Trace,
-                1 => log::LogLevel::Debug,
-                2 => log::LogLevel::Info,
-                3 => log::LogLevel::Warn,
-                4 => log::LogLevel::Error,
-                _ => log::LogLevel::Error,
-            };
+    v8::value::Function::new(
+        isolate,
+        outer_context,
+        2,
+        Box::new(move |mut info| {
+            let isolate = info.isolate;
+            if info.args.len() < 2 {
+                let message = v8::value::String::from_str(
+                    &isolate,
+                    "log() called with too few arguments, \
+                     requires at least two",
+                );
+                Err(v8::value::Exception::error(&isolate, &message).into())
+            } else if let (Some(level), Some(name)) = (
+                info.args.remove(0).into_int32(),
+                info.args.remove(0).into_string(),
+            ) {
+                let level = match level.value() {
+                    0 => log::Level::Trace,
+                    1 => log::Level::Debug,
+                    2 => log::Level::Info,
+                    3 => log::Level::Warn,
+                    4 => log::Level::Error,
+                    _ => log::Level::Error,
+                };
 
-            if log_enabled!(level) {
-                let name = name.value();
+                if log_enabled!(level) {
+                    let name = name.value();
 
-                let args = info.args
-                    .iter()
-                    .map(|v| v.to_string(&context).value())
-                    .collect::<Vec<_>>()
-                    .join(" ");
+                    let args = info
+                        .args
+                        .iter()
+                        .map(|v| v.to_string(&context).value())
+                        .collect::<Vec<_>>()
+                        .join(" ");
 
-                log!(level, "{}: {}", name, args);
+                    log!(level, "{}: {}", name, args);
+                }
+
+                Ok(v8::value::undefined(&isolate).into())
+            } else {
+                let message = v8::value::String::from_str(
+                    &isolate,
+                    &format!(
+                        "log() called with bad \
+                         arguments, the first two \
+                         arguments should be an int and \
+                         a string"
+                    ),
+                );
+                Err(v8::value::Exception::error(&isolate, &message).into())
             }
-
-            Ok(v8::value::undefined(&isolate).into())
-        } else {
-            let message = v8::value::String::from_str(&isolate,
-                                                      &format!("log() called with bad \
-                                                                arguments, the first two \
-                                                                arguments should be an int and \
-                                                                a string"));
-            Err(v8::value::Exception::error(&isolate, &message).into())
-        }
-    }))
+        }),
+    )
 }
 
 type ModuleCache = cell::RefCell<collections::HashMap<String, v8::value::Object>>;
@@ -287,54 +321,63 @@ type ModuleCache = cell::RefCell<collections::HashMap<String, v8::value::Object>
 fn build_require(isolate: &v8::Isolate, outer_context: &v8::Context) -> v8::value::Function {
     let context = outer_context.clone();
     let module_cache = cell::RefCell::new(collections::HashMap::new());
-    v8::value::Function::new(isolate,
-                             outer_context,
-                             1,
-                             Box::new(move |mut info| {
-        let isolate = info.isolate;
-        if info.args.len() < 1 {
-            let message = v8::value::String::from_str(&isolate,
-                                                      "require() called without any arguments");
-            Err(v8::value::Exception::error(&isolate, &message).into())
-        } else if let Some(required_name) = info.args.remove(0).into_string() {
-            let required_name = required_name.value();
+    v8::value::Function::new(
+        isolate,
+        outer_context,
+        1,
+        Box::new(move |mut info| {
+            let isolate = info.isolate;
+            if info.args.len() < 1 {
+                let message =
+                    v8::value::String::from_str(&isolate, "require() called without any arguments");
+                Err(v8::value::Exception::error(&isolate, &message).into())
+            } else if let Some(required_name) = info.args.remove(0).into_string() {
+                let required_name = required_name.value();
 
-            for &(name, source) in MODULES.iter() {
-                if name == required_name {
-                    return Ok(load_module(&isolate, &context, &module_cache, name, source));
+                for &(name, source) in MODULES.iter() {
+                    if name == required_name {
+                        return Ok(load_module(&isolate, &context, &module_cache, name, source));
+                    }
                 }
-            }
 
-            let message = v8::value::String::from_str(&isolate,
-                                                      &format!("module not found: {:?}",
-                                                               required_name));
-            Err(v8::value::Exception::error(&isolate, &message).into())
-        } else {
-            let message = v8::value::String::from_str(&isolate,
-                                                      "require() called with a non-string \
-                                                       argument");
-            Err(v8::value::Exception::error(&isolate, &message).into())
-        }
-    }))
+                let message = v8::value::String::from_str(
+                    &isolate,
+                    &format!("module not found: {:?}", required_name),
+                );
+                Err(v8::value::Exception::error(&isolate, &message).into())
+            } else {
+                let message = v8::value::String::from_str(
+                    &isolate,
+                    "require() called with a non-string \
+                     argument",
+                );
+                Err(v8::value::Exception::error(&isolate, &message).into())
+            }
+        }),
+    )
 }
 
-fn load_module(isolate: &v8::Isolate,
-               context: &v8::Context,
-               module_cache: &ModuleCache,
-               name: &str,
-               source: &str)
-               -> v8::Value {
+fn load_module(
+    isolate: &v8::Isolate,
+    context: &v8::Context,
+    module_cache: &ModuleCache,
+    name: &str,
+    source: &str,
+) -> v8::Value {
     let exports_key = v8::value::String::from_str(isolate, "exports");
 
     let (module_value, should_init) = match module_cache.borrow_mut().entry(name.to_owned()) {
         collections::hash_map::Entry::Occupied(o) => {
             debug!("Re-using already loaded module {}", name);
             (o.get().clone(), false)
-        },
+        }
         collections::hash_map::Entry::Vacant(v) => {
             debug!("Loading module {} for the first time", name);
-            (v.insert(v8::value::Object::new(isolate, context)).clone(), true)
-        },
+            (
+                v.insert(v8::value::Object::new(isolate, context)).clone(),
+                true,
+            )
+        }
     };
 
     if should_init {
@@ -347,8 +390,8 @@ fn load_module(isolate: &v8::Isolate,
 
         let source_name = v8::value::String::from_str(isolate, &format!("{}.js", name));
         let source = v8::value::String::from_str(isolate, source);
-        let script = v8::Script::compile_with_name(isolate, context, &source_name, &source)
-            .unwrap();
+        let script =
+            v8::Script::compile_with_name(isolate, context, &source_name, &source).unwrap();
 
         let module_key = v8::value::String::from_str(isolate, "module");
 
@@ -368,43 +411,55 @@ fn load_module(isolate: &v8::Isolate,
     module_value.get(context, &exports_key)
 }
 
-fn load_embedded_file(isolate: &v8::Isolate,
-                      context: &v8::Context,
-                      file_name: &str,
-                      file_contents: &str)
-                      -> error::Result<()> {
+fn load_embedded_file(
+    isolate: &v8::Isolate,
+    context: &v8::Context,
+    file_name: &str,
+    file_contents: &str,
+) -> error::Result<()> {
     let file_name = v8::value::String::from_str(isolate, file_name);
     let file_contents = v8::value::String::from_str(isolate, file_contents);
-    let script = try!(v8::Script::compile_with_name(isolate, context, &file_name, &file_contents));
+    let script = try!(v8::Script::compile_with_name(
+        isolate,
+        context,
+        &file_name,
+        &file_contents
+    ));
     try!(script.run(context));
     Ok(())
 }
 
-fn expr_to_v8(isolate: &v8::Isolate,
-              context: &v8::Context,
-              expr: &query::Expression)
-              -> error::Result<v8::Value> {
+fn expr_to_v8(
+    isolate: &v8::Isolate,
+    context: &v8::Context,
+    expr: &query::Expression,
+) -> error::Result<v8::Value> {
     match *expr {
         query::Expression::Value(ref v) => Ok(value_to_v8(isolate, context, v)),
         query::Expression::Function(ref args, ref body) => {
             let function_key = v8::value::String::from_str(isolate, "Function");
-            let mut args = args.iter()
+            let mut args = args
+                .iter()
                 .map(|a| v8::value::String::from_str(isolate, a).into())
                 .collect::<Vec<v8::Value>>();
             args.push(v8::value::String::from_str(isolate, &format!("return {};", body)).into());
 
             let arg_refs = args.iter().collect::<Vec<&v8::Value>>();
 
-            let function_ctor = context.global().get(context, &function_key).into_object().unwrap();
+            let function_ctor = context
+                .global()
+                .get(context, &function_key)
+                .into_object()
+                .unwrap();
             let function = try!(function_ctor.call_as_constructor(context, &arg_refs));
             Ok(function)
-        },
+        }
         query::Expression::Javascript(ref v) => {
             let source = v8::value::String::from_str(isolate, v);
             let script = try!(v8::Script::compile(isolate, context, &source));
             let result = try!(script.run(context));
             Ok(result)
-        },
+        }
     }
 }
 
@@ -416,12 +471,12 @@ fn value_to_v8(isolate: &v8::Isolate, context: &v8::Context, value: &value::Valu
 
         I8(v) => v8::value::Integer::new(isolate, v as i32).into(),
         I16(v) => v8::value::Integer::new(isolate, v as i32).into(),
-        I32(v) => v8::value::Integer::new(isolate, v as i32).into(),
+        I32(v) => v8::value::Integer::new(isolate, v).into(),
         I64(v) => v8::value::Number::new(isolate, v as f64).into(),
 
         U8(v) => v8::value::Integer::new_from_unsigned(isolate, v as u32).into(),
         U16(v) => v8::value::Integer::new_from_unsigned(isolate, v as u32).into(),
-        U32(v) => v8::value::Integer::new_from_unsigned(isolate, v as u32).into(),
+        U32(v) => v8::value::Integer::new_from_unsigned(isolate, v).into(),
         U64(v) => v8::value::Number::new(isolate, v as f64).into(),
 
         F32(ordered_float::OrderedFloat(v)) => v8::value::Number::new(isolate, v as f64).into(),
@@ -431,9 +486,13 @@ fn value_to_v8(isolate: &v8::Isolate, context: &v8::Context, value: &value::Valu
         String(ref v) => v8::value::String::from_str(isolate, v.as_str()).into(),
         Bytes(ref v) => {
             // TODO: this is a stop gap until there is a stable API for byte buffers in V8...
-            let hex = v.iter().map(|b| format!("{:02x}", b)).collect::<Vec<_>>().join("");
+            let hex = v
+                .iter()
+                .map(|b| format!("{:02x}", b))
+                .collect::<Vec<_>>()
+                .join("");
             v8::value::String::from_str(isolate, &hex).into()
-        },
+        }
 
         Sequence(ref v) => {
             let a = v8::value::Array::new(isolate, context, v.len() as u32);
@@ -443,7 +502,7 @@ fn value_to_v8(isolate: &v8::Isolate, context: &v8::Context, value: &value::Valu
             }
 
             a.into()
-        },
+        }
         Map(ref m) => {
             let o = v8::value::Object::new(isolate, context);
 
@@ -454,7 +513,7 @@ fn value_to_v8(isolate: &v8::Isolate, context: &v8::Context, value: &value::Valu
             }
 
             o.into()
-        },
+        }
     }
 }
 
@@ -495,7 +554,11 @@ fn value_from_v8(isolate: &v8::Isolate, context: &v8::Context, value: v8::Value)
     } else if value.is_array() {
         let array = value.into_array().unwrap();
         let length_key = v8::value::String::from_str(isolate, "length");
-        let length = array.get(context, &length_key).into_uint32().unwrap().value();
+        let length = array
+            .get(context, &length_key)
+            .into_uint32()
+            .unwrap()
+            .value();
 
         let mut result = Vec::with_capacity(length as usize);
 
@@ -509,14 +572,20 @@ fn value_from_v8(isolate: &v8::Isolate, context: &v8::Context, value: v8::Value)
 
         let keys = object.get_own_property_names(context);
         let length_key = v8::value::String::from_str(isolate, "length");
-        let keys_length = keys.get(context, &length_key).into_uint32().unwrap().value();
+        let keys_length = keys
+            .get(context, &length_key)
+            .into_uint32()
+            .unwrap()
+            .value();
 
         let mut result = collections::BTreeMap::new();
         for i in 0..keys_length {
             let key = keys.get_index(context, i).to_detail_string(context).into();
             let value = object.get(context, &key);
-            result.insert(value_from_v8(isolate, context, key),
-                          value_from_v8(isolate, context, value));
+            result.insert(
+                value_from_v8(isolate, context, key),
+                value_from_v8(isolate, context, value),
+            );
         }
 
         value::Value::Map(result)

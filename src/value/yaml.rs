@@ -3,25 +3,33 @@ use serde_yaml;
 use std::io;
 use value;
 
+#[derive(Debug)]
 pub struct YamlSource<R>(Option<R>);
-pub struct YamlSink<W>(W) where W: io::Write;
+
+#[derive(Debug)]
+pub struct YamlSink<W>(W)
+where
+    W: io::Write;
 
 #[inline]
 pub fn source<R>(r: R) -> YamlSource<R>
-    where R: io::Read
+where
+    R: io::Read,
 {
     YamlSource(Some(r))
 }
 
 #[inline]
 pub fn sink<W>(w: W) -> YamlSink<W>
-    where W: io::Write
+where
+    W: io::Write,
 {
     YamlSink(w)
 }
 
 impl<R> value::Source for YamlSource<R>
-    where R: io::Read
+where
+    R: io::Read,
 {
     #[inline]
     fn read(&mut self) -> error::Result<Option<value::Value>> {
@@ -37,7 +45,8 @@ impl<R> value::Source for YamlSource<R>
 }
 
 impl<W> value::Sink for YamlSink<W>
-    where W: io::Write
+where
+    W: io::Write,
 {
     #[inline]
     fn write(&mut self, value: value::Value) -> error::Result<()> {

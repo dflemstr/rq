@@ -2,24 +2,36 @@ use error;
 use std::io;
 use value;
 
-pub struct RawSource<R>(io::Lines<io::BufReader<R>>) where R: io::Read;
+#[derive(Debug)]
+pub struct RawSource<R>(io::Lines<io::BufReader<R>>)
+where
+    R: io::Read;
 
-pub struct RawSink<W>(io::LineWriter<W>) where W: io::Write;
+#[derive(Debug)]
+pub struct RawSink<W>(io::LineWriter<W>)
+where
+    W: io::Write;
 
 #[inline]
-pub fn source<R>(r: R) -> RawSource<R> where R: io::Read
+pub fn source<R>(r: R) -> RawSource<R>
+where
+    R: io::Read,
 {
     use std::io::BufRead;
     RawSource(io::BufReader::new(r).lines())
 }
 
 #[inline]
-pub fn sink<W>(w: W) -> RawSink<W> where W: io::Write
+pub fn sink<W>(w: W) -> RawSink<W>
+where
+    W: io::Write,
 {
     RawSink(io::LineWriter::new(w))
 }
 
-impl<R> value::Source for RawSource<R> where R: io::Read
+impl<R> value::Source for RawSource<R>
+where
+    R: io::Read,
 {
     #[inline]
     fn read(&mut self) -> error::Result<Option<value::Value>> {
@@ -31,7 +43,9 @@ impl<R> value::Source for RawSource<R> where R: io::Read
     }
 }
 
-impl<W> value::Sink for RawSink<W> where W: io::Write
+impl<W> value::Sink for RawSink<W>
+where
+    W: io::Write,
 {
     #[inline]
     fn write(&mut self, value: value::Value) -> error::Result<()> {
@@ -48,10 +62,12 @@ impl<W> value::Sink for RawSink<W> where W: io::Write
                 Ok(())
             }
             value::Value::Char(c) => {
-                write!(self.0, "{}\n", c)?;
+                writeln!(self.0, "{}", c)?;
                 Ok(())
             }
-            x => bail!("raw can only output strings, bytes and chars, got: {:?}", x)
+            x => Err(error::Error::Format {
+                msg: format!("raw can only output strings, bytes and chars, got: {:?}", x),
+            }),
         }
     }
 }

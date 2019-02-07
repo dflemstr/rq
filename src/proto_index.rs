@@ -1,5 +1,3 @@
-
-
 use config;
 use error;
 
@@ -9,11 +7,13 @@ use std::fs;
 use std::path;
 use std::process;
 
-pub fn add_file(paths: &config::Paths,
-                relative_to: &path::Path,
-                file: &path::Path)
-                -> error::Result<()> {
-    let rel_file = file.strip_prefix(relative_to)
+pub fn add_file(
+    paths: &config::Paths,
+    relative_to: &path::Path,
+    file: &path::Path,
+) -> error::Result<()> {
+    let rel_file = file
+        .strip_prefix(relative_to)
         .unwrap_or(file.file_name().map(path::Path::new).unwrap_or(file));
     let target = paths.preferred_data("proto").join(rel_file);
 
@@ -27,9 +27,9 @@ pub fn add_file(paths: &config::Paths,
     Ok(())
 }
 
-pub fn compile_descriptor_set(paths: &config::Paths)
-                              -> error::Result<protobuf::descriptor::FileDescriptorSet> {
-
+pub fn compile_descriptor_set(
+    paths: &config::Paths,
+) -> error::Result<protobuf::descriptor::FileDescriptorSet> {
     let proto_includes = try!(paths.find_data("proto"));
     let proto_files = try!(paths.find_data("proto/**/*.proto"));
     let cache = paths.preferred_cache("descriptor-cache.pb");
@@ -46,7 +46,8 @@ pub fn compile_descriptor_set(paths: &config::Paths)
             try!(fs::create_dir_all(parent));
         }
 
-        let include_args = proto_includes.into_iter()
+        let include_args = proto_includes
+            .into_iter()
             .map(|p| format!("-I{}", p.to_string_lossy()))
             .collect::<Vec<_>>();
 
@@ -72,7 +73,8 @@ pub fn compile_descriptor_set(paths: &config::Paths)
 }
 
 fn is_cache_stale<P>(cache: &path::Path, proto_files: &[P]) -> error::Result<bool>
-    where P: AsRef<path::Path>
+where
+    P: AsRef<path::Path>,
 {
     use std::os::unix::fs::MetadataExt;
 
