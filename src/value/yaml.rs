@@ -1,7 +1,7 @@
-use error;
+use crate::error;
 use serde_yaml;
 use std::io;
-use value;
+use crate::value;
 
 #[derive(Debug)]
 pub struct YamlSource<R>(Option<R>);
@@ -50,8 +50,8 @@ where
 {
     #[inline]
     fn write(&mut self, value: value::Value) -> error::Result<()> {
-        try!(serde_yaml::to_writer(&mut self.0, &value));
-        try!(self.0.write(b"\n"));
+        r#try!(serde_yaml::to_writer(&mut self.0, &value));
+        r#try!(self.0.write(b"\n"));
         Ok(())
     }
 }

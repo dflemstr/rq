@@ -3,8 +3,8 @@ use std::io;
 use serde;
 use toml;
 
-use error;
-use value;
+use crate::error;
+use crate::value;
 
 #[derive(Debug)]
 pub struct TomlSource(Option<String>);
@@ -18,7 +18,7 @@ where
     R: io::Read,
 {
     let mut string = String::new();
-    try!(r.read_to_string(&mut string));
+    r#try!(r.read_to_string(&mut string));
     Ok(TomlSource(Some(string)))
 }
 
@@ -59,7 +59,7 @@ where
         }
 
         self.0.write_all(string.as_bytes())?;
-        try!(self.0.write_all(b"\n"));
+        r#try!(self.0.write_all(b"\n"));
         Ok(())
     }
 }

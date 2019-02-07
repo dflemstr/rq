@@ -1,10 +1,10 @@
 mod context;
 mod parser;
 
-use error;
+use crate::error;
 
 pub use self::context::Context;
-use value;
+use crate::value;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Query(Vec<Process>);
@@ -51,7 +51,7 @@ impl Query {
         let mut processes = Vec::with_capacity(self.0.len());
 
         for def in self.0.iter() {
-            processes.push(Some(RunningProcess(def, try!(context.process(&def.0)))));
+            processes.push(Some(RunningProcess(def, r#try!(context.process(&def.0)))));
         }
 
         Ok(Output {
@@ -69,7 +69,7 @@ where
         match self.processes[idx].take() {
             None => Ok(None),
             Some(mut process) => {
-                let result = try!(self.run_process(idx, &mut process));
+                let result = r#try!(self.run_process(idx, &mut process));
                 self.processes[idx] = Some(process);
                 Ok(result)
             }
@@ -88,27 +88,27 @@ where
             match instance.state.resume() {
                 context::Resume::Start(s) => {
                     trace!("Process moving out of start: {} {:?}", idx, decl);
-                    instance.state = try!(s.run(&instance, &decl.1));
+                    instance.state = r#try!(s.run(&instance, &decl.1));
                     trace!("Process moved out of start: {} {:?}", idx, decl);
                 }
                 context::Resume::Pending(p) => {
                     trace!("Process moving out of pending: {} {:?}", idx, decl);
-                    instance.state = try!(p.run(&instance));
+                    instance.state = r#try!(p.run(&instance));
                     trace!("Process moved out of pending: {} {:?}", idx, decl);
                 }
                 context::Resume::Await(a) => {
-                    let value = try!(if idx == 0 {
+                    let value = r#try!(if idx == 0 {
                         self.source.read()
                     } else {
                         self.run_process_idx(idx - 1)
                     });
                     trace!("Process moving out of await: {} {:?}", idx, decl);
-                    instance.state = try!(a.run(&instance, value));
+                    instance.state = r#try!(a.run(&instance, value));
                     trace!("Process moved out of await: {} {:?}", idx, decl);
                 }
                 context::Resume::Emit(e) => {
                     trace!("Process moving out of emit: {} {:?}", idx, decl);
-                    let (state, value) = try!(e.run());
+                    let (state, value) = r#try!(e.run());
                     instance.state = state;
                     trace!("Process moved out of emit: {} {:?}", idx, decl);
                     return Ok(Some(value));
@@ -140,7 +140,7 @@ where
 mod test {
     use super::*;
 
-    use value;
+    use crate::value;
 
     #[test]
     fn parse_kitchen_sink() {

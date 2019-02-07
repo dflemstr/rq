@@ -27,7 +27,7 @@ pub fn source<R>(r: R) -> error::Result<HjsonSource>
 where
     R: io::Read,
 {
-    let bytes = try!(r.bytes().collect::<io::Result<Vec<u8>>>());
+    let bytes = r.bytes().collect::<io::Result<Vec<u8>>>()?;
     Ok(HjsonSource(serde_hjson::StreamDeserializer::new(
         bytes.into_iter(),
     )))
@@ -62,7 +62,7 @@ where
     #[inline]
     fn write(&mut self, v: value::Value) -> error::Result<()> {
         if let Some(ref mut w) = self.0 {
-            try!(serde::Serialize::serialize(&v, w));
+            serde::Serialize::serialize(&v, w)?;
         }
 
         // Some juggling required here to get the underlying writer temporarily, to write a newline.
@@ -95,9 +95,9 @@ impl serde_hjson::ser::Formatter for Formatter {
         W: io::Write,
     {
         if self.current_indent > 0 && !self.current_is_array && !self.braces_same_line {
-            try!(self.newline(writer, 0));
+            self.newline(writer, 0)?;
         } else {
-            try!(self.start_value(writer));
+            self.start_value(writer)?;
         }
         self.current_indent += 1;
         self.stack.push(self.current_is_array);
@@ -109,7 +109,7 @@ impl serde_hjson::ser::Formatter for Formatter {
     where
         W: io::Write,
     {
-        try!(writer.write_all(b"\n"));
+        writer.write_all(b"\n")?;
         indent(writer, self.current_indent)
     }
 
@@ -129,8 +129,8 @@ impl serde_hjson::ser::Formatter for Formatter {
     {
         self.current_indent -= 1;
         self.current_is_array = self.stack.pop().unwrap();
-        try!(writer.write(b"\n"));
-        try!(indent(writer, self.current_indent));
+        writer.write(b"\n")?;
+        indent(writer, self.current_indent)?;
         writer.write_all(&[ch]).map_err(From::from)
     }
 
@@ -139,7 +139,7 @@ impl serde_hjson::ser::Formatter for Formatter {
         W: io::Write,
     {
         self.at_colon = false;
-        try!(writer.write_all(b"\n"));
+        writer.write_all(b"\n")?;
         let ii = self.current_indent as i32 + add_indent;
         indent(writer, if ii < 0 { 0 } else { ii as usize })
     }
@@ -150,7 +150,7 @@ impl serde_hjson::ser::Formatter for Formatter {
     {
         if self.at_colon {
             self.at_colon = false;
-            try!(writer.write_all(b" "))
+            writer.write_all(b" ")?
         }
         Ok(())
     }
@@ -161,7 +161,7 @@ where
     W: io::Write,
 {
     for _ in 0..n {
-        try!(wr.write_all(b"  "));
+        wr.write_all(b"  ")?;
     }
 
     Ok(())

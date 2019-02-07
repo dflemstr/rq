@@ -14,33 +14,13 @@
     unused_qualifications
 )]
 
-extern crate ansi_term;
-extern crate avro_rs;
-extern crate dtoa;
 #[macro_use]
 extern crate failure;
-extern crate glob;
-extern crate itoa;
 #[macro_use]
 extern crate log;
-extern crate csv;
-extern crate ordered_float;
 #[cfg(feature = "js")]
 #[macro_use]
 extern crate pest;
-extern crate protobuf;
-extern crate rmpv;
-extern crate serde;
-extern crate serde_cbor;
-extern crate serde_hjson;
-extern crate serde_json;
-extern crate serde_protobuf;
-extern crate serde_yaml;
-extern crate toml;
-#[cfg(feature = "js")]
-extern crate v8;
-extern crate xdg_basedir;
-extern crate yaml_rust;
 
 pub mod config;
 pub mod error;

@@ -1,9 +1,9 @@
 use avro_rs;
-use error;
+use crate::error;
 use std;
 use std::fmt;
 use std::io;
-use value;
+use crate::value;
 
 pub struct AvroSource<'a, R>(avro_rs::Reader<'a, R>)
 where

@@ -1,10 +1,10 @@
-use error;
+use crate::error;
 
 use serde;
 use serde_cbor;
 use std::fmt;
 use std::io;
-use value;
+use crate::value;
 
 pub struct CborSource<R>(serde_cbor::de::Deserializer<serde_cbor::de::IoRead<R>>)
 where

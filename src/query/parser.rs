@@ -1,15 +1,15 @@
 #![allow(unused_must_use)]
 
-use error;
+use crate::error;
 
 use pest::prelude::*;
-use query;
+use crate::query;
 use std::char;
 use std::collections;
 use std::fmt;
 use std::iter;
 use std::str;
-use value;
+use crate::value;
 
 impl_rdp! {
     grammar! {

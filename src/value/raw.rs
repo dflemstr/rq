@@ -1,6 +1,6 @@
-use error;
+use crate::error;
 use std::io;
-use value;
+use crate::value;
 
 #[derive(Debug)]
 pub struct RawSource<R>(io::Lines<io::BufReader<R>>)

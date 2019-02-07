@@ -1,9 +1,9 @@
 use csv;
-use error;
+use crate::error;
 use ordered_float;
 use std::fmt;
 use std::io;
-use value;
+use crate::value;
 
 pub struct CsvSource<R>(csv::StringRecordsIntoIter<R>)
 where

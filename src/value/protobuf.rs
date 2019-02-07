@@ -1,12 +1,12 @@
 use std::fmt;
 
-use error;
+use crate::error;
 use protobuf;
 use serde;
 
 use serde_protobuf;
 use serde_protobuf::descriptor;
-use value;
+use crate::value;
 
 pub struct ProtobufSource<'a>(serde_protobuf::de::Deserializer<'a>, bool);
 
@@ -16,7 +16,7 @@ pub fn source<'a>(
     message_name: &str,
     input: protobuf::CodedInputStream<'a>,
 ) -> error::Result<ProtobufSource<'a>> {
-    let de = try!(serde_protobuf::de::Deserializer::for_named_message(
+    let de = r#try!(serde_protobuf::de::Deserializer::for_named_message(
         descriptors,
         message_name,
         input,

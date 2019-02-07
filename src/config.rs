@@ -1,4 +1,4 @@
-use error;
+use crate::error;
 
 use glob;
 use std::path;
@@ -25,9 +25,9 @@ impl Paths {
         }
 
         Ok(Paths {
-            config_home: resolve(try!(dirs::get_config_home())),
-            cache_home: resolve(try!(dirs::get_cache_home())),
-            data_home: resolve(try!(dirs::get_data_home())),
+            config_home: resolve(r#try!(dirs::get_config_home())),
+            cache_home: resolve(r#try!(dirs::get_cache_home())),
+            data_home: resolve(r#try!(dirs::get_data_home())),
             config_dirs: resolve_all(dirs::get_config_dirs()),
             data_dirs: resolve_all(dirs::get_data_dirs()),
         })
@@ -75,10 +75,10 @@ where
 {
     let mut result = Vec::new();
 
-    try!(run_pattern(home, pattern, &mut result));
+    r#try!(run_pattern(home, pattern, &mut result));
 
     for dir in dirs.iter() {
-        try!(run_pattern(dir.as_ref(), pattern, &mut result));
+        r#try!(run_pattern(dir.as_ref(), pattern, &mut result));
     }
 
     Ok(result)
@@ -91,8 +91,8 @@ fn run_pattern(
 ) -> error::Result<()> {
     let full_pattern = format!("{}/{}", dir.to_string_lossy(), pattern);
 
-    for entry in try!(glob::glob(&full_pattern)) {
-        result.push(try!(entry));
+    for entry in r#try!(glob::glob(&full_pattern)) {
+        result.push(r#try!(entry));
     }
 
     Ok(())

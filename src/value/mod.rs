@@ -1,4 +1,4 @@
-use error;
+use crate::error;
 
 use ordered_float;
 use serde;

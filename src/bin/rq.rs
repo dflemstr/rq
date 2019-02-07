@@ -1,16 +1,7 @@
-extern crate ansi_term;
-extern crate env_logger;
-extern crate failure;
 #[macro_use]
 extern crate log;
-extern crate nix;
-extern crate protobuf;
-extern crate record_query;
-extern crate serde_protobuf;
 #[macro_use]
 extern crate structopt;
-#[cfg(feature = "js")]
-extern crate v8;
 
 use record_query as rq;
 use std::env;
@@ -359,8 +350,10 @@ where
     I: rq::value::Source,
     O: rq::value::Sink,
 {
-    if !args.arg_query.is_empty() {
-        return Err("Queries are not supported in this v8-less rq build.")?;
+    if args.arg_query.is_none() {
+        return Err(rq::error::Error::Message(
+            "Queries are not supported in this v8-less rq build.".into(),
+        ))?;
     }
 
     while let Some(result) = rq::value::Source::read(&mut source)? {

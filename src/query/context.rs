@@ -1,13 +1,13 @@
-use error;
+use crate::error;
 use log;
 use ordered_float;
-use query;
+use crate::query;
 use std::cell;
 use std::collections;
 use std::mem;
 use std::str;
 use v8;
-use value;
+use crate::value;
 
 const API_JS: &'static str = include_str!("../api.js");
 const PRELUDE_JS: &'static str = include_str!("../prelude.js");
@@ -87,13 +87,13 @@ impl Context {
         global.set(&context, &rq_key, &rq_obj);
         global.set(&context, &require_key, &require_fun);
 
-        try!(load_embedded_file(
+        r#try!(load_embedded_file(
             &self.isolate,
             &context,
             "api.js",
             API_JS
         ));
-        try!(load_embedded_file(
+        r#try!(load_embedded_file(
             &self.isolate,
             &context,
             "prelude.js",
@@ -111,14 +111,14 @@ impl Context {
 
         let process_key = v8::value::String::from_str(&self.isolate, "Process");
         let process_fn =
-            try!(rq_obj
+            r#try!(rq_obj
                 .get(&context, &process_key)
                 .into_object()
                 .ok_or(error::Error::Internal(
                     "The rq.Process global variable was not an object"
                 )));
-        let process = try!(process_fn.call_as_constructor(&context, &[&generator_fn]));
-        let process = try!(process.into_object().ok_or(error::Error::Internal(
+        let process = r#try!(process_fn.call_as_constructor(&context, &[&generator_fn]));
+        let process = r#try!(process.into_object().ok_or(error::Error::Internal(
             "The constructed Process was not an object"
         )));
         let resume_key = v8::value::String::from_str(&self.isolate, "resume");
@@ -197,13 +197,13 @@ impl ResumeStart {
         let args_value = v8::value::Array::new(isolate, context, args.len() as u32);
 
         for (i, arg) in args.iter().enumerate() {
-            args_value.set_index(context, i as u32, &try!(expr_to_v8(isolate, context, arg)));
+            args_value.set_index(context, i as u32, &r#try!(expr_to_v8(isolate, context, arg)));
         }
 
         params.set(context, &type_key, &type_value);
         params.set(context, &args_key, &args_value);
 
-        try!(process.resume.call(context, &[&params]));
+        r#try!(process.resume.call(context, &[&params]));
 
         Ok(State::Pending)
     }
@@ -220,7 +220,7 @@ impl ResumePending {
 
         params.set(context, &type_key, &type_value);
 
-        let resume = try!(process.resume.call(context, &[&params]));
+        let resume = r#try!(process.resume.call(context, &[&params]));
         Ok(State::from_resume(isolate, context, resume))
     }
 }
@@ -247,7 +247,7 @@ impl ResumeAwait {
         params.set(context, &has_next_key, &has_next_value);
         params.set(context, &next_key, &next_value);
 
-        let resume = try!(process.resume.call(context, &[&params]));
+        let resume = r#try!(process.resume.call(context, &[&params]));
         Ok(State::from_resume(isolate, context, resume))
     }
 }
@@ -419,13 +419,13 @@ fn load_embedded_file(
 ) -> error::Result<()> {
     let file_name = v8::value::String::from_str(isolate, file_name);
     let file_contents = v8::value::String::from_str(isolate, file_contents);
-    let script = try!(v8::Script::compile_with_name(
+    let script = r#try!(v8::Script::compile_with_name(
         isolate,
         context,
         &file_name,
         &file_contents
     ));
-    try!(script.run(context));
+    r#try!(script.run(context));
     Ok(())
 }
 
@@ -451,20 +451,20 @@ fn expr_to_v8(
                 .get(context, &function_key)
                 .into_object()
                 .unwrap();
-            let function = try!(function_ctor.call_as_constructor(context, &arg_refs));
+            let function = r#try!(function_ctor.call_as_constructor(context, &arg_refs));
             Ok(function)
         }
         query::Expression::Javascript(ref v) => {
             let source = v8::value::String::from_str(isolate, v);
-            let script = try!(v8::Script::compile(isolate, context, &source));
-            let result = try!(script.run(context));
+            let script = r#try!(v8::Script::compile(isolate, context, &source));
+            let result = r#try!(script.run(context));
             Ok(result)
         }
     }
 }
 
 fn value_to_v8(isolate: &v8::Isolate, context: &v8::Context, value: &value::Value) -> v8::Value {
-    use value::Value::*;
+    use crate::value::Value::*;
     match *value {
         Unit => v8::value::null(isolate).into(),
         Bool(v) => v8::value::Boolean::new(isolate, v).into(),

@@ -3,8 +3,8 @@ use std::io;
 use ordered_float;
 use rmpv;
 
-use error;
-use value;
+use crate::error;
+use crate::value;
 
 #[derive(Debug)]
 pub struct MessagePackSource<R>(R)
