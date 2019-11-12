@@ -44,9 +44,6 @@ pub struct Options {
     /// Input is a series of CBOR values.
     #[structopt(short = "c", long = "input-cbor")]
     pub flag_input_cbor: bool,
-    /// Input is a HJSON document.
-    #[structopt(short = "h", long = "input-hjson")]
-    pub flag_input_hjson: bool,
     /// Input is white-space separated JSON values (default).
     #[structopt(short = "j", long = "input-json")]
     pub flag_input_json: bool,
@@ -72,8 +69,6 @@ pub struct Options {
     pub flag_output_avro: Option<String>,
     #[structopt(short = "C", long = "output-cbor")]
     pub flag_output_cbor: bool,
-    #[structopt(short = "H", long = "output-hjson")]
-    pub flag_output_hjson: bool,
     #[structopt(short = "J", long = "output-json")]
     pub flag_output_json: bool,
     #[structopt(short = "R", long = "output-raw")]
@@ -179,12 +174,6 @@ fn run(args: &Options, paths: &rq::config::Paths) -> rq::error::Result<()> {
     } else if args.flag_input_message_pack {
         let source = rq::value::messagepack::source(&mut input);
         run_source(args, paths, source)
-    } else if args.flag_input_hjson {
-        Err(rq::error::Error::unimplemented(
-            "hjson deserialization (waiting for serde 0.9.0 \
-             support)"
-                .to_owned(),
-        ))
     } else if args.flag_input_toml {
         let source = rq::value::toml::source(&mut input)?;
         run_source(args, paths, source)
@@ -275,12 +264,6 @@ where
     } else if args.flag_output_message_pack {
         let sink = rq::value::messagepack::sink(&mut output);
         run_source_sink(paths, source, sink)
-    } else if args.flag_output_hjson {
-        Err(rq::error::Error::unimplemented(
-            "hjson serialization (waiting for serde 0.9.0 \
-             support)"
-                .to_owned(),
-        ))
     } else if args.flag_output_toml {
         // TODO: add TOML ugly printing eventually; now it's always "readable"
         dispatch_format!(

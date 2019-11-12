@@ -10,8 +10,6 @@ use std::io;
 pub mod avro;
 pub mod cbor;
 pub mod csv;
-#[cfg(feature = "hjson_serde_0_9_support")]
-pub mod hjson;
 pub mod json;
 pub mod messagepack;
 pub mod protobuf;
