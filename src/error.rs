@@ -12,7 +12,6 @@ use std::string;
 use toml;
 #[cfg(feature = "v8")]
 use v8;
-use xdg_basedir;
 use yaml_rust;
 
 use std::result;
@@ -47,8 +46,6 @@ pub enum Error {
     TomlDeserialize(#[cause] toml::de::Error),
     #[fail(display = "TOML serialize error")]
     TomlSerialize(#[cause] toml::ser::Error),
-    #[fail(display = "XDG basedir error")]
-    XdgBasedir(#[cause] xdg_basedir::Error),
     #[fail(display = "glob error")]
     Glob(#[cause] glob::GlobError),
     #[fail(display = "glob pattern error")]
@@ -145,7 +142,6 @@ gen_from!(serde_yaml::Error, Yaml);
 gen_from!(yaml_rust::ScanError, YamlScan);
 gen_from!(toml::de::Error, TomlDeserialize);
 gen_from!(toml::ser::Error, TomlSerialize);
-gen_from!(xdg_basedir::Error, XdgBasedir);
 gen_from!(glob::GlobError, Glob);
 gen_from!(glob::PatternError, GlobPattern);
 gen_from!(csv::Error, Csv);
