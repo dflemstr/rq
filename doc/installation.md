@@ -3,6 +3,8 @@
 There are many different ways to install `rq`, listed from most preferred
 to least preferred.
 
+TODO: this section will soon be updated!
+
   * [Generic](#generic) (Up to date, fast)
   * [Cargo](#cargo) (Stable releases, slow)
   * [Manual download](#manual-download) (Up to date, fast)
