@@ -7,7 +7,6 @@ TODO: this section will soon be updated!
 
   * [Generic](#generic) (Up to date, fast)
   * [Cargo](#cargo) (Stable releases, slow)
-  * [Manual download](#manual-download) (Up to date, fast)
   * [GitHub releases](#github-releases) (Stable releases, fast)
   * [Arch Linux](#arch-linux) (Up to date, slow)
   * [Mac OS X](#mac-os-x) (Out of date, slow)
@@ -19,84 +18,13 @@ There is a generic best-effort installer available via the dreaded
 need to compile `rq` from scratch, and you always get the latest
 version.
 
-    curl -sSLf https://sh.dflemstr.io/rq | bash
+    curl -LSfs https://japaric.github.io/trust/install.sh | sh -s -- --git dflemstr/rq
 
 ## Cargo
 
 There is a crate available on [crates.io](https://crates.io/), so just run:
 
     cargo install record-query
-
-## Manual download
-
-If you don't trust the above script (all it does is to detect your
-architecture and run `curl`), you can also manually download `rq` for
-your architecture.
-
-
-  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-unknown-linux-gnu/rq">
-      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-unknown-linux-gnu/badge-small.svg?v=3"
-           alt="x86_64-unknown-linux-gnu">
-      x86_64-unknown-linux-gnu
-    </a>
-  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-unknown-linux-musl/rq">
-      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-unknown-linux-musl/badge-small.svg?v=3"
-           alt="x86_64-unknown-linux-musl">
-      x86_64-unknown-linux-musl
-    </a>
-  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-gnu/rq">
-      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-gnu/badge-small.svg?v=3"
-           alt="i686-unknown-linux-gnu">
-      i686-unknown-linux-gnu
-    </a>
-  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-musl/rq">
-      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-unknown-linux-musl/badge-small.svg?v=3"
-           alt="i686-unknown-linux-musl">
-      i686-unknown-linux-musl
-    </a>
-  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-apple-darwin/rq">
-      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/x86_64-apple-darwin/badge-small.svg?v=3"
-           alt="x86_64-apple-darwin">
-      x86_64-apple-darwin
-    </a>
-  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-apple-darwin/rq">
-      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/i686-apple-darwin/badge-small.svg?v=3"
-           alt="i686-apple-darwin">
-      i686-apple-darwin
-    </a>
-  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-gnueabi/rq">
-      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-gnueabi/badge-small.svg?v=3"
-           alt="arm-unknown-linux-gnueabi">
-      arm-unknown-linux-gnueabi
-    </a>
-  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-musleabi/rq">
-      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-musleabi/badge-small.svg?v=3"
-           alt="arm-unknown-linux-musleabi">
-      arm-unknown-linux-musleabi
-    </a>
-  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-gnueabihf/rq">
-      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-gnueabihf/badge-small.svg?v=3"
-           alt="arm-unknown-linux-gnueabihf">
-      arm-unknown-linux-gnueabihf
-    </a>
-  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-musleabihf/rq">
-      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/arm-unknown-linux-musleabihf/badge-small.svg?v=3"
-           alt="arm-unknown-linux-musleabihf">
-      arm-unknown-linux-musleabihf
-    </a>
-  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/armv7-unknown-linux-gnueabihf/rq">
-      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/armv7-unknown-linux-gnueabihf/badge-small.svg?v=3"
-           alt="armv7-unknown-linux-gnueabihf">
-      armv7-unknown-linux-gnueabihf
-    </a>
-  * <a href="https://s3-eu-west-1.amazonaws.com/record-query/record-query/armv7-unknown-linux-musleabihf/rq">
-      <img src="https://s3-eu-west-1.amazonaws.com/record-query/record-query/armv7-unknown-linux-musleabihf/badge-small.svg?v=3"
-           alt="armv7-unknown-linux-musleabihf">
-      armv7-unknown-linux-musleabihf
-    </a>
-
-You need to manually put the downloaded file in e.g. `/usr/local/bin`
-and run `chmod +x` on it.
 
 ## GitHub releases
 
