@@ -76,16 +76,14 @@ fn is_cache_stale<P>(cache: &path::Path, proto_files: &[P]) -> error::Result<boo
 where
     P: AsRef<path::Path>,
 {
-    use std::os::unix::fs::MetadataExt;
-
     if cache.exists() {
         let cache_metadata = fs::metadata(&cache)?;
-        let cache_mtime = cache_metadata.mtime();
-        let mut max_proto_mtime = 0;
+        let cache_mtime = cache_metadata.modified()?;
+        let mut max_proto_mtime = std::time::SystemTime::UNIX_EPOCH;
 
         for proto_file in proto_files.iter() {
             let proto_metadata = fs::metadata(&proto_file)?;
-            let proto_mtime = proto_metadata.mtime();
+            let proto_mtime = proto_metadata.modified()?;
             max_proto_mtime = cmp::max(max_proto_mtime, proto_mtime);
         }
 
