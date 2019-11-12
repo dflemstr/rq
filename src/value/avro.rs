@@ -1,37 +1,37 @@
-use avro_rs;
 use crate::error;
+use crate::value;
+use avro_rs;
 use std;
 use std::fmt;
 use std::io;
-use crate::value;
 
-pub struct AvroSource<'a, R>(avro_rs::Reader<'a, R>)
+pub struct Source<'a, R>(avro_rs::Reader<'a, R>)
 where
     R: io::Read;
 
-pub struct AvroSink<'a, W>(avro_rs::Writer<'a, W>)
+pub struct Sink<'a, W>(avro_rs::Writer<'a, W>)
 where
     W: io::Write;
 
 #[inline]
-pub fn source<'a, R>(r: R) -> error::Result<AvroSource<'a, R>>
+pub fn source<'a, R>(r: R) -> error::Result<Source<'a, R>>
 where
     R: io::Read,
 {
-    Ok(AvroSource(avro_rs::Reader::new(r).map_err(|e| {
+    Ok(Source(avro_rs::Reader::new(r).map_err(|e| {
         error::Error::Avro(error::Avro::downcast(e))
     })?))
 }
 
 #[inline]
-pub fn sink<W>(schema: &avro_rs::Schema, w: W, codec: avro_rs::Codec) -> error::Result<AvroSink<W>>
+pub fn sink<W>(schema: &avro_rs::Schema, w: W, codec: avro_rs::Codec) -> error::Result<Sink<W>>
 where
     W: io::Write,
 {
-    Ok(AvroSink(avro_rs::Writer::with_codec(schema, w, codec)))
+    Ok(Sink(avro_rs::Writer::with_codec(schema, w, codec)))
 }
 
-impl<'a, R> value::Source for AvroSource<'a, R>
+impl<'a, R> value::Source for Source<'a, R>
 where
     R: io::Read,
 {
@@ -54,14 +54,10 @@ fn value_from_avro(value: avro_rs::types::Value) -> value::Value {
         Value::Long(v) => value::Value::I64(v),
         Value::Float(v) => value::Value::from_f32(v),
         Value::Double(v) => value::Value::from_f64(v),
-        Value::Bytes(v) => value::Value::Bytes(v),
-        Value::String(v) => value::Value::String(v),
-        Value::Fixed(_, v) => value::Value::Bytes(v),
-        Value::Enum(_, v) => value::Value::String(v),
+        Value::Bytes(v) | Value::Fixed(_, v) => value::Value::Bytes(v),
+        Value::String(v) | Value::Enum(_, v) => value::Value::String(v),
         Value::Union(boxed) => value_from_avro(*boxed),
-        Value::Array(v) => {
-            value::Value::Sequence(v.into_iter().map(|v| value_from_avro(v)).collect())
-        }
+        Value::Array(v) => value::Value::Sequence(v.into_iter().map(value_from_avro).collect()),
         Value::Map(v) => value::Value::Map(
             v.into_iter()
                 .map(|(k, v)| (value::Value::String(k), value_from_avro(v)))
@@ -75,7 +71,7 @@ fn value_from_avro(value: avro_rs::types::Value) -> value::Value {
     }
 }
 
-impl<'a, W> value::Sink for AvroSink<'a, W>
+impl<'a, W> value::Sink for Sink<'a, W>
 where
     W: io::Write,
 {
@@ -90,21 +86,22 @@ where
 
 fn value_to_avro(value: value::Value) -> error::Result<avro_rs::types::Value> {
     use avro_rs::types::Value;
+    use std::convert::TryFrom;
     match value {
         value::Value::Unit => Ok(Value::Null),
         value::Value::Bool(v) => Ok(Value::Boolean(v)),
 
-        value::Value::I8(v) => Ok(Value::Int(v as i32)),
-        value::Value::I16(v) => Ok(Value::Int(v as i32)),
+        value::Value::I8(v) => Ok(Value::Int(i32::from(v))),
+        value::Value::I16(v) => Ok(Value::Int(i32::from(v))),
         value::Value::I32(v) => Ok(Value::Int(v)),
         value::Value::I64(v) => Ok(Value::Long(v)),
 
-        value::Value::U8(v) => Ok(Value::Int(v as i32)),
-        value::Value::U16(v) => Ok(Value::Int(v as i32)),
-        value::Value::U32(v) => Ok(Value::Long(v as i64)),
+        value::Value::U8(v) => Ok(Value::Int(i32::from(v))),
+        value::Value::U16(v) => Ok(Value::Int(i32::from(v))),
+        value::Value::U32(v) => Ok(Value::Long(i64::from(v))),
         value::Value::U64(v) => {
-            if v <= std::i64::MAX as u64 {
-                Ok(Value::Long(v as i64))
+            if let Ok(v) = i64::try_from(v) {
+                Ok(Value::Long(v))
             } else {
                 Err(error::Error::Format {
                     msg: format!(
@@ -124,16 +121,14 @@ fn value_to_avro(value: value::Value) -> error::Result<avro_rs::types::Value> {
 
         value::Value::Sequence(v) => Ok(Value::Array(
             v.into_iter()
-                .map(|v| value_to_avro(v))
+                .map(value_to_avro)
                 .collect::<error::Result<Vec<_>>>()?,
         )),
         value::Value::Map(v) => Ok(Value::Record(
             v.into_iter()
                 .map(|(k, v)| match (value_to_string(k), value_to_avro(v)) {
                     (Ok(k), Ok(v)) => Ok((k, v)),
-                    (Ok(_), Err(e)) => Err(e),
-                    (Err(e), Ok(_)) => Err(e),
-                    (Err(_), Err(e)) => Err(e),
+                    (Ok(_), Err(e)) | (Err(e), Ok(_)) | (Err(_), Err(e)) => Err(e),
                 })
                 .collect::<error::Result<Vec<_>>>()?,
         )),
@@ -150,7 +145,7 @@ fn value_to_string(value: value::Value) -> error::Result<String> {
     }
 }
 
-impl<'a, R> fmt::Debug for AvroSource<'a, R>
+impl<'a, R> fmt::Debug for Source<'a, R>
 where
     R: io::Read,
 {
@@ -159,7 +154,7 @@ where
     }
 }
 
-impl<'a, W> fmt::Debug for AvroSink<'a, W>
+impl<'a, W> fmt::Debug for Sink<'a, W>
 where
     W: io::Write,
 {
@@ -168,7 +163,7 @@ where
     }
 }
 
-impl<'a, W> Drop for AvroSink<'a, W>
+impl<'a, W> Drop for Sink<'a, W>
 where
     W: io::Write,
 {

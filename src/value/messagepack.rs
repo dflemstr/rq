@@ -45,7 +45,7 @@ where
             Err(Error::InvalidMarkerRead(ref e)) if e.kind() == io::ErrorKind::UnexpectedEof => {
                 Ok(None)
             }
-            Err(e) => Err(error::Error::MessagePackDecode(e).into()),
+            Err(e) => Err(error::Error::MessagePackDecode(e)),
         }
     }
 }
@@ -79,7 +79,7 @@ fn value_from_message_pack(value: rmpv::Value) -> error::Result<value::Value> {
                 Ok(value::Value::String(v.into_str().unwrap()))
             }
         }
-        Value::Binary(v) => Ok(value::Value::Bytes(v)),
+        Value::Ext(_, v) | Value::Binary(v) => Ok(value::Value::Bytes(v)),
         Value::Array(v) => Ok(value::Value::Sequence(
             v.into_iter()
                 .map(value_from_message_pack)
@@ -90,7 +90,6 @@ fn value_from_message_pack(value: rmpv::Value) -> error::Result<value::Value> {
                 .map(|(k, v)| Ok((value_from_message_pack(k)?, value_from_message_pack(v)?)))
                 .collect::<error::Result<_>>()?,
         )),
-        Value::Ext(_, v) => Ok(value::Value::Bytes(v)),
     }
 }
 

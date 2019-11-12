@@ -14,7 +14,7 @@ pub struct Paths {
 }
 
 impl Paths {
-    pub fn new() -> error::Result<Paths> {
+    pub fn new() -> error::Result<Self> {
         fn resolve(mut p: path::PathBuf) -> path::PathBuf {
             p.push("rq");
             p
@@ -24,10 +24,10 @@ impl Paths {
             ps.into_iter().map(resolve).collect()
         }
 
-        Ok(Paths {
-            config_home: resolve(r#try!(dirs::get_config_home())),
-            cache_home: resolve(r#try!(dirs::get_cache_home())),
-            data_home: resolve(r#try!(dirs::get_data_home())),
+        Ok(Self {
+            config_home: resolve(dirs::get_config_home()?),
+            cache_home: resolve(dirs::get_cache_home()?),
+            data_home: resolve(dirs::get_data_home()?),
             config_dirs: resolve_all(dirs::get_config_dirs()),
             data_dirs: resolve_all(dirs::get_data_dirs()),
         })
@@ -75,10 +75,10 @@ where
 {
     let mut result = Vec::new();
 
-    r#try!(run_pattern(home, pattern, &mut result));
+    run_pattern(home, pattern, &mut result)?;
 
     for dir in dirs.iter() {
-        r#try!(run_pattern(dir.as_ref(), pattern, &mut result));
+        run_pattern(dir.as_ref(), pattern, &mut result)?;
     }
 
     Ok(result)
@@ -91,8 +91,8 @@ fn run_pattern(
 ) -> error::Result<()> {
     let full_pattern = format!("{}/{}", dir.to_string_lossy(), pattern);
 
-    for entry in r#try!(glob::glob(&full_pattern)) {
-        result.push(r#try!(entry));
+    for entry in glob::glob(&full_pattern)? {
+        result.push(entry?);
     }
 
     Ok(())

@@ -144,7 +144,7 @@ fn main() {
 
     setup_log(args.flag_log.as_ref().map(String::as_ref), args.flag_quiet);
 
-    main_with_args(&args, &paths).unwrap_or_else(|e| log_error(&args, e));
+    main_with_args(&args, &paths).unwrap_or_else(|e| log_error(&args, &e));
 }
 
 fn main_with_args(args: &Options, paths: &rq::config::Paths) -> rq::error::Result<()> {
@@ -153,8 +153,7 @@ fn main_with_args(args: &Options, paths: &rq::config::Paths) -> rq::error::Resul
             ProtobufSubcmd::Add { schema, base } => {
                 let base = base
                     .as_ref()
-                    .map(|p| p.as_path())
-                    .unwrap_or_else(|| path::Path::new("."));
+                    .map_or_else(|| path::Path::new("."), |p| p.as_path());
                 rq::proto_index::add_file(&paths, base, &schema)
             }
         },
@@ -233,21 +232,21 @@ where
             match format {
                 Format::Compact => {
                     let sink = $compact(&mut output);
-                    run_source_sink(args, paths, source, sink)
+                    run_source_sink(paths, source, sink)
                 }
                 Format::Readable => {
                     let sink = $readable(&mut output);
-                    run_source_sink(args, paths, source, sink)
+                    run_source_sink(paths, source, sink)
                 }
                 Format::Indented => {
                     let sink = $indented(&mut output);
-                    run_source_sink(args, paths, source, sink)
+                    run_source_sink(paths, source, sink)
                 }
             }
         };
     }
 
-    if let Some(_) = args.flag_output_protobuf {
+    if args.flag_output_protobuf.is_some() {
         Err(rq::error::Error::unimplemented(
             "protobuf serialization".to_owned(),
         ))
@@ -260,23 +259,22 @@ where
         } else {
             "null"
         };
-        let codec = match avro_rs::Codec::from_str(&codec_string) {
-            Ok(v) => v,
-            Err(_) => {
-                return Err(rq::error::Error::Message(format!(
-                    "illegal Avro codec: {}",
-                    codec_string
-                )));
-            }
+        let codec = if let Ok(v) = avro_rs::Codec::from_str(&codec_string) {
+            v
+        } else {
+            return Err(rq::error::Error::Message(format!(
+                "illegal Avro codec: {}",
+                codec_string
+            )));
         };
         let sink = rq::value::avro::sink(&schema, &mut output, codec)?;
-        run_source_sink(args, paths, source, sink)
+        run_source_sink(paths, source, sink)
     } else if args.flag_output_cbor {
         let sink = rq::value::cbor::sink(&mut output);
-        run_source_sink(args, paths, source, sink)
+        run_source_sink(paths, source, sink)
     } else if args.flag_output_message_pack {
         let sink = rq::value::messagepack::sink(&mut output);
-        run_source_sink(args, paths, source, sink)
+        run_source_sink(paths, source, sink)
     } else if args.flag_output_hjson {
         Err(rq::error::Error::unimplemented(
             "hjson serialization (waiting for serde 0.9.0 \
@@ -299,10 +297,10 @@ where
         )
     } else if args.flag_output_raw {
         let sink = rq::value::raw::sink(&mut output);
-        run_source_sink(args, paths, source, sink)
+        run_source_sink(paths, source, sink)
     } else if args.flag_output_csv {
         let sink = rq::value::csv::sink(&mut output);
-        run_source_sink(args, paths, source, sink)
+        run_source_sink(paths, source, sink)
     } else {
         dispatch_format!(
             rq::value::json::sink_compact,
@@ -320,28 +318,7 @@ fn read_avro_schema_from_file(path: &path::Path) -> rq::error::Result<avro_rs::S
         .map_err(|e| rq::error::Error::Avro(rq::error::Avro::downcast(e)))?)
 }
 
-#[cfg(feature = "js")]
 fn run_source_sink<I, O>(
-    args: &Options,
-    _paths: &rq::config::Paths,
-    source: I,
-    sink: O,
-) -> rq::error::Result<()>
-where
-    I: rq::value::Source,
-    O: rq::value::Sink,
-{
-    let query = match args.arg_query {
-        None => rq::query::Query::empty(),
-        Some(ref query) => rq::query::Query::parse(query)?,
-    };
-
-    record_query::run_query(&query, source, sink)
-}
-
-#[cfg(not(feature = "js"))]
-fn run_source_sink<I, O>(
-    args: &Options,
     _paths: &rq::config::Paths,
     mut source: I,
     mut sink: O,
@@ -350,12 +327,6 @@ where
     I: rq::value::Source,
     O: rq::value::Sink,
 {
-    if args.arg_query.is_none() {
-        return Err(rq::error::Error::Message(
-            "Queries are not supported in this v8-less rq build.".into(),
-        ))?;
-    }
-
     while let Some(result) = rq::value::Source::read(&mut source)? {
         sink.write(result)?;
     }
@@ -401,36 +372,21 @@ fn set_ran_cmd(cmd: &str, paths: &rq::config::Paths) -> rq::error::Result<()> {
     Ok(())
 }
 
-fn log_error(args: &Options, error: rq::error::Error) {
+fn log_error(args: &Options, error: &rq::error::Error) {
     use failure::Fail;
 
-    match error {
-        #[cfg(feature = "v8")]
-        rq::error::Error::Js(v8::error::Error::Javascript {
-            ref message,
-            ref stack_trace,
-        }) => {
-            error!("Error while executing JavaScript: {}", message);
-
-            for line in format!("{}", stack_trace).lines() {
-                error!("{}", line);
-            }
-        }
-        _ => {
-            let main_str = format!("{}", error);
-            let mut main_lines = main_str.lines();
-            error!("Encountered: {}", main_lines.next().unwrap());
-            for line in main_lines {
-                error!("  {}", line);
-            }
-            for e in failure::Fail::iter_causes(&error) {
-                let sub_str = format!("{}", e);
-                let mut sub_lines = sub_str.lines();
-                error!("Caused by: {}", sub_lines.next().unwrap());
-                for line in sub_lines {
-                    error!("  {}", line);
-                }
-            }
+    let main_str = format!("{}", error);
+    let mut main_lines = main_str.lines();
+    error!("Encountered: {}", main_lines.next().unwrap());
+    for line in main_lines {
+        error!("  {}", line);
+    }
+    for e in failure::Fail::iter_causes(error) {
+        let sub_str = format!("{}", e);
+        let mut sub_lines = sub_str.lines();
+        error!("Caused by: {}", sub_lines.next().unwrap());
+        for line in sub_lines {
+            error!("  {}", line);
         }
     }
 
@@ -455,9 +411,9 @@ fn setup_log(spec: Option<&str>, quiet: bool) {
     if quiet {
         builder.filter(None, log::LevelFilter::Off);
     } else if let Some(s) = spec {
-        builder.parse(s);
+        builder.parse_filters(s);
     } else if let Ok(s) = env::var("RUST_LOG") {
-        builder.parse(&s);
+        builder.parse_filters(&s);
     } else {
         builder.filter(None, log::LevelFilter::Info);
     };
@@ -472,9 +428,9 @@ impl str::FromStr for Format {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "compact" => Ok(Format::Compact),
-            "readable" => Ok(Format::Readable),
-            "indented" => Ok(Format::Indented),
+            "compact" => Ok(Self::Compact),
+            "readable" => Ok(Self::Readable),
+            "indented" => Ok(Self::Indented),
             _ => Err(failure::err_msg(format!("unrecognized format: {}", s))),
         }
     }
@@ -526,7 +482,6 @@ fn format_log_record(
 
 #[cfg(test)]
 mod test {
-
     use super::*;
 
     fn parse_args(args: &[&str]) -> Options {

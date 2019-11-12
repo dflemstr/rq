@@ -1,38 +1,40 @@
 use crate::error;
 
+use crate::value;
 use serde;
 use serde_cbor;
 use std::fmt;
 use std::io;
-use crate::value;
 
-pub struct CborSource<R>(serde_cbor::de::Deserializer<serde_cbor::de::IoRead<R>>)
+pub struct Source<R>(serde_cbor::de::Deserializer<serde_cbor::de::IoRead<R>>)
 where
     R: io::Read;
 
-pub struct CborSink<W>(serde_cbor::ser::Serializer<W>)
+pub struct Sink<W>(serde_cbor::ser::Serializer<serde_cbor::ser::IoWrite<W>>)
 where
     W: io::Write;
 
 #[inline]
-pub fn source<R>(r: R) -> CborSource<R>
+pub fn source<R>(r: R) -> Source<R>
 where
     R: io::Read,
 {
-    CborSource(serde_cbor::de::Deserializer::new(
+    Source(serde_cbor::de::Deserializer::new(
         serde_cbor::de::IoRead::new(r),
     ))
 }
 
 #[inline]
-pub fn sink<W>(w: W) -> CborSink<W>
+pub fn sink<W>(w: W) -> Sink<W>
 where
     W: io::Write,
 {
-    CborSink(serde_cbor::ser::Serializer::new(w))
+    Sink(serde_cbor::ser::Serializer::new(
+        serde_cbor::ser::IoWrite::new(w),
+    ))
 }
 
-impl<R> value::Source for CborSource<R>
+impl<R> value::Source for Source<R>
 where
     R: io::Read,
 {
@@ -48,7 +50,7 @@ where
     }
 }
 
-impl<W> value::Sink for CborSink<W>
+impl<W> value::Sink for Sink<W>
 where
     W: io::Write,
 {
@@ -58,7 +60,7 @@ where
     }
 }
 
-impl<R> fmt::Debug for CborSource<R>
+impl<R> fmt::Debug for Source<R>
 where
     R: io::Read,
 {
@@ -67,7 +69,7 @@ where
     }
 }
 
-impl<W> fmt::Debug for CborSink<W>
+impl<W> fmt::Debug for Sink<W>
 where
     W: io::Write,
 {

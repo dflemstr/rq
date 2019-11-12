@@ -1,26 +1,24 @@
-#!/bin/bash -ex
 # This script takes care of testing your crate
 
+set -ex
+
+# TODO This is the "test phase", tweak it as you see fit
 main() {
-    local basedir
-    if [ "$TRAVIS_OS_NAME" = linux ]
-    then basedir=/project
-    else basedir=$PWD
+    cross build --target $TARGET
+    cross build --target $TARGET --release
+
+    if [ ! -z $DISABLE_TESTS ]; then
+        return
     fi
 
-    export V8_LIBS=$basedir/v8-build/lib/libv8uber.a
-    export V8_SOURCE=$basedir/v8-build
+    cross test --target $TARGET
+    cross test --target $TARGET --release
 
-    cross build --target "$TARGET"
-
-    if [ ! -z "$DISABLE_TESTS" ]
-    then return
-    fi
-
-    cross test --all --target "$TARGET"
+    cross run --target $TARGET
+    cross run --target $TARGET --release
 }
 
-# we don't run the "test phase" when doing tagged deploys
-if [ -z "$TRAVIS_TAG" ]
-then main
+# we don't run the "test phase" when doing deploys
+if [ -z $TRAVIS_TAG ]; then
+    main
 fi

@@ -62,48 +62,48 @@ impl Value {
         W: io::Write,
     {
         serde_json::to_writer(&mut w, self)?;
-        w.write(&[10])?; // Newline
+        w.write_all(&[10])?; // Newline
         Ok(())
     }
 
-    pub fn from_f32(v: f32) -> Value {
-        Value::F32(ordered_float::OrderedFloat(v))
+    pub fn from_f32(v: f32) -> Self {
+        Self::F32(ordered_float::OrderedFloat(v))
     }
 
-    pub fn from_f64(v: f64) -> Value {
-        Value::F64(ordered_float::OrderedFloat(v))
+    pub fn from_f64(v: f64) -> Self {
+        Self::F64(ordered_float::OrderedFloat(v))
     }
 }
 
 impl fmt::Display for Value {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
-            Value::Unit => write!(f, "()"),
-            Value::Bool(v) => write!(f, "{}", v),
+            Self::Unit => write!(f, "()"),
+            Self::Bool(v) => write!(f, "{}", v),
 
-            Value::I8(v) => write!(f, "{}", v),
-            Value::I16(v) => write!(f, "{}", v),
-            Value::I32(v) => write!(f, "{}", v),
-            Value::I64(v) => write!(f, "{}", v),
+            Self::I8(v) => write!(f, "{}", v),
+            Self::I16(v) => write!(f, "{}", v),
+            Self::I32(v) => write!(f, "{}", v),
+            Self::I64(v) => write!(f, "{}", v),
 
-            Value::U8(v) => write!(f, "{}", v),
-            Value::U16(v) => write!(f, "{}", v),
-            Value::U32(v) => write!(f, "{}", v),
-            Value::U64(v) => write!(f, "{}", v),
+            Self::U8(v) => write!(f, "{}", v),
+            Self::U16(v) => write!(f, "{}", v),
+            Self::U32(v) => write!(f, "{}", v),
+            Self::U64(v) => write!(f, "{}", v),
 
-            Value::F32(v) => write!(f, "{}", v),
-            Value::F64(v) => write!(f, "{}", v),
+            Self::F32(v) => write!(f, "{}", v),
+            Self::F64(v) => write!(f, "{}", v),
 
-            Value::Char(v) => write!(f, "{}", v),
-            Value::String(ref v) => write!(f, "{}", v),
-            Value::Bytes(ref v) => {
+            Self::Char(v) => write!(f, "{}", v),
+            Self::String(ref v) => write!(f, "{}", v),
+            Self::Bytes(ref v) => {
                 for b in v {
                     write!(f, "{:02x}", b)?;
                 }
                 Ok(())
             }
 
-            Value::Sequence(ref seq) => {
+            Self::Sequence(ref seq) => {
                 let mut needs_sep = false;
                 write!(f, "[")?;
                 for v in seq {
@@ -116,7 +116,7 @@ impl fmt::Display for Value {
                 write!(f, "]")?;
                 Ok(())
             }
-            Value::Map(ref map) => {
+            Self::Map(ref map) => {
                 let mut needs_sep = false;
                 write!(f, "{{")?;
                 for (k, v) in map {
@@ -140,35 +140,35 @@ impl serde::ser::Serialize for Value {
         S: serde::ser::Serializer,
     {
         match *self {
-            Value::Unit => ().serialize(s),
-            Value::Bool(v) => v.serialize(s),
+            Self::Unit => ().serialize(s),
+            Self::Bool(v) => v.serialize(s),
 
-            Value::I8(v) => v.serialize(s),
-            Value::I16(v) => v.serialize(s),
-            Value::I32(v) => v.serialize(s),
-            Value::I64(v) => v.serialize(s),
+            Self::I8(v) => v.serialize(s),
+            Self::I16(v) => v.serialize(s),
+            Self::I32(v) => v.serialize(s),
+            Self::I64(v) => v.serialize(s),
 
-            Value::U8(v) => v.serialize(s),
-            Value::U16(v) => v.serialize(s),
-            Value::U32(v) => v.serialize(s),
-            Value::U64(v) => v.serialize(s),
+            Self::U8(v) => v.serialize(s),
+            Self::U16(v) => v.serialize(s),
+            Self::U32(v) => v.serialize(s),
+            Self::U64(v) => v.serialize(s),
 
-            Value::F32(v) => v.serialize(s),
-            Value::F64(v) => v.serialize(s),
+            Self::F32(v) => v.serialize(s),
+            Self::F64(v) => v.serialize(s),
 
-            Value::Char(v) => v.serialize(s),
-            Value::String(ref v) => v.serialize(s),
-            Value::Bytes(ref v) => v.serialize(s),
+            Self::Char(v) => v.serialize(s),
+            Self::String(ref v) => v.serialize(s),
+            Self::Bytes(ref v) => v.serialize(s),
 
-            Value::Sequence(ref v) => v.serialize(s),
-            Value::Map(ref v) => v.serialize(s),
+            Self::Sequence(ref v) => v.serialize(s),
+            Self::Map(ref v) => v.serialize(s),
         }
     }
 }
 
 impl<'de> serde::de::Deserialize<'de> for Value {
     #[inline]
-    fn deserialize<D>(d: D) -> Result<Value, D::Error>
+    fn deserialize<D>(d: D) -> Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
     {

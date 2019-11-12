@@ -18,30 +18,12 @@
 extern crate failure;
 #[macro_use]
 extern crate log;
-#[cfg(feature = "js")]
 #[macro_use]
 extern crate pest;
 
 pub mod config;
 pub mod error;
 pub mod proto_index;
-#[cfg(feature = "js")]
-pub mod query;
 pub mod value;
 
-#[cfg(feature = "js")]
-pub fn run_query<I, O>(query: &query::Query, source: I, mut sink: O) -> error::Result<()>
-where
-    I: value::Source,
-    O: value::Sink,
-{
-    let query_context = query::Context::new();
-
-    let mut results = query.evaluate(&query_context, source)?;
-
-    while let Some(result) = value::Source::read(&mut results)? {
-        sink.write(result)?;
-    }
-
-    Ok(())
-}
+pub const GIT_VERSION: &str = git_version::git_version!();

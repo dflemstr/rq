@@ -1,33 +1,33 @@
 use crate::error;
+use crate::value;
 use serde_yaml;
 use std::io;
-use crate::value;
 
 #[derive(Debug)]
-pub struct YamlSource<R>(Option<R>);
+pub struct Source<R>(Option<R>);
 
 #[derive(Debug)]
-pub struct YamlSink<W>(W)
+pub struct Sink<W>(W)
 where
     W: io::Write;
 
 #[inline]
-pub fn source<R>(r: R) -> YamlSource<R>
+pub fn source<R>(r: R) -> Source<R>
 where
     R: io::Read,
 {
-    YamlSource(Some(r))
+    Source(Some(r))
 }
 
 #[inline]
-pub fn sink<W>(w: W) -> YamlSink<W>
+pub fn sink<W>(w: W) -> Sink<W>
 where
     W: io::Write,
 {
-    YamlSink(w)
+    Sink(w)
 }
 
-impl<R> value::Source for YamlSource<R>
+impl<R> value::Source for Source<R>
 where
     R: io::Read,
 {
@@ -44,14 +44,14 @@ where
     }
 }
 
-impl<W> value::Sink for YamlSink<W>
+impl<W> value::Sink for Sink<W>
 where
     W: io::Write,
 {
     #[inline]
     fn write(&mut self, value: value::Value) -> error::Result<()> {
-        r#try!(serde_yaml::to_writer(&mut self.0, &value));
-        r#try!(self.0.write(b"\n"));
+        serde_yaml::to_writer(&mut self.0, &value)?;
+        self.0.write_all(b"\n")?;
         Ok(())
     }
 }

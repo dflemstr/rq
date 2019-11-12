@@ -1,7 +1,0 @@
-{
-  "name": "rq",
-  "private": true,
-  "devDependencies": {
-    "jaguarjs-jsdoc-patched": "0.0.5"
-  }
-}

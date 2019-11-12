@@ -23,9 +23,6 @@ pub type Result<A> = result::Result<A, Error>;
 pub enum Error {
     #[fail(display = "protobuf error")]
     Protobuf(#[cause] serde_protobuf::error::Error),
-    #[cfg(feature = "js")]
-    #[fail(display = "JS error: {:?}", _0)]
-    Js(v8::error::Error),
     #[fail(display = "IO error")]
     Io(#[cause] io::Error),
     #[fail(display = "UTF-8 error")]
@@ -64,10 +61,6 @@ pub enum Error {
     Unimplemented { msg: String },
     #[fail(display = "illegal state: {}", msg)]
     IllegalState { msg: String },
-    #[fail(display = "syntax error: {}", msg)]
-    SyntaxError { msg: String },
-    #[fail(display = "process not found: {}", name)]
-    ProcessNotFound { name: String },
     #[fail(display = "format error: {}", msg)]
     Format { msg: String },
     #[fail(display = "internal error: {}", _0)]
@@ -91,38 +84,38 @@ pub enum Avro {
 }
 
 impl Error {
-    pub fn unimplemented(msg: String) -> Error {
-        Error::Unimplemented { msg }
+    pub fn unimplemented(msg: String) -> Self {
+        Self::Unimplemented { msg }
     }
 
-    pub fn illegal_state(msg: String) -> Error {
-        Error::IllegalState { msg }
+    pub fn illegal_state(msg: String) -> Self {
+        Self::IllegalState { msg }
     }
 }
 
 impl Avro {
-    pub fn downcast(error: failure::Error) -> Avro {
+    pub fn downcast(error: failure::Error) -> Self {
         let error = match error.downcast::<avro_rs::DecodeError>() {
-            Ok(error) => return Avro::Decode(error),
+            Ok(error) => return Self::Decode(error),
             Err(error) => error,
         };
 
         let error = match error.downcast::<avro_rs::ParseSchemaError>() {
-            Ok(error) => return Avro::ParseSchema(error),
+            Ok(error) => return Self::ParseSchema(error),
             Err(error) => error,
         };
 
         let error = match error.downcast::<avro_rs::SchemaResolutionError>() {
-            Ok(error) => return Avro::SchemaResolution(error),
+            Ok(error) => return Self::SchemaResolution(error),
             Err(error) => error,
         };
 
         let error = match error.downcast::<avro_rs::ValidationError>() {
-            Ok(error) => return Avro::Validation(error),
+            Ok(error) => return Self::Validation(error),
             Err(error) => error,
         };
 
-        Avro::Custom {
+        Self::Custom {
             message: error.to_string(),
         }
     }
@@ -132,7 +125,7 @@ macro_rules! gen_from {
     ($t:ty, $i:ident) => {
         impl From<$t> for Error {
             fn from(e: $t) -> Self {
-                Error::$i(e)
+                Self::$i(e)
             }
         }
     };

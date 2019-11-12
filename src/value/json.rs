@@ -2,21 +2,21 @@ use ansi_term;
 use dtoa;
 
 use crate::error;
+use crate::value;
 use itoa;
 use serde;
 use serde_json;
 use std::fmt;
 use std::io;
 use std::str;
-use crate::value;
 
-pub struct JsonSource<'de, R>(
+pub struct Source<'de, R>(
     serde_json::StreamDeserializer<'de, serde_json::de::IoRead<R>, value::Value>,
 )
 where
     R: io::Read;
 
-pub struct JsonSink<W, F>(W, F)
+pub struct Sink<W, F>(W, F)
 where
     W: io::Write,
     F: Clone + serde_json::ser::Formatter;
@@ -50,38 +50,38 @@ pub struct ReadableFormatter {
 }
 
 #[inline]
-pub fn source<'de, R>(r: R) -> JsonSource<'de, R>
+pub fn source<'de, R>(r: R) -> Source<'de, R>
 where
     R: io::Read,
 {
-    JsonSource(serde_json::Deserializer::new(serde_json::de::IoRead::new(r)).into_iter())
+    Source(serde_json::Deserializer::new(serde_json::de::IoRead::new(r)).into_iter())
 }
 
 #[inline]
-pub fn sink_compact<W>(w: W) -> JsonSink<W, serde_json::ser::CompactFormatter>
+pub fn sink_compact<W>(w: W) -> Sink<W, serde_json::ser::CompactFormatter>
 where
     W: io::Write,
 {
-    JsonSink(w, serde_json::ser::CompactFormatter)
+    Sink(w, serde_json::ser::CompactFormatter)
 }
 
 #[inline]
-pub fn sink_readable<W>(w: W) -> JsonSink<W, ReadableFormatter>
+pub fn sink_readable<W>(w: W) -> Sink<W, ReadableFormatter>
 where
     W: io::Write,
 {
-    JsonSink(w, ReadableFormatter::new())
+    Sink(w, ReadableFormatter::new())
 }
 
 #[inline]
-pub fn sink_indented<'a, W>(w: W) -> JsonSink<W, serde_json::ser::PrettyFormatter<'a>>
+pub fn sink_indented<'a, W>(w: W) -> Sink<W, serde_json::ser::PrettyFormatter<'a>>
 where
     W: io::Write,
 {
-    JsonSink(w, serde_json::ser::PrettyFormatter::new())
+    Sink(w, serde_json::ser::PrettyFormatter::new())
 }
 
-impl<'de, R> value::Source for JsonSource<'de, R>
+impl<'de, R> value::Source for Source<'de, R>
 where
     R: io::Read,
 {
@@ -95,7 +95,7 @@ where
     }
 }
 
-impl<W, F> value::Sink for JsonSink<W, F>
+impl<W, F> value::Sink for Sink<W, F>
 where
     W: io::Write,
     F: Clone + serde_json::ser::Formatter,
@@ -105,18 +105,18 @@ where
         {
             let mut serializer =
                 serde_json::ser::Serializer::with_formatter(&mut self.0, self.1.clone());
-            r#try!(serde::Serialize::serialize(&v, &mut serializer));
+            serde::Serialize::serialize(&v, &mut serializer)?;
         }
-        r#try!(self.0.write_all(b"\n"));
+        self.0.write_all(b"\n")?;
         Ok(())
     }
 }
 
 impl ReadableFormatter {
-    fn new() -> ReadableFormatter {
+    fn new() -> Self {
         use ansi_term::{Colour, Style};
 
-        ReadableFormatter {
+        Self {
             current_indent: 0,
             is_in_object_key: false,
             has_value: false,
@@ -151,9 +151,9 @@ impl ReadableFormatter {
         W: io::Write + ?Sized,
         I: itoa::Integer,
     {
-        r#try!(write!(writer, "{}", self.number_style.prefix()));
-        r#try!(itoa::write(&mut writer, value));
-        r#try!(write!(writer, "{}", self.number_style.suffix()));
+        write!(writer, "{}", self.number_style.prefix())?;
+        itoa::write(&mut writer, value)?;
+        write!(writer, "{}", self.number_style.suffix())?;
         Ok(())
     }
 
@@ -165,9 +165,9 @@ impl ReadableFormatter {
         W: io::Write + ?Sized,
         F: dtoa::Floating,
     {
-        r#try!(write!(writer, "{}", self.number_style.prefix()));
-        r#try!(dtoa::write(&mut writer, value));
-        r#try!(write!(writer, "{}", self.number_style.suffix()));
+        write!(writer, "{}", self.number_style.prefix())?;
+        dtoa::write(&mut writer, value)?;
+        write!(writer, "{}", self.number_style.suffix())?;
         Ok(())
     }
 }
@@ -394,8 +394,8 @@ impl serde_json::ser::Formatter for ReadableFormatter {
         self.current_indent -= 1;
 
         if self.has_value {
-            r#try!(write!(writer, "\n"));
-            r#try!(indent(writer, self.current_indent));
+            writeln!(writer)?;
+            indent(writer, self.current_indent)?;
         }
 
         write!(writer, "{}", self.array_bracket_style.paint("]")).map_err(From::from)
@@ -409,11 +409,11 @@ impl serde_json::ser::Formatter for ReadableFormatter {
         W: io::Write + ?Sized,
     {
         if !first {
-            r#try!(write!(writer, "{}", self.array_comma_style.paint(",")));
+            write!(writer, "{}", self.array_comma_style.paint(","))?;
         }
 
-        r#try!(write!(writer, "\n"));
-        r#try!(indent(writer, self.current_indent));
+        writeln!(writer)?;
+        indent(writer, self.current_indent)?;
         Ok(())
     }
 
@@ -450,8 +450,8 @@ impl serde_json::ser::Formatter for ReadableFormatter {
         self.current_indent -= 1;
 
         if self.has_value {
-            r#try!(write!(writer, "\n"));
-            r#try!(indent(writer, self.current_indent));
+            writeln!(writer)?;
+            indent(writer, self.current_indent)?;
         }
 
         write!(writer, "{}", self.object_brace_style.paint("}")).map_err(From::from)
@@ -466,11 +466,11 @@ impl serde_json::ser::Formatter for ReadableFormatter {
         self.is_in_object_key = true;
 
         if !first {
-            r#try!(write!(writer, "{}", self.object_comma_style.paint(",")));
+            write!(writer, "{}", self.object_comma_style.paint(","))?;
         }
 
-        r#try!(write!(writer, "\n"));
-        r#try!(indent(writer, self.current_indent));
+        writeln!(writer)?;
+        indent(writer, self.current_indent)?;
         Ok(())
     }
 
@@ -519,7 +519,7 @@ where
     Ok(())
 }
 
-impl<'de, R> fmt::Debug for JsonSource<'de, R>
+impl<'de, R> fmt::Debug for Source<'de, R>
 where
     R: io::Read,
 {
@@ -528,7 +528,7 @@ where
     }
 }
 
-impl<W, F> fmt::Debug for JsonSink<W, F>
+impl<W, F> fmt::Debug for Sink<W, F>
 where
     W: io::Write,
     F: Clone + serde_json::ser::Formatter,

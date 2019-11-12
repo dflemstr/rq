@@ -23,7 +23,6 @@ operating systems and architectures.
 
   - [Installation](doc/installation.md) — How to install `rq`.
   - [Tutorial](doc/tutorial.md) — Learn `rq` from scratch.
-  - [Demo](doc/demo.md) — Showing off misc. `rq` features.
   - [Process quick reference](https://dflemstr.github.io/rq/js/module-prelude.html)
     — Quickly find a process you need.
   - [Protobuf](doc/protobuf.md) — Configure Protobuf specifics.

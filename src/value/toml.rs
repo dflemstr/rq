@@ -7,30 +7,30 @@ use crate::error;
 use crate::value;
 
 #[derive(Debug)]
-pub struct TomlSource(Option<String>);
+pub struct Source(Option<String>);
 
 #[derive(Debug)]
-pub struct TomlSink<W: io::Write>(W);
+pub struct Sink<W: io::Write>(W);
 
 #[inline]
-pub fn source<R>(mut r: R) -> error::Result<TomlSource>
+pub fn source<R>(mut r: R) -> error::Result<Source>
 where
     R: io::Read,
 {
     let mut string = String::new();
-    r#try!(r.read_to_string(&mut string));
-    Ok(TomlSource(Some(string)))
+    r.read_to_string(&mut string)?;
+    Ok(Source(Some(string)))
 }
 
 #[inline]
-pub fn sink<W>(w: W) -> TomlSink<W>
+pub fn sink<W>(w: W) -> Sink<W>
 where
     W: io::Write,
 {
-    TomlSink(w)
+    Sink(w)
 }
 
-impl value::Source for TomlSource {
+impl value::Source for Source {
     #[inline]
     fn read(&mut self) -> error::Result<Option<value::Value>> {
         match self.0.take() {
@@ -46,7 +46,7 @@ impl value::Source for TomlSource {
     }
 }
 
-impl<W> value::Sink for TomlSink<W>
+impl<W> value::Sink for Sink<W>
 where
     W: io::Write,
 {
@@ -59,7 +59,7 @@ where
         }
 
         self.0.write_all(string.as_bytes())?;
-        r#try!(self.0.write_all(b"\n"));
+        self.0.write_all(b"\n")?;
         Ok(())
     }
 }
