@@ -30,7 +30,6 @@ architectures.
 |-------------------------|------|-------|
 | Apache Avro             | ✔️    | ✔️     |
 | CBOR                    | ✔️    | ✔️     |
-| HJSON                   | ✔️    | ✔️     |
 | JSON                    | ✔️    | ✔️     |
 | MessagePack             | ✔️    | ✔️     |
 | Google Protocol Buffers | ✔️    | ✖️     |
