@@ -1,4 +1,4 @@
-# `rq` [![Build Status](https://travis-ci.org/dflemstr/rq.svg?branch=master)](https://travis-ci.org/dflemstr/rq) [![Crates.io](https://img.shields.io/crates/v/record-query.svg)](https://crates.io/crates/record-query) [![Language (Rust)](https://img.shields.io/badge/powered_by-Rust-blue.svg)](http://www.rust-lang.org/)
+# `rq` [![Build Status](https://travis-ci.org/dflemstr/rq.svg?branch=master)](https://travis-ci.org/dflemstr/rq) [![Build status](https://ci.appveyor.com/api/projects/status/aq916pu1odthadeh?svg=true)](https://ci.appveyor.com/project/dflemstr/rq) [![Crates.io](https://img.shields.io/crates/v/record-query.svg)](https://crates.io/crates/record-query) [![Language (Rust)](https://img.shields.io/badge/powered_by-Rust-blue.svg)](http://www.rust-lang.org/)
 
 **NOTE**: `rq` no longer ships with a Javascript engine included; instead,
 it focuses exclusively on format transformation.  You can still pipe into
