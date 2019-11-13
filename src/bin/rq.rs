@@ -326,10 +326,7 @@ fn load_descriptors(
 }
 
 fn infer_format() -> Format {
-    use nix::unistd;
-    use std::os::unix::io::AsRawFd;
-
-    if unistd::isatty(io::stdin().as_raw_fd()).unwrap_or(false) {
+    if atty::is(atty::Stream::Stdout) {
         Format::Readable
     } else {
         Format::Compact
