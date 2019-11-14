@@ -423,10 +423,8 @@ fn format_log_record(
     use ansi_term::ANSIStrings;
     use ansi_term::Colour;
     use ansi_term::Style;
-    use nix::unistd;
-    use std::os::unix::io::AsRawFd;
 
-    if unistd::isatty(io::stderr().as_raw_fd()).unwrap_or(false) {
+    if atty::is(atty::Stream::Stderr) {
         let normal = Style::new();
         let (front, back) = match record.level() {
             log::Level::Error => (Colour::Red.normal(), Colour::Red.dimmed()),
