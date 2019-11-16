@@ -680,7 +680,7 @@ dependencies = [
 
 [[package]]
 name = "record-query"
-version = "1.0.1-alpha.0"
+version = "1.0.1"
 dependencies = [
  "ansi_term 0.12.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "atty 0.2.13 (registry+https://github.com/rust-lang/crates.io-index)",
