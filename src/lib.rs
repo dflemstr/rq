@@ -26,4 +26,8 @@ pub mod error;
 pub mod proto_index;
 pub mod value;
 
-pub const GIT_VERSION: &str = git_version::git_version!();
+pub const VERSION: &str = env!("VERGEN_SEMVER");
+
+#[doc(hidden)]
+#[deprecated(since = "1.0.1", note = "use VERSION instead")]
+pub const GIT_VERSION: &str = VERSION;
