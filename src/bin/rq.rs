@@ -14,6 +14,7 @@ use std::str;
 #[derive(Debug, StructOpt)]
 #[structopt(
     name = "rq",
+    version = record_query::VERSION,
     about = r#"
 A tool for manipulating data records.
 
