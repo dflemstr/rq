@@ -10,6 +10,7 @@ TODO: this section will soon be updated!
   * [GitHub releases](#github-releases) (Stable releases, fast)
   * [Arch Linux](#arch-linux) (Up to date, slow)
   * [Mac OS X](#mac-os-x) (Out of date, slow)
+  * [Nix](#nix) (Up to date, slow)
 
 ## Generic
 
@@ -58,3 +59,13 @@ If you for some reason want the last tagged release of `rq` (might be
 severely out of date):
 
     brew install rq
+
+## Nix
+
+`rq` is available in nixpkgs. You can install it via `nix-env`:
+
+    nix-env -i rq
+    
+ Or add to packages list if you use [Home Manager](https://github.com/rycee/home-manager):
+ 
+     home.packages = [ pkgs.rq ]
