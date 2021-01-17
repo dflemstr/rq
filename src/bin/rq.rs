@@ -122,14 +122,13 @@ pub enum Format {
 fn main() {
     use structopt::StructOpt;
 
-    let paths = rq::config::Paths::new().unwrap();
 
     let args: Options = match Options::clap().get_matches_safe() {
         Err(e) => {
             match e.kind {
-                structopt::clap::ErrorKind::HelpDisplayed => set_ran_cmd("help", &paths).unwrap(),
+                structopt::clap::ErrorKind::HelpDisplayed => set_ran_cmd("help").unwrap(),
                 structopt::clap::ErrorKind::VersionDisplayed => {
-                    set_ran_cmd("version", &paths).unwrap()
+                    set_ran_cmd("version").unwrap()
                 }
                 _ => (),
             }
@@ -140,52 +139,54 @@ fn main() {
 
     setup_log(args.flag_log.as_ref().map(String::as_ref), args.flag_quiet);
 
-    main_with_args(&args, &paths).unwrap_or_else(|e| log_error(&args, &e));
+    main_with_args(&args).unwrap_or_else(|e| log_error(&args, &e));
 }
 
-fn main_with_args(args: &Options, paths: &rq::config::Paths) -> rq::error::Result<()> {
+fn main_with_args(args: &Options) -> rq::error::Result<()> {
     match args.subcmd {
         Some(Subcmd::Protobuf { ref subcmd }) => match subcmd {
             ProtobufSubcmd::Add { schema, base } => {
                 let base = base
                     .as_ref()
                     .map_or_else(|| path::Path::new("."), |p| p.as_path());
+                let paths = rq::config::Paths::new()?;
                 rq::proto_index::add_file(&paths, base, &schema)
             }
         },
-        None => run(&args, &paths),
+        None => run(&args),
     }
 }
 
-fn run(args: &Options, paths: &rq::config::Paths) -> rq::error::Result<()> {
+fn run(args: &Options) -> rq::error::Result<()> {
     let stdin = io::stdin();
     let mut input = stdin.lock();
 
     if let Some(ref name) = args.flag_input_protobuf {
+        let paths = rq::config::Paths::new()?;
         let proto_descriptors = load_descriptors(&paths)?;
         let stream = protobuf::CodedInputStream::new(&mut input);
         let source = rq::value::protobuf::source(&proto_descriptors, name, stream)?;
-        run_source(args, paths, source)
+        run_source(args, source)
     } else if args.flag_input_avro {
         let source = rq::value::avro::source(&mut input)?;
-        run_source(args, paths, source)
+        run_source(args, source)
     } else if args.flag_input_cbor {
         let source = rq::value::cbor::source(&mut input);
-        run_source(args, paths, source)
+        run_source(args, source)
     } else if args.flag_input_message_pack {
         let source = rq::value::messagepack::source(&mut input);
-        run_source(args, paths, source)
+        run_source(args, source)
     } else if args.flag_input_toml {
         let source = rq::value::toml::source(&mut input)?;
-        run_source(args, paths, source)
+        run_source(args, source)
     } else if args.flag_input_yaml {
         let source = rq::value::yaml::source(&mut input);
-        run_source(args, paths, source)
+        run_source(args, source)
     } else if args.flag_input_raw {
         let source = rq::value::raw::source(&mut input);
-        run_source(args, paths, source)
+        run_source(args, source)
     } else if args.flag_input_csv {
-        if env::args().skip(1).any(|v| v == "-v") && !has_ran_cmd("help", paths)? {
+        if env::args().skip(1).any(|v| v == "-v") && !has_ran_cmd("help")? {
             warn!("You started rq -v, which puts it in CSV input mode.");
             warn!("It's now waiting for CSV input, which might not be what you wanted.");
             warn!(
@@ -194,9 +195,9 @@ fn run(args: &Options, paths: &rq::config::Paths) -> rq::error::Result<()> {
             );
         }
         let source = rq::value::csv::source(&mut input);
-        run_source(args, paths, source)
+        run_source(args, source)
     } else {
-        if !args.flag_input_json && !has_ran_cmd("help", paths)? {
+        if !args.flag_input_json && !has_ran_cmd("help")? {
             warn!("You started rq without any input flags, which puts it in JSON input mode.");
             warn!("It's now waiting for JSON input, which might not be what you wanted.");
             warn!(
@@ -205,11 +206,11 @@ fn run(args: &Options, paths: &rq::config::Paths) -> rq::error::Result<()> {
             );
         }
         let source = rq::value::json::source(&mut input);
-        run_source(args, paths, source)
+        run_source(args, source)
     }
 }
 
-fn run_source<I>(args: &Options, paths: &rq::config::Paths, source: I) -> rq::error::Result<()>
+fn run_source<I>(args: &Options, source: I) -> rq::error::Result<()>
 where
     I: rq::value::Source,
 {
@@ -222,15 +223,15 @@ where
             match format {
                 Format::Compact => {
                     let sink = $compact(&mut output);
-                    run_source_sink(paths, source, sink)
+                    run_source_sink(source, sink)
                 }
                 Format::Readable => {
                     let sink = $readable(&mut output);
-                    run_source_sink(paths, source, sink)
+                    run_source_sink(source, sink)
                 }
                 Format::Indented => {
                     let sink = $indented(&mut output);
-                    run_source_sink(paths, source, sink)
+                    run_source_sink(source, sink)
                 }
             }
         };
@@ -258,13 +259,13 @@ where
             )));
         };
         let sink = rq::value::avro::sink(&schema, &mut output, codec)?;
-        run_source_sink(paths, source, sink)
+        run_source_sink(source, sink)
     } else if args.flag_output_cbor {
         let sink = rq::value::cbor::sink(&mut output);
-        run_source_sink(paths, source, sink)
+        run_source_sink(source, sink)
     } else if args.flag_output_message_pack {
         let sink = rq::value::messagepack::sink(&mut output);
-        run_source_sink(paths, source, sink)
+        run_source_sink(source, sink)
     } else if args.flag_output_toml {
         // TODO: add TOML ugly printing eventually; now it's always "readable"
         dispatch_format!(
@@ -281,10 +282,10 @@ where
         )
     } else if args.flag_output_raw {
         let sink = rq::value::raw::sink(&mut output);
-        run_source_sink(paths, source, sink)
+        run_source_sink(source, sink)
     } else if args.flag_output_csv {
         let sink = rq::value::csv::sink(&mut output);
-        run_source_sink(paths, source, sink)
+        run_source_sink(source, sink)
     } else {
         dispatch_format!(
             rq::value::json::sink_compact,
@@ -303,7 +304,6 @@ fn read_avro_schema_from_file(path: &path::Path) -> rq::error::Result<avro_rs::S
 }
 
 fn run_source_sink<I, O>(
-    _paths: &rq::config::Paths,
     mut source: I,
     mut sink: O,
 ) -> rq::error::Result<()>
@@ -334,14 +334,23 @@ fn infer_format() -> Format {
     }
 }
 
-fn has_ran_cmd(cmd: &str, paths: &rq::config::Paths) -> rq::error::Result<bool> {
+fn has_ran_cmd(cmd: &str) -> rq::error::Result<bool> {
+    let paths = match rq::config::Paths::new() {
+        Ok(paths) => paths,
+        Err(_) => return Ok(false),
+    };
     paths
         .find_config(&format!("{}{}", "has-ran-", cmd))
         .map(|v| !v.is_empty())
         .map_err(From::from)
 }
 
-fn set_ran_cmd(cmd: &str, paths: &rq::config::Paths) -> rq::error::Result<()> {
+fn set_ran_cmd(cmd: &str) -> rq::error::Result<()> {
+    let paths = match rq::config::Paths::new() {
+        Ok(paths) => paths,
+        Err(_) => return Ok(()),
+    };
+
     let file = paths.preferred_config(format!("{}{}", "has-ran-", cmd));
 
     if let Some(parent) = file.parent() {
