@@ -170,7 +170,7 @@ where
     fn drop(&mut self) {
         match self.0.flush() {
             Ok(_) => (),
-            Err(error) => panic!(error),
+            Err(error) => panic!("{}", error),
         }
     }
 }
