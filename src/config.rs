@@ -2,6 +2,7 @@ use crate::error;
 
 use glob;
 use std::path;
+use std::env;
 
 #[derive(Debug)]
 pub struct Paths {
@@ -12,13 +13,27 @@ pub struct Paths {
 
 impl Paths {
     pub fn new() -> error::Result<Self> {
-        let dirs = directories::ProjectDirs::from("io", "dflemstr", "rq").unwrap();
+        match env::var_os("RQ_SYSTEM_DIR") {
+            Some(basepath) => {
+                let basepath = path::Path::new(&basepath);
+                Ok(Self {
+                    config: basepath.join("config"),
+                    cache: basepath.join("cache"),
+                    data: basepath.join("data"),
+                })
+            },
+            None => match directories::ProjectDirs::from("io", "dflemstr", "rq") {
+                Some(dirs) => Ok(Self {
+                    config: dirs.config_dir().into(),
+                    cache: dirs.cache_dir().into(),
+                    data: dirs.data_dir().into(),
+                }),
+                None => Err(error::Error::Message(format!(
+                    "The environment variable RQ_SYSTEM_DIR is unspecified and no home directory is known"
+                ))),
+            },
+        }
 
-        Ok(Self {
-            config: dirs.config_dir().into(),
-            cache: dirs.cache_dir().into(),
-            data: dirs.data_dir().into(),
-        })
     }
 
     pub fn preferred_config<P>(&self, path: P) -> path::PathBuf
