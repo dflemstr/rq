@@ -1,8 +1,8 @@
 use crate::error;
 
 use glob;
-use std::path;
 use std::env;
+use std::path;
 
 #[derive(Debug)]
 pub struct Paths {
@@ -33,7 +33,6 @@ impl Paths {
                 ))),
             },
         }
-
     }
 
     pub fn preferred_config<P>(&self, path: P) -> path::PathBuf

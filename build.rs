@@ -1,6 +1,6 @@
 extern crate vergen;
 
-use vergen::{ConstantsFlags, generate_cargo_keys};
+use vergen::{generate_cargo_keys, ConstantsFlags};
 
 fn main() {
     // Setup the flags, toggling off the 'SEMVER_FROM_CARGO_PKG' flag

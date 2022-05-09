@@ -122,14 +122,11 @@ pub enum Format {
 fn main() {
     use structopt::StructOpt;
 
-
     let args: Options = match Options::clap().get_matches_safe() {
         Err(e) => {
             match e.kind {
                 structopt::clap::ErrorKind::HelpDisplayed => set_ran_cmd("help").unwrap(),
-                structopt::clap::ErrorKind::VersionDisplayed => {
-                    set_ran_cmd("version").unwrap()
-                }
+                structopt::clap::ErrorKind::VersionDisplayed => set_ran_cmd("version").unwrap(),
                 _ => (),
             }
             e.exit()
@@ -303,10 +300,7 @@ fn read_avro_schema_from_file(path: &path::Path) -> rq::error::Result<avro_rs::S
         .map_err(|e| rq::error::Error::Avro(rq::error::Avro::downcast(e)))?)
 }
 
-fn run_source_sink<I, O>(
-    mut source: I,
-    mut sink: O,
-) -> rq::error::Result<()>
+fn run_source_sink<I, O>(mut source: I, mut sink: O) -> rq::error::Result<()>
 where
     I: rq::value::Source,
     O: rq::value::Sink,
