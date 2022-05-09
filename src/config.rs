@@ -28,9 +28,9 @@ impl Paths {
                     cache: dirs.cache_dir().into(),
                     data: dirs.data_dir().into(),
                 }),
-                None => Err(error::Error::Message(format!(
-                    "The environment variable RQ_SYSTEM_DIR is unspecified and no home directory is known"
-                ))),
+                None => Err(error::Error::Message(
+                    "The environment variable RQ_SYSTEM_DIR is unspecified and no home directory is known".to_string()
+                )),
             },
         }
     }

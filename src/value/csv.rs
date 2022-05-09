@@ -95,7 +95,7 @@ fn value_to_csv(value: value::Value) -> error::Result<String> {
         value::Value::F64(ordered_float::OrderedFloat(v)) => Ok(v.to_string()),
 
         value::Value::Char(v) => Ok(v.to_string()),
-        value::Value::String(v) => Ok(v.to_string()),
+        value::Value::String(v) => Ok(v),
         value::Value::Bytes(_) => Err(error::Error::Format {
             msg: "csv cannot output nested bytes".to_owned(),
         }),
