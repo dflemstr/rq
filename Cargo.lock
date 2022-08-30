@@ -769,7 +769,7 @@ dependencies = [
 
 [[package]]
 name = "record-query"
-version = "1.0.3"
+version = "1.0.4"
 dependencies = [
  "ansi_term",
  "atty",
