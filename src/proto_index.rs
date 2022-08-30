@@ -65,7 +65,7 @@ pub fn compile_descriptor_set(
     }
 
     let mut cache_file = fs::File::open(&cache)?;
-    let descriptor_set = protobuf::parse_from_reader(&mut cache_file)?;
+    let descriptor_set = protobuf::Message::parse_from_reader(&mut cache_file)?;
 
     trace!("Successfully parsed descriptor set from cache");
 

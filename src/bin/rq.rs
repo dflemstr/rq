@@ -371,7 +371,7 @@ fn log_error(args: &Options, error: &rq::error::Error) {
     for line in main_lines {
         error!("  {}", line);
     }
-    for e in failure::Fail::iter_causes(error) {
+    for e in <dyn failure::Fail>::iter_causes(error) {
         let sub_str = format!("{}", e);
         let mut sub_lines = sub_str.lines();
         error!("Caused by: {}", sub_lines.next().unwrap());
