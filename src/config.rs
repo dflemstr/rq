@@ -1,8 +1,8 @@
 use crate::error;
 
 use glob;
-use std::path;
 use std::env;
+use std::path;
 
 #[derive(Debug)]
 pub struct Paths {
@@ -28,12 +28,11 @@ impl Paths {
                     cache: dirs.cache_dir().into(),
                     data: dirs.data_dir().into(),
                 }),
-                None => Err(error::Error::Message(format!(
-                    "The environment variable RQ_SYSTEM_DIR is unspecified and no home directory is known"
-                ))),
+                None => Err(error::Error::Message(
+                    "The environment variable RQ_SYSTEM_DIR is unspecified and no home directory is known".to_string()
+                )),
             },
         }
-
     }
 
     pub fn preferred_config<P>(&self, path: P) -> path::PathBuf

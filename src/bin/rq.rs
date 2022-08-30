@@ -122,14 +122,11 @@ pub enum Format {
 fn main() {
     use structopt::StructOpt;
 
-
     let args: Options = match Options::clap().get_matches_safe() {
         Err(e) => {
             match e.kind {
                 structopt::clap::ErrorKind::HelpDisplayed => set_ran_cmd("help").unwrap(),
-                structopt::clap::ErrorKind::VersionDisplayed => {
-                    set_ran_cmd("version").unwrap()
-                }
+                structopt::clap::ErrorKind::VersionDisplayed => set_ran_cmd("version").unwrap(),
                 _ => (),
             }
             e.exit()
@@ -150,10 +147,10 @@ fn main_with_args(args: &Options) -> rq::error::Result<()> {
                     .as_ref()
                     .map_or_else(|| path::Path::new("."), |p| p.as_path());
                 let paths = rq::config::Paths::new()?;
-                rq::proto_index::add_file(&paths, base, &schema)
+                rq::proto_index::add_file(&paths, base, schema)
             }
         },
-        None => run(&args),
+        None => run(args),
     }
 }
 
@@ -250,7 +247,7 @@ where
         } else {
             "null"
         };
-        let codec = if let Ok(v) = avro_rs::Codec::from_str(&codec_string) {
+        let codec = if let Ok(v) = avro_rs::Codec::from_str(codec_string) {
             v
         } else {
             return Err(rq::error::Error::Message(format!(
@@ -299,14 +296,11 @@ fn read_avro_schema_from_file(path: &path::Path) -> rq::error::Result<avro_rs::S
     let mut file = fs::File::open(path)?;
     let mut buffer = String::new();
     file.read_to_string(&mut buffer)?;
-    Ok(avro_rs::Schema::parse_str(&buffer)
-        .map_err(|e| rq::error::Error::Avro(rq::error::Avro::downcast(e)))?)
+    avro_rs::Schema::parse_str(&buffer)
+        .map_err(|e| rq::error::Error::Avro(rq::error::Avro::downcast(e)))
 }
 
-fn run_source_sink<I, O>(
-    mut source: I,
-    mut sink: O,
-) -> rq::error::Result<()>
+fn run_source_sink<I, O>(mut source: I, mut sink: O) -> rq::error::Result<()>
 where
     I: rq::value::Source,
     O: rq::value::Sink,
