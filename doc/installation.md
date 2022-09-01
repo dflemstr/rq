@@ -9,7 +9,7 @@ TODO: this section will soon be updated!
   * [Cargo](#cargo) (Stable releases, slow)
   * [GitHub releases](#github-releases) (Stable releases, fast)
   * [Arch Linux](#arch-linux) (Up to date, slow)
-  * [Mac OS X](#mac-os-x) (Out of date, slow)
+  * [macOS](#macOS) (Multiple options)
   * [Nix](#nix) (Up to date, slow)
 
 ## Generic
@@ -43,7 +43,7 @@ example `pacaur`:
 
 This takes a while to install because `rq` will be built from source.
 
-## Mac OS X
+## macOS
 
 There is a Homebrew tap available.  Add it like this:
 
@@ -59,6 +59,12 @@ If you for some reason want the last tagged release of `rq` (might be
 severely out of date):
 
     brew install rq
+
+On macOS, you can also install `rq` using [MacPorts](https://www.macports.org):
+
+    sudo port install rq
+    
+More info [here](https://ports.macports.org/port/rq/).
 
 ## Nix
 
