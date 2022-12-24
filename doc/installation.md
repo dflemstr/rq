@@ -8,7 +8,7 @@ TODO: this section will soon be updated!
   * [Generic](#generic) (Up to date, fast)
   * [Cargo](#cargo) (Stable releases, slow)
   * [GitHub releases](#github-releases) (Stable releases, fast)
-  * [Arch Linux](#arch-linux) (Up to date, slow)
+  * [Arch Linux](#arch-linux) (Up to date, fast)
   * [Mac OS X](#mac-os-x) (Out of date, slow)
   * [Nix](#nix) (Up to date, slow)
 
@@ -36,12 +36,9 @@ that these might be very out of date compared to `master`.
 
 ## Arch Linux
 
-There is a package available for AUR, so it can be installed with for
-example `pacaur`:
+There is an official package in the [community] repository:
 
-    pacaur -S record-query-git
-
-This takes a while to install because `rq` will be built from source.
+    pacman -S rq
 
 ## Mac OS X
 
@@ -65,7 +62,7 @@ severely out of date):
 `rq` is available in nixpkgs. You can install it via `nix-env`:
 
     nix-env -i rq
-    
+
  Or add to packages list if you use [Home Manager](https://github.com/rycee/home-manager):
- 
+
      home.packages = [ pkgs.rq ]
