@@ -6,6 +6,7 @@ use serde_json;
 use std::collections;
 use std::fmt;
 use std::io;
+use ::toml::ser as toml_ser;
 
 pub mod avro;
 pub mod cbor;
@@ -159,7 +160,7 @@ impl serde::ser::Serialize for Value {
             Self::Bytes(ref v) => v.serialize(s),
 
             Self::Sequence(ref v) => v.serialize(s),
-            Self::Map(ref v) => v.serialize(s),
+            Self::Map(ref v) => toml_ser::tables_last(v, s),
         }
     }
 }
