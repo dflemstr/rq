@@ -42,3 +42,4 @@ architectures.
 | TOML                    | ✔️    | ✔️     |
 | Raw (plain text)        | ✔️    | ✔️     |
 | CSV                     | ✔️    | ✔️     |
+| SMILE                   | ✔️    | ✔️     |
