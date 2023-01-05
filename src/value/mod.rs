@@ -42,9 +42,6 @@ pub enum Value {
 
     // A sequence of pairs is appropriate for representing an object/a map:
     // there is no need to deduplicate keys, and it is nice to preserve order.
-    //
-    // Note: The yaml serializer first transforms values into an enum similar to this one,
-    // but the Map variant is backed by linked-hash-map, so it will still deduplicate keys.
     Map(Vec<(Value, Value)>),
 }
 
