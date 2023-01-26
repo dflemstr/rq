@@ -48,12 +48,15 @@ serde_cbor = "0.11.2"
 serde_json = "1.0.81"
 serde_yaml = "0.9.16"
 structopt = "0.3.26"
-toml = "0.5.9"
 yaml-rust = "0.4.5"
 
 [dependencies.avro-rs]
 version = "0.6.5"
 features = ["snappy"]
+
+[dependencies.toml]
+version = "0.6.0"
+features = ["preserve_order"]
 
 [profile.release]
 lto = true
