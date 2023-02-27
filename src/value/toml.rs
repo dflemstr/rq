@@ -35,8 +35,8 @@ impl value::Source for Source {
     fn read(&mut self) -> error::Result<Option<value::Value>> {
         match self.0.take() {
             Some(v) => {
-                let mut de = toml::de::Deserializer::new(v.as_str());
-                match serde::Deserialize::deserialize(&mut de) {
+                let de = toml::de::Deserializer::new(v.as_str());
+                match serde::Deserialize::deserialize(de) {
                     Ok(v) => Ok(Some(v)),
                     Err(e) => Err(error::Error::from(e)),
                 }
@@ -54,8 +54,8 @@ where
     fn write(&mut self, value: value::Value) -> error::Result<()> {
         let mut string = String::new();
         {
-            let mut ser = toml::ser::Serializer::new(&mut string);
-            serde::Serialize::serialize(&value, &mut ser)?;
+            let ser = toml::ser::Serializer::new(&mut string);
+            serde::Serialize::serialize(&value, ser)?;
         }
 
         self.0.write_all(string.as_bytes())?;

@@ -3,7 +3,6 @@ use crate::error;
 use ordered_float;
 use serde;
 use serde_json;
-use std::collections;
 use std::fmt;
 use std::io;
 
@@ -17,7 +16,7 @@ pub mod raw;
 pub mod toml;
 pub mod yaml;
 
-#[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
+#[derive(Debug)]
 pub enum Value {
     Unit,
     Bool(bool),
@@ -40,8 +39,10 @@ pub enum Value {
     Bytes(Vec<u8>),
 
     Sequence(Vec<Value>),
-    // TODO: Use a container that preserves insertion order
-    Map(collections::BTreeMap<Value, Value>),
+
+    // A sequence of pairs is appropriate for representing an object/a map:
+    // there is no need to deduplicate keys, and it is nice to preserve order.
+    Map(Vec<(Value, Value)>),
 }
 
 pub trait Source {
@@ -159,7 +160,14 @@ impl serde::ser::Serialize for Value {
             Self::Bytes(ref v) => v.serialize(s),
 
             Self::Sequence(ref v) => v.serialize(s),
-            Self::Map(ref v) => v.serialize(s),
+            Self::Map(ref v) => {
+                use serde::ser::SerializeMap;
+                let mut s = s.serialize_map(Some(v.len()))?;
+                for (key, value) in v {
+                    SerializeMap::serialize_entry(&mut s, key, value)?;
+                }
+                SerializeMap::end(s)
+            }
         }
     }
 }
@@ -353,10 +361,10 @@ impl<'de> serde::de::Visitor<'de> for ValueVisitor {
     where
         V: serde::de::MapAccess<'de>,
     {
-        let mut values = collections::BTreeMap::new();
+        let mut values = Vec::new();
 
-        while let Some((key, value)) = v.next_entry()? {
-            values.insert(key, value);
+        while let Some(entry) = v.next_entry()? {
+            values.push(entry);
         }
 
         Ok(Value::Map(values))
