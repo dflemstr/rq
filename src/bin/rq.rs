@@ -65,6 +65,9 @@ pub struct Options {
     /// Input is a series of YAML documents.
     #[structopt(short = "y", long = "input-yaml")]
     pub flag_input_yaml: bool,
+    /// Input is formatted as SMILE
+    #[structopt(short = "s", long = "input-smile")]
+    pub flag_input_smile: bool,
 
     #[structopt(short = "A", long = "output-avro")]
     pub flag_output_avro: Option<String>,
@@ -84,6 +87,8 @@ pub struct Options {
     pub flag_output_toml: bool,
     #[structopt(short = "Y", long = "output-yaml")]
     pub flag_output_yaml: bool,
+    #[structopt(short = "S", long = "output-smile")]
+    pub flag_output_smile: bool,
 
     #[structopt(short = "l", long = "log")]
     pub flag_log: Option<String>,
@@ -178,6 +183,9 @@ fn run(args: &Options) -> rq::error::Result<()> {
         run_source(args, source)
     } else if args.flag_input_yaml {
         let source = rq::value::yaml::source(&mut input);
+        run_source(args, source)
+    } else if args.flag_input_smile {
+        let source = rq::value::smile::source(&mut input)?;
         run_source(args, source)
     } else if args.flag_input_raw {
         let source = rq::value::raw::source(&mut input);
@@ -277,6 +285,9 @@ where
             rq::value::yaml::sink,
             rq::value::yaml::sink
         )
+    } else if args.flag_output_smile {
+        let sink = rq::value::smile::sink(&mut output)?;
+        run_source_sink(source, sink)
     } else if args.flag_output_raw {
         let sink = rq::value::raw::sink(&mut output);
         run_source_sink(source, sink)
@@ -591,6 +602,30 @@ mod test {
     fn test_docopt_output_cbor_long() {
         let a = parse_args(&["rq", "--output-cbor"]);
         assert!(a.flag_output_cbor);
+    }
+
+    #[test]
+    fn test_docopt_input_smile() {
+        let a = parse_args(&["rq", "-s"]);
+        assert!(a.flag_input_smile);
+    }
+
+    #[test]
+    fn test_docopt_input_smile_long() {
+        let a = parse_args(&["rq", "--input-smile"]);
+        assert!(a.flag_input_smile);
+    }
+
+    #[test]
+    fn test_docopt_output_smile() {
+        let a = parse_args(&["rq", "-S"]);
+        assert!(a.flag_output_smile);
+    }
+
+    #[test]
+    fn test_docopt_output_smile_long() {
+        let a = parse_args(&["rq", "--output-smile"]);
+        assert!(a.flag_output_smile);
     }
 
     #[test]

@@ -46,6 +46,8 @@ pub enum Error {
     TomlDeserialize(#[cause] toml::de::Error),
     #[fail(display = "TOML serialize error")]
     TomlSerialize(#[cause] toml::ser::Error),
+    #[fail(display = "SMILE error")]
+    Smile(#[cause] serde_smile::Error),
     #[fail(display = "glob error")]
     Glob(#[cause] glob::GlobError),
     #[fail(display = "glob pattern error")]
@@ -142,6 +144,7 @@ gen_from!(serde_yaml::Error, Yaml);
 gen_from!(yaml_rust::ScanError, YamlScan);
 gen_from!(toml::de::Error, TomlDeserialize);
 gen_from!(toml::ser::Error, TomlSerialize);
+gen_from!(serde_smile::Error, Smile);
 gen_from!(glob::GlobError, Glob);
 gen_from!(glob::PatternError, GlobPattern);
 gen_from!(csv::Error, Csv);
