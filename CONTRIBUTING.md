@@ -30,16 +30,6 @@ you can get those like this:
     sudo apt install libclang-dev clang
 
 To build `rq`, navigate to the source directory.
-
-You will need a build of the V8 JavaScript engine as well.  If
-your operating system package manager doesn't provide a package,
-you can download a build like this:
-
-    wget "https://s3-eu-west-1.amazonaws.com/record-query/v8/$TARGET/5.7.441.1/v8-build.tar.gz"
-    tar -xvf v8-build.tar.gz
-    export V8_LIBS=$PWD/v8-build/lib/libv8uber.a
-    export V8_SOURCE=$PWD/v8-build
-
 Now you can run the tests for the project (including JSDoc tests):
 
     cargo test

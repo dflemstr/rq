@@ -3,8 +3,6 @@
 
 // For pest parser generation
 #![recursion_limit = "1024"]
-#![deny(warnings)]
-#![deny(clippy::all)]
 #![deny(
     missing_debug_implementations,
     trivial_casts,
@@ -18,8 +16,6 @@
 extern crate failure;
 #[macro_use]
 extern crate log;
-#[macro_use]
-extern crate pest;
 
 pub mod config;
 pub mod error;

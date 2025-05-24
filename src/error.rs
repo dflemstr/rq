@@ -1,3 +1,5 @@
+#![allow(non_local_definitions)] // avro old, requires failure, which is unmaintained, yay
+
 use csv;
 use glob;
 use protobuf;
@@ -10,8 +12,6 @@ use serde_yaml;
 use std::io;
 use std::string;
 use toml;
-#[cfg(feature = "v8")]
-use v8;
 use yaml_rust;
 
 use std::result;
@@ -46,6 +46,8 @@ pub enum Error {
     TomlDeserialize(#[cause] toml::de::Error),
     #[fail(display = "TOML serialize error")]
     TomlSerialize(#[cause] toml::ser::Error),
+    #[fail(display = "SMILE error")]
+    Smile(#[cause] serde_smile::Error),
     #[fail(display = "glob error")]
     Glob(#[cause] glob::GlobError),
     #[fail(display = "glob pattern error")]
@@ -130,8 +132,6 @@ macro_rules! gen_from {
 
 gen_from!(serde_protobuf::error::Error, Protobuf);
 gen_from!(io::Error, Io);
-#[cfg(feature = "js")]
-gen_from!(v8::error::Error, Js);
 gen_from!(string::FromUtf8Error, Utf8);
 gen_from!(protobuf::ProtobufError, NativeProtobuf);
 gen_from!(rmpv::encode::Error, MessagePackEncode);
@@ -142,6 +142,7 @@ gen_from!(serde_yaml::Error, Yaml);
 gen_from!(yaml_rust::ScanError, YamlScan);
 gen_from!(toml::de::Error, TomlDeserialize);
 gen_from!(toml::ser::Error, TomlSerialize);
+gen_from!(serde_smile::Error, Smile);
 gen_from!(glob::GlobError, Glob);
 gen_from!(glob::PatternError, GlobPattern);
 gen_from!(csv::Error, Csv);

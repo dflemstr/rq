@@ -13,6 +13,7 @@ pub mod json;
 pub mod messagepack;
 pub mod protobuf;
 pub mod raw;
+pub mod smile;
 pub mod toml;
 pub mod yaml;
 
